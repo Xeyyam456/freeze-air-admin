@@ -1,7 +1,7 @@
 
 import { useActionState, useMemo, useRef, useState } from "react";
 import { Pencil, Plus, Search, ShieldCheck, Trash2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
-import { addTool, deleteTool, giveTool, returnTool, setStorekeeper, updateTool } from "@/actions/tools";
+import { addTool, deleteTool, discardPiece, finishMaterial, givePiece, giveTool, returnTool, setStorekeeper, updateTool } from "@/actions/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
@@ -23,6 +23,8 @@ export type Holding = {
   taken_at: string;
   employees: { full_name: string; photo_url: string | null } | null;
 };
+// Depoda qalan material parçası (usta işlədib, qalanını təhvil verib): ayrı-ayrı göstərilir
+export type Piece = { id: number; tool_id: number; length: number; created_at: string; employees: { full_name: string } | null };
 export type DepotEmployee = Pick<Tables<"employees">, "id" | "full_name" | "photo_url" | "position" | "is_management" | "is_storekeeper" | "user_id">;
 
 // Hər növün mətnləri
@@ -171,11 +173,12 @@ export function StorekeepersCard({ employees, owner, selfId }: { employees: Depo
 }
 
 // Depo: iki tab (Alətlər / Materiallar); hər birində siyahı və "Ustalar üzrə" görünüşü.
-export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings, employees, canManage }: {
+export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings, pieces, employees, canManage }: {
   kind: Kind;
   onKind: (k: Kind) => void;
   tools: Tool[];
   holdings: Holding[];
+  pieces: Piece[];
   employees: DepotEmployee[];
   canManage: boolean;
 }) {
@@ -225,7 +228,10 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
 
   return (
     <div className="space-y-4">
-      {open && <ToolModal tool={open} holders={allHoldings.filter((h) => h.tool_id === open.id)} employees={employees} canManage={canManage} onClose={() => setOpenId(null)} />}
+      {open && (
+        <ToolModal tool={open} holders={allHoldings.filter((h) => h.tool_id === open.id)} pieces={pieces.filter((p) => p.tool_id === open.id)}
+          employees={employees} canManage={canManage} onClose={() => setOpenId(null)} />
+      )}
       {openPerson && (
         <PersonModal emp={openPerson} kind={kind} holds={byEmployee[openPerson.id] ?? []} toolInfo={toolInfo} canManage={canManage} onClose={() => setOpenEmp(null)} />
       )}
@@ -306,7 +312,8 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                 <th className="px-4 py-3">{tx.col}</th>
                 <th className="w-28 px-4 py-3 text-center">Cəmi</th>
                 <th className="w-28 px-4 py-3 text-center">Ustalarda</th>
-                <th className="w-28 px-4 py-3 text-center">Depoda</th>
+                <th className="w-28 px-4 py-3 text-center">{kind === "material" ? "Tam (depoda)" : "Depoda"}</th>
+                {kind === "material" && <th className="w-40 px-4 py-3 text-center">Parçalar</th>}
               </tr>
             </thead>
             <tbody>
@@ -321,7 +328,8 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                       {t.inventory_code && <span className="muted text-xs">{t.inventory_code}</span>}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-center font-semibold tabular-nums">{withUnit(t.quantity, t)}</td>
+                  {/* Cəmi = tam hissə + parçalar (ümumilikdə nə qədər var) */}
+                  <td className="px-4 py-3 text-center font-semibold tabular-nums">{withUnit(t.quantity + t.pieces_total, t)}</td>
                   <td className="px-4 py-3 text-center tabular-nums">{t.given_out ? withUnit(t.given_out, t) : <span className="muted">—</span>}</td>
                   <td className="px-4 py-3 text-center">
                     <span className={`inline-block min-w-8 rounded-full px-2 py-0.5 text-xs font-bold tabular-nums ${
@@ -329,6 +337,11 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                       {withUnit(t.available, t)}
                     </span>
                   </td>
+                  {kind === "material" && (
+                    <td className="px-4 py-3 text-center text-[13px] tabular-nums">
+                      {t.pieces_count ? `${t.pieces_count} ədəd · ${t.pieces_total} ${t.unit}` : <span className="muted">—</span>}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -341,44 +354,75 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
 }
 
 // toolName verilirsə: usta pəncərəsində (sətirdə usta yox, alətin adı göstərilir). unit: ölçü vahidi (ədəd, metr...)
-// Ustadakı alət: "Geri al". Ustada 1 ədəddirsə dərhal, çoxdursa neçə ədəd olduğu soruşulur.
-function HolderRow({ holding, canManage, toolName, unit = "ədəd" }: { holding: Holding; canManage: boolean; toolName?: string; unit?: string }) {
+// Alət: "Geri al" (ustada 1 ədəddirsə dərhal, çoxdursa neçə ədəd olduğu soruşulur).
+// Material: "Təhvil ver": usta neçə işlədib deyilir; işlənən sərf olunur, qalan hissə depoya ayrı parça kimi yazılır.
+function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = false }: {
+  holding: Holding; canManage: boolean; toolName?: string; unit?: string; material?: boolean;
+}) {
   const [asking, setAsking] = useState(false);
+  const [used, setUsed] = useState(0); // material: yazılan "işlədilib" (qalanı canlı göstərmək üçün)
   const [state, action, pending] = useActionState(
     async (_prev: Awaited<ReturnType<typeof returnTool>>, fd: FormData) => {
       const qty = Number(fd.get("quantity") ?? holding.quantity);
+      if (material) {
+        if (qty > holding.quantity) return { error: `Ustada cəmi ${holding.quantity} ${unit} var.` };
+        return finishMaterial(holding.id, qty);
+      }
       if (qty > holding.quantity) return { error: `Ustada cəmi ${holding.quantity} ${unit} var.` };
       return returnTool(holding.id, qty);
     },
     null,
   );
-  useOnSuccess(state, () => setAsking(false), "Geri alındı");
+  useOnSuccess(state, () => { setAsking(false); setUsed(0); }, material ? "Təhvil alındı" : "Geri alındı");
+
+  const leftover = holding.quantity - used;
+  const hint = used === 0 ? `Heç nə işlənməyib: ${holding.quantity} ${unit} tam depoya qayıdır.`
+    : leftover > 0 ? `${leftover} ${unit} qalıb: depoya ayrıca parça kimi yazılır.`
+    : "Hamısı işlənib: depoya heç nə qayıtmır.";
 
   return (
-    <li className="flex items-center gap-3 py-2">
-      {toolName !== undefined ? (
-        <>
-          <Wrench size={15} className="shrink-0 text-primary" />
-          <span className="min-w-0 flex-1 truncate text-sm font-semibold">{toolName}</span>
-        </>
-      ) : (
-        <>
-          <Avatar employee={{ full_name: holding.employees?.full_name ?? "?", photo_url: holding.employees?.photo_url ?? null }} className="!h-8 !w-8 !text-[11px]" />
-          <span className="min-w-0 flex-1 truncate text-sm font-semibold">{holding.employees?.full_name ?? "—"}</span>
-        </>
-      )}
-      <span className="text-sm font-bold tabular-nums text-primary">{holding.quantity} {unit}</span>
-      {canManage && (
-        <ActionForm action={action} className="flex items-center gap-1.5">
-          {asking && (
-            <QuantityInput limit={holding.quantity} defaultValue={holding.quantity} className="!h-8 !w-16"
+    <li className="py-2">
+      <div className="flex items-center gap-3">
+        {toolName !== undefined ? (
+          <>
+            <Wrench size={15} className="shrink-0 text-primary" />
+            <span className="min-w-0 flex-1 truncate text-sm font-semibold">{toolName}</span>
+          </>
+        ) : (
+          <>
+            <Avatar employee={{ full_name: holding.employees?.full_name ?? "?", photo_url: holding.employees?.photo_url ?? null }} className="!h-8 !w-8 !text-[11px]" />
+            <span className="min-w-0 flex-1 truncate text-sm font-semibold">{holding.employees?.full_name ?? "—"}</span>
+          </>
+        )}
+        <span className="text-sm font-bold tabular-nums text-primary">{holding.quantity} {unit}</span>
+        {canManage && material && !asking && (
+          <button type="button" onClick={() => setAsking(true)} className="btn btn-secondary btn-sm !h-8">Təhvil ver</button>
+        )}
+        {canManage && !material && (
+          <ActionForm action={action} className="flex items-center gap-1.5">
+            {asking && (
+              <QuantityInput limit={holding.quantity} defaultValue={holding.quantity} className="!h-8 !w-16"
+                limitText={(limit) => `Ustada cəmi ${limit} ${unit} var.`} />
+            )}
+            {holding.quantity > 1 && !asking ? (
+              <button type="button" onClick={() => setAsking(true)} className="btn btn-secondary btn-sm !h-8">Geri al</button>
+            ) : (
+              <button type="submit" disabled={pending} className="btn btn-secondary btn-sm !h-8">{pending ? "..." : "Geri al"}</button>
+            )}
+          </ActionForm>
+        )}
+      </div>
+      {canManage && material && asking && (
+        <ActionForm action={action} className="mt-2 rounded-xl bg-bg p-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold">İşlədilib:</span>
+            <QuantityInput min={0} defaultValue={0} limit={holding.quantity} className="!h-8 !w-20" onValue={setUsed}
               limitText={(limit) => `Ustada cəmi ${limit} ${unit} var.`} />
-          )}
-          {holding.quantity > 1 && !asking ? (
-            <button type="button" onClick={() => setAsking(true)} className="btn btn-secondary btn-sm !h-8">Geri al</button>
-          ) : (
-            <button type="submit" disabled={pending} className="btn btn-secondary btn-sm !h-8">{pending ? "..." : "Geri al"}</button>
-          )}
+            <span className="muted text-sm">{unit}</span>
+            <button type="submit" disabled={pending || used > holding.quantity} className="btn btn-primary btn-sm !h-8 ml-auto">{pending ? "..." : "Təhvil al"}</button>
+            <button type="button" onClick={() => { setAsking(false); setUsed(0); }} className="btn btn-cancel btn-sm !h-8">Ləğv</button>
+          </div>
+          <p className="muted mt-2 text-xs">{used > holding.quantity ? "İşlədilən götürülən miqdardan çox ola bilməz." : hint}</p>
         </ActionForm>
       )}
     </li>
@@ -446,15 +490,70 @@ function EditToolModal({ tool, onClose }: { tool: Tool; onClose: () => void }) {
   );
 }
 
-function ToolModal({ tool, holders, employees, canManage, onClose }: {
+// Parçanı kimə verəsən: kiçik pəncərə
+function PieceGiveModal({ piece, unit, employees, onClose }: { piece: Piece; unit: string; employees: DepotEmployee[]; onClose: () => void }) {
+  const [picked, setPicked] = useState<number | null>(null);
+  const [pending, setPending] = useState(false);
+  const items = employees.filter((e) => !e.is_management).map((e) => ({ id: e.id, name: e.full_name }));
+
+  async function give() {
+    if (!picked) return;
+    setPending(true);
+    const r = await givePiece(piece.id, picked);
+    setPending(false);
+    if (r?.error) return toast.error(r.error);
+    toast.success("Verildi");
+    onClose();
+  }
+
+  return (
+    <Modal onClose={onClose} labelledBy="piece-give-title" className="!max-w-md">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h2 id="piece-give-title" className="text-lg font-bold">{piece.length} {unit} parça: kimə verilir?</h2>
+        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+      </div>
+      <div className="flex gap-2 pb-2">
+        <ToolPicker items={items} value={picked} onChange={setPicked} name="employee_id" icon={Users}
+          placeholder="Usta seç..." emptyLabel="Aktiv əməkdaş yoxdur" searchLabel="Usta axtar..." />
+        <button type="button" disabled={pending || !picked} onClick={give} className="btn btn-primary btn-sm !h-9">{pending ? "..." : "Ver"}</button>
+      </div>
+    </Modal>
+  );
+}
+
+// Depodakı bir parça: neçə metr, kimdən qalıb, nə vaxt; ustaya vermək və ya silmək (sərf olunub)
+function PieceRow({ piece, unit, employees, canManage }: { piece: Piece; unit: string; employees: DepotEmployee[]; canManage: boolean }) {
+  const [giving, setGiving] = useState(false);
+  const date = piece.created_at.slice(0, 10).split("-").reverse().join(".");
+  return (
+    <li className="flex items-center gap-3 py-2">
+      {giving && <PieceGiveModal piece={piece} unit={unit} employees={employees} onClose={() => setGiving(false)} />}
+      <span className="w-24 text-sm font-bold tabular-nums">{piece.length} {unit}</span>
+      <span className="muted min-w-0 flex-1 truncate text-[13px]">{piece.employees ? `${piece.employees.full_name} qaytarıb` : "Qaytaran bilinmir"} · {date}</span>
+      {canManage && (
+        <>
+          <button type="button" onClick={() => setGiving(true)} className="btn btn-secondary btn-sm !h-8">Ver</button>
+          <ConfirmButton onConfirm={async () => { await discardPiece(piece.id); }} success={false} className="icon-btn icon-btn-danger" title="Parçanı sil"
+            question={`${piece.length} ${unit} parça siyahıdan silinəcək (sərf olunub).`}>
+            <Trash2 size={15} />
+          </ConfirmButton>
+        </>
+      )}
+    </li>
+  );
+}
+
+function ToolModal({ tool, holders, pieces, employees, canManage, onClose }: {
   tool: Tool;
   holders: Holding[];
+  pieces: Piece[];
   employees: DepotEmployee[];
   canManage: boolean;
   onClose: () => void;
 }) {
   const [editing, setEditing] = useState(false);
   const kind = tool.kind as Kind;
+  const material = kind === "material";
 
   return (
     <Modal onClose={onClose} labelledBy={`tool-${tool.id}-title`} className="!max-w-xl">
@@ -462,10 +561,21 @@ function ToolModal({ tool, holders, employees, canManage, onClose }: {
       <div className="flex items-start gap-2">
         <div className="min-w-0 flex-1">
           <h2 id={`tool-${tool.id}-title`} className="truncate text-xl font-bold">{tool.name}</h2>
-          <p className="mt-1 text-sm">
-            Cəmi <b>{withUnit(tool.quantity, tool)}</b> · ustalarda <b className="text-primary">{withUnit(tool.given_out, tool)}</b> · depoda{" "}
-            <b className={tool.available ? "text-ok" : "text-danger"}>{withUnit(tool.available, tool)}</b>
-          </p>
+          {material ? (
+            <>
+              {/* Ümumilikdə nə qədər var = tam hissə + parçalar */}
+              <p className="mt-1 text-sm">Ümumi <b>{withUnit(tool.quantity + tool.pieces_total, tool)}</b></p>
+              <p className="muted mt-0.5 text-[13px]">
+                tam: depoda <b className={tool.available ? "text-ok" : "text-danger"}>{withUnit(tool.available, tool)}</b>, ustalarda{" "}
+                <b className="text-primary">{withUnit(tool.given_out, tool)}</b> · parçalar: <b className="text-ink">{tool.pieces_count} ədəd, {withUnit(tool.pieces_total, tool)}</b>
+              </p>
+            </>
+          ) : (
+            <p className="mt-1 text-sm">
+              Cəmi <b>{withUnit(tool.quantity, tool)}</b> · ustalarda <b className="text-primary">{withUnit(tool.given_out, tool)}</b> · depoda{" "}
+              <b className={tool.available ? "text-ok" : "text-danger"}>{withUnit(tool.available, tool)}</b>
+            </p>
+          )}
         </div>
         {canManage && (
           <>
@@ -491,8 +601,22 @@ function ToolModal({ tool, holders, employees, canManage, onClose }: {
         <p className="muted py-3 text-sm">Hamısı depodadır.</p>
       ) : (
         <ul className="nice-scroll max-h-60 divide-y divide-line overflow-y-auto">
-          {holders.map((h) => <HolderRow key={h.id} holding={h} canManage={canManage} unit={tool.unit} />)}
+          {holders.map((h) => <HolderRow key={h.id} holding={h} canManage={canManage} unit={tool.unit} material={material} />)}
         </ul>
+      )}
+
+      {/* Parçalar: hər biri ayrıca (3 usta 2 metr qaytarıbsa, 3 ədəd 2 metrlik parça, 6 metrlik tam boru yox) */}
+      {material && (
+        <>
+          <h3 className="mb-1 mt-5 text-xs font-bold uppercase tracking-wide text-muted">Depodakı parçalar ({pieces.length})</h3>
+          {pieces.length === 0 ? (
+            <p className="muted py-3 text-sm">Parça yoxdur. Usta işlədib qalanını təhvil verəndə burada görünəcək.</p>
+          ) : (
+            <ul className="nice-scroll max-h-56 divide-y divide-line overflow-y-auto">
+              {pieces.map((p) => <PieceRow key={p.id} piece={p} unit={tool.unit} employees={employees} canManage={canManage} />)}
+            </ul>
+          )}
+        </>
       )}
 
       {canManage && (
@@ -529,7 +653,7 @@ function PersonModal({ emp, kind, holds, toolInfo, canManage, onClose }: {
       {holds.length > 0 && (
         <ul className="nice-scroll mt-4 max-h-[min(433px,calc(100vh-260px))] divide-y divide-line overflow-y-auto">
           {holds.map((h) => (
-            <HolderRow key={h.id} holding={h} canManage={canManage} toolName={toolInfo.get(h.tool_id)?.name ?? "—"} unit={toolInfo.get(h.tool_id)?.unit} />
+            <HolderRow key={h.id} holding={h} canManage={canManage} toolName={toolInfo.get(h.tool_id)?.name ?? "—"} unit={toolInfo.get(h.tool_id)?.unit} material={kind === "material"} />
           ))}
         </ul>
       )}

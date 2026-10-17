@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Page } from "@/components/Page";
 import { WithSidePanel } from "@/components/SidePanel";
-import { AddToolCard, StorekeepersCard, ToolList, type Holding, type Kind } from "@/components/depot/DepotForms";
+import { AddToolCard, StorekeepersCard, ToolList, type Holding, type Kind, type Piece } from "@/components/depot/DepotForms";
 import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 
 async function fetchDepot() {
   const supabase = createClient();
-  const [{ data: tools }, { data: holdings }, { data: employees }] = await Promise.all([
+  const [{ data: tools }, { data: holdings }, { data: employees }, { data: pieces }] = await Promise.all([
     // Anbar vəziyyəti: ümumi say, ustalarda, depoda qalan (view tool_stock)
     supabase.from("tool_stock").select("*").order("name"),
     // Hazırda ustalarda olanlar (qaytarılmamış)
@@ -20,8 +20,10 @@ async function fetchDepot() {
       .select("id, full_name, photo_url, position, is_management, is_storekeeper, user_id")
       .eq("is_active", true)
       .order("full_name"),
+    // Depodakı material parçaları (usta işlədib, qalanını təhvil verib)
+    supabase.from("material_pieces").select("id, tool_id, length, created_at, employees(full_name)").order("created_at"),
   ]);
-  return { tools: tools ?? [], holdings: (holdings ?? []) as Holding[], employees: employees ?? [] };
+  return { tools: tools ?? [], holdings: (holdings ?? []) as Holding[], pieces: (pieces ?? []) as Piece[], employees: employees ?? [] };
 }
 
 export default function DepotPage() {
@@ -41,7 +43,7 @@ export default function DepotPage() {
             <StorekeepersCard employees={data.employees} owner={owner} selfId={employeeId} />
           </>
         }>
-          <ToolList kind={kind} onKind={setKind} tools={data.tools} holdings={data.holdings} employees={data.employees} canManage={canManageTools} />
+          <ToolList kind={kind} onKind={setKind} tools={data.tools} holdings={data.holdings} pieces={data.pieces} employees={data.employees} canManage={canManageTools} />
         </WithSidePanel>
       )}
     </Page>

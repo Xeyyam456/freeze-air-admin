@@ -248,6 +248,7 @@ export type Database = {
           returned_at: string | null
           taken_at: string
           tool_id: number
+          used: number
         }
         Insert: {
           employee_id: number
@@ -257,6 +258,7 @@ export type Database = {
           returned_at?: string | null
           taken_at?: string
           tool_id: number
+          used?: number
         }
         Update: {
           employee_id?: number
@@ -266,6 +268,7 @@ export type Database = {
           returned_at?: string | null
           taken_at?: string
           tool_id?: number
+          used?: number
         }
         Relationships: [
           {
@@ -277,6 +280,27 @@ export type Database = {
           },
           {
             foreignKeyName: "tool_assignments_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      material_pieces: {
+        Row: { created_at: string; from_employee_id: number | null; id: number; length: number; tool_id: number }
+        Insert: { created_at?: string; from_employee_id?: number | null; id?: never; length: number; tool_id: number }
+        Update: { created_at?: string; from_employee_id?: number | null; id?: never; length?: number; tool_id?: number }
+        Relationships: [
+          {
+            foreignKeyName: "material_pieces_from_employee_id_fkey"
+            columns: ["from_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_pieces_tool_id_fkey"
             columns: ["tool_id"]
             isOneToOne: false
             referencedRelation: "tools"
@@ -406,6 +430,8 @@ export type Database = {
           kind: string
           name: string
           notes: string | null
+          pieces_count: number
+          pieces_total: number
           quantity: number
           unit: string
         }
@@ -414,6 +440,8 @@ export type Database = {
     }
     Functions: {
       can_manage_tools: { Args: never; Returns: boolean }
+      finish_material: { Args: { p_assignment_id: number; p_used: number }; Returns: undefined }
+      give_piece: { Args: { p_employee_id: number; p_piece_id: number }; Returns: undefined }
       give_tool: { Args: { p_employee_id: number; p_quantity: number; p_tool_id: number }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
       is_owner: { Args: never; Returns: boolean }

@@ -89,6 +89,35 @@ export async function returnTool(assignmentId: number, quantity: number): Promis
   return { ok: true };
 }
 
+// Usta materialı təhvil verir: neçə ölçü vahidi (metr...) işlədib. İşlənən sərf olunur, qalan hissə depoya AYRI PARÇA kimi yazılır;
+// used = 0 olsa, götürülən olduğu kimi tam depoya qayıdır (bazada finish_material).
+export async function finishMaterial(assignmentId: number, used: number): Promise<FormState> {
+  const { error } = await createClient().rpc("finish_material", { p_assignment_id: assignmentId, p_used: used });
+  if (error) return { error: error.message };
+  revalidate();
+  return { ok: true };
+}
+
+// Depodakı parçanı ustaya ver (parça tam hissəyə qatılıb ustaya verilir; təhvildə yenidən bölünə bilər)
+export async function givePiece(pieceId: number, employeeId: number): Promise<FormState> {
+  const { error } = await createClient().rpc("give_piece", { p_piece_id: pieceId, p_employee_id: employeeId });
+  if (error) return { error: error.message };
+  revalidate();
+  return { ok: true };
+}
+
+// Parçanı siyahıdan sil (sərf olunub)
+export async function discardPiece(pieceId: number): Promise<boolean> {
+  const { error } = await createClient().from("material_pieces").delete().eq("id", pieceId);
+  if (error) {
+    toast.error(error.message);
+    return false;
+  }
+  toast.success("Parça silindi");
+  revalidate();
+  return true;
+}
+
 // Depo məsulunu yalnız müdir təyin edir (bazada trigger yoxlayır)
 export async function setStorekeeper(employeeId: number, value: boolean) {
   const { error } = await createClient().from("employees").update({ is_storekeeper: value }).eq("id", employeeId);
