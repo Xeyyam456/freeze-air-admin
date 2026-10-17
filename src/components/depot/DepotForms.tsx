@@ -130,6 +130,26 @@ export function ToolList({ tools, holdings, employees, canManage }: {
 }) {
   const [query, setQuery] = useState("");
   const [openId, setOpenId] = useState<number | null>(null);
+  const [view, setView] = useState<"tools" | "people">("tools");
+  const [openEmp, setOpenEmp] = useState<number | null>(null);
+
+  const toolById = useMemo(() => new Map(tools.map((t) => [t.id, t.name])), [tools]);
+  const byEmployee = useMemo(() => {
+    const m: Record<number, Holding[]> = {};
+    for (const h of holdings) (m[h.employee_id] ??= []).push(h);
+    return m;
+  }, [holdings]);
+
+  // Ustalar (rəhbərlik yox): ad və ya üzərindəki alətin adı ilə axtarış
+  const masters = useMemo(() => {
+    const words = norm(query).split(/\s+/).filter(Boolean);
+    return employees.filter((e) => !e.is_management).filter((e) => {
+      const names = (byEmployee[e.id] ?? []).map((h) => toolById.get(h.tool_id) ?? "").join(" ");
+      const haystack = norm(`${e.full_name} ${names}`);
+      return words.every((w) => haystack.includes(w));
+    });
+  }, [employees, query, byEmployee, toolById]);
+  const openPerson = employees.find((e) => e.id === openEmp) ?? null;
 
   const byTool = useMemo(() => {
     const m: Record<number, Holding[]> = {};
@@ -167,6 +187,60 @@ export function ToolList({ tools, holdings, employees, canManage }: {
         <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Alət və ya usta axtar..." aria-label="Alət axtar" />
       </div>
 
+      {openPerson && (
+        <PersonModal emp={openPerson} holds={byEmployee[openPerson.id] ?? []} toolById={toolById} canManage={canManage} onClose={() => setOpenEmp(null)} />
+      )}
+
+      <div className="inline-flex gap-1 rounded-xl bg-line/60 p-1" role="tablist">
+        {([["tools", "Alətlər"], ["people", "Ustalar"]] as const).map(([v, label]) => (
+          <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => setView(v)}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${view === v ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {view === "people" ? (
+        <div className="card overflow-hidden !p-0">
+          <table className="w-full text-sm">
+            <thead className="bg-[#f8f9fc] text-left text-xs font-semibold text-muted">
+              <tr>
+                <th className="px-4 py-3">Usta</th>
+                <th className="px-4 py-3">Üzərindəki alətlər</th>
+                <th className="w-24 px-4 py-3 text-center">Ədəd</th>
+              </tr>
+            </thead>
+            <tbody>
+              {masters.map((e) => {
+                const holds = byEmployee[e.id] ?? [];
+                const total = holds.reduce((n, h) => n + h.quantity, 0);
+                return (
+                  <tr key={e.id} onClick={() => setOpenEmp(e.id)} tabIndex={0}
+                    onKeyDown={(ev) => (ev.key === "Enter" || ev.key === " ") && setOpenEmp(e.id)}
+                    className="cursor-pointer border-t border-line transition-colors hover:bg-primary-soft/40">
+                    <td className="px-4 py-3">
+                      <span className="flex items-center gap-2.5">
+                        <Avatar employee={e} className="!h-8 !w-8 !text-[11px]" />
+                        <span className="font-semibold">{e.full_name}</span>
+                      </span>
+                    </td>
+                    <td className="max-w-0 px-4 py-3">
+                      <span className="block truncate text-[13px]" title={holds.map((h) => toolById.get(h.tool_id)).join(", ")}>
+                        {holds.length === 0 ? <span className="muted">Alət yoxdur</span>
+                          : holds.map((h) => `${toolById.get(h.tool_id) ?? "—"}${h.quantity > 1 ? ` ×${h.quantity}` : ""}`).join(", ")}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-center tabular-nums">
+                      {total ? <span className="inline-block min-w-8 rounded-full bg-primary-soft px-2 py-0.5 text-xs font-bold text-primary">{total}</span> : <span className="muted">—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {masters.length === 0 && <p className="muted border-t border-line py-8 text-center text-sm">Heç nə tapılmadı.</p>}
+        </div>
+      ) : (
       <div className="card overflow-hidden !p-0">
         <table className="w-full text-sm">
           <thead className="bg-[#f8f9fc] text-left text-xs font-semibold text-muted">
@@ -203,12 +277,42 @@ export function ToolList({ tools, holdings, employees, canManage }: {
         </table>
         {filtered.length === 0 && <p className="muted border-t border-line py-8 text-center text-sm">Heç nə tapılmadı.</p>}
       </div>
+      )}
     </div>
   );
 }
 
+// Ustanın pəncərəsi: üzərində hansı alət neçə ədəd var (geri almaq da olur)
+function PersonModal({ emp, holds, toolById, canManage, onClose }: {
+  emp: DepotEmployee;
+  holds: Holding[];
+  toolById: Map<number, string>;
+  canManage: boolean;
+  onClose: () => void;
+}) {
+  const total = holds.reduce((n, h) => n + h.quantity, 0);
+  return (
+    <Modal onClose={onClose} labelledBy={`emp-${emp.id}-title`} className="!max-w-xl">
+      <div className="flex items-center gap-3">
+        <Avatar employee={emp} className="!h-11 !w-11 !text-sm" />
+        <div className="min-w-0 flex-1">
+          <h2 id={`emp-${emp.id}-title`} className="truncate text-xl font-bold">{emp.full_name}</h2>
+          <p className="muted text-sm">{total ? `Üzərində ${total} ədəd alət var` : "Üzərində alət yoxdur"}</p>
+        </div>
+        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+      </div>
+      {holds.length > 0 && (
+        <ul className="nice-scroll mt-4 max-h-[min(433px,calc(100vh-260px))] divide-y divide-line overflow-y-auto">
+          {holds.map((h) => <HolderRow key={h.id} holding={h} canManage={canManage} toolName={toolById.get(h.tool_id) ?? "—"} />)}
+        </ul>
+      )}
+    </Modal>
+  );
+}
+
 // Ustadakı alət: "Geri al". Ustada 1 ədəddirsə dərhal, çoxdursa neçə ədəd olduğu soruşulur.
-function HolderRow({ holding, canManage }: { holding: Holding; canManage: boolean }) {
+// toolName verilirsə: usta pəncərəsində (sətirdə usta yox, alətin adı göstərilir)
+function HolderRow({ holding, canManage, toolName }: { holding: Holding; canManage: boolean; toolName?: string }) {
   const [asking, setAsking] = useState(false);
   const [state, action, pending] = useActionState(
     async (_prev: Awaited<ReturnType<typeof returnTool>>, fd: FormData) => {
@@ -222,8 +326,17 @@ function HolderRow({ holding, canManage }: { holding: Holding; canManage: boolea
 
   return (
     <li className="flex items-center gap-3 py-2">
-      <Avatar employee={{ full_name: holding.employees?.full_name ?? "?", photo_url: holding.employees?.photo_url ?? null }} className="!h-8 !w-8 !text-[11px]" />
-      <span className="min-w-0 flex-1 truncate text-sm font-semibold">{holding.employees?.full_name ?? "—"}</span>
+      {toolName !== undefined ? (
+        <>
+          <Wrench size={15} className="shrink-0 text-primary" />
+          <span className="min-w-0 flex-1 truncate text-sm font-semibold">{toolName}</span>
+        </>
+      ) : (
+        <>
+          <Avatar employee={{ full_name: holding.employees?.full_name ?? "?", photo_url: holding.employees?.photo_url ?? null }} className="!h-8 !w-8 !text-[11px]" />
+          <span className="min-w-0 flex-1 truncate text-sm font-semibold">{holding.employees?.full_name ?? "—"}</span>
+        </>
+      )}
       <span className="text-sm font-bold tabular-nums text-primary">{holding.quantity} ədəd</span>
       {canManage && (
         <ActionForm action={action} className="flex items-center gap-1.5">
