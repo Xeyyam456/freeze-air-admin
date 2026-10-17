@@ -206,4 +206,4 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 - Saytın keşini admin dəyişikliyindən sonra dərhal təmizləmək (`revalidateTag` + web-də `/api/revalidate`).
 - Müraciətlər üçün e-poçt bildirişi (Resend və s.), brauzer bildirişi.
 - Xəritə üçün koordinat sahəsi (`site_settings`); silmək əvəzinə "Səbət" (soft-delete).
-- Ustalar üçün mobil tətbiq (React Native, Google Maps/Waze naviqasiyası).
+- Ustalar üçün mobil tətbiq (React Native, Google Maps/Waze naviqasiyası). Mobildə mağaza/filial axtarışı kodla (məs. `ARZ-045`) + "Yol tap" (Google Maps marşrutu) və Waze lazımdır; web-də bu çıxarılıb, qaralama commit `019f8e4`-dədir.
