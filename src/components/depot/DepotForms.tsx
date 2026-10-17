@@ -612,7 +612,9 @@ function ToolModal({ tool, holders, pieces, employees, canManage, onClose }: {
           {pieces.length === 0 ? (
             <p className="muted py-3 text-sm">Parça yoxdur. Usta işlədib qalanını təhvil verəndə burada görünəcək.</p>
           ) : (
-            <ul className="nice-scroll max-h-56 divide-y divide-line overflow-y-auto">
+            // 4 sətir görünür (hər sətir 48px + 3 xətt = 195px), qalanı gizli zolaqla sürüşür; 4-dən çoxdursa aşağıda solğunlaşma
+            <ul className={`max-h-[195px] divide-y divide-line overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+              pieces.length > 4 ? "[mask-image:linear-gradient(to_bottom,black_calc(100%-24px),transparent)]" : ""}`}>
               {pieces.map((p) => <PieceRow key={p.id} piece={p} unit={tool.unit} employees={employees} canManage={canManage} />)}
             </ul>
           )}
