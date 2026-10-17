@@ -1,9 +1,9 @@
 
 import { useActionState, useMemo, useRef, useState } from "react";
-import { Pencil, Plus, Search, ShieldCheck, Trash2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
-import { addTool, deleteTool, discardPiece, finishMaterial, givePiece, giveTool, returnTool, setStorekeeper, updateTool } from "@/actions/tools";
+import { KeyRound, Pencil, Plus, Search, ShieldCheck, Trash2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
+import { addStorekeeper, addTool, deleteTool, discardPiece, finishMaterial, givePiece, giveTool, returnTool, setStorekeeper, updateTool } from "@/actions/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { AccountSection, Avatar, type Accounts } from "@/components/employees/EmployeeForms";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
 import { giveLimitText, QuantityInput } from "@/components/QuantityInput";
@@ -160,11 +160,39 @@ export function AddToolCard({ kind, onKind, names }: { kind: Kind; onKind: (k: K
   );
 }
 
-// Depo məsulları: hamı görür, yalnız müdir təyin edir və götürür
-export function StorekeepersCard({ employees, owner, selfId }: { employees: DepotEmployee[]; owner: boolean; selfId: number | null }) {
+// Yeni depo məsulu: əməkdaş kartı + giriş hesabı bir formada (yalnız admin görür)
+function NewKeeperForm({ onDone }: { onDone: () => void }) {
+  const [state, action, pending] = useActionState(addStorekeeper, null);
+  useOnSuccess(state, onDone, "Depo məsulu əlavə edildi");
+  return (
+    <ActionForm action={action} className="space-y-3 rounded-xl border border-line p-3">
+      <Field label="Soyad və ad">
+        <input name="full_name" placeholder="Məmmədov Əli" required autoComplete="off" className="field" />
+      </Field>
+      <Field label="Telefon">
+        <input name="phone" placeholder="+994 50 000 00 00" className="field" />
+      </Field>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="E-poçt (giriş)">
+          <input name="email" type="email" required autoComplete="off" className="field" />
+        </Field>
+        <Field label="Parol (ən azı 8)">
+          <input name="password" type="password" minLength={8} required autoComplete="new-password" className="field" />
+        </Field>
+      </div>
+      <Buttons pending={pending} label="Depo məsulunu yarat" onCancel={onDone} />
+    </ActionForm>
+  );
+}
+
+// Depo məsulları (yalnız admin görür): yeni depo məsulu yarat + giriş hesabı aç, mövcud əməkdaşı təyin et, hesabı idarə et.
+// Depo məsulu usta paneli ilə daxil olur: orada yalnız ona görünən "Depo" bölməsini idarə edir.
+export function StorekeepersCard({ employees, accounts, selfId }: { employees: DepotEmployee[]; accounts: Accounts; selfId: number | null }) {
   const keepers = employees.filter((e) => e.is_storekeeper);
   const [picked, setPicked] = useState<number | null>(null);
-  // Müdir öz kartını dəyişə bilmir (baza qaydası), həm də onsuz da depoya yetkisi var
+  const [adding, setAdding] = useState(false);
+  const [openId, setOpenId] = useState<number | null>(null); // hesabı açıq olan depo məsulu
+  // Admin öz kartını dəyişə bilmir (baza qaydası); depo məsulu olanlar siyahıda yoxdur
   const candidates = employees
     .filter((e) => !e.is_storekeeper && e.id !== selfId)
     .map((e) => ({ id: e.id, name: e.full_name, hint: e.is_management ? "rəhbər" : "usta" }));
@@ -173,41 +201,64 @@ export function StorekeepersCard({ employees, owner, selfId }: { employees: Depo
     <div className="card space-y-3">
       <div className="flex items-center gap-3">
         <span className="icon-tile !h-9 !w-9"><ShieldCheck size={18} /></span>
-        <h2 className="card-title">Depo məsulu</h2>
+        <div className="min-w-0 flex-1">
+          <h2 className="card-title">Depo məsulu</h2>
+          <p className="muted text-xs">Yalnız adminə görünür</p>
+        </div>
+        {!adding && (
+          <button type="button" onClick={() => setAdding(true)} className="btn btn-primary btn-sm"><UserPlus size={14} /> Yeni</button>
+        )}
       </div>
+
+      {adding && <NewKeeperForm onDone={() => setAdding(false)} />}
+
       {keepers.length === 0 ? (
         <p className="muted text-sm">Təyin olunmayıb. Hələlik depoda dəyişikliyi yalnız müdir edir.</p>
       ) : (
         <ul className="space-y-1.5">
-          {keepers.map((e) => (
-            <li key={e.id} className="flex items-center gap-2.5 rounded-xl bg-bg px-2.5 py-2">
-              <Avatar employee={e} className="!h-8 !w-8 !text-[11px]" />
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold">{e.full_name}</span>
-                {/* Hesabı olmayan depo məsulu panelə daxil ola bilmir */}
-                {!e.user_id && <span className="block text-[11px] font-semibold text-danger">Giriş hesabı yoxdur</span>}
-              </span>
-              {owner && (
-                <ConfirmButton onConfirm={() => setStorekeeper(e.id, false)} success={false}
-                  className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted hover:bg-danger-soft hover:text-danger"
-                  title="Depo məsulluğunu götür" question={`${e.full_name} artıq depoda dəyişiklik edə bilməyəcək.`} confirmLabel="Bəli, götür">
-                  <X size={14} />
-                </ConfirmButton>
-              )}
-            </li>
-          ))}
+          {keepers.map((e) => {
+            const email = accounts.emails[e.id] ?? null;
+            return (
+              <li key={e.id} className="rounded-xl bg-bg px-2.5 py-2">
+                <div className="flex items-center gap-2.5">
+                  <Avatar employee={e} className="!h-8 !w-8 !text-[11px]" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold">{e.full_name}</span>
+                    {/* Hesabı olmayan depo məsulu panelə daxil ola bilmir */}
+                    {e.user_id
+                      ? <span className="muted block truncate text-[11px]">{email ?? "Giriş hesabı var"}</span>
+                      : <span className="block text-[11px] font-semibold text-danger">Giriş hesabı yoxdur</span>}
+                  </span>
+                  <button type="button" onClick={() => setOpenId(openId === e.id ? null : e.id)} aria-expanded={openId === e.id}
+                    className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted hover:bg-primary-soft hover:text-primary" title="Giriş hesabı">
+                    <KeyRound size={14} />
+                  </button>
+                  <ConfirmButton onConfirm={() => setStorekeeper(e.id, false)} success={false}
+                    className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted hover:bg-danger-soft hover:text-danger"
+                    title="Depo məsulluğunu götür" question={`${e.full_name} artıq depoda dəyişiklik edə bilməyəcək. Əməkdaş kartı və hesabı silinmir.`} confirmLabel="Bəli, götür">
+                    <X size={14} />
+                  </ConfirmButton>
+                </div>
+                {openId === e.id && (
+                  <div className="mt-2">
+                    <AccountSection employeeId={e.id} email={email} hasAccount={!!e.user_id} enabled={accounts.enabled}
+                      note="Hesabla depo məsulu usta panelinə daxil olub Depo bölməsini idarə edir." />
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
-      {owner && (
-        <div className="flex gap-2">
-          <ToolPicker items={candidates} value={picked} onChange={setPicked} name="employee_id" icon={Users}
-            placeholder="Əməkdaş seç..." emptyLabel="Seçiləcək əməkdaş yoxdur" searchLabel="Əməkdaş axtar..." />
-          <button type="button" disabled={!picked} className="btn btn-primary btn-sm !h-9"
-            onClick={async () => { if (picked) { await setStorekeeper(picked, true); setPicked(null); } }}>
-            <UserPlus size={14} /> Təyin et
-          </button>
-        </div>
-      )}
+
+      <div className="flex gap-2">
+        <ToolPicker items={candidates} value={picked} onChange={setPicked} name="employee_id" icon={Users}
+          placeholder="Mövcud əməkdaşı seç..." emptyLabel="Seçiləcək əməkdaş yoxdur" searchLabel="Əməkdaş axtar..." />
+        <button type="button" disabled={!picked} className="btn btn-primary btn-sm !h-9"
+          onClick={async () => { if (picked) { await setStorekeeper(picked, true); setPicked(null); } }}>
+          Təyin et
+        </button>
+      </div>
     </div>
   );
 }

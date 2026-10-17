@@ -70,7 +70,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Sətrə klik → pəncərə: başlıqda "Cəmi · ustalarda · depoda", "Kimdədir" siyahısı ("Geri al": 1 ədəddirsə dərhal, çoxdursa say soruşulur), altda "Kimə verilir?" (yalnız ustalar, rəhbərlik siyahıda yoxdur) + say + "Ver".
 - Forma: yalnız Ad, Say, İnventar kodu (`category`/`notes` bazada qalır, UI-da yoxdur; `updateTool` formada olmayan sahəyə toxunmur).
 - **Say yoxlaması dərhal**: `components/QuantityInput.tsx` — limitdən çox yazılan kimi tost + sahənin altında qırmızı yazı ("Depoda cəmi 1 ədəd qalıb — 2 ədəd vermək olmur."); göndərəndə də yoxlanır, sorğu getmir. Brauzerin `max` atributu işlənmir (səssiz bloklayır). Redaktədə say ustalardakından az olanda, ustada olan aləti silməyə çalışanda da tost.
-- Sağ panel: "Yeni alət" (yalnız depo məsulu/müdir) + "Depo məsulu" (hamı görür, müdir təyin edir/götürür; hesabı yoxdursa "Giriş hesabı yoxdur").
+- Sağ panel: "Yeni alət/material" (yalnız depo məsulu/müdir) + **"Depo məsulu" kartı yalnız ADMİNƏ görünür** (istifadəçi qərarı: "yalnızca adminin görə biləcəyi bölmə, depoçuya hesab açıb versin"): **"Yeni"** düyməsi → forma (ad, telefon, e-poçt, parol) əməkdaş kartını (vəzifə "Depo məsulu", `is_storekeeper`) və giriş hesabını bir addımda yaradır (`addStorekeeper` → Edge Function `create`); hər depo məsulunda açar düyməsi → `AccountSection` (hesab aç, parolu dəyiş, hesabı sil), ✕ → depo məsulluğunu götür (kart və hesab qalır); altda mövcud əməkdaşı seçib "Təyin et". Depo məsulu **usta paneli** (web) ilə daxil olur, orada yalnız ona görünən "Depo" bölməsini idarə edir.
 - Depo məsulu usta olarsa, depo işini **web usta panelində** (`/depo`, yalnız ona görünür) də görür; o səhifə buradakı Depo-nun kopyasıdır (sinxron saxla).
 - Ustalar səhifəsində ustanın "Alətlər" tabı da eyni qaydadadır (say ×N, × hamısını qaytarır, "Alət ver" `QuantityInput` ilə).
 
@@ -109,7 +109,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 | Cədvəl | Əsas sütunlar | Qeyd |
 |---|---|---|
 | `profiles` | id (= auth.users.id), full_name, role (`admin`/`worker`), is_owner | `handle_new_user` trigger-i ilə yaranır |
-| `employees` | full_name, position, specialty, is_management, is_storekeeper, start_date, phone, photo_url, user_id, is_active | usta və rəhbərlik birlikdə; `user_id` hesabı bağlayır; `is_storekeeper` = depo məsulu (yalnız müdir təyin edir) |
+| `employees` | full_name, position, specialty, is_management, is_storekeeper, start_date, phone, photo_url, user_id, is_active | usta və rəhbərlik birlikdə; `user_id` hesabı bağlayır; `is_storekeeper` = depo məsulu (yalnız admin təyin edir) |
 | `companies` | name, kind (`company`/`market`), phone, contact_person, notes, logo_url, address, lat, lng | şirkət (bank, stadion, residence) və ya market şəbəkəsi |
 | `stores` | company_id, code, name, address, lat, lng, phone, notes | şirkətin filialı / marketin mağazası |
 | `tools`, `tool_assignments`, `material_pieces` | alət **və material**: name, inventory_code, category, notes, **quantity** (TAM hissənin sayı), **kind** (`tool`/`material`), **unit** (ədəd, metr, kq...); təhvil: tool_id, employee_id, **quantity**, **used** (materialda işlədilən), taken_at, returned_at; **parçalar** (`material_pieces`): tool_id, length, from_employee_id, created_at | bir ustada eyni alətdən/materialdan bir açıq təhvil (unikal indeks), yenisi verəndə say artır; view `tool_stock`: quantity, given_out (ustalarda), available (tam, depoda), kind, unit, pieces_count, pieces_total. **Ümumilikdə nə qədər var = quantity + pieces_total** |
@@ -131,7 +131,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Trigger `employees_guard_photo` (BEFORE UPDATE): başqasının `photo_url`-unu birbaşa dəyişməyi bloklayır.
 - Trigger `employees_sync_role` (AFTER INSERT/UPDATE): hesab rəhbərliyə (`is_management`) bağlananda `admin`, ustaya bağlananda `worker` rolu verir. Rol yalnız belə dəyişir.
 - Material təhvili: RPC `finish_material(p_assignment_id, p_used)` — usta götürdüyündən `p_used` qədər işlədib: **işlənən sərf olunur** (`tools.quantity` azalır, `tool_assignments.used` yazılır), **qalan hissə depoya AYRI PARÇA kimi yazılır** (`material_pieces`; 3 usta 2 metr qaytarsa, 6 metrlik tam boru yox, 3 ədəd 2 metrlik parça); `p_used = 0` olsa götürülən olduğu kimi tam depoya qayıdır (quantity dəyişmir). RPC `give_piece(p_piece_id, p_employee_id, p_amount default null)`: parçanın hamısı və ya **bir hissəsi** ustaya verilir (`p_amount` verilsə qalan hissə depoda parça kimi qalır: 4 metrlik parçadan 2 metr verilir, 2 metrlik parça qalır); verilən hissə tam hissəyə qatılıb ustaya verilir. İkisi də `security invoker`, yetki RLS-dən (`can_manage_tools()`). Əməliyyatlar tam tam ədədlərlədir (kəsr yoxdur).
-- Depo: `is_storekeeper()`, `can_manage_tools()` (= sahib və ya aktiv depo məsulu); RPC `give_tool(p_tool_id, p_employee_id, p_quantity)` və `return_tool(p_assignment_id, p_quantity)` (hissə-hissə qaytarma; qaytarılan hissə bağlı sətir kimi tarixçədə qalır; ikisi də `security invoker`, yetki RLS-dən). Trigger-lər: `tool_assignments_check_stock` (depodakından çox vermək olmur, alət sətri kilidlənir), `tools_guard_stock` (say ustalardakından az ola bilməz; ustada olan alət silinmir), `employees_guard_storekeeper` (`is_storekeeper`-i yalnız sahib dəyişir), `tool_assignments_only_masters` (alət yalnız aktiv ustaya, rəhbərliyə yox).
+- Depo: `is_storekeeper()`, `can_manage_tools()` (= sahib və ya aktiv depo məsulu); RPC `give_tool(p_tool_id, p_employee_id, p_quantity)` və `return_tool(p_assignment_id, p_quantity)` (hissə-hissə qaytarma; qaytarılan hissə bağlı sətir kimi tarixçədə qalır; ikisi də `security invoker`, yetki RLS-dən). Trigger-lər: `tool_assignments_check_stock` (depodakından çox vermək olmur, alət sətri kilidlənir), `tools_guard_stock` (say ustalardakından az ola bilməz; ustada olan alət silinmir), `employees_guard_storekeeper` (`is_storekeeper`-i yalnız admin dəyişir), `tool_assignments_only_masters` (alət yalnız aktiv ustaya, rəhbərliyə yox).
 - `handle_new_user`: yeni auth istifadəçisi → `profiles` sətri. `rls_auto_enable`: yeni cədvəldə RLS-i avtomatik açır.
 
 ### Yetkilər (RLS)
@@ -158,7 +158,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da yalnız `contact_requests`. Hadisəni RLS-ə görə yalnız admin alır.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0036`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0037`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
@@ -182,6 +182,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0033: materialın istifadəsi: `tool_assignments.used`, cədvəl `material_pieces` (depodakı qalıq parçalar), `tool_stock.pieces_count/pieces_total`, RPC `finish_material`, `give_piece`.;
   - 0034: `give_piece`-ə `p_amount`: parçanın bir hissəsini ustaya vermək (qalan hissə parça kimi qalır);
   - 0036: qablaşdırılmış material (qaz balonu...): `tools.pack_name` (balon), `tools.pack_size` (hər qabda 11), `tool_stock`-a bu sütunlar; daxildə hər şey ölçü vahidi ilə (44 kq), qab yalnız daxiletmə və göstəriş üçün ("44 kq (4 balon)");
+  - 0037: depo məsulunu istənilən admin təyin edir (əvvəl yalnız müdir): `employees_guard_storekeeper` `is_admin()` yoxlayır;
   - 0035: `material_pieces.original_length` (usta ilkin nə qədər qaytarıb; hissə veriləndə `length` azalır, ilkin qalır: sətir "1 metr · qalıb, ilkin 2 metr — Kərimov Orxan 2 metr qaytarıb" kimi oxunur).
 - RLS dəyişikliyini simulyasiya olunmuş JWT ilə DO-blokunda yoxla: `set_config('request.jwt.claims', json_build_object('sub', <uuid>, 'role', 'authenticated')::text, true)`, `set local role authenticated`. Nəticəni `raise exception 'NƏTİCƏ ...'` ilə çıxar, bu da hər şeyi geri qaytarır.
 - `database.types.ts` əl ilə yenilənib; dəyişiklikdən sonra Supabase MCP `generate_typescript_types` ilə yenidən yarat və **web reposundakı eyni fayla da** köçür.

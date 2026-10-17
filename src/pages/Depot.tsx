@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Page } from "@/components/Page";
 import { WithSidePanel } from "@/components/SidePanel";
 import { AddToolCard, StorekeepersCard, ToolList, type Holding, type Kind, type Piece } from "@/components/depot/DepotForms";
+import { listAccountEmails } from "@/actions/accounts";
 import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 
-async function fetchDepot() {
+async function fetchDepot(admin: boolean) {
   const supabase = createClient();
-  const [{ data: tools }, { data: holdings }, { data: employees }, { data: pieces }] = await Promise.all([
+  const [{ data: tools }, { data: holdings }, { data: employees }, { data: pieces }, emails] = await Promise.all([
     // Anbar vəziyyəti: ümumi say, ustalarda, depoda qalan (view tool_stock)
     supabase.from("tool_stock").select("*").order("name"),
     // Hazırda ustalarda olanlar (qaytarılmamış)
@@ -22,13 +23,15 @@ async function fetchDepot() {
       .order("full_name"),
     // Depodakı material parçaları (usta işlədib, qalanını təhvil verib)
     supabase.from("material_pieces").select("id, tool_id, length, original_length, created_at, employees(full_name)").order("created_at"),
+    // Depo məsullarının giriş hesabları (e-poçt): yalnız admin görür, Edge Function verir
+    admin ? listAccountEmails() : Promise.resolve(null),
   ]);
-  return { tools: tools ?? [], holdings: (holdings ?? []) as Holding[], pieces: (pieces ?? []) as Piece[], employees: employees ?? [] };
+  return { tools: tools ?? [], holdings: (holdings ?? []) as Holding[], pieces: (pieces ?? []) as Piece[], employees: employees ?? [], emails };
 }
 
 export default function DepotPage() {
-  const { owner, canManageTools, employeeId } = useAuth();
-  const data = useData(fetchDepot);
+  const { admin, canManageTools, employeeId } = useAuth();
+  const data = useData(() => fetchDepot(admin), [admin]);
   // Alətlər / Materiallar tabı: həm siyahı, həm "Yeni ..." forması bununla dəyişir
   const [kind, setKind] = useState<Kind>("tool");
 
@@ -40,7 +43,8 @@ export default function DepotPage() {
         <WithSidePanel panel={
           <>
             {canManageTools && <AddToolCard kind={kind} onKind={setKind} names={data.tools.filter((t) => t.kind === kind).map((t) => t.name)} />}
-            <StorekeepersCard employees={data.employees} owner={owner} selfId={employeeId} />
+            {/* Depo məsulu bölməsi yalnız adminə görünür: yarat, hesab aç, götür */}
+            {admin && <StorekeepersCard employees={data.employees} accounts={{ enabled: data.emails !== null, emails: data.emails ?? {} }} selfId={employeeId} />}
           </>
         }>
           <ToolList kind={kind} onKind={setKind} tools={data.tools} holdings={data.holdings} pieces={data.pieces} employees={data.employees} canManage={canManageTools} />
