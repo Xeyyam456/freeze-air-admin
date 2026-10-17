@@ -41,11 +41,23 @@ function toolError(error: { code: string; message: string }): FormState {
   return { error: error.code === "23505" ? "Bu inventar kodu artıq var." : error.message };
 }
 
+// Ad müqayisəsi: böyük/kiçik hərf, artıq boşluq və ı/i, ə/e, ö/o, ü/u, ç/c, ş/s, ğ/g fərqi nəzərə alınmır ("MIs Boru" = "Mis boru")
+function nameKey(s: string) {
+  return s.toLowerCase().replace(/ı/g, "i").replace(/ə/g, "e").replace(/ö/g, "o").replace(/ü/g, "u")
+    .replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g").replace(/\s+/g, " ").trim();
+}
+
 export async function addTool(_prev: FormState, formData: FormData): Promise<FormState> {
   const f = toolFields(formData);
   const invalid = checkFields(f);
   if (invalid) return { error: invalid };
-  const { error } = await createClient().from("tools").insert({ ...f, name: f.name! });
+  const supabase = createClient();
+  // Eyni növdə eyni ad ikinci dəfə yaradılmır: mövcud olanı açıb miqdarı artırmaq lazımdır
+  const kind = (f as { kind?: string }).kind ?? "tool";
+  const { data: existing } = await supabase.from("tools").select("name").eq("kind", kind);
+  const dup = (existing ?? []).find((t) => nameKey(t.name) === nameKey(f.name!));
+  if (dup) return { error: `"${dup.name}" artıq var. Yenisini yaratma: onu siyahıdan açıb miqdarı artır (✎).` };
+  const { error } = await supabase.from("tools").insert({ ...f, name: f.name! });
   if (error) return toolError(error);
   revalidate();
   return { ok: true };

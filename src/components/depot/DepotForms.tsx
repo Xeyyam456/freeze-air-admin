@@ -62,10 +62,11 @@ function norm(s: string | null | undefined) {
     .replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g");
 }
 
-// Alət / material əlavə et və redaktə et sahələri. Vahid (ədəd, kq, metr, litr...) həm alət, həm material üçün seçilir.
+// Alət / material əlavə et və redaktə et sahələri. Vahid (ədəd, kq, metr, litr...) açılan siyahıdan seçilir (alət və material üçün).
+// Ad: mövcud adlar təklif olunur (eyni material ikinci dəfə yazılmasın; təkrar ad əlavə edəndə də bloklanır).
 // Qablaşdırılmış material (qaz balonu...) üçün qab (balon) və hər qabdakı miqdar (11 kq) yazılır: say qabla daxil edilir,
 // daxildə ölçü vahidi ilə saxlanır (4 balon × 11 kq = 44 kq). Beləcə usta 1 balon götürüb 5 kq qaytara bilir.
-function ToolFields({ t, kind }: { t?: Tool; kind: Kind }) {
+function ToolFields({ t, kind, names = [] }: { t?: Tool; kind: Kind; names?: string[] }) {
   const tx = TEXT[kind];
   const editing = !!t;
   const [count, setCount] = useState(t?.quantity ?? 1);
@@ -74,19 +75,23 @@ function ToolFields({ t, kind }: { t?: Tool; kind: Kind }) {
   const [packSize, setPackSize] = useState("");
   const size = Number(packSize);
   const packed = kind === "material" && !editing && packName.trim() !== "" && Number.isInteger(size) && size > 0;
+  // Siyahıda olmayan köhnə vahid (məs. "balon", "Metr") itməsin: ayrıca seçim kimi qalır
+  const unitOptions = UNITS.includes(unit) ? UNITS : [unit, ...UNITS];
 
   return (
     <>
       <Field label="Adı">
-        <input name="name" defaultValue={t?.name} placeholder={tx.placeholder} required className="field" />
+        <input name="name" defaultValue={t?.name} placeholder={tx.placeholder} required list={editing ? undefined : "depot-names"} autoComplete="off" className="field" />
+        {!editing && <datalist id="depot-names">{names.map((n) => <option key={n} value={n} />)}</datalist>}
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label={packed ? `Say (${packName.trim()})` : tx.qty}>
           <input name="quantity" type="number" min={0} step={1} value={count} onChange={(e) => setCount(Number(e.target.value))} required className="field" />
         </Field>
         <Field label="Vahid">
-          <input name="unit" value={unit} onChange={(e) => setUnit(e.target.value)} required list="depot-units" className="field" />
-          <datalist id="depot-units">{UNITS.map((u) => <option key={u} value={u} />)}</datalist>
+          <select name="unit" value={unit} onChange={(e) => setUnit(e.target.value)} className="field">
+            {unitOptions.map((u) => <option key={u} value={u}>{u}</option>)}
+          </select>
         </Field>
       </div>
       {kind === "tool" && (
@@ -132,7 +137,7 @@ export function KindTabs({ kind, onKind }: { kind: Kind; onKind: (k: Kind) => vo
 }
 
 // Sağ paneldəki "Yeni alət / Yeni material" kartı (yalnız depo məsulu və müdir). Alət və material ayrı əlavə olunur.
-export function AddToolCard({ kind, onKind }: { kind: Kind; onKind: (k: Kind) => void }) {
+export function AddToolCard({ kind, onKind, names }: { kind: Kind; onKind: (k: Kind) => void; names: string[] }) {
   const [state, action, pending] = useActionState(addTool, null);
   const ref = useRef<HTMLFormElement>(null);
   const tx = TEXT[kind];
@@ -149,7 +154,7 @@ export function AddToolCard({ kind, onKind }: { kind: Kind; onKind: (k: Kind) =>
       {/* key: növ dəyişəndə forma təzələnir (köhnə yazılar qalmasın) */}
       <ActionForm key={`${kind}-${formKey}`} ref={ref} action={action} className="space-y-4">
         <input type="hidden" name="kind" value={kind} />
-        <ToolFields kind={kind} />
+        <ToolFields kind={kind} names={names} />
         <Buttons pending={pending} label={tx.addLabel} />
       </ActionForm>
     </div>
@@ -400,22 +405,30 @@ function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = f
   // Material: "İşlədilib" və ya "Qaytarılır" (usta qaz balonundan 5 kq qaytarır): eyni nəticə, fərqli yazılış
   const [mode, setMode] = useState<"used" | "left">("used");
   const [val, setVal] = useState(0);
-  const used = mode === "used" ? val : holding.quantity - val;
-  const invalid = val > holding.quantity;
+  // Qablı materialda (balon...) təhvil də balonla və ya ölçü vahidi ilə (kq) yazıla bilər (verəndə olduğu kimi)
+  const [byPack, setByPack] = useState(false);
+  const packed = !!pack?.pack_size && !!pack?.pack_name;
+  const factor = packed && byPack ? pack!.pack_size! : 1;
+  const unitLabel = packed && byPack ? pack!.pack_name! : unit;
+  const valBase = val * factor; // ölçü vahidi ilə
+  const used = mode === "used" ? valBase : holding.quantity - valBase;
+  const invalid = valBase > holding.quantity;
+  const limit = Math.floor(holding.quantity / factor);
   const [state, action, pending] = useActionState(
     async (_prev: Awaited<ReturnType<typeof returnTool>>, fd: FormData) => {
-      const qty = Number(fd.get("quantity") ?? holding.quantity);
+      const raw = Number(fd.get("quantity") ?? holding.quantity);
+      const qty = material ? raw * factor : raw; // material: yazılan balon da olsa, baza ölçü vahidi ilə işləyir
       if (qty > holding.quantity) return { error: `Ustada cəmi ${holding.quantity} ${unit} var.` };
       if (material) return finishMaterial(holding.id, mode === "used" ? qty : holding.quantity - qty);
       return returnTool(holding.id, qty);
     },
     null,
   );
-  useOnSuccess(state, () => { setAsking(false); setVal(0); setMode("used"); }, material ? "Təhvil alındı" : "Geri alındı");
+  useOnSuccess(state, () => { setAsking(false); setVal(0); setMode("used"); setByPack(false); }, material ? "Təhvil alındı" : "Geri alındı");
 
   const leftover = holding.quantity - used;
   const hint = used === 0 ? `Heç nə işlənməyib: ${holding.quantity} ${unit} tam depoya qayıdır.`
-    : leftover > 0 ? `${leftover} ${unit} qalıb: depoya ayrıca parça kimi yazılır.`
+    : leftover > 0 ? `${showQty(leftover, unit, pack)} qalıb: depoya ayrıca parça kimi yazılır.`
     : "Hamısı işlənib: depoya heç nə qayıtmır.";
 
   return (
@@ -462,11 +475,22 @@ function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = f
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold">{mode === "used" ? "İşlədilib:" : "Qaytarılır:"}</span>
-            <QuantityInput key={mode} min={0} defaultValue={0} limit={holding.quantity} className="!h-8 !w-20" onValue={setVal}
-              limitText={(limit) => `Ustada cəmi ${limit} ${unit} var.`} />
-            <span className="muted text-sm">{unit}</span>
+            <QuantityInput key={`${mode}-${byPack}`} min={0} defaultValue={0} limit={limit} className="!h-8 !w-20" onValue={setVal}
+              limitText={(l) => `Ustada cəmi ${l} ${unitLabel} var.`} />
+            {packed ? (
+              <span className="inline-flex shrink-0 gap-0.5 rounded-lg bg-line/60 p-0.5" role="tablist" aria-label="Vahid">
+                {([[false, unit], [true, pack!.pack_name!]] as const).map(([v, label]) => (
+                  <button key={String(v)} type="button" role="tab" aria-selected={byPack === v} onClick={() => { setByPack(v); setVal(0); }}
+                    className={`h-7 rounded-md px-2 text-xs font-semibold transition-colors ${byPack === v ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
+                    {label}
+                  </button>
+                ))}
+              </span>
+            ) : (
+              <span className="muted text-sm">{unit}</span>
+            )}
             <button type="submit" disabled={pending || invalid} className="btn btn-primary btn-sm !h-8 ml-auto">{pending ? "..." : "Təhvil al"}</button>
-            <button type="button" onClick={() => { setAsking(false); setVal(0); setMode("used"); }} className="btn btn-cancel btn-sm !h-8">Ləğv</button>
+            <button type="button" onClick={() => { setAsking(false); setVal(0); setMode("used"); setByPack(false); }} className="btn btn-cancel btn-sm !h-8">Ləğv</button>
           </div>
           <p className="muted mt-2 text-xs">{invalid ? "Ustada olandan çox ola bilməz." : hint}</p>
         </ActionForm>

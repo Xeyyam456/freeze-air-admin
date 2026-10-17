@@ -39,7 +39,7 @@ export default function DepotPage() {
       ) : (
         <WithSidePanel panel={
           <>
-            {canManageTools && <AddToolCard kind={kind} onKind={setKind} />}
+            {canManageTools && <AddToolCard kind={kind} onKind={setKind} names={data.tools.filter((t) => t.kind === kind).map((t) => t.name)} />}
             <StorekeepersCard employees={data.employees} owner={owner} selfId={employeeId} />
           </>
         }>
