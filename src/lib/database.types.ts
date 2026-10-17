@@ -21,7 +21,7 @@ export type Database = {
       }
       ac_error_codes: {
         Row: {
-          brand_id: number
+          brand_id: number | null
           cause: string | null
           code: string
           created_at: string
@@ -32,7 +32,7 @@ export type Database = {
           title: string
         }
         Insert: {
-          brand_id: number
+          brand_id?: number | null
           cause?: string | null
           code: string
           created_at?: string
@@ -43,7 +43,7 @@ export type Database = {
           title: string
         }
         Update: {
-          brand_id?: number
+          brand_id?: number | null
           cause?: string | null
           code?: string
           created_at?: string

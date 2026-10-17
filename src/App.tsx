@@ -5,6 +5,7 @@ import { Toaster } from "@/components/Toaster";
 import { ClientPage, ClientsPage } from "@/pages/Clients";
 import DepotPage from "@/pages/Depot";
 import EmployeesPage from "@/pages/Employees";
+import ErrorCodesPage from "@/pages/ErrorCodes";
 import Home from "@/pages/Home";
 import LoginPage from "@/pages/Login";
 import ManagementPage from "@/pages/Management";
@@ -44,6 +45,7 @@ export default function App() {
             <Route path="depo" element={<DepotPage />} />
             <Route path="tapshiriqlar" element={<TasksPage />} />
             <Route path="isler" element={<WorkLogsPage />} />
+            <Route path="xeta-kodlari" element={<ErrorCodesPage />} />
             <Route path="muracietler" element={<RequestsPage />} />
             <Route path="sayt" element={<SitePage />} />
             <Route path="*" element={<NotFoundPage />} />

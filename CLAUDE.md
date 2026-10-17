@@ -34,7 +34,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - `.env.local` (git-ignored, **oxuma**): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Gizli açar burada yoxdur və olmamalıdır.
 
 ## Kod quruluşu (`src/`)
-- `App.tsx`: marşrutlar `/login`, `/`, `/sirketler(/:id)`, `/magazalar(/:id)`, `/ustalar`, `/rehberlik`, `/depo`, `/tapshiriqlar`, `/isler`, `/muracietler`, `/sayt`; naməlum ünvan → `pages/NotFound.tsx` (tünd 404 ekranı, "Panelə qayıt"); `RequireAuth` (admin üçün `ContactRequestsListener` də burada); `<Toaster />`.
+- `App.tsx`: marşrutlar `/login`, `/`, `/sirketler(/:id)`, `/magazalar(/:id)`, `/ustalar`, `/rehberlik`, `/depo`, `/xeta-kodlari`, `/tapshiriqlar`, `/isler`, `/muracietler`, `/sayt`; naməlum ünvan → `pages/NotFound.tsx` (tünd 404 ekranı, "Panelə qayıt"); `RequireAuth` (admin üçün `ContactRequestsListener` də burada); `<Toaster />`.
 - `auth/AuthProvider.tsx`: sessiya + `admin`, `owner`, `storekeeper`, `canManageTools` (sahib və ya depo məsulu), `name`, `position`, `linked`, `employeeId`, `photoUrl`, `reload()`.
 - `lib/`:
   - `supabase/client.ts`: tək brauzer klienti, yalnız publishable açar;
@@ -60,6 +60,11 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - **Ayın icmalı** (`components/work/MonthDashboard.tsx`, "İş qeydləri / Müraciətlər" sırası ilə "Ustalar bu gün" arasında, tam en): bütün ustaların ay üzrə gördüyü işlər. Başlıq zolağında ay seçimi (‹ ay ›) və **Günlük | Yığım** keçidi; 3 xana (**İş sayı** əvvəlki ayın tam sayına görə fərqlə, **İş yazan usta**, **Fərqli yer**); **hamar əyri + qradiyent sahə qrafiki** (hover/fokusda şaquli xətt, nöqtə, tooltip; cari ayda gələcək günlər çəkilmir; "Cədvəl" görünüşü); sağda **Ustalar üzrə** reyting (6 usta görünür, çoxdursa gizli scrollbar ilə sürüşür; avatar, ad, nazik qradiyent zolaq, iş sayı; **klik → həmin ustanın işləri** `AllLogsModal`). **Üslub (2026-10-17, istifadəçi "dashboard style dəyiş" dedi): tünd navy kart (başlıq zolağı ilə eyni palitra), şüşə effektli xanalar, parlayan firuzəyi əyri, tünd tooltip, parlayan reyting zolaqları**; əvvəlki açıq/qradiyent üslub atıldı. Web usta panelindəki `/statistika`-dan fərqli: bütün ustalar.
 - Sürətli keçidlər. **Ən altdakı "Bölmələr" sırası çıxarılıb** (istifadəçi: "gərək yoxdu"; menyu onsuz da bölmələrə aparır) — yenidən əlavə etmə.
 - Məlumat `useData(fetchDashboard)` ilə; `revalidate()` (məs. Realtime müraciət) hamısını yeniləyir.
+
+### Xəta kodları (`/xeta-kodlari`, `pages/ErrorCodes.tsx` + `components/errors/ErrorCodeForms.tsx`; migrasiya 0044)
+- Admin idarə edir; sahələr: **kondisioner modeli** (`model_series`, boş = bütün modellər), **xəta kodu** (`code`), **xəta açıqlaması** (`title`), **edilecək iş** (`solution`). `cause`, `source` və brend (`brand_id`, 0044-dən sonra məcburi deyil) UI-da yoxdur. Təkrar: eyni model + kod (hərf/boşluq fərqi nəzərə alınmır) unikal indeksdə bloklanır.
+- Solda axtarışlı cədvəl (Model | Kod | Açıqlama | Edilecək iş; öz içində sürüşür, klik → redaktə, silmə), sağ paneldə **"Yeni kod"** və **"Excel-dən yüklə"** tabları. Excel: başlıqlar Model, Kod, Açıqlama, Edilecək iş (alternativ adlar qəbul olunur), "Şablonu yüklə" boş .xlsx şablon verir (nümunə sətir yoxdur), yükləmədən əvvəl önizləmə; eyni model+kod varsa yenilənir, yoxsa əlavə olunur. Xəta kodlarının məzmununu admin özü yazır (uydurma texniki məlumat yazma).
+- Usta panelində `/xeta-kodlari` yalnız baxışdır (`web/src/components/errors/ErrorCodeView.tsx`: axtarış + kartlar).
 
 ### Tapşırıqlar (`/tapshiriqlar`, `pages/Tasks.tsx`; menyuda "Tapşırıqlar"; migrasiya 0039)
 - Admin və rəhbərlik (`is_admin()`) ustaya gün üçün iş verir: **usta + yer (mağaza/filial, sabit məkan və ya yazılan yer; iş qeydindəki `PlacePicker`) + səbəb + tarix** (məs. "Əlizadə Xəyyam · İzmir Villa · qaz qaçağı", "Rabitə Bank Sahil filialı · detallı yuyulma"). Cədvəl `tasks` (employee_id, task_date, store_id | company_id | place_text, reason, done, done_at, created_by).
@@ -176,7 +181,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da yalnız `contact_requests`. Hadisəni RLS-ə görə yalnız admin alır.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0043`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0044`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
@@ -201,6 +206,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0034: `give_piece`-ə `p_amount`: parçanın bir hissəsini ustaya vermək (qalan hissə parça kimi qalır);
   - 0036: qablaşdırılmış material (qaz balonu...): `tools.pack_name` (balon), `tools.pack_size` (hər qabda 11), `tool_stock`-a bu sütunlar; daxildə hər şey ölçü vahidi ilə (44 kq), qab yalnız daxiletmə və göstəriş üçün ("44 kq (4 balon)");
   - 0039: `tasks` cədvəli (iş tapşırıqları), RLS və `tasks_guard` tətikçisi;
+  - 0044: xəta kodları: `ac_error_codes.brand_id` məcburi deyil, unikallıq model + kod üzrə (indeks `ac_error_codes_model_code_key`);
   - 0041-0043: tapşırıqdan avtomatik iş qeydi (`tasks.work_log_id`, `tasks.note`, `task_set_done`, `task_set_note`, "Tapşırıq: " prefiksi);
   - 0040: Səbət (0038-dəki `trash` cədvəli, tətikçilər, `restore_trash`) ləğv olundu, silindi; 0038-dən yalnız `tools.min_stock` qalır;
   - 0038: `tools.min_stock` (minimum qalıq, `tool_stock`-a sütun) (Səbət hissəsi 0040 ilə silinib);
@@ -236,7 +242,6 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 ## Növbəti işlər
 - **"Görülən işlər" bölməsi** (`/isler`, təklif olunub, istifadəçi təsdiqləməyib): tarix aralığı, usta, şirkət/market filtrləri, axtarış, xülasə, günlərə görə qruplu siyahı, Excel-ə ixrac.
 - Repoların ayrılması (sonda): `supabase/`-ı `admin/`-ə köçürmək, `admin/` və `web/`-i ayrı repolara çıxarmaq (məs. `git subtree split --prefix=admin` ilə tarixçə saxlanır).
-- Xəta kodları bölməsi (`ac_brands`, `ac_error_codes`).
 - Saytın keşini admin dəyişikliyindən sonra dərhal təmizləmək (`revalidateTag` + web-də `/api/revalidate`).
 - Müraciətlər üçün e-poçt bildirişi (Resend və s.), brauzer bildirişi.
 - Xəritə üçün koordinat sahəsi (`site_settings`). (Silmək əvəzinə "Səbət" sınanıb və istifadəçinin istəyi ilə ləğv olunub: yenidən təklif etmə.)
