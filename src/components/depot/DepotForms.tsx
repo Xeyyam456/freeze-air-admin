@@ -744,7 +744,7 @@ function ToolModal({ tool, holders, pieces, employees, canManage, onClose }: {
                 <Trash2 size={16} />
               </button>
             ) : (
-              <ConfirmButton onConfirm={() => deleteTool(tool.id)} success={false} className="icon-btn icon-btn-danger" title={TEXT[kind].deleteTitle}>
+              <ConfirmButton onConfirm={() => deleteTool(tool.id, kind)} success={false} className="icon-btn icon-btn-danger" title={TEXT[kind].deleteTitle}>
                 <Trash2 size={16} />
               </ConfirmButton>
             )}

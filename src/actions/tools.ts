@@ -75,13 +75,13 @@ export async function updateTool(id: number, _prev: FormState, formData: FormDat
 }
 
 // Ustalarda olan alət silinmir (baza bloklayır): səbəbi tostla göstərilir
-export async function deleteTool(id: number) {
+export async function deleteTool(id: number, kind: "tool" | "material" = "tool") {
   const { error } = await createClient().from("tools").delete().eq("id", id);
   if (error) {
     toast.error(error.message);
     return;
   }
-  toast.success("Alət silindi");
+  toast.success(kind === "material" ? "Material silindi" : "Alət silindi");
   revalidate();
 }
 
