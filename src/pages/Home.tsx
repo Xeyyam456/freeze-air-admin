@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import {
-  ArrowRight, Building2, CalendarDays, ClipboardList, ExternalLink, FileSpreadsheet, Globe, Inbox, MapPin, Plus, Store,
+  ArrowRight, Building2, CalendarDays, Check, ClipboardList, ExternalLink, FileSpreadsheet, Globe, Inbox, ListChecks, MapPin, Plus, Store,
   TriangleAlert, UserPlus, Users, Wrench,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
@@ -41,7 +41,7 @@ async function fetchDashboard() {
   const n = (r: { count: number | null }) => r.count ?? 0;
   const today = localDate();
 
-  const [lowStock, companies, branches, markets, shops, tools, employees, logs, todayLogs, requests, unread] = await Promise.all([
+  const [lowStock, companies, branches, markets, shops, tools, employees, logs, todayLogs, requests, unread, tasks] = await Promise.all([
     // Minimum qalıq həddi olan və həddə çatan alət/materiallar: paneldə xəbərdarlıq
     supabase.from("tool_stock").select("id, name, kind, unit, available, pieces_total, min_stock").not("min_stock", "is", null)
       .then((r) => (r.data ?? []).filter(isLowStock).sort((a, b) => a.name.localeCompare(b.name, "az"))),
@@ -62,6 +62,11 @@ async function fetchDashboard() {
     supabase.from("contact_requests").select("id, name, phone, message, handled, created_at").order("created_at", { ascending: false }).limit(4)
       .then((r) => r.data ?? []),
     supabase.from("contact_requests").select("*", head).eq("handled", false).then(n),
+    // Bugünkü tapşırıqlar (görülməyənlər yuxarıda)
+    supabase.from("tasks")
+      .select("id, done, reason, place_text, employees(full_name, photo_url), stores(name, code, companies(name)), companies(name)")
+      .eq("task_date", today).order("done").order("created_at").limit(100)
+      .then((r) => r.data ?? []),
   ]);
 
   const masters = employees.filter((e) => !e.is_management);
@@ -71,11 +76,18 @@ async function fetchDashboard() {
   return {
     companies, branches, markets, shops, tools,
     masters, managers: employees.length - masters.length,
-    logs, todayTotal: todayLogs.length, todayCount, requests, unread, lowStock,
+    logs, todayTotal: todayLogs.length, todayCount, requests, unread, lowStock, tasks,
   };
 }
 
 type Log = Awaited<ReturnType<typeof fetchDashboard>>["logs"][number];
+type TaskRow = Awaited<ReturnType<typeof fetchDashboard>>["tasks"][number];
+
+function taskPlace(t: TaskRow) {
+  if (t.stores) return `${t.stores.companies?.name ?? ""} · ${t.stores.name}`;
+  if (t.companies) return t.companies.name;
+  return t.place_text ?? "Yer silinib";
+}
 
 // İş yeri: mağaza/filial (şirkətin adı ilə) | sabit məkanlı şirkət | siyahıda olmayan yer
 function placeOf(l: Log) {
@@ -126,7 +138,7 @@ export default function Home() {
         </Link>
       )}
 
-      <div className="mt-5 grid gap-5 xl:grid-cols-[1.7fr_1fr]">
+      <div className="mt-5 grid gap-5 xl:grid-cols-[1.35fr_1.25fr_1fr]">
         {/* Bu gün: iş qeydləri (son 4; hamısı pəncərədə) */}
         <section className="card flex h-[374px] flex-col">
           <div className="flex items-center justify-between gap-3">
@@ -165,6 +177,44 @@ export default function Home() {
             <button type="button" onClick={() => setAllLogs("")} className="link mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold">
               Hamısına bax <ArrowRight size={14} />
             </button>
+          )}
+        </section>
+
+        {/* Bugünkü tapşırıqlar (admin/rəhbərlik ustalara verir): görülməyənlər yuxarıda; hamısı /tapshiriqlar-da */}
+        <section className="card flex h-[374px] flex-col">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="card-title flex items-center gap-2"><ListChecks size={18} className="text-primary" /> Tapşırıqlar</h2>
+            <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-bold text-primary">
+              Bu gün: {d ? `${d.tasks.filter((t) => t.done).length} / ${d.tasks.length}` : "–"}
+            </span>
+          </div>
+          {!d ? (
+            <p className="muted mt-6 text-sm">Yüklənir...</p>
+          ) : d.tasks.length === 0 ? (
+            <Empty icon={ListChecks} title="Bu gün tapşırıq yoxdur" text="Tapşırıqlar bölməsindən ustaya iş ver." />
+          ) : (
+            <ul className="mt-3 min-h-0 flex-1 space-y-1 overflow-hidden">
+              {d.tasks.slice(0, 4).map((t) => (
+                <li key={t.id}>
+                  <Link to="/tapshiriqlar" className="flex items-start gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-bg">
+                    <Avatar employee={{ full_name: t.employees?.full_name ?? "?", photo_url: t.employees?.photo_url ?? null }} className="!h-10 !w-10 shrink-0 !text-xs" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold">{t.employees?.full_name ?? "—"}</span>
+                      <span className="flex min-w-0 items-center gap-1 truncate text-xs font-semibold text-primary"><MapPin size={12} className="shrink-0" /> {taskPlace(t)}</span>
+                      <span className="muted mt-0.5 line-clamp-1 block text-sm">{t.reason}</span>
+                    </span>
+                    <span className={`mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-lg border-2 ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent"}`} title={t.done ? "Görülüb" : "Görülməyib"}>
+                      <Check size={14} strokeWidth={3} />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          {!!d?.tasks.length && (
+            <Link to="/tapshiriqlar" className="link mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold">
+              {d.tasks.length > 4 ? `Hamısına bax (${d.tasks.length})` : "Hamısına bax"} <ArrowRight size={14} />
+            </Link>
           )}
         </section>
 
