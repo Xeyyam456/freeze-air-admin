@@ -40,7 +40,7 @@ export default function DepotPage() {
       {!data ? (
         <div className="card muted">Yüklənir...</div>
       ) : (
-        <WithSidePanel panel={
+        <WithSidePanel stack panel={
           <>
             {canManageTools && <AddToolCard kind={kind} onKind={setKind} names={data.tools.filter((t) => t.kind === kind).map((t) => t.name)} />}
             {/* Depo məsulu bölməsi yalnız adminə görünür: yarat, hesab aç, götür */}

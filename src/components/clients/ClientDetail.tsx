@@ -74,7 +74,7 @@ export function ClientDetail({ id, kind }: { id: number; kind: Kind }) {
       subtitle={fixedPlace ? (client.address ?? "Sabit məkan") : `${list.length} ${k.unit}`}
       back={{ href: k.route, label: k.section }}
     >
-      <WithSidePanel fill={fixedPlace} panel={<ClientAside key={client.id} company={client} unitCount={list.length} admin={admin} />}>
+      <WithSidePanel fill={fixedPlace} stack={!fixedPlace} panel={<ClientAside key={client.id} company={client} unitCount={list.length} admin={admin} />}>
         {fixedPlace ? <LocationView company={client} /> : <UnitList units={list} kind={kind} admin={admin} />}
       </WithSidePanel>
     </Page>
