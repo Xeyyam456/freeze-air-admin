@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Page } from "@/components/Page";
 import { WithSidePanel } from "@/components/SidePanel";
-import { AddToolCard, StorekeepersCard, ToolList, type Holding } from "@/components/depot/DepotForms";
+import { AddToolCard, StorekeepersCard, ToolList, type Holding, type Kind } from "@/components/depot/DepotForms";
 import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
@@ -26,19 +27,21 @@ async function fetchDepot() {
 export default function DepotPage() {
   const { owner, canManageTools, employeeId } = useAuth();
   const data = useData(fetchDepot);
+  // Alətlər / Materiallar tabı: həm siyahı, həm "Yeni ..." forması bununla dəyişir
+  const [kind, setKind] = useState<Kind>("tool");
 
   return (
-    <Page title="Depo" subtitle={canManageTools ? "Alətlər, sayı və kimdə olduğu" : "Alətlərə baxış: dəyişiklikləri depo məsulu edir"}>
+    <Page title="Depo" subtitle={canManageTools ? "Alətlər və materiallar, sayı və kimdə olduğu" : "Depoya baxış: dəyişiklikləri depo məsulu edir"}>
       {!data ? (
         <div className="card muted">Yüklənir...</div>
       ) : (
         <WithSidePanel panel={
           <>
-            {canManageTools && <AddToolCard />}
+            {canManageTools && <AddToolCard kind={kind} onKind={setKind} />}
             <StorekeepersCard employees={data.employees} owner={owner} selfId={employeeId} />
           </>
         }>
-          <ToolList tools={data.tools} holdings={data.holdings} employees={data.employees} canManage={canManageTools} />
+          <ToolList kind={kind} onKind={setKind} tools={data.tools} holdings={data.holdings} employees={data.employees} canManage={canManageTools} />
         </WithSidePanel>
       )}
     </Page>

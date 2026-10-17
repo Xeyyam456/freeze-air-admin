@@ -30,5 +30,6 @@ export function QuantityInput({ limit, limitText, className = "", defaultValue =
 }
 
 // Ustaya vermək: depodakından çox yazılanda göstərilən mətn
-export const giveLimitText = (limit: number, wanted: number) =>
-  limit === 0 ? "Depoda bu alətdən qalmayıb." : `Depoda cəmi ${limit} ədəd qalıb — ${wanted} ədəd vermək olmur.`;
+// unit: alət üçün "ədəd", material üçün ölçü vahidi (metr, kq...)
+export const giveLimitText = (limit: number, wanted: number, unit = "ədəd") =>
+  limit === 0 ? "Depoda qalmayıb." : `Depoda cəmi ${limit} ${unit} qalıb — ${wanted} ${unit} vermək olmur.`;

@@ -62,7 +62,8 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 ### Depo (`/depo`, `pages/Depot.tsx` + `components/depot/DepotForms.tsx`)
 - Hamı baxır; yazmaq `canManageTools` (bazada `can_manage_tools()`). Aksiyalar `actions/tools.ts`: `addTool`, `updateTool`, `deleteTool`, `giveTool`, `returnTool(assignmentId, say)`, `setStorekeeper`.
 - **Sadə saxla** (istifadəçi əvvəlki variantı "çox qəliz" adlandırıb): axtarış + cədvəl (Alət | Cəmi | Ustalarda | Depoda). Göstərici kartları, filtrlər, zolaqlar, tarixçə tabı **qəsdən yoxdur**.
-- **"Alətlər / Ustalar" tabı** (cədvəlin üstündə): "Ustalar"da bütün ustaların adı, üzərindəki alətlər ("Drel, Manometr ×2") və ədəd sayı; sətrə klik → `PersonModal` (ustanın alətləri və "Geri al"). Axtarış hər iki tabda işləyir (usta adı və ya alət adı). **Yalnız admin-dədir**, web-dəki depo məsulu Depo-sunda (`DepotView.tsx`) bu tab yoxdur (istənilsə köçürülür).
+- **İki tab: "Alətlər" və "Materiallar"** (istifadəçi: depoda yalnız alət yox, mis boru, qaz balonu kimi sərf materialları da olur). Eyni cədvəl, eyni qaydalar (say, ustaya vermə, geri alma, dərhal say xəbərdarlığı); fərq: material **ölçü vahidi** ilə ("50 metr", "Vahid" sahəsi: ədəd, metr, kq, litr...). Tab həm siyahını, həm sağdakı **"Yeni alət / Yeni material"** formasını dəyişir (alət və material ayrı əlavə olunur; `kind` gizli sahə). Hər tabda ikinci keçid: **"Siyahı" / "Ustalar üzrə"**: usta adı, üzərindəki alət/material ("Drel, Manometr ×2", "Mis boru 12 metr") və say (alətdə ədəd cəmi, materialda növ sayı); sətrə klik → `PersonModal` (ustanın alətləri/materialları və "Geri al").
+- **Materiallar yalnız Depo-dadır**: Ustalar səhifəsi (alət tabı, "Alət ver"), Panelin "Alət" xanası və web usta paneli `kind = 'tool'` ilə süzülür; materiallar oralarda görünmür.
 - Sətrə klik → pəncərə: başlıqda "Cəmi · ustalarda · depoda", "Kimdədir" siyahısı ("Geri al": 1 ədəddirsə dərhal, çoxdursa say soruşulur), altda "Kimə verilir?" (yalnız ustalar, rəhbərlik siyahıda yoxdur) + say + "Ver".
 - Forma: yalnız Ad, Say, İnventar kodu (`category`/`notes` bazada qalır, UI-da yoxdur; `updateTool` formada olmayan sahəyə toxunmur).
 - **Say yoxlaması dərhal**: `components/QuantityInput.tsx` — limitdən çox yazılan kimi tost + sahənin altında qırmızı yazı ("Depoda cəmi 1 ədəd qalıb — 2 ədəd vermək olmur."); göndərəndə də yoxlanır, sorğu getmir. Brauzerin `max` atributu işlənmir (səssiz bloklayır). Redaktədə say ustalardakından az olanda, ustada olan aləti silməyə çalışanda da tost.
@@ -108,7 +109,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 | `employees` | full_name, position, specialty, is_management, is_storekeeper, start_date, phone, photo_url, user_id, is_active | usta və rəhbərlik birlikdə; `user_id` hesabı bağlayır; `is_storekeeper` = depo məsulu (yalnız müdir təyin edir) |
 | `companies` | name, kind (`company`/`market`), phone, contact_person, notes, logo_url, address, lat, lng | şirkət (bank, stadion, residence) və ya market şəbəkəsi |
 | `stores` | company_id, code, name, address, lat, lng, phone, notes | şirkətin filialı / marketin mağazası |
-| `tools`, `tool_assignments` | alət: name, inventory_code, category, notes, **quantity** (ümumi say); təhvil: tool_id, employee_id, **quantity**, taken_at, returned_at | bir ustada eyni alətdən bir açıq təhvil (unikal indeks), yenisi verəndə say artır; view `tool_stock`: quantity, given_out (ustalarda), available (depoda) |
+| `tools`, `tool_assignments` | alət **və material**: name, inventory_code, category, notes, **quantity** (ümumi say), **kind** (`tool`/`material`), **unit** (ölçü vahidi: ədəd, metr, kq...); təhvil: tool_id, employee_id, **quantity**, taken_at, returned_at | bir ustada eyni alətdən/materialdan bir açıq təhvil (unikal indeks), yenisi verəndə say artır; view `tool_stock`: quantity, given_out (ustalarda), available (depoda), kind, unit |
 | `work_logs` | employee_id, work_date, store_id \| company_id \| place_text, description, created_by | iş yeri: üçündən biri mütləqdir (check) |
 | `work_files` | work_log_id, kind, path | `work` bucket-dəki fayllar |
 | `contact_requests` | name, phone, email, message, handled | saytdakı "Bizə yazın"; Realtime-da |
@@ -153,7 +154,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da yalnız `contact_requests`. Hadisəni RLS-ə görə yalnız admin alır.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0031`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0032`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
@@ -172,7 +173,8 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0028: `public_management()`, saytda "Rəhbərlik";
   - 0029: xidmət səhifələri (`site_services` yeni sahələr + ilkin məzmun);
   - 0030: depo: alət sayı (`quantity`), `tool_stock`, depo məsulu (`is_storekeeper`), `give_tool`/`return_tool`; `tools.status` və `tool_current_holders` silindi;
-  - 0031: alət yalnız aktiv ustaya verilir (trigger `tool_assignments_only_masters`; rəhbərlik ala bilməz).
+  - 0031: alət yalnız aktiv ustaya verilir (trigger `tool_assignments_only_masters`; rəhbərlik ala bilməz);
+  - 0032: depoda materiallar (mis boru, qaz balonu...): `tools.kind` (`tool`/`material`), `tools.unit`, `tool_stock`-a bu sütunlar.
 - RLS dəyişikliyini simulyasiya olunmuş JWT ilə DO-blokunda yoxla: `set_config('request.jwt.claims', json_build_object('sub', <uuid>, 'role', 'authenticated')::text, true)`, `set local role authenticated`. Nəticəni `raise exception 'NƏTİCƏ ...'` ilə çıxar, bu da hər şeyi geri qaytarır.
 - `database.types.ts` əl ilə yenilənib; dəyişiklikdən sonra Supabase MCP `generate_typescript_types` ilə yenidən yarat və **web reposundakı eyni fayla da** köçür.
 

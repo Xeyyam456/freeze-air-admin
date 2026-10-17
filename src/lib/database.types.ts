@@ -290,27 +290,33 @@ export type Database = {
           created_at: string
           id: number
           inventory_code: string | null
+          kind: string
           name: string
           notes: string | null
           quantity: number
+          unit: string
         }
         Insert: {
           category?: string | null
           created_at?: string
           id?: never
           inventory_code?: string | null
+          kind?: string
           name: string
           notes?: string | null
           quantity?: number
+          unit?: string
         }
         Update: {
           category?: string | null
           created_at?: string
           id?: never
           inventory_code?: string | null
+          kind?: string
           name?: string
           notes?: string | null
           quantity?: number
+          unit?: string
         }
         Relationships: []
       }
@@ -397,9 +403,11 @@ export type Database = {
           given_out: number
           id: number
           inventory_code: string | null
+          kind: string
           name: string
           notes: string | null
           quantity: number
+          unit: string
         }
         Relationships: []
       }

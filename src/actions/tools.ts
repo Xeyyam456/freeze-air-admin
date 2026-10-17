@@ -8,20 +8,25 @@ import { toast } from "@/lib/toast";
 // Say qaydaları da bazadadır: depoda olandan çox vermək, ustalardakından az say yazmaq olmur.
 // Bazanın xəta mətnləri Azərbaycan dilindədir, olduğu kimi göstərilir.
 
-// Yalnız formada olan sahələr yazılır: formada olmayan (məs. bazadakı kateqoriya, qeyd) toxunulmaz qalır
+// Yalnız formada olan sahələr yazılır: formada olmayan (məs. bazadakı kateqoriya, qeyd) toxunulmaz qalır.
+// kind ("tool" | "material") yalnız əlavə edəndə gəlir (gizli sahə); unit (ölçü vahidi) yalnız materialda.
 function toolFields(formData: FormData) {
   const optional = Object.fromEntries(
     (["inventory_code", "category", "notes"] as const).filter((k) => formData.has(k)).map((k) => [k, text(formData, k)]),
   ) as { inventory_code?: string | null; category?: string | null; notes?: string | null };
+  const kind = formData.has("kind") ? { kind: formData.get("kind") === "material" ? "material" : "tool" } : {};
+  const unit = formData.has("unit") ? { unit: text(formData, "unit") ?? "ədəd" } : {};
   return {
     name: text(formData, "name"),
     quantity: Number(formData.get("quantity") ?? 1),
     ...optional,
+    ...kind,
+    ...unit,
   };
 }
 
 function checkFields(f: ReturnType<typeof toolFields>): string | null {
-  if (!f.name) return "Alətin adı vacibdir.";
+  if (!f.name) return "Adı vacibdir.";
   if (!Number.isInteger(f.quantity) || f.quantity < 0) return "Say 0 və ya müsbət tam ədəd olmalıdır.";
   return null;
 }

@@ -18,11 +18,11 @@ async function fetchEmployees(admin: boolean) {
     // Hazırda ustalarda olan alətlər (qaytarılmamış)
     supabase
       .from("tool_assignments")
-      .select("id, employee_id, quantity, taken_at, tools(id, name, inventory_code)")
+      .select("id, employee_id, quantity, taken_at, tools(id, name, inventory_code, kind)")
       .is("returned_at", null)
       .order("taken_at"),
     // Depoda boş ədədi olan alətlər: ustaya vermək üçün
-    supabase.from("tool_stock").select("id, name, available").gt("available", 0).order("name"),
+    supabase.from("tool_stock").select("id, name, available").eq("kind", "tool").gt("available", 0).order("name"),
     // Bu gün yazılan işlər: kartda say göstərilir
     supabase.from("work_logs").select("employee_id").eq("work_date", todayIso()),
     // Ustaların giriş hesabları (e-poçt): yalnız admin görür, Edge Function verir
@@ -31,7 +31,7 @@ async function fetchEmployees(admin: boolean) {
 
   const toolsByEmployee: Record<number, HeldTool[]> = {};
   for (const a of assignments ?? []) {
-    if (!a.tools) continue;
+    if (!a.tools || a.tools.kind !== "tool") continue; // materiallar yalnız Depo-da
     (toolsByEmployee[a.employee_id] ??= []).push({ ...a.tools, assignmentId: a.id, quantity: a.quantity, taken_at: a.taken_at });
   }
   const todayWork: Record<number, number> = {};

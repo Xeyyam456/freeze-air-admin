@@ -45,7 +45,7 @@ async function fetchDashboard() {
     supabase.from("companies").select("*", head).eq("kind", "market").then(n),
     supabase.from("stores").select("*, companies!inner(kind)", head).eq("companies.kind", "market").then(n),
     // Depo: ədədlərin cəmi və ustalardakı hissə
-    supabase.from("tool_stock").select("quantity, given_out").then((r) => (r.data ?? []).reduce(
+    supabase.from("tool_stock").select("quantity, given_out").eq("kind", "tool").then((r) => (r.data ?? []).reduce(
       (s, t) => ({ total: s.total + t.quantity, out: s.out + t.given_out }), { total: 0, out: 0 })),
     supabase.from("employees").select("id, full_name, photo_url, specialty, is_management, is_active").eq("is_active", true).order("full_name")
       .then((r) => r.data ?? []),
