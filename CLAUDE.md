@@ -189,6 +189,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 
 ### Hesablar və məlumat
 - Sahib (müdir) = **Məmmədov Anar** (`xeyyamelizade5@gmail.com`), admin, employee id 8.
+  - Giriş e-poçtunu hər hesab özü dəyişir: profil pəncərəsində (yuxarı sağ) **"E-poçtu dəyiş"** (`ProfileModal` → `auth.updateUser({ email })`, Supabase təsdiq məktubu göndərir, linkə basılınca keçid olur). Admin/müdir statusu e-poçta yox, hesabın id-sinə bağlıdır, ona görə dəyişəndə yetki itmir. Dəyişəndən sonra bu sənədlərdəki ünvanı da yenilə.
 - Usta hesabı: `xeyyamalizade5@gmail.com` → **Əlizadə Xəyyam**, employee id 1. Diqqət: "e"/"a" fərqi.
 - Rəhbərlik: id 7 Abdulov Ceyhun, id 8 Məmmədov Anar, id 9 Mirmanafov Mirsadiq.
 - Marketlər: "Araz Market" (id 4, 200 mağaza, kodlar `ARZ-001…`), "TEST Oba Market" (id 6, 200 mağaza, `OBA-001…`). Mağazalar `excel/*-market-200.xlsx`-dən import olunub, məlumat uydurmadır. İstifadəçi "TEST" sözünü adlardan hələlik götürməmək dedi.
