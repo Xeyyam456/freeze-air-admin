@@ -28,7 +28,8 @@ async function fetchLog(id: number) {
       employees(full_name, photo_url, specialty),
       stores(code, name, address, lat, lng, companies(name)),
       companies(name, address, lat, lng),
-      work_files(id, kind, path)`)
+      work_files(id, kind, path),
+      tasks(reason, note)`)
     .eq("id", id)
     .maybeSingle();
   if (!data) return undefined; // tapılmadı (null = hələ yüklənir)
@@ -54,6 +55,7 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
     : log?.companies
       ? { name: log.companies.name, address: log.companies.address, lat: log.companies.lat, lng: log.companies.lng }
       : null;
+  const task = log?.tasks?.[0] ?? null; // bu iş tapşırıqdan yaranıbsa
   const act = log?.files.find((f) => f.kind === "act");
   const photos = log?.files.filter((f) => f.kind === "photo") ?? [];
 
@@ -100,11 +102,26 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
             {place && <MapButton place={place} />}
           </div>
 
-          {/* Nə edib */}
-          <div>
-            <span className="label">Görülən iş</span>
-            <p className="whitespace-pre-line rounded-xl border border-line p-4 text-sm leading-relaxed">{log.description}</p>
-          </div>
+          {/* Nə edib: tapşırıqdan yaranan işdə müdirin verdiyi iş (tapşırıq) və ustanın yazdığı görülən iş ayrı göstərilir */}
+          {task ? (
+            <>
+              <div>
+                <span className="label">İş (tapşırıq)</span>
+                <p className="whitespace-pre-line rounded-xl border border-line bg-bg p-4 text-sm leading-relaxed">{task.reason}</p>
+              </div>
+              <div>
+                <span className="label">Görülən iş</span>
+                {task.note
+                  ? <p className="whitespace-pre-line rounded-xl border border-line p-4 text-sm leading-relaxed">{task.note}</p>
+                  : <p className="muted rounded-xl border border-dashed border-line p-4 text-sm">Usta hələ görülən iş barədə yazmayıb.</p>}
+              </div>
+            </>
+          ) : (
+            <div>
+              <span className="label">Görülən iş</span>
+              <p className="whitespace-pre-line rounded-xl border border-line p-4 text-sm leading-relaxed">{log.description}</p>
+            </div>
+          )}
 
           {/* Akt və şəkillər */}
           {(act || photos.length > 0) && (
