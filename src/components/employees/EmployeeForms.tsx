@@ -1,6 +1,6 @@
 
 import { useActionState, useMemo, useRef, useState } from "react";
-import { Briefcase, CalendarDays, ClipboardList, KeyRound, Pencil, Phone, Plus, Search, Trash2, User, Users, Wrench, X } from "lucide-react";
+import { Briefcase, CalendarDays, ClipboardList, KeyRound, Pencil, Package, Phone, Plus, Search, Trash2, User, Users, Wrench, X } from "lucide-react";
 import { createEmployeeAccount, deleteEmployeeAccount, resetEmployeePassword } from "@/actions/accounts";
 import { addEmployee, deleteEmployee, updateEmployee } from "@/actions/employees";
 import { giveTool, returnTool } from "@/actions/tools";
@@ -19,7 +19,12 @@ import { toast } from "@/lib/toast";
 type Employee = Tables<"employees">;
 
 // Ustada hazırda olan alət (açıq təhvil): assignmentId — geri almaq üçün, quantity — ustadakı say
-export type HeldTool = { assignmentId: number; id: number; name: string; inventory_code: string | null; taken_at: string; quantity: number };
+export type HeldTool = { assignmentId: number; id: number; name: string; inventory_code: string | null; taken_at: string; quantity: number; kind: string; unit: string; pack_name: string | null; pack_size: number | null };
+
+// Qablı materialda (balon...) tam qabların sayı mötərizədə: "11 kq (1 balon)"
+function packSuffix(n: number, t: Pick<HeldTool, "pack_name" | "pack_size">) {
+  return t.pack_size && t.pack_name && n > 0 && n % t.pack_size === 0 ? ` (${n / t.pack_size} ${t.pack_name})` : "";
+}
 // Depoda boş ədədi olan alət
 export type FreeTool = { id: number; name: string; available: number };
 // Ustaların giriş hesabları: enabled — gizli açar qurulubmu; emails — usta id → e-poçt
@@ -163,8 +168,8 @@ function EmployeeDetailsModal({ employee, tools, freeTools, accounts, admin, can
             <User size={15} /> Haqqında
           </button>
           <button type="button" role="tab" aria-selected={tab === "tools"} onClick={() => setTab("tools")} className={tabClass("tools")}>
-            <Wrench size={15} /> Alətlər
-            <span className="rounded-full bg-primary-soft px-1.5 text-xs text-primary">{toolCount(tools)}</span>
+            <Wrench size={15} /> Alət və material
+            <span className="rounded-full bg-primary-soft px-1.5 text-xs text-primary">{toolCount(tools) + materialCount(tools)}</span>
           </button>
           <button type="button" role="tab" aria-selected={tab === "work"} onClick={() => setTab("work")} className={tabClass("work")}>
             <ClipboardList size={15} /> İşlər
@@ -278,8 +283,14 @@ export function AccountSection({ employeeId, email, hasAccount, enabled, note = 
 }
 
 // Ustadakı ədədlərin cəmi
+// Ustadakı alət ədədlərinin cəmi (materiallar ayrıca: vahidləri fərqlidir)
 function toolCount(tools: HeldTool[]) {
-  return tools.reduce((s, t) => s + t.quantity, 0);
+  return tools.filter((t) => t.kind === "tool").reduce((s, t) => s + t.quantity, 0);
+}
+
+// Ustadakı material növlərinin sayı
+function materialCount(tools: HeldTool[]) {
+  return tools.filter((t) => t.kind === "material").length;
 }
 
 // Alətlər tabı: ustadakı alətlər və sayı; depo məsulu və müdir aləti geri ala (×) və depodan verə bilir.
@@ -310,17 +321,20 @@ function ToolsTab({ employeeId, tools, freeTools, canManage }: {
     <div className="flex h-full flex-col gap-2">
       {tools.length === 0 ? (
         <div className="grid flex-1 place-items-center rounded-xl border border-dashed border-line">
-          <p className="muted text-sm">Ustanın üzərində alət yoxdur.</p>
+          <p className="muted text-sm">Ustanın üzərində alət və ya material yoxdur.</p>
         </div>
       ) : (
         // Üç sütun: çox alət olanda da sahə öz içində sürüşür, pəncərə böyümür
         <ul className="grid min-h-0 flex-1 auto-rows-min grid-cols-3 gap-1.5 overflow-y-auto">
-          {tools.map((t) => (
+          {/* Əvvəl alətlər, sonra materiallar; materialın idarəsi (təhvil, geri alma) yalnız Depo-dadır */}
+          {[...tools].sort((a, b) => (a.kind === b.kind ? 0 : a.kind === "tool" ? -1 : 1)).map((t) => (
             <li key={t.assignmentId} className="flex items-center gap-2 rounded-lg bg-bg py-1.5 pl-3 pr-1.5 text-[13px] font-medium" title={t.name}>
-              <Wrench size={13} className="shrink-0 text-primary" />
+              {t.kind === "material" ? <Package size={13} className="shrink-0 text-primary" /> : <Wrench size={13} className="shrink-0 text-primary" />}
               <span className="min-w-0 flex-1 truncate">{t.name}</span>
-              {t.quantity > 1 && <span className="shrink-0 rounded-full bg-primary-soft px-1.5 text-xs font-bold text-primary">×{t.quantity}</span>}
-              {canManage && (
+              {t.kind === "material"
+                ? <span className="shrink-0 rounded-full bg-primary-soft px-1.5 text-xs font-bold text-primary">{t.quantity} {t.unit}{packSuffix(t.quantity, t)}</span>
+                : t.quantity > 1 && <span className="shrink-0 rounded-full bg-primary-soft px-1.5 text-xs font-bold text-primary">×{t.quantity}</span>}
+              {canManage && t.kind === "tool" && (
                 <ConfirmButton
                   onConfirm={async () => {
                     const r = await returnTool(t.assignmentId, t.quantity);
@@ -422,7 +436,7 @@ function EmployeeCard({ employee, tools, todayCount, freeTools, accounts, admin,
             <ClipboardList size={13} /> Bu gün: {todayCount} iş
           </span>
           <span className={`flex items-center gap-1.5 ${tools.length ? "text-primary" : "muted"}`}>
-            <Wrench size={13} /> {toolCount(tools)} alət
+            <Wrench size={13} /> {toolCount(tools)} alət{materialCount(tools) > 0 && ` · ${materialCount(tools)} material`}
           </span>
         </span>
       </div>

@@ -18,7 +18,7 @@ async function fetchEmployees(admin: boolean) {
     // Hazırda ustalarda olan alətlər (qaytarılmamış)
     supabase
       .from("tool_assignments")
-      .select("id, employee_id, quantity, taken_at, tools(id, name, inventory_code, kind)")
+      .select("id, employee_id, quantity, taken_at, tools(id, name, inventory_code, kind, unit, pack_name, pack_size)")
       .is("returned_at", null)
       .order("taken_at"),
     // Depoda boş ədədi olan alətlər: ustaya vermək üçün
@@ -31,7 +31,7 @@ async function fetchEmployees(admin: boolean) {
 
   const toolsByEmployee: Record<number, HeldTool[]> = {};
   for (const a of assignments ?? []) {
-    if (!a.tools || a.tools.kind !== "tool") continue; // materiallar yalnız Depo-da
+    if (!a.tools) continue;
     (toolsByEmployee[a.employee_id] ??= []).push({ ...a.tools, assignmentId: a.id, quantity: a.quantity, taken_at: a.taken_at });
   }
   const todayWork: Record<number, number> = {};
