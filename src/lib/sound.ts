@@ -18,6 +18,11 @@ if (typeof window !== "undefined") {
   }
 }
 
+// Səs hazırdırmı (bu səhifədə ən azı bir klik/düymə olub)? Yoxdursa brauzer səsə icazə vermir.
+export function isSoundReady() {
+  return !!ctx && ctx.state === "running";
+}
+
 export function playNotify() {
   try {
     unlock();
