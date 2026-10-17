@@ -337,27 +337,46 @@
     font-size: 16px;
     font-weight: 700;
   }
-  /* İncə, yuvarlaq sürüşdürmə zolağı (siyahılar üçün; səhifənin öz scrollbar-ı gizlidir) */
+  /* İncə, yuvarlaq sürüşdürmə zolağı (siyahılar və modallar üçün; səhifənin öz scrollbar-ı gizlidir).
+     Chrome/Edge: ::-webkit-scrollbar (Chrome 121+ scrollbar-color/width verilsə webkit qaydalarını yox sayır,
+     ona görə standart xassələr yalnız webkit olmayan brauzerə (Firefox) verilir).
+     Zolağın tutma sahəsi 10px, görünən hissəsi 4px: sakit durur, üzərinə gələndə 6px olub rəng alır. */
   .nice-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(31, 111, 235, 0.35) transparent;
     scrollbar-gutter: stable;
   }
   .nice-scroll::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
+    height: 10px;
   }
   .nice-scroll::-webkit-scrollbar-track {
-    background: var(--color-bg);
-    border-radius: 999px;
-    margin: 4px 0;
+    background: transparent;
   }
   .nice-scroll::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--color-frost), var(--color-primary));
+    background: rgba(31, 111, 235, 0.28);
+    background-clip: padding-box;
+    border: 3px solid transparent;
     border-radius: 999px;
-    border: 2px solid var(--color-bg);
+    transition: background-color 150ms ease;
+  }
+  .nice-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(31, 111, 235, 0.45);
+    background-clip: padding-box;
   }
   .nice-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--color-primary-dark);
+    background-color: var(--color-primary);
+    background-clip: padding-box;
+    border-width: 2px;
+  }
+  .nice-scroll::-webkit-scrollbar-thumb:active {
+    background-color: var(--color-primary-dark);
+    background-clip: padding-box;
+    border-width: 2px;
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    .nice-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(31, 111, 235, 0.4) transparent;
+    }
   }
 
   .card-link {
