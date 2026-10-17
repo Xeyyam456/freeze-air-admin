@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import {
-  ArrowRight, Building2, CalendarDays, Check, ClipboardList, ExternalLink, FileSpreadsheet, Globe, Inbox, ListChecks, MapPin, Plus, Store,
+  ArrowRight, Building2, CalendarDays, Check, ClipboardList, ExternalLink, FileSpreadsheet, Globe, ListChecks, MapPin, Plus, Store,
   TriangleAlert, UserPlus, Users, Wrench,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
@@ -41,7 +41,7 @@ async function fetchDashboard() {
   const n = (r: { count: number | null }) => r.count ?? 0;
   const today = localDate();
 
-  const [lowStock, companies, branches, markets, shops, tools, employees, logs, todayLogs, requests, unread, tasks] = await Promise.all([
+  const [lowStock, companies, branches, markets, shops, tools, employees, logs, todayLogs, tasks] = await Promise.all([
     // Minimum qalıq həddi olan və həddə çatan alət/materiallar: paneldə xəbərdarlıq
     supabase.from("tool_stock").select("id, name, kind, unit, available, pieces_total, min_stock").not("min_stock", "is", null)
       .then((r) => (r.data ?? []).filter(isLowStock).sort((a, b) => a.name.localeCompare(b.name, "az"))),
@@ -59,9 +59,6 @@ async function fetchDashboard() {
       .order("created_at", { ascending: false }).limit(4)
       .then((r) => r.data ?? []),
     supabase.from("work_logs").select("employee_id").eq("work_date", today).then((r) => r.data ?? []),
-    supabase.from("contact_requests").select("id, name, phone, message, handled, created_at").order("created_at", { ascending: false }).limit(4)
-      .then((r) => r.data ?? []),
-    supabase.from("contact_requests").select("*", head).eq("handled", false).then(n),
     // Bugünkü tapşırıqlar (görülənlər də daxil; ustaya görə qruplu)
     supabase.from("tasks")
       .select("id, done, reason, place_text, employees(full_name, photo_url), stores(name, code, companies(name)), companies(name)")
@@ -76,7 +73,7 @@ async function fetchDashboard() {
   return {
     companies, branches, markets, shops, tools,
     masters, managers: employees.length - masters.length,
-    logs, todayTotal: todayLogs.length, todayCount, requests, unread, lowStock, tasks,
+    logs, todayTotal: todayLogs.length, todayCount, lowStock, tasks,
   };
 }
 
@@ -139,7 +136,7 @@ export default function Home() {
         </Link>
       )}
 
-      <div className="mt-5 grid gap-5 xl:grid-cols-[1.35fr_1.25fr_1fr]">
+      <div className="mt-5 grid gap-5 xl:grid-cols-[1fr_1.35fr]">
         {/* Bu gün: iş qeydləri (son 4; hamısı pəncərədə) */}
         <section className="card flex h-[374px] flex-col">
           <div className="flex items-center justify-between gap-3">
@@ -230,36 +227,6 @@ export default function Home() {
           {!!d?.tasks.length && (
             <Link to="/tapshiriqlar" className="link mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold">
               Hamısına bax ({d.tasks.length}) <ArrowRight size={14} />
-            </Link>
-          )}
-        </section>
-
-        {/* Müraciətlər (saytdan) */}
-        <section className="card flex h-[374px] flex-col">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="card-title flex items-center gap-2"><Inbox size={18} className="text-primary" /> Müraciətlər</h2>
-            {!!d?.unread && <span className="rounded-full bg-danger px-2.5 py-0.5 text-xs font-bold text-white">{d.unread} yeni</span>}
-          </div>
-          {!d ? (
-            <p className="muted mt-6 text-sm">Yüklənir...</p>
-          ) : d.requests.length === 0 ? (
-            <Empty icon={Inbox} title="Müraciət yoxdur" text="Saytdakı “Bizə yazın” formasından gələnlər burada görünür." />
-          ) : (
-            <ul className="mt-4 min-h-0 flex-1 space-y-2 overflow-hidden">
-              {d.requests.map((r) => (
-                <li key={r.id} className={`rounded-xl border px-3 py-2.5 ${r.handled ? "border-line" : "border-primary/30 bg-primary-soft/50"}`}>
-                  <div className="flex items-center justify-between gap-2 text-sm">
-                    <span className="truncate font-semibold">{r.name}</span>
-                    <span className="muted shrink-0 text-xs">{ago(r.created_at)}</span>
-                  </div>
-                  <p className="muted truncate text-xs">{r.phone}{r.message ? ` · ${r.message}` : ""}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-          {!!d?.requests.length && (
-            <Link to="/muracietler" className="link mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold">
-              Hamısına bax <ArrowRight size={14} />
             </Link>
           )}
         </section>
