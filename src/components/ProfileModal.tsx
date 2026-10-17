@@ -1,63 +1,11 @@
 import { useState } from "react";
-import { Mail, UserRound, X } from "lucide-react";
+import { UserRound, X } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { AvatarUpload } from "@/components/employees/AvatarUpload";
 import { Buttons, Field } from "@/components/forms";
 import { Modal } from "@/components/Modal";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
-
-// Giriş e-poçtunu dəyişmək: Supabase yeni ünvana təsdiq məktubu göndərir (təhlükəsizlik üçün köhnə ünvana da göndərə bilər).
-// Linkə basılmayınca e-poçt dəyişmir; admin yetkisi və müdir statusu e-poçta yox, hesabın öz identifikatoruna bağlıdır, ona görə itmir.
-function EmailChange() {
-  const { email } = useAuth();
-  const [open, setOpen] = useState(false);
-  const [pending, setPending] = useState(false);
-  const [sentTo, setSentTo] = useState<string | null>(null);
-
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const next = String(new FormData(e.currentTarget).get("email") ?? "").trim().toLowerCase();
-    if (!next) return toast.error("Yeni e-poçt vacibdir.");
-    if (next === email?.toLowerCase()) return toast.error("Bu artıq hazırkı e-poçtundur.");
-    setPending(true);
-    const { error } = await createClient().auth.updateUser({ email: next }, { emailRedirectTo: window.location.origin });
-    setPending(false);
-    if (error) {
-      if (/already|registered|exists/i.test(error.message)) return toast.error("Bu e-poçtla hesab artıq var.");
-      if (/rate|seconds|too many/i.test(error.message)) return toast.error("Çox tez-tez cəhd edirsən, bir az sonra yenidən yoxla.");
-      if (/invalid|valid/i.test(error.message)) return toast.error("E-poçt düzgün deyil.");
-      return toast.error(error.message);
-    }
-    setSentTo(next);
-    setOpen(false);
-    toast.success("Təsdiq məktubu göndərildi");
-  }
-
-  if (sentTo) {
-    return (
-      <div className="rounded-xl bg-primary-soft px-3 py-2.5 text-sm">
-        <p className="flex items-center gap-2 font-semibold text-primary"><Mail size={15} /> Təsdiq məktubu göndərildi</p>
-        <p className="mt-1 text-xs text-ink">
-          <b>{sentTo}</b> ünvanını yoxla və məktubdakı linkə bas. Təhlükəsizlik üçün köhnə ünvana da məktub gələ bilər: hər ikisindəki linkə bas.
-          Təsdiqdən sonra yeni ünvanla daxil ol; yetkilərin dəyişmir.
-        </p>
-      </div>
-    );
-  }
-
-  return open ? (
-    <form onSubmit={onSubmit} className="space-y-3">
-      <Field label="Yeni e-poçt">
-        <input name="email" type="email" required autoFocus autoComplete="off" placeholder="yeni@gmail.com" className="field" />
-      </Field>
-      <p className="muted text-xs">Ünvana təsdiq məktubu gələcək. Linkə basmayınca e-poçt dəyişmir.</p>
-      <Buttons pending={pending} label="Təsdiq məktubu göndər" onCancel={() => setOpen(false)} />
-    </form>
-  ) : (
-    <button type="button" onClick={() => setOpen(true)} className="btn btn-secondary btn-sm"><Mail size={14} /> E-poçtu dəyiş</button>
-  );
-}
 
 // Profil: hesabın adı. Əməkdaşa bağlı hesabda ad əməkdaş kartından gəlir və orada dəyişdirilir.
 export function ProfileModal({ onClose }: { onClose: () => void }) {
@@ -107,10 +55,6 @@ export function ProfileModal({ onClose }: { onClose: () => void }) {
           <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
         </form>
       )}
-
-      <div className="mt-5 border-t border-line pt-4">
-        <EmailChange />
-      </div>
     </Modal>
   );
 }
