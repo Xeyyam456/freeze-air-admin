@@ -17,7 +17,7 @@ Kondisioner servis şirkəti **Freeze Air Service** üçün sistem: ustalar, mü
 
 İkisi də **eyni Supabase layihəsini** işlədir. `supabase/` qovluğu (miqrasiyalar + Edge Function) **bu (admin) reposuna aiddir**; web-də baza dəyişikliyi lazım olanda miqrasiya burada yazılır.
 
-**Hazırkı vəziyyət (2026-10-17):** repolar hələ ayrılmayıb. Hər şey `D:\Praqramlasirma\Projects\kondisioner-servis\` altındadır: `admin/`, `web/`, `supabase/` (hələ kökdə, ayrılanda `admin/supabase/`-a köçürüləcək), `excel/` (test Excel faylları, heç bir repoya aid deyil). 
+**Hazırkı vəziyyət (2026-10-18):** repolar hələ ayrılmayıb. Hər şey `D:\Praqramlasirma\Projects\kondisioner-servis\` altındadır: `admin/`, `web/`, `supabase/` (hələ kökdə, ayrılanda `admin/supabase/`-a köçürüləcək), `excel/` (test Excel faylları, heç bir repoya aid deyil). 
 
 **Git (2026-10-17-dən):** hələlik hamısı **bir repodadır**, kökdə (`kondisioner-servis/.git`, budaq `main`): `admin/`, `web/`, `supabase/` birlikdə commit və push olunur. `web/`-in köhnə ayrıca `.git`-i (yalnız Next-in ilk commit-i) götürülüb. Kök `.gitignore`: `node_modules`, `.next`, `dist`, `.env*`, `excel/`; `.gitattributes`: LF.
 
@@ -222,7 +222,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Rəhbərlik: id 7 Abdulov Ceyhun, id 8 Məmmədov Anar, id 9 Mirmanafov Mirsadiq.
 - Marketlər: "Araz Market" (id 4, 200 mağaza, kodlar `ARZ-001…`), "TEST Oba Market" (id 6, 200 mağaza, `OBA-001…`). Mağazalar `excel/*-market-200.xlsx`-dən import olunub, məlumat uydurmadır. İstifadəçi "TEST" sözünü adlardan hələlik götürməmək dedi.
 - Şirkətlər: Rabitə Bank (id 7, 10 filial), Qarabağ Stadion, Knightsbridge Residence, Port Baku Residence, İzmir Villa (filialsız, sabit məkan).
-- 2026-10-17: Əlizadə Xəyyam üçün 5 sınaq iş yazılıb (id 27–31: bu gün 2, dünən 3; uydurma məzmun); müraciət yoxdur.
+- 2026-10-18: iş qeydləri, tapşırıqlar və fayl qeydləri istifadəçi istəyi ilə **hamısı silindi** (baza təmizdir); `work` bucket-ində `32/` qovluğunda 2 yetim şəkil qalıb (SQL ilə silinmir, Storage panelindən əl ilə). Xəta kodları: real kod `Daikin VRV · U4`; sınaq faylı `excel/xeta-kodlari-test.xlsx` (14 kod, `TEST` modelləri: yüklənibsə sonra "Modellər" tabından silinir). Müraciətlər: istifadəçinin yazdığı sınaq müraciətlər var.
 
 ## Web reposu ilə sinxron saxlanmalı olanlar
 Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
@@ -241,9 +241,11 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 - Shell-də `node -e` daxilində `\n` və `\D` kimi escape-lər pozulur; uzun skripti scratchpad-də `.cjs` faylına yaz.
 
 ## Növbəti işlər
-- **"Görülən işlər" bölməsi** (`/isler`, təklif olunub, istifadəçi təsdiqləməyib): tarix aralığı, usta, şirkət/market filtrləri, axtarış, xülasə, günlərə görə qruplu siyahı, Excel-ə ixrac.
+- **Admin panelin giriş səhifəsi** usta panelindəkindən köhnədir: eyni müasir dizayna keçirmək (istifadəçi: "sonda baxarıq").
+- **Supabase ehtiyat nüsxəsi (backup)**: canlı məlumata keçməzdən əvvəl avtomatik ehtiyat nüsxənin açıq olduğunu yoxlamaq (tənzimləmədir; iş qeydləri kimi silinənlər geri qayıtmır, Səbət ləğv olunub).
+- Müraciətlər üçün e-poçt bildirişi (Resend və s.), brauzer bildirişi (istifadəçi: "qalsın").
 - Repoların ayrılması (sonda): `supabase/`-ı `admin/`-ə köçürmək, `admin/` və `web/`-i ayrı repolara çıxarmaq (məs. `git subtree split --prefix=admin` ilə tarixçə saxlanır).
 - Saytın keşini admin dəyişikliyindən sonra dərhal təmizləmək (`revalidateTag` + web-də `/api/revalidate`).
-- Müraciətlər üçün e-poçt bildirişi (Resend və s.), brauzer bildirişi.
 - Xəritə üçün koordinat sahəsi (`site_settings`). (Silmək əvəzinə "Səbət" sınanıb və istifadəçinin istəyi ilə ləğv olunub: yenidən təklif etmə.)
 - Ustalar üçün mobil tətbiq (React Native, Google Maps/Waze naviqasiyası). Mobildə mağaza/filial axtarışı kodla (məs. `ARZ-045`) + "Yol tap" (Google Maps marşrutu) və Waze lazımdır; web-də bu çıxarılıb, qaralama commit `019f8e4`-dədir.
+- Hazır olanlar (təkrar təklif etmə): "Görülən işlər" səhifəsi (`/isler`), Depo tarixçəsi və minimum qalıq, tapşırıqlar, xəta kodları.
