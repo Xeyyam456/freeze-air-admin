@@ -240,9 +240,8 @@
     z-index: 40;
     width: var(--panel-w);
     overflow-y: auto;
-    /* Normalda hər şey sığır; çox alçaq ekranda nazik scrollbar görünür ki, aşağıda nəsə olduğu bilinsin */
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-line) transparent;
+    /* Forma açılıb məzmun uzananda da sürüşmə işləyir, amma scrollbar görünmür (istifadəçi qərarı: gizli) */
+    scrollbar-width: none;
     background:
       radial-gradient(420px 180px at 100% 0%, rgba(34, 195, 230, 0.10), transparent 70%),
       var(--color-surface);
@@ -251,6 +250,9 @@
     box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 12px 32px rgba(16, 24, 40, 0.08);
   }
   /* Panel içində kartlar ayrı qutu yox, xətlə ayrılan bölmələrdir */
+  .side-panel::-webkit-scrollbar {
+    display: none;
+  }
   .side-panel .card {
     background: transparent;
     border: 0;
