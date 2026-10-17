@@ -41,7 +41,9 @@ export function UnitList({ units, kind, admin }: { units: Tables<"stores">[]; ki
   return (
     <div className="space-y-4">
       {/* Axtarış konteynerin yuxarısında sabit qalır */}
-      <div className="search sticky top-0 z-10 rounded-[14px] shadow-[0_0_0_16px_#f8f9fc]">
+      {/* Konteynerin yuxarı boşluğunu (pt-5) örtür: sürüşən kartlar axtarışın üstündə və altında görünmür */}
+      <div className="sticky -top-5 z-10 -mt-5 bg-[#f8f9fc] pt-5 shadow-[0_16px_0_0_#f8f9fc]">
+        <div className="search">
         <Search size={20} />
         <input
           value={query}
@@ -49,6 +51,7 @@ export function UnitList({ units, kind, admin }: { units: Tables<"stores">[]; ki
           placeholder={`${k.Unit} kodu, adı və ya ünvanı ilə axtar...`}
           aria-label={`${k.Unit} axtarışı`}
         />
+      </div>
       </div>
 
       {query && (

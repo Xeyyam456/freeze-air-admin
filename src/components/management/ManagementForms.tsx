@@ -228,10 +228,13 @@ export function ManagerList({ managers, accounts, canEdit, myUserId }: {
 
   return (
     <div className="space-y-4">
-      <div className="search sticky top-0 z-10 rounded-[14px] shadow-[0_0_0_16px_#f8f9fc]">
+      {/* Konteynerin yuxarı boşluğunu (pt-5) örtür: sürüşən kartlar axtarışın üstündə və altında görünmür */}
+      <div className="sticky -top-5 z-10 -mt-5 bg-[#f8f9fc] pt-5 shadow-[0_16px_0_0_#f8f9fc]">
+        <div className="search">
         <Search size={20} />
         <input value={query} onChange={(e) => setQuery(e.target.value)}
           placeholder="Ad, vəzifə və ya telefon ilə axtar..." aria-label="Rəhbər axtarışı" />
+      </div>
       </div>
       {filtered.length === 0 ? (
         <div className="card muted py-10 text-center text-sm">Bu axtarışa uyğun rəhbər tapılmadı.</div>

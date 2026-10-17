@@ -327,9 +327,12 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
         <PersonModal emp={openPerson} kind={kind} holds={byEmployee[openPerson.id] ?? []} toolInfo={toolInfo} canManage={canManage} onClose={() => setOpenEmp(null)} />
       )}
 
-      <div className="search sticky top-0 z-10 rounded-[14px] shadow-[0_0_0_16px_#f8f9fc]">
+      {/* Konteynerin yuxarı boşluğunu (pt-5) örtür: sürüşən kartlar axtarışın üstündə və altında görünmür */}
+      <div className="sticky -top-5 z-10 -mt-5 bg-[#f8f9fc] pt-5 shadow-[0_16px_0_0_#f8f9fc]">
+        <div className="search">
         <Search size={20} />
         <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={tx.search} aria-label="Axtarış" />
+      </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
