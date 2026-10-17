@@ -159,7 +159,7 @@ export default function TasksPage() {
                                 <span className={t.done ? "text-ok/80" : ""}>{t.reason}</span>
                               </span>
                               {/* Usta görüləndən sonra təmir barədə yazıbsa və fayl əlavə edibsə burada görünür */}
-                              {t.note && <span className="muted block truncate text-xs">Təmir: {t.note}</span>}
+                              {t.note && <span className="block truncate text-xs text-[#6d5efc]"><b>Təmir:</b> {t.note}</span>}
                             </span>
                             {(t.work_logs?.work_files.length ?? 0) > 0 && (
                               <span className="inline-flex shrink-0 items-center gap-0.5 text-xs text-muted" title="Usta fayl əlavə edib (iş qeydində)"><Paperclip size={13} />{t.work_logs?.work_files.length}</span>
