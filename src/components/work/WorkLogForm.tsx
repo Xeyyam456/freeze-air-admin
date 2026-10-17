@@ -21,7 +21,7 @@ export type ExistingLog = {
 };
 
 // Bütün yerlər: əvvəl sabit məkanlı şirkətlər, sonra hər şəbəkənin mağazaları koda görə
-async function loadPlaces(): Promise<Place[]> {
+export async function loadPlaces(): Promise<Place[]> {
   const supabase = createClient();
   const [{ data: stores }, { data: companies }] = await Promise.all([
     supabase.from("stores").select("id, code, name, address, companies(name)"),

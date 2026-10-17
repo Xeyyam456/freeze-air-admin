@@ -154,9 +154,12 @@
   }
   @media (max-width: 1600px) {
     .nav-link {
-      padding: 0 10px;
-      gap: 6px;
+      padding: 0 8px;
+      gap: 5px;
       font-size: 13px;
+    }
+    .user-chip {
+      white-space: nowrap;
     }
   }
   .nav-link:hover {

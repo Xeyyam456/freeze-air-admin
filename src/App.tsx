@@ -12,6 +12,7 @@ import NotFoundPage from "@/pages/NotFound";
 import RequestsPage from "@/pages/Requests";
 import SitePage from "@/pages/Site";
 import TrashPage from "@/pages/Trash";
+import TasksPage from "@/pages/Tasks";
 import WorkLogsPage from "@/pages/WorkLogs";
 
 // Giriş etməyən istifadəçi yalnız /login səhifəsini görür
@@ -42,6 +43,7 @@ export default function App() {
             <Route path="ustalar" element={<EmployeesPage />} />
             <Route path="rehberlik" element={<ManagementPage />} />
             <Route path="depo" element={<DepotPage />} />
+            <Route path="tapshiriqlar" element={<TasksPage />} />
             <Route path="isler" element={<WorkLogsPage />} />
             <Route path="sebet" element={<TrashPage />} />
             <Route path="muracietler" element={<RequestsPage />} />

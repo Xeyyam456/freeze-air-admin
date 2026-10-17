@@ -239,6 +239,70 @@ export type Database = {
           },
         ]
       }
+      tasks: {
+        Row: {
+          company_id: number | null
+          created_at: string
+          created_by: string | null
+          done: boolean
+          done_at: string | null
+          employee_id: number
+          id: number
+          place_text: string | null
+          reason: string
+          store_id: number | null
+          task_date: string
+        }
+        Insert: {
+          company_id?: number | null
+          created_at?: string
+          created_by?: string | null
+          done?: boolean
+          done_at?: string | null
+          employee_id: number
+          id?: never
+          place_text?: string | null
+          reason: string
+          store_id?: number | null
+          task_date?: string
+        }
+        Update: {
+          company_id?: number | null
+          created_at?: string
+          created_by?: string | null
+          done?: boolean
+          done_at?: string | null
+          employee_id?: number
+          id?: never
+          place_text?: string | null
+          reason?: string
+          store_id?: number | null
+          task_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tool_assignments: {
         Row: {
           employee_id: number
