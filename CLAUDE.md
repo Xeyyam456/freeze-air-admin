@@ -86,6 +86,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 
 ## UI qaydaları
 - **Bildirişlər yalnız tostla** (`lib/toast.ts` + `components/Toaster.tsx`; `toast.success/error`). Formalarda `useOnSuccess(state, fn, "uğur mesajı")` xəta və uğur tostunu özü göstərir; `ConfirmButton` uğurda "Silindi" göstərir (`success` prop, `false` = tost yox). Formun içində `alert-error` və "Saxlanıldı" sətirləri yazma.
+- **Toaster modaldan yuxarıdadır** (`z-[200]`, modal fonu `z-index: 100`): modal içindəki əməliyyatların (alət vermək, geri almaq, əlavə etmək) tostu əvvəl fonun arxasında qalıb görünmürdü. Yeni qat əlavə etsən, 200-dən aşağı saxla.
 - Redaktə formaları `SaveConfirmForm` ilə: "Yadda saxla" → təsdiq modalı.
 - Şəkillər kəsilməsin: sayt məzmunu üçün `object-contain` və ya öz nisbətində (`h-auto`) göstər.
 - Siyahı öz içində sürüşəndə `nice-scroll` sinfi (`index.css`: 10px tutma sahəsi, 4px görünən yuvarlaq zolaq, hover-də 6px və tünd göy; yalnız `::-webkit-scrollbar` — Chrome 121+ `scrollbar-color` verilsə webkit-i yox sayır, standart xassələr `@supports not selector(::-webkit-scrollbar)` ilə Firefox üçündür; web `globals.css` ilə eyni). Paneldəki rəqəmlər `components/CountUp.tsx` ilə sayılaraq açılır (ease-out, azaldılmış hərəkətdə yox).

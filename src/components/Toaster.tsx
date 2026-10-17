@@ -1,12 +1,13 @@
 import { CircleAlert, CircleCheck, X } from "lucide-react";
 import { dismissToast, useToasts } from "@/lib/toast";
 
-// Ekranın sağ aşağı küncündə tost bildirişləri (App-də bir dəfə qoyulur)
+// Ekranın sağ aşağı küncündə tost bildirişləri (App-də bir dəfə qoyulur).
+// z-[200]: modalın fonundan (z-index 100) yuxarıdadır; əks halda modal içindəki əməliyyatların (alət vermək və s.) tostu fonun arxasında qalır.
 export function Toaster() {
   const toasts = useToasts();
 
   return (
-    <div className="pointer-events-none fixed bottom-5 right-5 z-[100] flex w-[min(380px,calc(100vw-40px))] flex-col gap-2" aria-live="polite">
+    <div className="pointer-events-none fixed bottom-5 right-5 z-[200] flex w-[min(380px,calc(100vw-40px))] flex-col gap-2" aria-live="polite">
       {toasts.map((t) => (
         <div key={t.id} role={t.kind === "error" ? "alert" : "status"}
           className="toast-in pointer-events-auto flex items-start gap-3 rounded-xl border border-line bg-surface p-3.5 shadow-[0_12px_32px_rgba(16,24,40,0.16)]">
