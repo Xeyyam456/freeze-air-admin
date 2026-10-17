@@ -1,0 +1,640 @@
+@import "tailwindcss";
+
+/* Rəng və şrift tokenləri. Rəngi dəyişmək üçün yalnız buranı dəyiş. */
+@theme {
+  --color-bg: #f4f6fa;
+  --color-surface: #ffffff;
+  --color-ink: #0e1726;
+  --color-muted: #667085;
+  --color-line: #e6e9f0;
+  --color-primary: #1f6feb;
+  --color-primary-dark: #1757c2;
+  --color-primary-soft: #eaf2fe;
+  --color-frost: #22c3e6;
+  --color-danger: #e5484d;
+  --color-danger-soft: #fdecec;
+  --color-ok: #12a150;
+  --color-ok-soft: #e7f6ee;
+  --color-navy: #0a1a33;
+
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+  Ekrana görə dəyişən ölçülər. Böyük monitorda geniş, noutbukda yığcam.
+  --gutter: yanlardakı boşluq, --panel-w: sağ panelin eni,
+  --topbar-h / --hero-h: sabit header-in iki hissəsi, --gap: konteynerlər arası boşluq.
+*/
+:root {
+  --gutter: clamp(24px, 5vw, 120px);
+  --panel-w: clamp(360px, 26vw, 440px);
+  --topbar-h: 72px;
+  --hero-h: 88px;
+  --gap: 24px;
+  --header-h: calc(var(--topbar-h) + 1px + var(--hero-h)); /* 1px: menyu altındakı xətt */
+}
+@media (max-height: 820px) {
+  :root {
+    --topbar-h: 60px;
+    --hero-h: 64px;
+    --gap: 16px;
+  }
+}
+
+@layer base {
+  /* Klik olunan hər şeydə əl kursoru (Tailwind v4 düymələrə özü qoymur); deaktiv olanda qadağan */
+  button, [role="button"], [role="tab"], a[href], summary, select,
+  label:has(input[type="checkbox"], input[type="radio"], input[type="file"]),
+  input[type="checkbox"], input[type="radio"], input[type="file"], input[type="color"] {
+    cursor: pointer;
+  }
+  button:disabled, [aria-disabled="true"], select:disabled, input:disabled {
+    cursor: not-allowed;
+  }
+
+  /* Scrollbar gizlidir, sürüşmə işləyir */
+  html {
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  h1, h2, h3 {
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  ::placeholder {
+    color: #98a2b3;
+  }
+}
+
+@layer components {
+  /* ---------- Header ---------- */
+  /* Menyu + başlıq zolağı birlikdə yuxarıda sabit qalır (cəmi 72 + 88 = 160px) */
+  .app-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 4px 16px rgba(10, 26, 51, 0.18);
+  }
+
+  .app-topbar {
+    color: #fff;
+    background: linear-gradient(90deg, #0a1a33 0%, #0f2a55 55%, #0e3b6e 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Səhifə başlığı zolağı: menyu ilə eyni rəng keçidi, üstündə işıq effekti */
+  .app-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: var(--hero-h);
+    color: #fff;
+    background:
+      radial-gradient(900px 160px at 85% 0%, rgba(34, 195, 230, 0.3), transparent 70%),
+      radial-gradient(600px 160px at 10% 120%, rgba(31, 111, 235, 0.45), transparent 70%),
+      linear-gradient(90deg, #0a1a33 0%, #0f2a55 55%, #0e3b6e 100%);
+    overflow: hidden;
+  }
+  /* İncə şəbəkə naxışı: kondisioner barmaqlığını xatırladır */
+  .app-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 28px
+    );
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+    pointer-events: none;
+  }
+
+  .app-shell {
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  .logo-mark {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--color-frost), var(--color-primary));
+    box-shadow: 0 6px 20px rgba(34, 195, 230, 0.35);
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.72);
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  @media (max-width: 1600px) {
+    .nav-link {
+      padding: 0 10px;
+      gap: 6px;
+      font-size: 13px;
+    }
+  }
+  .nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .nav-link[aria-current="page"] {
+    color: var(--color-navy);
+    background: #fff;
+  }
+
+  .user-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 4px 4px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 13px;
+  }
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--color-frost), var(--color-primary));
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  /* Səhifə başlığı tünd zolağın içində */
+  .page-hero h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .page-hero p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  /* Geri düyməsi başlığın solunda, ayrıca sətir tutmur */
+  .hero-back {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.85);
+    flex-shrink: 0;
+  }
+  .hero-back:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+  }
+
+  @media (max-height: 820px) {
+    .page-hero h1 {
+      font-size: 20px;
+    }
+  }
+
+  /* Məzmun header zolağından aşağıda başlayır */
+  .app-main {
+    position: relative;
+    padding-top: var(--gap);
+    padding-bottom: var(--gap);
+  }
+
+  /* ---------- Sağ panel ---------- */
+  /* Konteynerin içində, sağda sabit dayanır: sürüşmədə yeri dəyişmir. */
+  .side-panel {
+    position: fixed;
+    top: calc(var(--header-h) + var(--gap));
+    right: var(--gutter);  /* app-shell-in sağ boşluğu ilə eyni xətt */
+    bottom: var(--gap);
+    z-index: 40;
+    width: var(--panel-w);
+    overflow-y: auto;
+    /* Normalda hər şey sığır; çox alçaq ekranda nazik scrollbar görünür ki, aşağıda nəsə olduğu bilinsin */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) transparent;
+    background:
+      radial-gradient(420px 180px at 100% 0%, rgba(34, 195, 230, 0.10), transparent 70%),
+      var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 12px 32px rgba(16, 24, 40, 0.08);
+  }
+  /* Panel içində kartlar ayrı qutu yox, xətlə ayrılan bölmələrdir */
+  .side-panel .card {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 20px 24px;
+  }
+  .side-panel .card + .card {
+    border-top: 1px solid var(--color-line);
+  }
+  /* Alçaq ekranda panel daha yığcam: sahələr və boşluqlar kiçilir */
+  @media (max-height: 820px) {
+    .side-panel .card {
+      padding: 14px 20px;
+    }
+    .side-panel .field {
+      height: 36px;
+    }
+    .side-panel .label {
+      margin-bottom: 3px;
+      font-size: 12px;
+    }
+    .side-panel .btn {
+      height: 38px;
+    }
+  }
+  /* ---------- Mağaza / filial kartı ---------- */
+  .store-card {
+    position: relative;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+  .store-card:hover {
+    border-color: #c9dafb;
+    box-shadow: 0 8px 24px rgba(31, 111, 235, 0.1);
+  }
+  /* Kod kvadratı: tünd göy, işıq effektli — kart siyahısında gözün ilk tutduğu yer */
+  .store-code {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background:
+      radial-gradient(40px 30px at 80% 10%, rgba(34, 195, 230, 0.45), transparent 70%),
+      linear-gradient(140deg, #0f2a55, #0a1a33);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  /* Usta avatarı: şəkil olmayanda ad-soyadın baş hərfləri */
+  .emp-avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 999px;
+    background: linear-gradient(140deg, var(--color-frost), var(--color-primary));
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    box-shadow: 0 6px 16px rgba(31, 111, 235, 0.25);
+  }
+
+  /* ---------- Kartlar ---------- */
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  /* İncə, yuvarlaq sürüşdürmə zolağı (siyahılar üçün; səhifənin öz scrollbar-ı gizlidir) */
+  .nice-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(31, 111, 235, 0.35) transparent;
+    scrollbar-gutter: stable;
+  }
+  .nice-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  .nice-scroll::-webkit-scrollbar-track {
+    background: var(--color-bg);
+    border-radius: 999px;
+    margin: 4px 0;
+  }
+  .nice-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--color-frost), var(--color-primary));
+    border-radius: 999px;
+    border: 2px solid var(--color-bg);
+  }
+  .nice-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-dark);
+  }
+
+  .card-link {
+    display: block;
+    transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+  }
+  .card-link:hover {
+    transform: translateY(-2px);
+    border-color: #c9dafb;
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.04), 0 16px 32px rgba(31, 111, 235, 0.12);
+  }
+
+  .icon-tile {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
+
+  .stat-value {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Form ---------- */
+  .field {
+    width: 100%;
+    height: 42px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 14px;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+  textarea.field {
+    height: auto;
+    padding: 10px 12px;
+    resize: none;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-soft);
+  }
+  .label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .search {
+    position: relative;
+  }
+  .search input {
+    width: 100%;
+    height: 56px;
+    padding: 0 20px 0 52px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+  }
+  .search input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-soft), 0 8px 24px rgba(16, 24, 40, 0.08);
+  }
+  .search svg {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-muted);
+  }
+
+  /* ---------- Düymələr ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid transparent;
+    transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-primary-dark);
+  }
+  .btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    border-color: var(--color-line);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    border-color: #cfd5e1;
+    background: #fafbfd;
+  }
+  .btn-soft {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+  }
+  .btn-soft:hover:not(:disabled) {
+    background: #dbe8fd;
+  }
+  .btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+  }
+  .btn-danger:hover:not(:disabled) {
+    background: #cc3a3f;
+  }
+  /* Ləğv et: qırmızı tonlarda, amma silmə düyməsindən yumşaq */
+  .btn-cancel {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+    border-color: #f8cfd0;
+  }
+  .btn-cancel:hover:not(:disabled) {
+    background: #fbdcdd;
+  }
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: rgba(10, 26, 51, 0.55);
+    backdrop-filter: blur(3px);
+    animation: modal-fade 120ms ease-out;
+  }
+  .modal {
+    width: 100%;
+    max-width: 440px;
+    background: var(--color-surface);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 24px 64px rgba(10, 26, 51, 0.3);
+    animation: modal-pop 160ms ease-out;
+  }
+  @keyframes modal-fade {
+    from { opacity: 0; }
+  }
+  .toast-in {
+    animation: toast-in 180ms ease-out;
+  }
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(10px); }
+  }
+  @keyframes modal-pop {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .modal-backdrop, .modal, .toast-in { animation: none; }
+  }
+  .btn-sm {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+  .btn-glass {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+  .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .icon-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    color: var(--color-muted);
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .icon-btn:hover {
+    background: var(--color-bg);
+    color: var(--color-ink);
+  }
+  .icon-btn-danger:hover {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+  }
+
+  .link {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+
+  .muted {
+    color: var(--color-muted);
+  }
+
+  .alert-error {
+    color: #b42318;
+    background: var(--color-danger-soft);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .alert-ok {
+    color: #087443;
+    background: var(--color-ok-soft);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .code-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 6px;
+    background: var(--color-navy);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  .table-wrap {
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    overflow: auto;
+  }
+  .table-wrap table {
+    width: 100%;
+    font-size: 13px;
+    text-align: left;
+  }
+  .table-wrap th {
+    position: sticky;
+    top: 0;
+    background: #f8f9fc;
+    padding: 10px 12px;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .table-wrap td {
+    padding: 10px 12px;
+    border-top: 1px solid var(--color-line);
+  }
+}

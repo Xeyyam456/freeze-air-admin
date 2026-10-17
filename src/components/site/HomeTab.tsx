@@ -1,0 +1,266 @@
+import { useActionState, useRef, useState } from "react";
+import { CircleCheck, ClipboardCheck, ImagePlus, Snowflake, Trash2 } from "lucide-react";
+import { updateAbout, updateHomeImage, type HomeImageField } from "@/actions/site";
+import { removeSiteImage, uploadSiteImage } from "@/actions/siteContent";
+import { ConfirmButton } from "@/components/ConfirmButton";
+import { Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
+import type { Tables } from "@/lib/database.types";
+import { createClient } from "@/lib/supabase/client";
+import { useData } from "@/lib/useData";
+import { toast } from "@/lib/toast";
+
+const SITE_DELAY = "Saytda ən gec 1 dəqiqəyə görünəcək.";
+
+// "Haqqımızda" kartının rəngləri (saytın palitrası: web/src/app/globals.css və web page.tsx CARD_COLORS)
+const CARD_COLORS = [
+  { id: "night", label: "Tünd", bg: "#06192b", fg: "#ffffff", icon: "#00a3d9", sub: "rgba(255,255,255,0.6)" },
+  { id: "cold", label: "Göy", bg: "#00a3d9", fg: "#ffffff", icon: "#ffffff", sub: "rgba(255,255,255,0.75)" },
+  { id: "ice", label: "Açıq mavi", bg: "#cfe8f3", fg: "#06192b", icon: "#00a3d9", sub: "rgba(6,25,43,0.6)" },
+  { id: "white", label: "Ağ", bg: "#ffffff", fg: "#06192b", icon: "#00a3d9", sub: "rgba(6,25,43,0.6)" },
+];
+
+// Ana səhifənin və saytın idarə olunan hissələri: loqo, hero şəkli və "Haqqımızda" bölməsi.
+// Hər bölmənin yanında saytdakı görünüşünün kiçik önizləməsi var.
+export function HomeTab() {
+  const data = useData(async () => {
+    const supabase = createClient();
+    const [{ data: settings }, { data: texts }] = await Promise.all([
+      supabase.from("site_settings").select("*").eq("id", 1).maybeSingle(),
+      supabase.from("site_texts").select("key, value").in("key", ["brand.name", "brand.tagline", "home.hero.temp_label", "home.hero.temp", "home.hero.badge"]),
+    ]);
+    const t = Object.fromEntries((texts ?? []).map((r) => [r.key, r.value])) as Record<string, string | undefined>;
+    return { settings, t };
+  });
+
+  if (!data?.settings) return <div className="card muted">Yüklənir...</div>;
+  const { settings, t } = data;
+
+  return (
+    <div className="space-y-5">
+      <div className="grid gap-5 xl:grid-cols-[minmax(320px,400px)_1fr]">
+        {/* Loqo + header önizləməsi */}
+        <section className="card flex flex-col">
+          <h2 className="card-title">Loqo</h2>
+          <p className="muted mt-1 text-sm">Saytın bütün səhifələrində: header-də şirkət adının solunda və footer-də.</p>
+          <div className="mt-4 overflow-hidden rounded-xl border border-line">
+            <div className="flex h-16 items-center gap-3 bg-white px-4">
+              {settings.logo_url
+                ? <img src={settings.logo_url} alt="" className="h-10 w-auto max-w-[120px] object-contain" />
+                : <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#00a3d9] to-[#06192b] text-white"><Snowflake size={20} /></span>}
+              <span className="min-w-0 leading-tight">
+                <span className="block truncate text-sm font-extrabold text-[#06192b]">{t["brand.name"] ?? "Freeze Air Service"}</span>
+                <span className="block truncate text-[11px] text-[#06192b]/50">{t["brand.tagline"] ?? ""}</span>
+              </span>
+            </div>
+            <div className="flex h-7 items-center gap-3 bg-[#00a3d9] px-4 text-[10px] font-semibold text-white/85">
+              <span className="rounded bg-[#06192b] px-1.5 py-0.5 text-white">Əsas</span> Avadanlıq <span>Xidmətlər</span> <span>Əlaqə</span>
+            </div>
+          </div>
+          <p className="muted mb-4 mt-1.5 text-[11px]">Header önizləməsi</p>
+          <div className="mt-auto">
+            <ImageSlot field="logo_url" url={settings.logo_url} folder="logo" compact
+              empty="Loqo yoxdur: saytda qar dənəsi ikonu göstərilir"
+              hint="Şəffaf fonlu PNG, hündürlüyü ən azı 200 px." />
+          </div>
+        </section>
+
+        {/* Hero: şəklin üstündə saytdakı kimi künc nişanları */}
+        <section className="card">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="card-title">Hero şəkli</h2>
+              <p className="muted mt-1 text-sm">Saytın ən üstündə, başlığın sağında. Künc nişanları şəklin üstünə düşür: vacib detalı oraya qoymayın.</p>
+            </div>
+            <span className="muted rounded-full bg-bg px-3 py-1 text-xs">Tövsiyə: 4:3, 1600×1200 px</span>
+          </div>
+          <div className="mt-4 grid gap-5 lg:grid-cols-[1.3fr_1fr]">
+            <div className="relative rounded-2xl bg-gradient-to-br from-[#06192b] via-[#0b3a5c] to-[#00a3d9] p-6 sm:p-8">
+              <div className="relative mx-4">
+                {settings.hero_image_url
+                  ? <img src={settings.hero_image_url} alt="" className="block h-auto w-full rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.35)]" />
+                  : <div className="grid aspect-[4/3] place-items-center rounded-2xl bg-gradient-to-br from-white to-[#cfe8f3] text-center text-xs text-[#06192b]/50">Şəkil yoxdur: saytda kondisioner illüstrasiyası</div>}
+                <span className="absolute -bottom-3 -left-4 rounded-xl bg-white px-3 py-2 shadow-lg">
+                  <span className="block text-[9px] font-semibold text-[#06192b]/50">{t["home.hero.temp_label"] ?? "Otaq temperaturu"}</span>
+                  <span className="block text-base font-extrabold text-[#00a3d9]">{t["home.hero.temp"] ?? "+22°"}</span>
+                </span>
+                <span className="absolute -right-4 -top-3 flex items-center gap-1.5 rounded-xl bg-[#06192b] px-3 py-2 text-[11px] font-semibold text-white shadow-lg">
+                  <CircleCheck size={13} className="text-[#00a3d9]" /> {t["home.hero.badge"] ?? "Akt ilə təhvil"}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col justify-between gap-4">
+              <ul className="space-y-2.5 text-sm">
+                {[
+                  "Şəkil kəsilmir, öz nisbətində göstərilir.",
+                  "Şəkil yoxdursa, saytda kondisioner illüstrasiyası çıxır.",
+                  "Künc nişanlarının mətni: Sayt → Mətnlər → Ana səhifə.",
+                ].map((x) => (
+                  <li key={x} className="flex gap-2"><CircleCheck size={16} className="mt-0.5 shrink-0 text-primary" /> <span className="muted">{x}</span></li>
+                ))}
+              </ul>
+              <ImageSlot field="hero_image_url" url={settings.hero_image_url} folder="hero" hideImage hint="" />
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* Haqqımızda: şəkillər | mətn | siyahı + kart */}
+      <section className="card">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 className="card-title">Haqqımızda</h2>
+            <p className="muted mt-1 text-sm">Hero-dan sonrakı bölmə: saytda solda şəkillər və kart, sağda mətn.</p>
+          </div>
+          <span className="muted rounded-full bg-bg px-3 py-1 text-xs">Şəkillər yüklənən kimi saxlanır, mətnlər “Yadda saxla” ilə</span>
+        </div>
+        <div className="mt-5 grid gap-6 xl:grid-cols-[minmax(300px,1fr)_2fr]">
+          <div className="space-y-4">
+            <div>
+              <span className="label">Böyük şəkil (yuxarıda)</span>
+              <ImageSlot field="about_image_main_url" url={settings.about_image_main_url} folder="about" hint="16:9, məs. 1600×900 px." />
+            </div>
+            <div>
+              <span className="label">Kiçik şəkil (kartın yanında)</span>
+              <ImageSlot field="about_image_side_url" url={settings.about_image_side_url} folder="about" hint="Kvadrat, məs. 800×800 px." small />
+            </div>
+          </div>
+          <AboutForm key={settings.updated_at} settings={settings} />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// key (yuxarıda): saxlandıqdan sonra sahələr bazadakı yeni dəyərlərlə yenilənsin
+function AboutForm({ settings }: { settings: Tables<"site_settings"> }) {
+  const [state, action, pending] = useActionState(updateAbout, null);
+  useOnSuccess(state, undefined, "Haqqımızda mətni yadda saxlanıldı");
+  const [cardTitle, setCardTitle] = useState(settings.about_card_title ?? "");
+  const [cardText, setCardText] = useState(settings.about_card_text ?? "");
+  const [color, setColor] = useState(settings.about_card_color);
+  const c = CARD_COLORS.find((x) => x.id === color) ?? CARD_COLORS[0];
+
+  return (
+    <SaveConfirmForm action={action} className="grid gap-5 lg:grid-cols-2">
+      <div className="space-y-4">
+        <Field label="Başlıq">
+          <input name="about_title" defaultValue={settings.about_title ?? ""} maxLength={120} className="field" />
+        </Field>
+        <Field label="Mətn (abzasları boş sətirlə ayırın)">
+          <textarea name="about_text" defaultValue={settings.about_text ?? ""} maxLength={1500} rows={9} className="field resize-y !py-2" />
+        </Field>
+        <Field label="Siyahı (hər sətir bir bənd)">
+          <textarea name="about_points" defaultValue={settings.about_points ?? ""} maxLength={500} rows={3} className="field resize-y !py-2" />
+        </Field>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Kart: başlıq">
+            <input name="about_card_title" value={cardTitle} onChange={(e) => setCardTitle(e.target.value)} maxLength={60} className="field" />
+          </Field>
+          <Field label="Kart: alt yazı">
+            <input name="about_card_text" value={cardText} onChange={(e) => setCardText(e.target.value)} maxLength={80} className="field" />
+          </Field>
+        </div>
+        <fieldset>
+          <legend className="label">Kartın rəngi</legend>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {CARD_COLORS.map((x) => (
+              <label key={x.id} className="cursor-pointer">
+                <input type="radio" name="about_card_color" value={x.id} checked={color === x.id} onChange={() => setColor(x.id)} className="peer sr-only" />
+                <span className="flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm font-semibold transition-colors peer-checked:border-primary peer-checked:bg-primary-soft peer-focus-visible:ring-2 peer-focus-visible:ring-primary">
+                  <span className="h-5 w-5 shrink-0 rounded-md border border-line" style={{ background: x.bg }} />
+                  {x.label}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        {/* Kartın canlı önizləməsi: saytdakı kimi */}
+        <div className="rounded-2xl bg-[#eaf3f8] p-4">
+          <p className="mb-2 text-[11px] font-semibold text-muted">Kart saytda belə görünəcək</p>
+          <div className="flex max-w-xs flex-col justify-center rounded-[22px] p-5 shadow-sm" style={{ background: c.bg, color: c.fg }}>
+            <ClipboardCheck size={26} style={{ color: c.icon }} />
+            <p className="mt-3 text-base font-extrabold">{cardTitle || "Hər iş qeydə alınır"}</p>
+            {cardText && <p className="mt-1 text-xs" style={{ color: c.sub }}>{cardText}</p>}
+          </div>
+        </div>
+
+        <div className="mt-auto">
+          <Buttons pending={pending} label="Yadda saxla" />
+        </div>
+      </div>
+    </SaveConfirmForm>
+  );
+}
+
+// Şəkil yeri: yüklənən kimi bazaya yazılır, köhnə şəkil silinir. Şəkil kəsilmir (öz nisbətində).
+// compact: kiçik önizləmə (loqo); hideImage: yalnız düymələr (şəkil başqa yerdə önizlənir).
+function ImageSlot({ field, url, folder, hint, small = false, compact = false, hideImage = false, empty = "Şəkil yoxdur: saytda illüstrasiya göstərilir" }: {
+  field: HomeImageField;
+  url: string | null;
+  folder: string;
+  hint: string;
+  small?: boolean;
+  compact?: boolean;
+  hideImage?: boolean;
+  empty?: string;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function onFile(file: File | undefined) {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const next = await uploadSiteImage(file, folder);
+      const err = await updateHomeImage(field, next);
+      if (err) {
+        await removeSiteImage(next);
+        toast.error(err);
+      } else {
+        await removeSiteImage(url);
+        toast.success("Şəkil yadda saxlanıldı", SITE_DELAY);
+      }
+    } catch {
+      toast.error("Şəkil yüklənmədi. JPG, PNG və ya WebP olmalıdır.");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
+  async function onRemove() {
+    const err = await updateHomeImage(field, null);
+    if (err) return toast.error(err);
+    await removeSiteImage(url);
+    toast.success("Şəkil silindi", SITE_DELAY);
+  }
+
+  return (
+    <div className={small ? "max-w-xs" : ""}>
+      {!hideImage && (
+        <div className={`grid place-items-center overflow-hidden rounded-xl border border-dashed border-line bg-bg ${compact ? "min-h-24 p-3" : small ? "min-h-32" : "min-h-44"}`}>
+          {url
+            ? <img src={url} alt="" className={`block ${compact ? "max-h-20 w-auto" : "h-auto w-full"} ${uploading ? "opacity-50" : ""}`} />
+            : <span className="muted px-4 text-center text-xs">{uploading ? "Yüklənir..." : empty}</span>}
+        </div>
+      )}
+      <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
+      <div className={`flex flex-wrap items-center gap-2 ${hideImage ? "" : "mt-2"}`}>
+        <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} className="btn btn-secondary btn-sm">
+          <ImagePlus size={14} /> {uploading ? "Yüklənir..." : url ? "Dəyiş" : "Yüklə"}
+        </button>
+        {url && !uploading && (
+          <ConfirmButton onConfirm={onRemove} title="Şəkli sil" success={false} className="icon-btn icon-btn-danger !h-8"
+            question="Şəkil silinəcək, saytda yenidən ikon və ya illüstrasiya göstəriləcək.">
+            <Trash2 size={15} />
+          </ConfirmButton>
+        )}
+        {hint && <span className="muted text-[11px]">{hint}</span>}
+      </div>
+    </div>
+  );
+}
