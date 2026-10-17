@@ -9,6 +9,7 @@ import { CountUp } from "@/components/CountUp";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
 import { AllLogsModal } from "@/components/work/AllLogsModal";
+import { MonthDashboard } from "@/components/work/MonthDashboard";
 import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
@@ -178,6 +179,11 @@ export default function Home() {
             </Link>
           )}
         </section>
+      </div>
+
+      {/* Ayın icmalı: iş qeydləri ilə ustalar arasında (bütün ustaların ay üzrə gördüyü işlər) */}
+      <div className="mt-5">
+        <MonthDashboard onUsta={(name) => setAllLogs(name)} />
       </div>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[1.7fr_1fr]">
