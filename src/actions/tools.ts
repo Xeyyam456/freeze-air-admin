@@ -22,6 +22,9 @@ function toolFields(formData: FormData) {
   const packSize = Number(formData.get("pack_size") || 0);
   const packed = !!packName && Number.isInteger(packSize) && packSize > 0;
   const pack = packed ? { pack_name: packName, pack_size: packSize } : {};
+  // Minimum qalıq (istəyə görə): depodakı say bu həddə və ya azdırsa xəbərdarlıq; boş = xəbərdarlıq yoxdur
+  const minRaw = formData.has("min_stock") ? String(formData.get("min_stock") ?? "").trim() : null;
+  const minStock = minRaw === null ? {} : { min_stock: minRaw === "" ? null : Number(minRaw) };
   return {
     name: text(formData, "name"),
     quantity: Number(formData.get("quantity") ?? 1) * (packed ? packSize : 1),
@@ -29,12 +32,15 @@ function toolFields(formData: FormData) {
     ...kind,
     ...unit,
     ...pack,
+    ...minStock,
   };
 }
 
 function checkFields(f: ReturnType<typeof toolFields>): string | null {
   if (!f.name) return "Adı vacibdir.";
   if (!Number.isInteger(f.quantity) || f.quantity < 0) return "Say 0 və ya müsbət tam ədəd olmalıdır.";
+  const m = (f as { min_stock?: number | null }).min_stock;
+  if (m != null && (!Number.isInteger(m) || m < 0)) return "Minimum qalıq 0 və ya müsbət tam ədəd olmalıdır.";
   return null;
 }
 

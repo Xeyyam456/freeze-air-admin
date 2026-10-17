@@ -34,7 +34,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - `.env.local` (git-ignored, **oxuma**): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Gizli açar burada yoxdur və olmamalıdır.
 
 ## Kod quruluşu (`src/`)
-- `App.tsx`: marşrutlar `/login`, `/`, `/sirketler(/:id)`, `/magazalar(/:id)`, `/ustalar`, `/rehberlik`, `/depo`, `/muracietler`, `/sayt`; naməlum ünvan → `pages/NotFound.tsx` (tünd 404 ekranı, "Panelə qayıt"); `RequireAuth` (admin üçün `ContactRequestsListener` də burada); `<Toaster />`.
+- `App.tsx`: marşrutlar `/login`, `/`, `/sirketler(/:id)`, `/magazalar(/:id)`, `/ustalar`, `/rehberlik`, `/depo`, `/isler`, `/muracietler`, `/sayt`, `/sebet` (yalnız admin); naməlum ünvan → `pages/NotFound.tsx` (tünd 404 ekranı, "Panelə qayıt"); `RequireAuth` (admin üçün `ContactRequestsListener` də burada); `<Toaster />`.
 - `auth/AuthProvider.tsx`: sessiya + `admin`, `owner`, `storekeeper`, `canManageTools` (sahib və ya depo məsulu), `name`, `position`, `linked`, `employeeId`, `photoUrl`, `reload()`.
 - `lib/`:
   - `supabase/client.ts`: tək brauzer klienti, yalnız publishable açar;
@@ -60,7 +60,18 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Sürətli keçidlər. **Ən altdakı "Bölmələr" sırası çıxarılıb** (istifadəçi: "gərək yoxdu"; menyu onsuz da bölmələrə aparır) — yenidən əlavə etmə.
 - Məlumat `useData(fetchDashboard)` ilə; `revalidate()` (məs. Realtime müraciət) hamısını yeniləyir.
 
+### Görülən işlər (`/isler`, `pages/WorkLogs.tsx`; menyuda "İşlər")
+- Sol: 4 xülasə xanası (iş sayı, iş görülən gün, usta, fərqli yer) + günlərə görə qruplu siyahı (öz içində sürüşür, klik → `WorkLogModal`). Sağ panel: **tarix aralığı** (`DatePicker` + "Bu ay / Keçən ay / Son 7 gün"), usta, şirkət/market, axtarış, **"Excel-ə ixrac"**. Standart aralıq: bu ayın 1-i → bu gün. Ən çox 2000 iş yüklənir (aşarsa xəbərdarlıq).
+- İxrac **CSV** faylıdır (UTF-8 BOM + nöqtəli vergül: Excel birbaşa açır; ayrıca Excel kitabxanası qoşulmayıb). Sütunlar: Tarix, Saat, Usta, İş yeri, Görülən iş.
+
+### Səbət (`/sebet`, `pages/Trash.tsx`, yalnız admin; migrasiya 0038)
+- Silinən **şirkət, mağaza/filial, usta, alət** və onlarla birlikdə silinənlər (filiallar, alətin təhvilləri və parçaları) bazadakı **BEFORE DELETE tətikçiləri** ilə `trash` cədvəlinə nüsxə kimi yazılır; eyni silmə əməliyyatı eyni `batch` (tranzaksiya nömrəsi) daşıyır. Mövcud sorğulara və silmə kodlarına toxunulmayıb.
+- Səhifədə hər batch bir sətir ("+ 10 filial/mağaza", "+ 2 təhvil"): **Bərpa et** (RPC `restore_trash(batch)`: asılılıq sırası ilə geri yazır, şirkət/mağaza silinəndə yeri boşalan iş qeydlərini yenidən bağlayır, silinən ustanın giriş hesabı yoxdursa `user_id` boş qalır; eyni ad/kod varsa xəta və heç nə dəyişmir) və **Həmişəlik sil** (`trash`-dan silir). Avtomatik təmizləmə yoxdur.
+- Diqqət: usta silinəndə giriş hesabı (auth) ayrıca silinir və bərpa olunmur; şəkillər (storage) toxunulmazdır. Test məlumatını silsən səbətə düşür: yoxladıqdan sonra "Həmişəlik sil".
+
 ### Depo (`/depo`, `pages/Depot.tsx` + `components/depot/DepotForms.tsx`)
+- **Tarixçə** düyməsi (siyahının üstündə, aktiv tabın növü üçün; `components/depot/HistoryModal.tsx`): son 400 təhvil, günlərə görə qruplu, axtarışlı: kim nə vaxt götürdü / qaytardı (materialda "işlədi N, qalan M depoya"). Tab deyil, pəncərədir (istifadəçi əvvəl "çox qəliz" demişdi).
+- **Minimum qalıq** (`tools.min_stock`, istəyə görə, formada "Minimum qalıq"): depodakı say (materialda tam hissə + parçalar) həddə bərabər və ya azdırsa cədvəldə sarı **"azdır"** nişanı və admin **Panel**də "Depoda azalıb: ..." xəbərdarlığı (`isLowStock()`). Boşdursa xəbərdarlıq yoxdur.
 - Hamı baxır; yazmaq `canManageTools` (bazada `can_manage_tools()`). Aksiyalar `actions/tools.ts`: `addTool`, `updateTool`, `deleteTool`, `giveTool`, `returnTool(assignmentId, say)`, `setStorekeeper`.
 - **Sadə saxla** (istifadəçi əvvəlki variantı "çox qəliz" adlandırıb): axtarış + cədvəl (Alət | Cəmi | Ustalarda | Depoda). Göstərici kartları, filtrlər, zolaqlar, tarixçə tabı **qəsdən yoxdur**.
 - **İki tab: "Alətlər" və "Materiallar"** (istifadəçi: depoda yalnız alət yox, mis boru, qaz balonu kimi sərf materialları da olur). Eyni cədvəl, eyni qaydalar (say, ustaya vermə, geri alma, dərhal say xəbərdarlığı); fərq: material **ölçü vahidi** ilə ("50 metr", "Vahid" sahəsi: ədəd, metr, kq, litr...). Tab həm siyahını, həm sağdakı **"Yeni alət / Yeni material"** formasını dəyişir (alət və material ayrı əlavə olunur; `kind` gizli sahə). Hər tabda ikinci keçid: **"Siyahı" / "Ustalar üzrə"**: usta adı, üzərindəki alət/material ("Drel, Manometr ×2", "Mis boru 12 metr") və say (alətdə ədəd cəmi, materialda növ sayı); sətrə klik → `PersonModal` (ustanın alətləri/materialları və "Geri al").
@@ -160,7 +171,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da yalnız `contact_requests`. Hadisəni RLS-ə görə yalnız admin alır.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0037`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0038`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
@@ -184,6 +195,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0033: materialın istifadəsi: `tool_assignments.used`, cədvəl `material_pieces` (depodakı qalıq parçalar), `tool_stock.pieces_count/pieces_total`, RPC `finish_material`, `give_piece`.;
   - 0034: `give_piece`-ə `p_amount`: parçanın bir hissəsini ustaya vermək (qalan hissə parça kimi qalır);
   - 0036: qablaşdırılmış material (qaz balonu...): `tools.pack_name` (balon), `tools.pack_size` (hər qabda 11), `tool_stock`-a bu sütunlar; daxildə hər şey ölçü vahidi ilə (44 kq), qab yalnız daxiletmə və göstəriş üçün ("44 kq (4 balon)");
+  - 0038: Səbət (`trash` cədvəli, silinən şirkət/mağaza/usta/alət üçün BEFORE DELETE tətikçiləri, RPC `restore_trash`) və `tools.min_stock` (+ `tool_stock`-a sütun);
   - 0037: depo məsulunu istənilən admin təyin edir (əvvəl yalnız müdir): `employees_guard_storekeeper` `is_admin()` yoxlayır;
   - 0035: `material_pieces.original_length` (usta ilkin nə qədər qaytarıb; hissə veriləndə `length` azalır, ilkin qalır: sətir "1 metr · qalıb, ilkin 2 metr — Kərimov Orxan 2 metr qaytarıb" kimi oxunur).
 - RLS dəyişikliyini simulyasiya olunmuş JWT ilə DO-blokunda yoxla: `set_config('request.jwt.claims', json_build_object('sub', <uuid>, 'role', 'authenticated')::text, true)`, `set local role authenticated`. Nəticəni `raise exception 'NƏTİCƏ ...'` ilə çıxar, bu da hər şeyi geri qaytarır.

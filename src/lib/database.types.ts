@@ -308,6 +308,22 @@ export type Database = {
           },
         ]
       }
+      trash: {
+        Row: {
+          batch: number
+          data: Json
+          deleted_at: string
+          deleted_by: string | null
+          id: number
+          label: string
+          refs: Json | null
+          row_id: number
+          tbl: string
+        }
+        Insert: never
+        Update: never
+        Relationships: []
+      }
       tools: {
         Row: {
           category: string | null
@@ -315,6 +331,7 @@ export type Database = {
           id: number
           inventory_code: string | null
           kind: string
+          min_stock: number | null
           name: string
           notes: string | null
           pack_name: string | null
@@ -328,6 +345,7 @@ export type Database = {
           id?: never
           inventory_code?: string | null
           kind?: string
+          min_stock?: number | null
           name: string
           notes?: string | null
           pack_name?: string | null
@@ -341,6 +359,7 @@ export type Database = {
           id?: never
           inventory_code?: string | null
           kind?: string
+          min_stock?: number | null
           name?: string
           notes?: string | null
           pack_name?: string | null
@@ -434,6 +453,7 @@ export type Database = {
           id: number
           inventory_code: string | null
           kind: string
+          min_stock: number | null
           name: string
           notes: string | null
           pack_name: string | null
@@ -448,6 +468,7 @@ export type Database = {
     }
     Functions: {
       can_manage_tools: { Args: never; Returns: boolean }
+      restore_trash: { Args: { p_batch: number }; Returns: undefined }
       finish_material: { Args: { p_assignment_id: number; p_used: number }; Returns: undefined }
       give_piece: { Args: { p_amount?: number; p_employee_id: number; p_piece_id: number }; Returns: undefined }
       give_tool: { Args: { p_employee_id: number; p_quantity: number; p_tool_id: number }; Returns: undefined }

@@ -1,8 +1,9 @@
 
 import { useActionState, useMemo, useRef, useState } from "react";
-import { KeyRound, Pencil, Plus, Search, ShieldCheck, Trash2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
+import { History, KeyRound, Pencil, Plus, Search, ShieldCheck, Trash2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
 import { addStorekeeper, addTool, deleteTool, discardPiece, finishMaterial, givePiece, giveTool, returnTool, setStorekeeper, updateTool } from "@/actions/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
+import { HistoryModal } from "@/components/depot/HistoryModal";
 import { AccountSection, Avatar, type Accounts } from "@/components/employees/EmployeeForms";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
@@ -63,6 +64,11 @@ function norm(s: string | null | undefined) {
     .replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g");
 }
 
+// Depoda minimum qalıq həddinə çatıb: depodakı tam say (materialda + parçalar) həddə bərabər və ya ondan azdır
+export function isLowStock(t: { min_stock: number | null; available: number; pieces_total: number }) {
+  return t.min_stock != null && t.available + t.pieces_total <= t.min_stock;
+}
+
 // Alət / material əlavə et və redaktə et sahələri. Vahid (ədəd, kq, metr, litr...) açılan siyahıdan seçilir (alət və material üçün).
 // Ad: mövcud adlar təklif olunur (eyni material ikinci dəfə yazılmasın; təkrar ad əlavə edəndə də bloklanır).
 // Qablaşdırılmış material (qaz balonu...) üçün qab (balon) və hər qabdakı miqdar (11 kq) yazılır: say qabla daxil edilir,
@@ -93,6 +99,9 @@ function ToolFields({ t, kind, names = [] }: { t?: Tool; kind: Kind; names?: str
           <UnitSelect value={unit} onChange={setUnit} options={unitOptions} />
         </Field>
       </div>
+      <Field label={`Minimum qalıq (${unit.trim() || "vahid"}, istəyə görə)`}>
+        <input name="min_stock" type="number" min={0} step={1} defaultValue={t?.min_stock ?? ""} placeholder="Məs. 2: depoda ≤ 2 qalanda xəbərdarlıq" className="field" />
+      </Field>
       {kind === "tool" && (
         <Field label="İnventar kodu">
           <input name="inventory_code" defaultValue={t?.inventory_code ?? ""} placeholder="İstəyə görə" className="field" />
@@ -315,6 +324,7 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
   }, [employees, query, byEmployee, toolInfo]);
 
   const open = allTools.find((t) => t.id === openId) ?? null;
+  const [history, setHistory] = useState(false);
   const openPerson = employees.find((e) => e.id === openEmp) ?? null;
 
   return (
@@ -323,6 +333,7 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
         <ToolModal tool={open} holders={allHoldings.filter((h) => h.tool_id === open.id)} pieces={pieces.filter((p) => p.tool_id === open.id)}
           employees={employees} canManage={canManage} onClose={() => setOpenId(null)} />
       )}
+      {history && <HistoryModal kind={kind} onClose={() => setHistory(false)} />}
       {openPerson && (
         <PersonModal emp={openPerson} kind={kind} holds={byEmployee[openPerson.id] ?? []} toolInfo={toolInfo} canManage={canManage} onClose={() => setOpenEmp(null)} />
       )}
@@ -335,6 +346,8 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
 
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
         <KindTabs kind={kind} onKind={(k) => { onKind(k); setQuery(""); }} />
+        <div className="flex items-center gap-2">
+        <button type="button" onClick={() => setHistory(true)} className="btn btn-soft btn-sm !h-10"><History size={15} /> Tarixçə</button>
         <div className="inline-flex gap-1 rounded-xl bg-line/60 p-1" role="tablist" aria-label="Görünüş">
           {([["list", "Siyahı"], ["people", "Ustalar üzrə"]] as const).map(([v, label]) => (
             <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => setView(v)}
@@ -342,6 +355,7 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
               {label}
             </button>
           ))}
+        </div>
         </div>
       </div>
 
@@ -428,6 +442,7 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                       t.available ? "bg-ok-soft text-ok" : "bg-danger-soft text-danger"}`}>
                       {withUnit(t.available, t)}
                     </span>
+                    {isLowStock(t) && <span className="ml-1.5 rounded-full bg-[#fff4e0] px-2 py-0.5 text-[11px] font-bold text-[#b45309]" title={`Minimum qalıq: ${t.min_stock}`}>azdır</span>}
                   </td>
                   {kind === "material" && (
                     <td className="px-4 py-3 text-center text-[13px] tabular-nums">

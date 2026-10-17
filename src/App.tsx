@@ -11,6 +11,8 @@ import ManagementPage from "@/pages/Management";
 import NotFoundPage from "@/pages/NotFound";
 import RequestsPage from "@/pages/Requests";
 import SitePage from "@/pages/Site";
+import TrashPage from "@/pages/Trash";
+import WorkLogsPage from "@/pages/WorkLogs";
 
 // Giriş etməyən istifadəçi yalnız /login səhifəsini görür
 function RequireAuth() {
@@ -40,6 +42,8 @@ export default function App() {
             <Route path="ustalar" element={<EmployeesPage />} />
             <Route path="rehberlik" element={<ManagementPage />} />
             <Route path="depo" element={<DepotPage />} />
+            <Route path="isler" element={<WorkLogsPage />} />
+            <Route path="sebet" element={<TrashPage />} />
             <Route path="muracietler" element={<RequestsPage />} />
             <Route path="sayt" element={<SitePage />} />
             <Route path="*" element={<NotFoundPage />} />

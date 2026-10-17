@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router";
 import {
   ArrowRight, Building2, CalendarDays, ClipboardList, ExternalLink, FileSpreadsheet, Globe, Inbox, MapPin, Plus, Store,
-  UserPlus, Users, Wrench,
+  TriangleAlert, UserPlus, Users, Wrench,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
+import { isLowStock } from "@/components/depot/DepotForms";
 import { CountUp } from "@/components/CountUp";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
@@ -40,7 +41,10 @@ async function fetchDashboard() {
   const n = (r: { count: number | null }) => r.count ?? 0;
   const today = localDate();
 
-  const [companies, branches, markets, shops, tools, employees, logs, todayLogs, requests, unread] = await Promise.all([
+  const [lowStock, companies, branches, markets, shops, tools, employees, logs, todayLogs, requests, unread] = await Promise.all([
+    // Minimum qalıq həddi olan və həddə çatan alət/materiallar: paneldə xəbərdarlıq
+    supabase.from("tool_stock").select("id, name, kind, unit, available, pieces_total, min_stock").not("min_stock", "is", null)
+      .then((r) => (r.data ?? []).filter(isLowStock).sort((a, b) => a.name.localeCompare(b.name, "az"))),
     supabase.from("companies").select("*", head).eq("kind", "company").then(n),
     supabase.from("stores").select("*, companies!inner(kind)", head).eq("companies.kind", "company").then(n),
     supabase.from("companies").select("*", head).eq("kind", "market").then(n),
@@ -67,7 +71,7 @@ async function fetchDashboard() {
   return {
     companies, branches, markets, shops, tools,
     masters, managers: employees.length - masters.length,
-    logs, todayTotal: todayLogs.length, todayCount, requests, unread,
+    logs, todayTotal: todayLogs.length, todayCount, requests, unread, lowStock,
   };
 }
 
@@ -107,6 +111,20 @@ export default function Home() {
         <Stat to="/ustalar" icon={Users} label="Usta" value={d?.masters.length} sub={d && `${d.managers} rəhbər`} tone="from-[#6d5efc] to-[#1f6feb]" />
         <Stat to="/depo" icon={Wrench} label="Alət" value={d?.tools.total} sub={d && `${d.tools.total - d.tools.out} depoda, ${d.tools.out} ustalarda`} tone="from-[#f59e0b] to-[#f97316]" />
       </div>
+
+      {/* Depoda azalanlar: minimum qalıq həddinə çatan alət və materiallar */}
+      {!!d?.lowStock.length && (
+        <Link to="/depo" className="mt-5 flex items-start gap-3 rounded-2xl border border-[#f5d9a8] bg-[#fff8ec] px-5 py-4 transition-colors hover:bg-[#fff3dc]">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#fde7bf] text-[#b45309]"><TriangleAlert size={18} /></span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-bold text-[#92400e]">Depoda azalıb: {d.lowStock.length} {d.lowStock.length === 1 ? "mövqe" : "mövqe"}</span>
+            <span className="mt-0.5 block text-sm text-[#92400e]/90">
+              {d.lowStock.map((t) => `${t.name} (${t.available + t.pieces_total} ${t.kind === "material" ? t.unit : "ədəd"} qalıb)`).join(", ")}
+            </span>
+          </span>
+          <ArrowRight size={16} className="mt-2 shrink-0 text-[#b45309]" />
+        </Link>
+      )}
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[1.7fr_1fr]">
         {/* Bu gün: iş qeydləri (son 4; hamısı pəncərədə) */}
