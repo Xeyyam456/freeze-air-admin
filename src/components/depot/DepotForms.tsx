@@ -8,6 +8,7 @@ import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/com
 import { Modal } from "@/components/Modal";
 import { giveLimitText, QuantityInput } from "@/components/QuantityInput";
 import { ToolPicker } from "@/components/ToolPicker";
+import { UnitSelect } from "@/components/UnitSelect";
 import type { Tables } from "@/lib/database.types";
 import { toast } from "@/lib/toast";
 
@@ -89,9 +90,7 @@ function ToolFields({ t, kind, names = [] }: { t?: Tool; kind: Kind; names?: str
           <input name="quantity" type="number" min={0} step={1} value={count} onChange={(e) => setCount(Number(e.target.value))} required className="field" />
         </Field>
         <Field label="Vahid">
-          <select name="unit" value={unit} onChange={(e) => setUnit(e.target.value)} className="field">
-            {unitOptions.map((u) => <option key={u} value={u}>{u}</option>)}
-          </select>
+          <UnitSelect value={unit} onChange={setUnit} options={unitOptions} />
         </Field>
       </div>
       {kind === "tool" && (
