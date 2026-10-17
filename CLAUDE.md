@@ -189,6 +189,7 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 - `components/site/textFields.ts` (admin sahələri) ↔ web `src/lib/site-texts.ts` (`TEXT_DEFAULTS`). Yeni mətn: hər ikisinə açar + bazaya sətir (miqrasiya).
 - `components/site/EquipmentEditor.tsx` `ILLUSTRATED_KEYS` ↔ web `src/lib/site-content.ts` (illüstrasiyası olan avadanlıqlar: split, cassette, floor, ducted, outdoor).
 - Dizayn: `src/index.css` ↔ web `src/app/globals.css` (tokenlər eynidir). Kopya komponentlər: Modal, ConfirmModal, ConfirmButton, forms, Toaster + `lib/toast.ts`, DatePicker, StoreCard, MapButton, SidePanel, Page, LogoutButton, `work/WorkLogForm`, `work/PlacePicker`, `lib/{experience,kinds,navigation,form-state}.ts`. Fərq: admin-də `"use client"` və Next importları yoxdur, `refresh()` əvəzinə `revalidate()`.
+- İş qeydi pəncərəsi: `components/work/WorkLogModal.tsx` ↔ web `components/work/WorkLogModal.tsx`.
 - Depo: `components/depot/DepotForms.tsx` ↔ web `components/depot/DepotView.tsx`; `actions/tools.ts` ↔ web `lib/tools.ts`; `components/{ToolPicker,QuantityInput}.tsx` ↔ web.
 - Avatar çevirmə (`toSquareWebp`): `employees/AvatarUpload.tsx` ↔ web `components/ProfileButton.tsx`.
 
