@@ -35,7 +35,7 @@ const TEXT: Record<Kind, {
 }> = {
   tool: {
     tab: "Alətlər", col: "Alət", newTitle: "Yeni alət", addLabel: "Aləti əlavə et", added: "Alət əlavə edildi", editTitle: "Aləti redaktə et",
-    deleteTitle: "Aləti sil", qty: "Say (ədəd)", placeholder: "Vakuum nasos", search: "Alət və ya usta axtar...",
+    deleteTitle: "Aləti sil", qty: "Say", placeholder: "Vakuum nasos", search: "Alət və ya usta axtar...",
     empty: "Hələ alət yoxdur", hint: "Üzərindəki alətlər", peopleCol: "Ədəd",
   },
   material: {
@@ -46,8 +46,13 @@ const TEXT: Record<Kind, {
 };
 const UNITS = ["ədəd", "metr", "kq", "litr", "rulon", "bağlama"];
 
-// "12 metr" (material) | "12" (alət)
-const withUnit = (n: number, t: Pick<Tool, "kind" | "unit">) => (t.kind === "material" ? `${n} ${t.unit}` : String(n));
+// Qablı materialda (balon...) tam qabların sayı mötərizədə: "44 kq (4 balon)"
+type PackInfo = { pack_name: string | null; pack_size: number | null };
+const packSuffix = (n: number, p: PackInfo) => (p.pack_size && p.pack_name && n > 0 && n % p.pack_size === 0 ? ` (${n / p.pack_size} ${p.pack_name})` : "");
+// "12 metr" / "44 kq (4 balon)" (material) | "12" (alət)
+const withUnit = (n: number, t: Pick<Tool, "kind" | "unit" | "pack_name" | "pack_size">) => (t.kind === "material" ? `${n} ${t.unit}${packSuffix(n, t)}` : String(n));
+// Ustada olan miqdar: "11 kq (1 balon)"
+const showQty = (n: number, unit: string, p?: PackInfo | null) => `${n} ${unit}${p ? packSuffix(n, p) : ""}`;
 
 // Axtarış üçün sadələşdirmə: "Əlizadə" və "elizade" eyni tapılsın.
 function norm(s: string | null | undefined) {
@@ -57,28 +62,57 @@ function norm(s: string | null | undefined) {
     .replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g");
 }
 
+// Alət / material əlavə et və redaktə et sahələri. Vahid (ədəd, kq, metr, litr...) həm alət, həm material üçün seçilir.
+// Qablaşdırılmış material (qaz balonu...) üçün qab (balon) və hər qabdakı miqdar (11 kq) yazılır: say qabla daxil edilir,
+// daxildə ölçü vahidi ilə saxlanır (4 balon × 11 kq = 44 kq). Beləcə usta 1 balon götürüb 5 kq qaytara bilir.
 function ToolFields({ t, kind }: { t?: Tool; kind: Kind }) {
   const tx = TEXT[kind];
+  const editing = !!t;
+  const [count, setCount] = useState(t?.quantity ?? 1);
+  const [unit, setUnit] = useState(t?.unit ?? "ədəd");
+  const [packName, setPackName] = useState("");
+  const [packSize, setPackSize] = useState("");
+  const size = Number(packSize);
+  const packed = kind === "material" && !editing && packName.trim() !== "" && Number.isInteger(size) && size > 0;
+
   return (
     <>
       <Field label="Adı">
         <input name="name" defaultValue={t?.name} placeholder={tx.placeholder} required className="field" />
       </Field>
       <div className="grid grid-cols-2 gap-3">
-        <Field label={tx.qty}>
-          <input name="quantity" type="number" min={0} step={1} defaultValue={t?.quantity ?? 1} required className="field" />
+        <Field label={packed ? `Say (${packName.trim()})` : tx.qty}>
+          <input name="quantity" type="number" min={0} step={1} value={count} onChange={(e) => setCount(Number(e.target.value))} required className="field" />
         </Field>
-        {kind === "material" ? (
-          <Field label="Vahid">
-            <input name="unit" defaultValue={t?.unit ?? "ədəd"} required list="material-units" className="field" />
-            <datalist id="material-units">{UNITS.map((u) => <option key={u} value={u} />)}</datalist>
-          </Field>
-        ) : (
-          <Field label="İnventar kodu">
-            <input name="inventory_code" defaultValue={t?.inventory_code ?? ""} placeholder="İstəyə görə" className="field" />
-          </Field>
-        )}
+        <Field label="Vahid">
+          <input name="unit" value={unit} onChange={(e) => setUnit(e.target.value)} required list="depot-units" className="field" />
+          <datalist id="depot-units">{UNITS.map((u) => <option key={u} value={u} />)}</datalist>
+        </Field>
       </div>
+      {kind === "tool" && (
+        <Field label="İnventar kodu">
+          <input name="inventory_code" defaultValue={t?.inventory_code ?? ""} placeholder="İstəyə görə" className="field" />
+        </Field>
+      )}
+      {kind === "material" && !editing && (
+        <div className="rounded-xl border border-dashed border-line p-3">
+          <p className="text-xs font-semibold">Qablaşdırılıbsa (istəyə görə)</p>
+          <p className="muted mt-0.5 text-xs">Qaz balonu, kanistr kimi: say qabla yazılır, içindəki miqdar vahidlə (kq, litr). Usta qabdan işlədib qalanını qaytara bilir.</p>
+          <div className="mt-2 grid grid-cols-2 gap-3">
+            <Field label="Qabın adı">
+              <input name="pack_name" value={packName} onChange={(e) => setPackName(e.target.value)} placeholder="balon" className="field" />
+            </Field>
+            <Field label={`Hər qabda (${unit.trim() || "vahid"})`}>
+              <input name="pack_size" type="number" min={1} step={1} value={packSize} onChange={(e) => setPackSize(e.target.value)} placeholder="11" className="field" />
+            </Field>
+          </div>
+          {packed && (
+            <p className="mt-2 text-sm font-semibold">
+              Cəmi: {count * size} {unit.trim()} <span className="muted font-medium">({count} {packName.trim()})</span>
+            </p>
+          )}
+        </div>
+      )}
     </>
   );
 }
@@ -102,7 +136,8 @@ export function AddToolCard({ kind, onKind }: { kind: Kind; onKind: (k: Kind) =>
   const [state, action, pending] = useActionState(addTool, null);
   const ref = useRef<HTMLFormElement>(null);
   const tx = TEXT[kind];
-  useOnSuccess(state, () => ref.current?.reset(), tx.added);
+  const [formKey, setFormKey] = useState(0); // forma təzələnir (qab sahələri də sıfırlanır)
+  useOnSuccess(state, () => { ref.current?.reset(); setFormKey((k) => k + 1); }, tx.added);
 
   return (
     <div className="card space-y-4">
@@ -112,7 +147,7 @@ export function AddToolCard({ kind, onKind }: { kind: Kind; onKind: (k: Kind) =>
       </div>
       <KindTabs kind={kind} onKind={onKind} />
       {/* key: növ dəyişəndə forma təzələnir (köhnə yazılar qalmasın) */}
-      <ActionForm key={kind} ref={ref} action={action} className="space-y-4">
+      <ActionForm key={`${kind}-${formKey}`} ref={ref} action={action} className="space-y-4">
         <input type="hidden" name="kind" value={kind} />
         <ToolFields kind={kind} />
         <Buttons pending={pending} label={tx.addLabel} />
@@ -278,7 +313,7 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                 const label = (h: Holding) => {
                   const t = toolInfo.get(h.tool_id);
                   if (!t) return "—";
-                  return kind === "material" ? `${t.name} ${h.quantity} ${t.unit}` : `${t.name}${h.quantity > 1 ? ` ×${h.quantity}` : ""}`;
+                  return kind === "material" ? `${t.name} ${h.quantity} ${t.unit}${packSuffix(h.quantity, t)}` : `${t.name}${h.quantity > 1 ? ` ×${h.quantity}` : ""}`;
                 };
                 return (
                   <tr key={e.id} onClick={() => setOpenEmp(e.id)} tabIndex={0}
@@ -354,27 +389,29 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
   );
 }
 
-// toolName verilirsə: usta pəncərəsində (sətirdə usta yox, alətin adı göstərilir). unit: ölçü vahidi (ədəd, metr...)
+// toolName verilirsə: usta pəncərəsində (sətirdə usta yox, alətin adı göstərilir). unit: ölçü vahidi (ədəd, metr, kq...)
+// pack: qablı materialda (balon) tam qabların sayı mötərizədə göstərilir: "11 kq (1 balon)"
 // Alət: "Geri al" (ustada 1 ədəddirsə dərhal, çoxdursa neçə ədəd olduğu soruşulur).
-// Material: "Təhvil ver": usta neçə işlədib deyilir; işlənən sərf olunur, qalan hissə depoya ayrı parça kimi yazılır.
-function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = false }: {
-  holding: Holding; canManage: boolean; toolName?: string; unit?: string; material?: boolean;
+// Material: "Təhvil ver": usta neçə işlədib (və ya neçə qaytarır) deyilir; işlənən sərf olunur, qalan hissə depoya ayrı parça kimi yazılır.
+function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = false, pack = null }: {
+  holding: Holding; canManage: boolean; toolName?: string; unit?: string; material?: boolean; pack?: PackInfo | null;
 }) {
   const [asking, setAsking] = useState(false);
-  const [used, setUsed] = useState(0); // material: yazılan "işlədilib" (qalanı canlı göstərmək üçün)
+  // Material: "İşlədilib" və ya "Qaytarılır" (usta qaz balonundan 5 kq qaytarır): eyni nəticə, fərqli yazılış
+  const [mode, setMode] = useState<"used" | "left">("used");
+  const [val, setVal] = useState(0);
+  const used = mode === "used" ? val : holding.quantity - val;
+  const invalid = val > holding.quantity;
   const [state, action, pending] = useActionState(
     async (_prev: Awaited<ReturnType<typeof returnTool>>, fd: FormData) => {
       const qty = Number(fd.get("quantity") ?? holding.quantity);
-      if (material) {
-        if (qty > holding.quantity) return { error: `Ustada cəmi ${holding.quantity} ${unit} var.` };
-        return finishMaterial(holding.id, qty);
-      }
       if (qty > holding.quantity) return { error: `Ustada cəmi ${holding.quantity} ${unit} var.` };
+      if (material) return finishMaterial(holding.id, mode === "used" ? qty : holding.quantity - qty);
       return returnTool(holding.id, qty);
     },
     null,
   );
-  useOnSuccess(state, () => { setAsking(false); setUsed(0); }, material ? "Təhvil alındı" : "Geri alındı");
+  useOnSuccess(state, () => { setAsking(false); setVal(0); setMode("used"); }, material ? "Təhvil alındı" : "Geri alındı");
 
   const leftover = holding.quantity - used;
   const hint = used === 0 ? `Heç nə işlənməyib: ${holding.quantity} ${unit} tam depoya qayıdır.`
@@ -395,7 +432,7 @@ function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = f
             <span className="min-w-0 flex-1 truncate text-sm font-semibold">{holding.employees?.full_name ?? "—"}</span>
           </>
         )}
-        <span className="text-sm font-bold tabular-nums text-primary">{holding.quantity} {unit}</span>
+        <span className="text-sm font-bold tabular-nums text-primary">{showQty(holding.quantity, unit, pack)}</span>
         {canManage && material && !asking && (
           <button type="button" onClick={() => setAsking(true)} className="btn btn-secondary btn-sm !h-8">Təhvil ver</button>
         )}
@@ -415,15 +452,23 @@ function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = f
       </div>
       {canManage && material && asking && (
         <ActionForm action={action} className="mt-2 rounded-xl bg-bg p-3">
+          <div className="mb-2 inline-flex gap-0.5 rounded-lg bg-line/60 p-0.5" role="tablist" aria-label="Təhvil yazılışı">
+            {([["used", "İşlədilib"], ["left", "Qaytarılır"]] as const).map(([m, label]) => (
+              <button key={m} type="button" role="tab" aria-selected={mode === m} onClick={() => { setMode(m); setVal(0); }}
+                className={`rounded-md px-3 py-1 text-xs font-semibold transition-colors ${mode === m ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
+                {label}
+              </button>
+            ))}
+          </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold">İşlədilib:</span>
-            <QuantityInput min={0} defaultValue={0} limit={holding.quantity} className="!h-8 !w-20" onValue={setUsed}
+            <span className="text-sm font-semibold">{mode === "used" ? "İşlədilib:" : "Qaytarılır:"}</span>
+            <QuantityInput key={mode} min={0} defaultValue={0} limit={holding.quantity} className="!h-8 !w-20" onValue={setVal}
               limitText={(limit) => `Ustada cəmi ${limit} ${unit} var.`} />
             <span className="muted text-sm">{unit}</span>
-            <button type="submit" disabled={pending || used > holding.quantity} className="btn btn-primary btn-sm !h-8 ml-auto">{pending ? "..." : "Təhvil al"}</button>
-            <button type="button" onClick={() => { setAsking(false); setUsed(0); }} className="btn btn-cancel btn-sm !h-8">Ləğv</button>
+            <button type="submit" disabled={pending || invalid} className="btn btn-primary btn-sm !h-8 ml-auto">{pending ? "..." : "Təhvil al"}</button>
+            <button type="button" onClick={() => { setAsking(false); setVal(0); setMode("used"); }} className="btn btn-cancel btn-sm !h-8">Ləğv</button>
           </div>
-          <p className="muted mt-2 text-xs">{used > holding.quantity ? "İşlədilən götürülən miqdardan çox ola bilməz." : hint}</p>
+          <p className="muted mt-2 text-xs">{invalid ? "Ustada olandan çox ola bilməz." : hint}</p>
         </ActionForm>
       )}
     </li>
@@ -434,17 +479,25 @@ function GiveForm({ tool, employees }: { tool: Tool; employees: DepotEmployee[] 
   const [state, action, pending] = useActionState(giveTool, null);
   const [picked, setPicked] = useState<number | null>(null);
   const [formKey, setFormKey] = useState(0);
+  // Qablı materialda (balon...) say qabla ("1 balon") və ya ölçü vahidi ilə ("11 kq") yazıla bilər
+  const [byPack, setByPack] = useState(false);
   useOnSuccess(state, () => { setPicked(null); setFormKey((k) => k + 1); }, "Verildi");
   // Alət/material yalnız ustaya verilir (rəhbərlik siyahıda yoxdur; bazada da trigger yoxlayır)
   const items = employees.filter((e) => !e.is_management).map((e) => ({ id: e.id, name: e.full_name }));
+  const packed = !!tool.pack_size && !!tool.pack_name;
+  const factor = packed && byPack ? tool.pack_size! : 1;
+  const unitLabel = packed && byPack ? tool.pack_name! : tool.unit;
+  const limit = Math.floor(tool.available / factor);
 
-  // Göndərməzdən əvvəl də yoxla: say depodakından çoxdursa, sorğu getmir, tost çıxır
+  // Göndərməzdən əvvəl də yoxla: say depodakından çoxdursa, sorğu getmir, tost çıxır. Baza həmişə ölçü vahidi ilə işləyir.
   function submit(fd: FormData) {
     const wanted = Number(fd.get("quantity"));
-    if (wanted > tool.available) {
-      toast.error(giveLimitText(tool.available, wanted, tool.unit));
+    const amount = wanted * factor;
+    if (amount > tool.available) {
+      toast.error(giveLimitText(limit, wanted, unitLabel));
       return;
     }
+    fd.set("quantity", String(amount));
     action(fd);
   }
 
@@ -456,7 +509,17 @@ function GiveForm({ tool, employees }: { tool: Tool; employees: DepotEmployee[] 
       <input type="hidden" name="tool_id" value={tool.id} />
       <ToolPicker items={items} value={picked} onChange={setPicked} name="employee_id" icon={Users}
         placeholder="Kimə verilir?" emptyLabel="Aktiv əməkdaş yoxdur" searchLabel="Usta axtar..." />
-      <QuantityInput limit={tool.available} limitText={(limit, wanted) => giveLimitText(limit, wanted, tool.unit)} />
+      {packed && (
+        <span className="inline-flex shrink-0 gap-0.5 self-start rounded-lg bg-line/60 p-0.5" role="tablist" aria-label="Vahid">
+          {([[false, tool.unit], [true, tool.pack_name!]] as const).map(([v, label]) => (
+            <button key={String(v)} type="button" role="tab" aria-selected={byPack === v} onClick={() => setByPack(v)}
+              className={`h-8 rounded-md px-2.5 text-xs font-semibold transition-colors ${byPack === v ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
+              {label}
+            </button>
+          ))}
+        </span>
+      )}
+      <QuantityInput key={String(byPack)} limit={limit} limitText={(l, w) => giveLimitText(l, w, unitLabel)} />
       <button type="submit" disabled={pending || !picked} className="btn btn-primary btn-sm !h-9">{pending ? "..." : "Ver"}</button>
     </ActionForm>
   );
@@ -621,7 +684,7 @@ function ToolModal({ tool, holders, pieces, employees, canManage, onClose }: {
         <p className="muted py-3 text-sm">Hamısı depodadır.</p>
       ) : (
         <ul className="nice-scroll max-h-60 divide-y divide-line overflow-y-auto">
-          {holders.map((h) => <HolderRow key={h.id} holding={h} canManage={canManage} unit={tool.unit} material={material} />)}
+          {holders.map((h) => <HolderRow key={h.id} holding={h} canManage={canManage} unit={tool.unit} material={material} pack={tool} />)}
         </ul>
       )}
 
@@ -675,7 +738,7 @@ function PersonModal({ emp, kind, holds, toolInfo, canManage, onClose }: {
       {holds.length > 0 && (
         <ul className="nice-scroll mt-4 max-h-[min(433px,calc(100vh-260px))] divide-y divide-line overflow-y-auto">
           {holds.map((h) => (
-            <HolderRow key={h.id} holding={h} canManage={canManage} toolName={toolInfo.get(h.tool_id)?.name ?? "—"} unit={toolInfo.get(h.tool_id)?.unit} material={kind === "material"} />
+            <HolderRow key={h.id} holding={h} canManage={canManage} toolName={toolInfo.get(h.tool_id)?.name ?? "—"} unit={toolInfo.get(h.tool_id)?.unit} material={kind === "material"} pack={toolInfo.get(h.tool_id)} />
           ))}
         </ul>
       )}

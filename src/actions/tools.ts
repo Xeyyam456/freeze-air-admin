@@ -16,12 +16,18 @@ function toolFields(formData: FormData) {
   ) as { inventory_code?: string | null; category?: string | null; notes?: string | null };
   const kind = formData.has("kind") ? { kind: formData.get("kind") === "material" ? "material" : "tool" } : {};
   const unit = formData.has("unit") ? { unit: text(formData, "unit") ?? "ədəd" } : {};
+  // Qablaşdırılmış material (balon...): say qabla yazılır, daxildə ölçü vahidi ilə saxlanır (4 balon × 11 kq = 44 kq)
+  const packName = text(formData, "pack_name");
+  const packSize = Number(formData.get("pack_size") || 0);
+  const packed = !!packName && Number.isInteger(packSize) && packSize > 0;
+  const pack = packed ? { pack_name: packName, pack_size: packSize } : {};
   return {
     name: text(formData, "name"),
-    quantity: Number(formData.get("quantity") ?? 1),
+    quantity: Number(formData.get("quantity") ?? 1) * (packed ? packSize : 1),
     ...optional,
     ...kind,
     ...unit,
+    ...pack,
   };
 }
 

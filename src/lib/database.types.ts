@@ -317,6 +317,8 @@ export type Database = {
           kind: string
           name: string
           notes: string | null
+          pack_name: string | null
+          pack_size: number | null
           quantity: number
           unit: string
         }
@@ -328,6 +330,8 @@ export type Database = {
           kind?: string
           name: string
           notes?: string | null
+          pack_name?: string | null
+          pack_size?: number | null
           quantity?: number
           unit?: string
         }
@@ -339,6 +343,8 @@ export type Database = {
           kind?: string
           name?: string
           notes?: string | null
+          pack_name?: string | null
+          pack_size?: number | null
           quantity?: number
           unit?: string
         }
@@ -430,6 +436,8 @@ export type Database = {
           kind: string
           name: string
           notes: string | null
+          pack_name: string | null
+          pack_size: number | null
           pieces_count: number
           pieces_total: number
           quantity: number

@@ -63,6 +63,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Hamı baxır; yazmaq `canManageTools` (bazada `can_manage_tools()`). Aksiyalar `actions/tools.ts`: `addTool`, `updateTool`, `deleteTool`, `giveTool`, `returnTool(assignmentId, say)`, `setStorekeeper`.
 - **Sadə saxla** (istifadəçi əvvəlki variantı "çox qəliz" adlandırıb): axtarış + cədvəl (Alət | Cəmi | Ustalarda | Depoda). Göstərici kartları, filtrlər, zolaqlar, tarixçə tabı **qəsdən yoxdur**.
 - **İki tab: "Alətlər" və "Materiallar"** (istifadəçi: depoda yalnız alət yox, mis boru, qaz balonu kimi sərf materialları da olur). Eyni cədvəl, eyni qaydalar (say, ustaya vermə, geri alma, dərhal say xəbərdarlığı); fərq: material **ölçü vahidi** ilə ("50 metr", "Vahid" sahəsi: ədəd, metr, kq, litr...). Tab həm siyahını, həm sağdakı **"Yeni alət / Yeni material"** formasını dəyişir (alət və material ayrı əlavə olunur; `kind` gizli sahə). Hər tabda ikinci keçid: **"Siyahı" / "Ustalar üzrə"**: usta adı, üzərindəki alət/material ("Drel, Manometr ×2", "Mis boru 12 metr") və say (alətdə ədəd cəmi, materialda növ sayı); sətrə klik → `PersonModal` (ustanın alətləri/materialları və "Geri al").
+- **Vahid və qab**: əlavə etmə formasında (alət və material üçün) **Vahid** (ədəd / kq / metr / litr...) yazılır. Material üçün istəyə görə **qab**: "Qabın adı" (balon) + "Hər qabda" (11): say qabla yazılır, daxildə ölçü vahidi ilə saxlanır (4 balon × 11 kq = 44 kq), göstərişdə "44 kq (4 balon)" (tam qablar). Ustaya vermədə "kq | balon" keçidi (1 balon = 11 kq). Təhvildə "İşlədilib | Qaytarılır" keçidi: usta balondan 5 kq qaytarsa "Qaytarılır: 5" yazılır (işlədilib = götürülən − 5), 5 kq depoya parça kimi qayıdır.
 - **Material təhvili ("Təhvil ver")**: materialda ustanın sətrində "Geri al" əvəzinə **"Təhvil ver"** — `İşlədilib: [N] metr` yazılır, canlı izah çıxır ("2 metr qalıb: depoya ayrıca parça kimi yazılır" / "Hamısı işlənib" / "Heç nə işlənməyib: tam depoya qayıdır"); sonra "Təhvil al" (`finishMaterial`). Alət modalı: başlıqda "Ümumi X (tam: depoda / ustalarda; parçalar: N ədəd, X)", altda **"Depodakı parçalar"** (4 sətir görünür, qalanı gizli scrollbar ilə sürüşür) — hər parça ayrıca (neçə metr, kim qaytarıb, tarix) + "Ver" (ustaya, `givePiece`: pəncərədə **nə qədər** verilir, hamısı və ya bir hissəsi; qalan hissə depoda parça kimi qalır) + sil (sərf olunub, `discardPiece`). Cədvəldə materialda "Cəmi" = tam + parçalar, "Tam (depoda)" və "Parçalar" sütunları. `QuantityInput`-da `min` və `onValue` propları var.
 - **Materiallar admin-də yalnız Depo-dadır**: Ustalar səhifəsi (alət tabı, "Alət ver") və Panelin "Alət" xanası `kind = 'tool'` ilə süzülür. Web usta panelində isə ustada olan materiallar **göstərilir** (yalnız baxış; idarə Depo-dadır).
 - Sətrə klik → pəncərə: başlıqda "Cəmi · ustalarda · depoda", "Kimdədir" siyahısı ("Geri al": 1 ədəddirsə dərhal, çoxdursa say soruşulur), altda "Kimə verilir?" (yalnız ustalar, rəhbərlik siyahıda yoxdur) + say + "Ver".
@@ -156,7 +157,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da yalnız `contact_requests`. Hadisəni RLS-ə görə yalnız admin alır.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0035`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0036`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
@@ -179,6 +180,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0032: depoda materiallar (mis boru, qaz balonu...): `tools.kind` (`tool`/`material`), `tools.unit`, `tool_stock`-a bu sütunlar.
   - 0033: materialın istifadəsi: `tool_assignments.used`, cədvəl `material_pieces` (depodakı qalıq parçalar), `tool_stock.pieces_count/pieces_total`, RPC `finish_material`, `give_piece`.;
   - 0034: `give_piece`-ə `p_amount`: parçanın bir hissəsini ustaya vermək (qalan hissə parça kimi qalır);
+  - 0036: qablaşdırılmış material (qaz balonu...): `tools.pack_name` (balon), `tools.pack_size` (hər qabda 11), `tool_stock`-a bu sütunlar; daxildə hər şey ölçü vahidi ilə (44 kq), qab yalnız daxiletmə və göstəriş üçün ("44 kq (4 balon)");
   - 0035: `material_pieces.original_length` (usta ilkin nə qədər qaytarıb; hissə veriləndə `length` azalır, ilkin qalır: sətir "1 metr · qalıb, ilkin 2 metr — Kərimov Orxan 2 metr qaytarıb" kimi oxunur).
 - RLS dəyişikliyini simulyasiya olunmuş JWT ilə DO-blokunda yoxla: `set_config('request.jwt.claims', json_build_object('sub', <uuid>, 'role', 'authenticated')::text, true)`, `set local role authenticated`. Nəticəni `raise exception 'NƏTİCƏ ...'` ilə çıxar, bu da hər şeyi geri qaytarır.
 - `database.types.ts` əl ilə yenilənib; dəyişiklikdən sonra Supabase MCP `generate_typescript_types` ilə yenidən yarat və **web reposundakı eyni fayla da** köçür.
