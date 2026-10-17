@@ -154,7 +154,7 @@ export function WorkTab({ employeeId, employeeName, admin }: { employeeId: numbe
         )}
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {logs === null ? (
           <p className="muted py-6 text-center text-sm">Yüklənir...</p>
         ) : logs.length === 0 ? (
