@@ -98,9 +98,10 @@ export async function finishMaterial(assignmentId: number, used: number): Promis
   return { ok: true };
 }
 
-// Depodakı parçanı ustaya ver (parça tam hissəyə qatılıb ustaya verilir; təhvildə yenidən bölünə bilər)
-export async function givePiece(pieceId: number, employeeId: number): Promise<FormState> {
-  const { error } = await createClient().rpc("give_piece", { p_piece_id: pieceId, p_employee_id: employeeId });
+// Depodakı parçanı ustaya ver: amount verilməsə hamısı, verilsə bir hissəsi (qalan hissə depoda parça kimi qalır).
+// Verilən hissə tam hissəyə qatılıb ustaya verilir; təhvildə yenidən bölünə bilər.
+export async function givePiece(pieceId: number, employeeId: number, amount?: number): Promise<FormState> {
+  const { error } = await createClient().rpc("give_piece", { p_piece_id: pieceId, p_employee_id: employeeId, p_amount: amount });
   if (error) return { error: error.message };
   revalidate();
   return { ok: true };

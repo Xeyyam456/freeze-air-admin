@@ -490,16 +490,19 @@ function EditToolModal({ tool, onClose }: { tool: Tool; onClose: () => void }) {
   );
 }
 
-// Parçanı kimə verəsən: kiçik pəncərə
+// Parçanı kimə və nə qədər verəsən: hamısı və ya bir hissəsi (qalan hissə depoda parça kimi qalır)
 function PieceGiveModal({ piece, unit, employees, onClose }: { piece: Piece; unit: string; employees: DepotEmployee[]; onClose: () => void }) {
   const [picked, setPicked] = useState<number | null>(null);
+  const [amount, setAmount] = useState(piece.length);
   const [pending, setPending] = useState(false);
   const items = employees.filter((e) => !e.is_management).map((e) => ({ id: e.id, name: e.full_name }));
+  const valid = !!picked && Number.isInteger(amount) && amount >= 1 && amount <= piece.length;
+  const rest = piece.length - amount;
 
   async function give() {
-    if (!picked) return;
+    if (!valid || !picked) return;
     setPending(true);
-    const r = await givePiece(piece.id, picked);
+    const r = await givePiece(piece.id, picked, amount);
     setPending(false);
     if (r?.error) return toast.error(r.error);
     toast.success("Verildi");
@@ -512,10 +515,19 @@ function PieceGiveModal({ piece, unit, employees, onClose }: { piece: Piece; uni
         <h2 id="piece-give-title" className="text-lg font-bold">{piece.length} {unit} parça: kimə verilir?</h2>
         <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
       </div>
-      <div className="flex gap-2 pb-2">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-semibold">Nə qədər:</span>
+        <QuantityInput limit={piece.length} defaultValue={piece.length} className="!w-20" onValue={setAmount}
+          limitText={(limit) => `Parçada cəmi ${limit} ${unit} var.`} />
+        <span className="muted text-sm">{unit} (parçada {piece.length})</span>
+      </div>
+      <p className="muted mt-3 min-h-4 text-xs">
+        {valid ? (rest > 0 ? `${rest} ${unit} parça kimi depoda qalır.` : "Parçanın hamısı verilir.") : ""}
+      </p>
+      <div className="mt-2 flex gap-2 pb-2">
         <ToolPicker items={items} value={picked} onChange={setPicked} name="employee_id" icon={Users}
           placeholder="Usta seç..." emptyLabel="Aktiv əməkdaş yoxdur" searchLabel="Usta axtar..." />
-        <button type="button" disabled={pending || !picked} onClick={give} className="btn btn-primary btn-sm !h-9">{pending ? "..." : "Ver"}</button>
+        <button type="button" disabled={pending || !valid} onClick={give} className="btn btn-primary btn-sm !h-9">{pending ? "..." : "Ver"}</button>
       </div>
     </Modal>
   );

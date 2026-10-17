@@ -441,7 +441,7 @@ export type Database = {
     Functions: {
       can_manage_tools: { Args: never; Returns: boolean }
       finish_material: { Args: { p_assignment_id: number; p_used: number }; Returns: undefined }
-      give_piece: { Args: { p_employee_id: number; p_piece_id: number }; Returns: undefined }
+      give_piece: { Args: { p_amount?: number; p_employee_id: number; p_piece_id: number }; Returns: undefined }
       give_tool: { Args: { p_employee_id: number; p_quantity: number; p_tool_id: number }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
       is_owner: { Args: never; Returns: boolean }
