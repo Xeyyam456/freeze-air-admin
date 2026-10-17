@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, ListChecks, Plus, Trash2 } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, ListChecks, Paperclip, Plus, Trash2 } from "lucide-react";
 import { addTask, deleteTask, toggleTask } from "@/actions/tasks";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
@@ -24,7 +24,7 @@ async function fetchTasks(day: string) {
   const supabase = createClient();
   const [tasks, employees] = await Promise.all([
     supabase.from("tasks")
-      .select("id, employee_id, reason, done, done_at, place_text, store_id, company_id, stores(name, code, companies(name)), companies(name)")
+      .select("id, employee_id, reason, done, done_at, note, place_text, store_id, company_id, stores(name, code, companies(name)), companies(name), work_logs(work_files(id))")
       .eq("task_date", day).order("created_at").then((r) => r.data ?? []),
     supabase.from("employees").select("id, full_name, photo_url").eq("is_management", false).eq("is_active", true).order("full_name").then((r) => r.data ?? []),
   ]);
@@ -152,11 +152,18 @@ export default function TasksPage() {
                               className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 transition-colors ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent hover:border-primary"}`}>
                               <Check size={12} strokeWidth={3} />
                             </button>
-                            <span className="min-w-0 flex-1 truncate text-sm">
-                              <span className={`font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{placeOf(t)}</span>
-                              <span className="muted"> — </span>
-                              <span className={t.done ? "text-ok/80" : ""}>{t.reason}</span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-sm">
+                                <span className={`font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{placeOf(t)}</span>
+                                <span className="muted"> — </span>
+                                <span className={t.done ? "text-ok/80" : ""}>{t.reason}</span>
+                              </span>
+                              {/* Usta görüləndən sonra təmir barədə yazıbsa və fayl əlavə edibsə burada görünür */}
+                              {t.note && <span className="muted block truncate text-xs">Təmir: {t.note}</span>}
                             </span>
+                            {(t.work_logs?.work_files.length ?? 0) > 0 && (
+                              <span className="inline-flex shrink-0 items-center gap-0.5 text-xs text-muted" title="Usta fayl əlavə edib (iş qeydində)"><Paperclip size={13} />{t.work_logs?.work_files.length}</span>
+                            )}
                             <ConfirmButton onConfirm={() => deleteTask(t.id)} success={false} className="icon-btn icon-btn-danger !h-7 !w-7" title="Tapşırığı sil"
                               question={`"${t.reason}" tapşırığı silinəcək.`}>
                               <Trash2 size={14} />

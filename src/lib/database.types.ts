@@ -248,10 +248,12 @@ export type Database = {
           done_at: string | null
           employee_id: number
           id: number
+          note: string | null
           place_text: string | null
           reason: string
           store_id: number | null
           task_date: string
+          work_log_id: number | null
         }
         Insert: {
           company_id?: number | null
@@ -261,10 +263,12 @@ export type Database = {
           done_at?: string | null
           employee_id: number
           id?: never
+          note?: string | null
           place_text?: string | null
           reason: string
           store_id?: number | null
           task_date?: string
+          work_log_id?: number | null
         }
         Update: {
           company_id?: number | null
@@ -274,12 +278,21 @@ export type Database = {
           done_at?: string | null
           employee_id?: number
           id?: never
+          note?: string | null
           place_text?: string | null
           reason?: string
           store_id?: number | null
           task_date?: string
+          work_log_id?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "tasks_work_log_id_fkey"
+            columns: ["work_log_id"]
+            isOneToOne: false
+            referencedRelation: "work_logs"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "tasks_employee_id_fkey"
             columns: ["employee_id"]
@@ -516,6 +529,8 @@ export type Database = {
     }
     Functions: {
       can_manage_tools: { Args: never; Returns: boolean }
+      task_set_done: { Args: { p_done: boolean; p_task_id: number }; Returns: undefined }
+      task_set_note: { Args: { p_note: string; p_task_id: number }; Returns: number }
       finish_material: { Args: { p_assignment_id: number; p_used: number }; Returns: undefined }
       give_piece: { Args: { p_amount?: number; p_employee_id: number; p_piece_id: number }; Returns: undefined }
       give_tool: { Args: { p_employee_id: number; p_quantity: number; p_tool_id: number }; Returns: undefined }
