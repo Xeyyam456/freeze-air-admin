@@ -189,29 +189,47 @@ export default function Home() {
           ) : d.tasks.length === 0 ? (
             <Empty icon={ListChecks} title="Bu gün tapşırıq yoxdur" text="Tapşırıqlar bölməsindən ustaya iş ver." />
           ) : (
-            <ul className="mt-3 min-h-0 flex-1 overflow-hidden">
-              {/* Görülən (✓, yaşıl) və görülməyən (mavi) tapşırıqlar birlikdə; hər biri bir sətir */}
-              {d.tasks.slice(0, 8).map((t) => (
-                <li key={t.id}>
-                  <Link to="/tapshiriqlar" className="flex items-center gap-3 rounded-xl px-2 py-1.5 transition-colors hover:bg-bg">
-                    <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent"}`} title={t.done ? "Görülüb" : "Görülməyib"}>
-                      <Check size={12} strokeWidth={3} />
-                    </span>
-                    <span className="min-w-0 flex-1 truncate text-sm">
-                      <span className="font-bold">{(t.employees?.full_name ?? "—").split(" ").slice(-1)[0]}</span>
-                      <span className="muted"> · </span>
-                      <span className={`font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{taskPlace(t)}</span>
-                      <span className="muted"> — </span>
-                      <span className={t.done ? "text-ok/80" : ""}>{t.reason}</span>
-                    </span>
-                  </Link>
-                </li>
+            <div className="mt-3 grid min-h-0 flex-1 grid-cols-2 divide-x divide-line overflow-hidden">
+              {/* Ortadan iki sütun: solda gözləyənlər (mavi), sağda görülənlər (✓, yaşıl) */}
+              {([
+                { key: "wait", title: "Gözləyənlər", items: d.tasks.filter((t) => !t.done), max: 5, tone: "text-primary", empty: "Hamısı görülüb" },
+                { key: "done", title: "Görülənlər", items: d.tasks.filter((t) => t.done), max: 5, tone: "text-ok", empty: "Hələ görülən yoxdur" },
+              ] as const).map((g) => (
+                <div key={g.key} className="min-w-0 px-4 first:pl-0 last:pr-0">
+                  <p className={`flex items-center gap-2 pb-1.5 text-xs font-bold ${g.tone}`}>
+                    {g.title} <span className="rounded-full bg-bg px-2 py-0.5 text-[11px] text-muted">{g.items.length}</span>
+                  </p>
+                  {g.items.length === 0 ? (
+                    <p className="muted py-1.5 text-sm">{g.empty}</p>
+                  ) : (
+                    <ul>
+                      {g.items.slice(0, g.max).map((t) => (
+                        <li key={t.id}>
+                          <Link to="/tapshiriqlar" className="flex items-center gap-2.5 rounded-xl px-1.5 py-1.5 transition-colors hover:bg-bg">
+                            <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent"}`} title={t.done ? "Görülüb" : "Görülməyib"}>
+                              <Check size={12} strokeWidth={3} />
+                            </span>
+                            <span className="min-w-0 flex-1 leading-tight">
+                              <span className="block truncate text-sm">
+                                <span className="font-bold">{(t.employees?.full_name ?? "—").split(" ").slice(-1)[0]}</span>
+                                <span className="muted"> · </span>
+                                <span className={`font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{taskPlace(t)}</span>
+                              </span>
+                              <span className={`block truncate text-xs ${t.done ? "text-ok/80" : "muted"}`}>{t.reason}</span>
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                      {g.items.length > g.max && <li className="muted px-1.5 pt-0.5 text-xs">+ {g.items.length - g.max} daha</li>}
+                    </ul>
+                  )}
+                </div>
               ))}
-            </ul>
+            </div>
           )}
           {!!d?.tasks.length && (
             <Link to="/tapshiriqlar" className="link mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold">
-              {d.tasks.length > 8 ? `Hamısına bax (${d.tasks.length})` : "Hamısına bax"} <ArrowRight size={14} />
+              Hamısına bax ({d.tasks.length}) <ArrowRight size={14} />
             </Link>
           )}
         </section>
