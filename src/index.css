@@ -250,6 +250,31 @@
     box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 12px 32px rgba(16, 24, 40, 0.08);
   }
   /* Panel içində kartlar ayrı qutu yox, xətlə ayrılan bölmələrdir */
+  /* Sürüşəndə məzmun kənara yapışıb kəskin kəsilməsin: yuxarıda və aşağıda yumşaq solğunlaşma, aşağıda əlavə boşluq.
+     Maska yox, sticky pseudo-elementlər (maska panelin öz çərçivəsini də solğunlaşdırardı). */
+  .side-panel {
+    padding-bottom: 20px;
+  }
+  .side-panel::before,
+  .side-panel::after {
+    content: "";
+    display: block;
+    position: sticky;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .side-panel::before {
+    top: 0;
+    height: 22px;
+    margin-bottom: -22px;
+    background: linear-gradient(to bottom, var(--color-surface), rgba(255, 255, 255, 0));
+  }
+  .side-panel::after {
+    bottom: 0;
+    height: 34px;
+    margin-top: -34px;
+    background: linear-gradient(to top, var(--color-surface), rgba(255, 255, 255, 0));
+  }
   .side-panel::-webkit-scrollbar {
     display: none;
   }
