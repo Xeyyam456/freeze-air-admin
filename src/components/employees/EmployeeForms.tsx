@@ -1,32 +1,19 @@
 
 import { useActionState, useMemo, useRef, useState } from "react";
-import { Briefcase, CalendarDays, ClipboardList, KeyRound, Pencil, Package, Phone, Plus, Search, Trash2, User, Users, Wrench, X } from "lucide-react";
+import { Briefcase, CalendarDays, ClipboardList, KeyRound, Pencil, Phone, Plus, Search, Trash2, User, Users, X } from "lucide-react";
 import { createEmployeeAccount, deleteEmployeeAccount, resetEmployeePassword } from "@/actions/accounts";
 import { addEmployee, deleteEmployee, updateEmployee } from "@/actions/employees";
-import { giveTool, returnTool } from "@/actions/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { AvatarUpload } from "./AvatarUpload";
 import { DatePicker } from "@/components/DatePicker";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
-import { giveLimitText, QuantityInput } from "@/components/QuantityInput";
-import { ToolPicker } from "@/components/ToolPicker";
 import { WorkTab } from "@/components/work/WorkTab";
 import type { Tables } from "@/lib/database.types";
 import { experience, initials } from "@/lib/experience";
-import { toast } from "@/lib/toast";
 
 type Employee = Tables<"employees">;
 
-// Ustada hazırda olan alət (açıq təhvil): assignmentId — geri almaq üçün, quantity — ustadakı say
-export type HeldTool = { assignmentId: number; id: number; name: string; inventory_code: string | null; taken_at: string; quantity: number; kind: string; unit: string; pack_name: string | null; pack_size: number | null };
-
-// Qablı materialda (balon...) tam qabların sayı mötərizədə: "11 kq (1 balon)"
-function packSuffix(n: number, t: Pick<HeldTool, "pack_name" | "pack_size">) {
-  return t.pack_size && t.pack_name && n > 0 && n % t.pack_size === 0 ? ` (${n / t.pack_size} ${t.pack_name})` : "";
-}
-// Depoda boş ədədi olan alət
-export type FreeTool = { id: number; name: string; available: number };
 // Ustaların giriş hesabları: enabled — gizli açar qurulubmu; emails — usta id → e-poçt
 export type Accounts = { enabled: boolean; emails: Record<number, string> };
 
@@ -133,17 +120,14 @@ export function formatDate(d: string | null) {
 }
 
 // Usta kartına klikləyəndə açılan məlumat pəncərəsi
-function EmployeeDetailsModal({ employee, tools, freeTools, accounts, admin, canManageTools, onClose }: {
+function EmployeeDetailsModal({ employee, accounts, admin, onClose }: {
   accounts: Accounts;
-  canManageTools: boolean;
   employee: Employee;
-  tools: HeldTool[];
-  freeTools: FreeTool[];
   admin: boolean;
   onClose: () => void;
 }) {
   const exp = experience(employee.start_date);
-  const [tab, setTab] = useState<"about" | "tools" | "work">("about");
+  const [tab, setTab] = useState<"about" | "work">("about");
 
   const tabClass = (t: typeof tab) =>
     `flex flex-1 items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition-colors ${
@@ -166,10 +150,6 @@ function EmployeeDetailsModal({ employee, tools, freeTools, accounts, admin, can
         <div className="mt-5 flex gap-1 rounded-xl bg-bg p-1" role="tablist">
           <button type="button" role="tab" aria-selected={tab === "about"} onClick={() => setTab("about")} className={tabClass("about")}>
             <User size={15} /> Haqqında
-          </button>
-          <button type="button" role="tab" aria-selected={tab === "tools"} onClick={() => setTab("tools")} className={tabClass("tools")}>
-            <Wrench size={15} /> Alət və material
-            <span className="rounded-full bg-primary-soft px-1.5 text-xs text-primary">{toolCount(tools) + materialCount(tools)}</span>
           </button>
           <button type="button" role="tab" aria-selected={tab === "work"} onClick={() => setTab("work")} className={tabClass("work")}>
             <ClipboardList size={15} /> İşlər
@@ -201,8 +181,6 @@ function EmployeeDetailsModal({ employee, tools, freeTools, accounts, admin, can
             </div>
           )}
         </div>
-        ) : tab === "tools" ? (
-          <ToolsTab employeeId={employee.id} tools={tools} freeTools={freeTools} canManage={canManageTools} />
         ) : (
           <WorkTab employeeId={employee.id} employeeName={employee.full_name} admin={admin} />
         )}
@@ -282,101 +260,10 @@ export function AccountSection({ employeeId, email, hasAccount, enabled, note = 
   );
 }
 
-// Ustadakı ədədlərin cəmi
-// Ustadakı alət ədədlərinin cəmi (materiallar ayrıca: vahidləri fərqlidir)
-function toolCount(tools: HeldTool[]) {
-  return tools.filter((t) => t.kind === "tool").reduce((s, t) => s + t.quantity, 0);
-}
-
-// Ustadakı material növlərinin sayı
-function materialCount(tools: HeldTool[]) {
-  return tools.filter((t) => t.kind === "material").length;
-}
-
-// Alətlər tabı: ustadakı alətlər və sayı; depo məsulu və müdir aləti geri ala (×) və depodan verə bilir.
-// Hissə-hissə geri almaq Depo səhifəsindədir; burada × hamısını qaytarır.
-function ToolsTab({ employeeId, tools, freeTools, canManage }: {
-  employeeId: number;
-  tools: HeldTool[];
-  freeTools: FreeTool[];
-  canManage: boolean;
-}) {
-  const [state, action, pending] = useActionState(giveTool, null);
-  const [picked, setPicked] = useState<number | null>(null);
-  const [formKey, setFormKey] = useState(0);
-  useOnSuccess(state, () => { setPicked(null); setFormKey((k) => k + 1); }, "Alət verildi");
-  const pickedTool = freeTools.find((t) => t.id === picked);
-
-  // Say depodakından çoxdursa sorğu getmir, dərhal tost çıxır
-  function submit(fd: FormData) {
-    const wanted = Number(fd.get("quantity"));
-    if (pickedTool && wanted > pickedTool.available) {
-      toast.error(giveLimitText(pickedTool.available, wanted));
-      return;
-    }
-    action(fd);
-  }
-
-  return (
-    <div className="flex h-full flex-col gap-2">
-      {tools.length === 0 ? (
-        <div className="grid flex-1 place-items-center rounded-xl border border-dashed border-line">
-          <p className="muted text-sm">Ustanın üzərində alət və ya material yoxdur.</p>
-        </div>
-      ) : (
-        // Üç sütun: çox alət olanda da sahə öz içində sürüşür, pəncərə böyümür
-        <ul className="grid min-h-0 flex-1 auto-rows-min grid-cols-3 gap-1.5 overflow-y-auto">
-          {/* Əvvəl alətlər, sonra materiallar; materialın idarəsi (təhvil, geri alma) yalnız Depo-dadır */}
-          {[...tools].sort((a, b) => (a.kind === b.kind ? 0 : a.kind === "tool" ? -1 : 1)).map((t) => (
-            <li key={t.assignmentId} className="flex items-center gap-2 rounded-lg bg-bg py-1.5 pl-3 pr-1.5 text-[13px] font-medium" title={t.name}>
-              {t.kind === "material" ? <Package size={13} className="shrink-0 text-primary" /> : <Wrench size={13} className="shrink-0 text-primary" />}
-              <span className="min-w-0 flex-1 truncate">{t.name}</span>
-              {t.kind === "material"
-                ? <span className="shrink-0 rounded-full bg-primary-soft px-1.5 text-xs font-bold text-primary">{t.quantity} {t.unit}{packSuffix(t.quantity, t)}</span>
-                : t.quantity > 1 && <span className="shrink-0 rounded-full bg-primary-soft px-1.5 text-xs font-bold text-primary">×{t.quantity}</span>}
-              {canManage && t.kind === "tool" && (
-                <ConfirmButton
-                  onConfirm={async () => {
-                    const r = await returnTool(t.assignmentId, t.quantity);
-                    if (r?.error) toast.error(r.error);
-                    else toast.success("Alət geri alındı");
-                  }}
-                  success={false}
-                  className="grid h-6 w-6 shrink-0 place-items-center rounded-md text-muted hover:bg-danger-soft hover:text-danger"
-                  title="Aləti ustadan geri al"
-                  question={`"${t.name}"${t.quantity > 1 ? ` (${t.quantity} ədəd)` : ""} depoya qaytarılacaq və başqa ustaya vermək olacaq.`}
-                  confirmLabel="Bəli, geri al"
-                >
-                  <X size={14} />
-                </ConfirmButton>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {canManage && (
-        <ActionForm key={formKey} action={submit} className="flex shrink-0 gap-2">
-          <input type="hidden" name="employee_id" value={employeeId} />
-          <ToolPicker items={freeTools.map((t) => ({ id: t.id, name: t.name, hint: `depoda ${t.available}` }))} value={picked} onChange={setPicked} />
-          {/* Alət dəyişəndə say sahəsi yenidən yaranır ki, köhnə xəta qalmasın */}
-          <QuantityInput key={picked ?? 0} limit={pickedTool?.available ?? Infinity} limitText={giveLimitText} className="!w-16" />
-          <button type="submit" disabled={pending || !picked} className="btn btn-primary btn-sm !h-9">
-            <Plus size={14} /> {pending ? "..." : "Alət ver"}
-          </button>
-        </ActionForm>
-      )}
-    </div>
-  );
-}
-
-function EmployeeCard({ employee, tools, todayCount, freeTools, accounts, admin, canManageTools }: {
+function EmployeeCard({ employee, todayCount, accounts, admin }: {
   accounts: Accounts;
-  canManageTools: boolean;
   todayCount: number;
   employee: Employee;
-  tools: HeldTool[];
-  freeTools: FreeTool[];
   admin: boolean;
 }) {
   const [editing, setEditing] = useState(false);
@@ -386,7 +273,7 @@ function EmployeeCard({ employee, tools, todayCount, freeTools, accounts, admin,
   return (
     <>
       {/* Modallar kartın çölündədir: içlərindəki kliklər karta keçib detalları yenidən açmasın */}
-      {viewing && <EmployeeDetailsModal employee={employee} tools={tools} freeTools={freeTools} accounts={accounts} admin={admin} canManageTools={canManageTools} onClose={() => setViewing(false)} />}
+      {viewing && <EmployeeDetailsModal employee={employee} accounts={accounts} admin={admin} onClose={() => setViewing(false)} />}
       {editing && <EditEmployeeModal employee={employee} onClose={() => setEditing(false)} />}
 
     {/* Kartın istənilən yerinə klik məlumat pəncərəsini açır */}
@@ -435,9 +322,6 @@ function EmployeeCard({ employee, tools, todayCount, freeTools, accounts, admin,
           <span className={`flex items-center gap-1.5 ${todayCount ? "text-ok" : "muted"}`} title="Bu gün yazılan işlər">
             <ClipboardList size={13} /> Bu gün: {todayCount} iş
           </span>
-          <span className={`flex items-center gap-1.5 ${tools.length ? "text-primary" : "muted"}`}>
-            <Wrench size={13} /> {toolCount(tools)} alət{materialCount(tools) > 0 && ` · ${materialCount(tools)} material`}
-          </span>
         </span>
       </div>
     </div>
@@ -445,13 +329,10 @@ function EmployeeCard({ employee, tools, todayCount, freeTools, accounts, admin,
   );
 }
 
-export function EmployeeList({ employees, toolsByEmployee, todayWork, freeTools, accounts, admin, canManageTools }: {
+export function EmployeeList({ employees, todayWork, accounts, admin }: {
   accounts: Accounts;
-  canManageTools: boolean;
   todayWork: Record<number, number>; // usta id → bu gün yazılan iş sayı
   employees: Employee[];
-  toolsByEmployee: Record<number, HeldTool[]>;
-  freeTools: FreeTool[];
   admin: boolean;
 }) {
   const [query, setQuery] = useState("");
@@ -492,7 +373,7 @@ export function EmployeeList({ employees, toolsByEmployee, todayWork, freeTools,
         <div className="card muted py-10 text-center text-sm">Bu axtarışa uyğun usta tapılmadı.</div>
       ) : (
         <div className="grid grid-cols-2 gap-4">
-          {filtered.map((e) => <EmployeeCard key={e.id} employee={e} tools={toolsByEmployee[e.id] ?? []} todayCount={todayWork[e.id] ?? 0} freeTools={freeTools} accounts={accounts} admin={admin} canManageTools={canManageTools} />)}
+          {filtered.map((e) => <EmployeeCard key={e.id} employee={e} todayCount={todayWork[e.id] ?? 0} accounts={accounts} admin={admin} />)}
         </div>
       )}
     </div>
