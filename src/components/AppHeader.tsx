@@ -46,7 +46,7 @@ export function AppHeader({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
           <NavLinks />
-          <div className="ml-auto">
+          <div className="ml-auto shrink-0">
             <UserChip />
           </div>
         </div>

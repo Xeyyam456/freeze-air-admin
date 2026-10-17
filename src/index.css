@@ -163,7 +163,7 @@
     }
   }
   /* Kiçik ekranlarda menyu bəndlərinin ikonları gizlənir (yer qazanmaq üçün) */
-  @media (max-width: 1480px) {
+  @media (max-width: 1620px) {
     .nav-link > svg {
       display: none;
     }
@@ -186,6 +186,10 @@
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.12);
     font-size: 13px;
+    flex-shrink: 0;
+  }
+  .user-chip > * {
+    flex-shrink: 0;
   }
   .avatar {
     display: grid;
