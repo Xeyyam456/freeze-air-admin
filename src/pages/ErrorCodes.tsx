@@ -1,28 +1,32 @@
 import { useAuth } from "@/auth/AuthProvider";
 import { Page } from "@/components/Page";
 import { WithSidePanel } from "@/components/SidePanel";
-import { AddErrorCodeCard, ErrorCodeList } from "@/components/errors/ErrorCodeForms";
+import { ErrorCodeList, ErrorCodePanel } from "@/components/errors/ErrorCodeForms";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 
-async function fetchCodes() {
-  const { data } = await createClient().from("ac_error_codes").select("*").order("model_series", { nullsFirst: false }).order("code");
-  return data ?? [];
+async function fetchAll() {
+  const supabase = createClient();
+  const [models, codes] = await Promise.all([
+    supabase.from("ac_models").select("id, name").order("name").then((r) => r.data ?? []),
+    supabase.from("ac_error_codes").select("id, model_id, code, title, solution").order("code").then((r) => r.data ?? []),
+  ]);
+  return { models: models.sort((a, b) => a.name.localeCompare(b.name, "az")), codes };
 }
 
-// Xəta kodları: admin idarə edir (model, kod, açıqlama, edilecək iş); Excel-dən toplu yükləmək olar. Ustalar usta panelində baxır.
+// Xəta kodları: admin idarə edir. Əvvəl kondisioner modelləri əlavə olunur, sonra model seçilib kod, açıqlama və edilecək iş yazılır;
+// Excel-dən toplu yükləmək olar. Ustalar usta panelində modeli dropdown-dan seçib baxır.
 export default function ErrorCodesPage() {
   const { admin } = useAuth();
-  const codes = useData(fetchCodes);
-  const models = [...new Set((codes ?? []).map((c) => c.model_series).filter((m): m is string => !!m))].sort((a, b) => a.localeCompare(b, "az"));
+  const data = useData(fetchAll);
 
   return (
-    <Page title="Xəta kodları" subtitle="Kondisioner modeli, xəta kodu, açıqlama və edilecək iş">
-      {codes === null ? (
+    <Page title="Xəta kodları" subtitle="Əvvəl model əlavə et, sonra modeli seçib xəta kodu yaz">
+      {data === null ? (
         <div className="card muted">Yüklənir...</div>
       ) : (
-        <WithSidePanel stack panel={admin ? <AddErrorCodeCard models={models} /> : null}>
-          <ErrorCodeList codes={codes} models={models} />
+        <WithSidePanel stack panel={admin ? <ErrorCodePanel models={data.models} codes={data.codes} /> : null}>
+          <ErrorCodeList codes={data.codes} models={data.models} />
         </WithSidePanel>
       )}
     </Page>

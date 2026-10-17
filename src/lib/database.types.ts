@@ -21,47 +21,62 @@ export type Database = {
       }
       ac_error_codes: {
         Row: {
-          brand_id: number | null
           cause: string | null
           code: string
           created_at: string
           id: number
-          model_series: string | null
+          model_id: number
           solution: string | null
           source: string | null
           title: string
         }
         Insert: {
-          brand_id?: number | null
           cause?: string | null
           code: string
           created_at?: string
           id?: never
-          model_series?: string | null
+          model_id: number
           solution?: string | null
           source?: string | null
           title: string
         }
         Update: {
-          brand_id?: number | null
           cause?: string | null
           code?: string
           created_at?: string
           id?: never
-          model_series?: string | null
+          model_id?: number
           solution?: string | null
           source?: string | null
           title?: string
         }
         Relationships: [
           {
-            foreignKeyName: "ac_error_codes_brand_id_fkey"
-            columns: ["brand_id"]
+            foreignKeyName: "ac_error_codes_model_id_fkey"
+            columns: ["model_id"]
             isOneToOne: false
-            referencedRelation: "ac_brands"
+            referencedRelation: "ac_models"
             referencedColumns: ["id"]
           },
         ]
+      }
+      ac_models: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          name?: string
+        }
+        Relationships: []
       }
       companies: {
         Row: {

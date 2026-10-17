@@ -61,10 +61,10 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Sürətli keçidlər. **Ən altdakı "Bölmələr" sırası çıxarılıb** (istifadəçi: "gərək yoxdu"; menyu onsuz da bölmələrə aparır) — yenidən əlavə etmə.
 - Məlumat `useData(fetchDashboard)` ilə; `revalidate()` (məs. Realtime müraciət) hamısını yeniləyir.
 
-### Xəta kodları (`/xeta-kodlari`, `pages/ErrorCodes.tsx` + `components/errors/ErrorCodeForms.tsx`; migrasiya 0044)
-- Admin idarə edir; sahələr: **kondisioner modeli** (`model_series`, boş = bütün modellər), **xəta kodu** (`code`), **xəta açıqlaması** (`title`), **edilecək iş** (`solution`). `cause`, `source` və brend (`brand_id`, 0044-dən sonra məcburi deyil) UI-da yoxdur. Təkrar: eyni model + kod (hərf/boşluq fərqi nəzərə alınmır) unikal indeksdə bloklanır.
-- Solda axtarışlı cədvəl (Model | Kod | Açıqlama | Edilecək iş; öz içində sürüşür, klik → redaktə, silmə), sağ paneldə **"Yeni kod"** və **"Excel-dən yüklə"** tabları. Excel: başlıqlar Model, Kod, Açıqlama, Edilecək iş (alternativ adlar qəbul olunur), "Şablonu yüklə" boş .xlsx şablon verir (nümunə sətir yoxdur), yükləmədən əvvəl önizləmə; eyni model+kod varsa yenilənir, yoxsa əlavə olunur. Xəta kodlarının məzmununu admin özü yazır (uydurma texniki məlumat yazma).
-- Usta panelində `/xeta-kodlari` yalnız baxışdır (`web/src/components/errors/ErrorCodeView.tsx`: axtarış + kartlar).
+### Xəta kodları (`/xeta-kodlari`, `pages/ErrorCodes.tsx` + `components/errors/ErrorCodeForms.tsx`; migrasiya 0044-0045)
+- **Əvvəl modellər, sonra kodlar** (istifadəçi qərarı): kondisioner modelləri ayrıca siyahıdır (`ac_models`), xəta kodu (`ac_error_codes`: model_id, code, title = açıqlama, solution = edilecək iş) yazanda model **dropdown-dan seçilir**. Model silinəndə onun kodları da silinir (cascade). Brend (`ac_brands`) və köhnə `model_series` istifadə olunmur. Təkrar: eyni model adı və eyni modeldə eyni kod (hərf/boşluq fərqi nəzərə alınmır) bazada bloklanır.
+- Solda axtarış + **model süzgəci dropdown-u** + cədvəl (Model | Kod | Açıqlama | Edilecək iş; öz içində sürüşür, klik → redaktə, silmə). Sağ paneldə üç tab: **Modellər** (model əlavə et, adını dəyiş, sil; hər modeldə kod sayı), **Xəta kodu** (model dropdown, kod, açıqlama, edilecək iş; model yoxdursa "Model əlavə et" düyməsi; seçilmiş model ardıcıl yazmaq üçün qalır), **Excel** (başlıqlar Model, Kod, Açıqlama, Edilecək iş; "Şablonu yüklə" boş şablon verir; önizləmə; siyahıda olmayan model avtomatik yaranır; eyni model+kod yenilənir). İlk açılışda model yoxdursa "Modellər" tabı açılır. Xəta kodlarının məzmununu admin özü yazır (uydurma texniki məlumat yazma).
+- Usta panelində `/xeta-kodlari` yalnız baxışdır (`web/src/components/errors/ErrorCodeView.tsx`): **model dropdown-u** + axtarış + kartlar.
 
 ### Tapşırıqlar (`/tapshiriqlar`, `pages/Tasks.tsx`; menyuda "Tapşırıqlar"; migrasiya 0039)
 - Admin və rəhbərlik (`is_admin()`) ustaya gün üçün iş verir: **usta + yer (mağaza/filial, sabit məkan və ya yazılan yer; iş qeydindəki `PlacePicker`) + səbəb + tarix** (məs. "Əlizadə Xəyyam · İzmir Villa · qaz qaçağı", "Rabitə Bank Sahil filialı · detallı yuyulma"). Cədvəl `tasks` (employee_id, task_date, store_id | company_id | place_text, reason, done, done_at, created_by).
@@ -181,7 +181,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da yalnız `contact_requests`. Hadisəni RLS-ə görə yalnız admin alır.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0044`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0045`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
@@ -206,7 +206,8 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0034: `give_piece`-ə `p_amount`: parçanın bir hissəsini ustaya vermək (qalan hissə parça kimi qalır);
   - 0036: qablaşdırılmış material (qaz balonu...): `tools.pack_name` (balon), `tools.pack_size` (hər qabda 11), `tool_stock`-a bu sütunlar; daxildə hər şey ölçü vahidi ilə (44 kq), qab yalnız daxiletmə və göstəriş üçün ("44 kq (4 balon)");
   - 0039: `tasks` cədvəli (iş tapşırıqları), RLS və `tasks_guard` tətikçisi;
-  - 0044: xəta kodları: `ac_error_codes.brand_id` məcburi deyil, unikallıq model + kod üzrə (indeks `ac_error_codes_model_code_key`);
+  - 0045: xəta kodları üçün `ac_models` (kondisioner modelləri), `ac_error_codes.model_id` (model_series və brand_id silindi; mövcud kod yeni modelə köçürüldü);
+  - 0044: xəta kodları: `ac_error_codes.brand_id` məcburi deyil, unikallıq model + kod üzrə (0045 ilə əvəz olundu);
   - 0041-0043: tapşırıqdan avtomatik iş qeydi (`tasks.work_log_id`, `tasks.note`, `task_set_done`, `task_set_note`, "Tapşırıq: " prefiksi);
   - 0040: Səbət (0038-dəki `trash` cədvəli, tətikçilər, `restore_trash`) ləğv olundu, silindi; 0038-dən yalnız `tools.min_stock` qalır;
   - 0038: `tools.min_stock` (minimum qalıq, `tool_stock`-a sütun) (Səbət hissəsi 0040 ilə silinib);
