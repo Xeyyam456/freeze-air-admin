@@ -181,7 +181,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Rəhbərlik: id 7 Abdulov Ceyhun, id 8 Məmmədov Anar, id 9 Mirmanafov Mirsadiq.
 - Marketlər: "Araz Market" (id 4, 200 mağaza, kodlar `ARZ-001…`), "TEST Oba Market" (id 6, 200 mağaza, `OBA-001…`). Mağazalar `excel/*-market-200.xlsx`-dən import olunub, məlumat uydurmadır. İstifadəçi "TEST" sözünü adlardan hələlik götürməmək dedi.
 - Şirkətlər: Rabitə Bank (id 7, 10 filial), Qarabağ Stadion, Knightsbridge Residence, Port Baku Residence, İzmir Villa (filialsız, sabit məkan).
-- 2026-10-17 sonunda: iş qeydi və müraciət **yoxdur** (hamısı silinib).
+- 2026-10-17: Əlizadə Xəyyam üçün 5 sınaq iş yazılıb (id 27–31: bu gün 2, dünən 3; uydurma məzmun); müraciət yoxdur.
 
 ## Web reposu ilə sinxron saxlanmalı olanlar
 Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
