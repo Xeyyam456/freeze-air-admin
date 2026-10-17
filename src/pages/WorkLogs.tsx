@@ -60,21 +60,51 @@ function placeOf(l: Log) {
 }
 const companyOf = (l: Log) => l.stores?.company_id ?? l.company_id ?? null;
 
-// Excel açır: UTF-8 BOM + nöqtəli vergül (Azərbaycan/Rusiya yerli ayarlarında Excel ayırıcı kimi bunu gözləyir)
-function exportCsv(logs: Log[], from: string, to: string) {
-  const esc = (v: string) => `"${v.replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
-  const rows = [["Tarix", "Saat", "Usta", "İş yeri", "Görülən iş"].map(esc).join(";")];
-  for (const l of logs) {
-    rows.push([formatDateAz(l.work_date), timeOf(l.created_at), l.employees?.full_name ?? "", placeOf(l), l.description ?? ""].map(esc).join(";"));
-  }
-  const blob = new Blob(["﻿" + rows.join("\r\n")], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `isler-${from}_${to}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-  toast.success(`${logs.length} iş fayla yazıldı`);
+// Rəngli, formatlı .xlsx: başlıq zolağı, xülasə sətri, donmuş başlıq, zebra, bölgülər, uzun mətn sarılır
+type ExportInfo = { from: string; to: string; employee: string; company: string; query: string };
+
+async function exportXlsx(logs: Log[], info: ExportInfo) {
+  const { default: writeXlsxFile } = await import("write-excel-file/browser");
+  const NAVY = "#0a1a33", BLUE = "#1f6feb", LINE = "#d9dfeb", ZEBRA = "#f4f7fc", MUTED = "#667085";
+  const cols = 5;
+  const span = (value: string, style: Record<string, unknown>) => [{ value, columnSpan: cols, ...style }, ...Array(cols - 1).fill(null)];
+  const days = new Set(logs.map((l) => l.work_date)).size;
+  const masters = new Set(logs.map((l) => l.employee_id)).size;
+  const places = new Set(logs.map(placeOf)).size;
+  const filters = [`Tarix: ${formatDateAz(info.from)} – ${formatDateAz(info.to)}`, `Usta: ${info.employee}`, `Yer: ${info.company}`, info.query ? `Axtarış: "${info.query}"` : null].filter(Boolean).join("   ·   ");
+
+  const border = { borderColor: LINE, borderStyle: "thin" as const };
+  const head = (value: string, align: "left" | "center" = "left") => ({ value, fontWeight: "bold" as const, textColor: "#ffffff", backgroundColor: BLUE, align, alignVertical: "center" as const, height: 24, ...border });
+
+  const data = [
+    span("Freeze Air Service — Görülən işlər", { fontWeight: "bold", fontSize: 16, textColor: "#ffffff", backgroundColor: NAVY, alignVertical: "center", height: 34, indent: 1 }),
+    span(filters, { fontSize: 10, textColor: MUTED, alignVertical: "center", height: 20, indent: 1 }),
+    span(`İş sayı: ${logs.length}     İş görülən gün: ${days}     Usta: ${masters}     Fərqli yer: ${places}`, { fontWeight: "bold", textColor: BLUE, backgroundColor: "#eaf2fe", alignVertical: "center", height: 26, indent: 1 }),
+    Array(cols).fill(null),
+    [head("Tarix", "center"), head("Saat", "center"), head("Usta"), head("İş yeri"), head("Görülən iş")],
+    ...logs.map((l, i) => {
+      const bg = i % 2 ? { backgroundColor: ZEBRA } : {};
+      const [y, m, d] = l.work_date.split("-").map(Number);
+      const base = { alignVertical: "top" as const, ...bg, ...border };
+      return [
+        { ...base, value: new Date(Date.UTC(y, m - 1, d)), type: Date, format: "dd.mm.yyyy", align: "center" as const },
+        { ...base, value: timeOf(l.created_at), align: "center" as const, textColor: MUTED },
+        { ...base, value: l.employees?.full_name ?? "—", fontWeight: "bold" as const },
+        { ...base, value: placeOf(l), textColor: BLUE, wrap: true },
+        { ...base, value: l.description ?? "", wrap: true },
+      ];
+    }),
+    [{ value: "Cəmi", columnSpan: 4, fontWeight: "bold" as const, align: "right" as const, backgroundColor: "#eaf2fe", ...border }, null, null, null, { value: `${logs.length} iş`, fontWeight: "bold" as const, textColor: BLUE, backgroundColor: "#eaf2fe", ...border }],
+  ];
+
+  await writeXlsxFile(data, {
+    sheet: "Görülən işlər",
+    columns: [{ width: 13 }, { width: 8 }, { width: 26 }, { width: 38 }, { width: 70 }],
+    stickyRowsCount: 5,
+    showGridLines: false,
+    orientation: "landscape",
+  }, { fontFamily: "Calibri", fontSize: 11 }).toFile(`isler-${info.from}_${info.to}.xlsx`);
+  toast.success(`${logs.length} iş Excel fayla yazıldı`);
 }
 
 function Summary({ label, value, icon: Icon }: { label: string; value: number | string; icon: typeof Users }) {
@@ -161,7 +191,11 @@ export default function WorkLogsPage() {
         <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Usta, yer və ya görülən iş..." className="field" />
       </label>
 
-      <button type="button" disabled={list.length === 0} onClick={() => exportCsv(list, from, to)} className="btn btn-primary w-full">
+      <button type="button" disabled={list.length === 0} onClick={() => exportXlsx(list, {
+          from, to, query: query.trim(),
+          employee: filters?.employees.find((e) => String(e.id) === employeeId)?.full_name ?? "hamısı",
+          company: filters?.companies.find((c) => String(c.id) === companyId)?.name ?? "hamısı",
+        })} className="btn btn-primary w-full">
         <Download size={16} /> Excel-ə ixrac ({list.length})
       </button>
       {logs && logs.length >= LIMIT && <p className="text-xs text-danger">Aralıqda {LIMIT}-dən çox iş var: yalnız ən yenilər göstərilir. Aralığı daralt.</p>}

@@ -29,7 +29,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Brauzer viewport 1536×735 (DPR 1.25): hündürlüyə həssas dizayn (`@media (max-height:820px)`, CSS dəyişənləri `--gutter`, `--panel-w`, `--header-h`).
 
 ## Stack
-- Vite 8.3.2, React 19.3, React Router 8.4 (`BrowserRouter`, `Routes`), Tailwind v4 (`@tailwindcss/vite`), TypeScript 5.9, `@supabase/supabase-js` 2.117.2, lucide-react, `read-excel-file` (Excel import). Versiyalar dəqiq (`--save-exact`), ən azı 2 həftəlik.
+- Vite 8.3.2, React 19.3, React Router 8.4 (`BrowserRouter`, `Routes`), Tailwind v4 (`@tailwindcss/vite`), TypeScript 5.9, `@supabase/supabase-js` 2.117.2, lucide-react, `read-excel-file` (Excel import), `write-excel-file` (Excel ixrac). Versiyalar dəqiq (`--save-exact`), ən azı 2 həftəlik.
 - Font: Plus Jakarta Sans (Google Fonts, `index.html`). Alias `@/` → `src/`.
 - `.env.local` (git-ignored, **oxuma**): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Gizli açar burada yoxdur və olmamalıdır.
 
@@ -62,7 +62,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 
 ### Görülən işlər (`/isler`, `pages/WorkLogs.tsx`; menyuda "İşlər")
 - Sol: 4 xülasə xanası (iş sayı, iş görülən gün, usta, fərqli yer) + günlərə görə qruplu siyahı (öz içində sürüşür, klik → `WorkLogModal`). Sağ panel: **tarix aralığı** (`DatePicker` + "Bu ay / Keçən ay / Son 7 gün"), usta, şirkət/market, axtarış, **"Excel-ə ixrac"**. Standart aralıq: bu ayın 1-i → bu gün. Ən çox 2000 iş yüklənir (aşarsa xəbərdarlıq).
-- İxrac **CSV** faylıdır (UTF-8 BOM + nöqtəli vergül: Excel birbaşa açır; ayrıca Excel kitabxanası qoşulmayıb). Sütunlar: Tarix, Saat, Usta, İş yeri, Görülən iş.
+- İxrac **rəngli .xlsx** faylıdır (`write-excel-file` 4.1.1, `import("write-excel-file/browser")` dinamik): tünd başlıq zolağı "Freeze Air Service — Görülən işlər", süzgəc və xülasə sətirləri (iş sayı, gün, usta, yer), mavi cədvəl başlığı (donmuş), zebra sətirlər, nazik haşiyələr, tarix `dd.mm.yyyy`, uzun mətn sarılır, bölgülər gizli, "Cəmi" sətri. Ad: `isler-<başlanğıc>_<son>.xlsx`. Əvvəlki CSV variantı Excel-də pis görünürdü (istifadəçi şikayəti).
 
 ### Səbət (`/sebet`, `pages/Trash.tsx`, yalnız admin; migrasiya 0038)
 - Silinən **şirkət, mağaza/filial, usta, alət** və onlarla birlikdə silinənlər (filiallar, alətin təhvilləri və parçaları) bazadakı **BEFORE DELETE tətikçiləri** ilə `trash` cədvəlinə nüsxə kimi yazılır; eyni silmə əməliyyatı eyni `batch` (tranzaksiya nömrəsi) daşıyır. Mövcud sorğulara və silmə kodlarına toxunulmayıb.
