@@ -37,7 +37,7 @@ export function AppHeader({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-sticky">
       <div className="app-topbar">
-        <div className="app-shell flex h-[var(--topbar-h)] items-center gap-6 2xl:gap-10">
+        <div className="app-shell flex h-[var(--topbar-h)] items-center gap-3 min-[1800px]:gap-6 min-[2100px]:gap-10">
           <Link to="/" className="flex shrink-0 items-center gap-3 whitespace-nowrap">
             <span className="logo-mark"><Snowflake size={22} strokeWidth={2.4} /></span>
             <span className="leading-tight">

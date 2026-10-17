@@ -162,6 +162,12 @@
       white-space: nowrap;
     }
   }
+  /* Kiçik ekranlarda menyu bəndlərinin ikonları gizlənir (yer qazanmaq üçün); yalnız ikonlu bənd (Səbət) qalır */
+  @media (max-width: 1480px) {
+    .nav-link:not([aria-label]) > svg {
+      display: none;
+    }
+  }
   .nav-link:hover {
     color: #fff;
     background: rgba(255, 255, 255, 0.08);

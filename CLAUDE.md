@@ -116,6 +116,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Siyahı öz içində sürüşəndə `nice-scroll` sinfi (`index.css`: 10px tutma sahəsi, 4px görünən yuvarlaq zolaq, hover-də 6px və tünd göy; yalnız `::-webkit-scrollbar` — Chrome 121+ `scrollbar-color` verilsə webkit-i yox sayır, standart xassələr `@supports not selector(::-webkit-scrollbar)` ilə Firefox üçündür; web `globals.css` ilə eyni). Paneldəki rəqəmlər `components/CountUp.tsx` ilə sayılaraq açılır (ease-out, azaldılmış hərəkətdə yox).
 - `components/work/AllLogsModal.tsx`: bütün iş qeydləri (günlərə görə qruplu, gün başlığı yapışqan, axtarışlı, son 300). `components/work/WorkLogModal.tsx`: işin ətraflı pəncərəsi (usta, yer + xəritə, iş günü + "Əlavə edilib: tarix, saat", görülən iş, akt və şəkillər; `timeOf()`). İş yeri adı həmişə `text-primary` rəngdə; ustanın kartındakı `WorkTab`-da da saat göstərilir.
 - **Yeni müraciət**: Realtime (`contact_requests` INSERT) → tost + qısa səs + menyudakı sayğac (`NavLinks`) və siyahı yenilənir.
+- **Header kiçik ekranda sığır**: boşluqlar (`gap-3`, geniş ekranda artır), `<1600px` menyu bəndlərində az padding, `<1480px` menyu ikonları gizlənir (Səbət ikonlu qalır); admin `index.css` ↔ web `globals.css`.
 - Klik olunan hər şeydə əl kursoru (`index.css` base qaydası; deaktivdə `not-allowed`).
 - Yumşaq sürüşmə (Lenis) sınanıb və istifadəçinin istəyi ilə **silinib**: "ağırlıq yaradır". Yenidən təklif etmə.
 
