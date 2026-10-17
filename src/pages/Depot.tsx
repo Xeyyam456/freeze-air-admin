@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Page } from "@/components/Page";
 import { WithSidePanel } from "@/components/SidePanel";
-import { AddToolCard, StorekeepersCard, ToolList, type Holding, type Kind, type Piece } from "@/components/depot/DepotForms";
+import { AddToolCard, KeepersPanel, KindTabs, ToolList, type Holding, type Kind, type Piece } from "@/components/depot/DepotForms";
 import { listAccountEmails } from "@/actions/accounts";
 import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
@@ -34,21 +34,25 @@ export default function DepotPage() {
   const data = useData(() => fetchDepot(admin), [admin]);
   // Alətlər / Materiallar tabı: həm siyahı, həm "Yeni ..." forması bununla dəyişir
   const [kind, setKind] = useState<Kind>("tool");
+  // "Depo məsulu" tabı (yalnız admin): əsas sahədə depoçu yaratma və hesab idarəsi
+  const [keepers, setKeepers] = useState(false);
+  const pickKind = (k: Kind) => { setKind(k); setKeepers(false); };
 
   return (
     <Page title="Depo" subtitle={canManageTools ? "Alətlər və materiallar, sayı və kimdə olduğu" : "Depoya baxış: dəyişiklikləri depo məsulu edir"}>
       {!data ? (
         <div className="card muted">Yüklənir...</div>
       ) : (
-        <WithSidePanel panel={
-          <>
-            {canManageTools && <AddToolCard kind={kind} onKind={setKind} names={data.tools.filter((t) => t.kind === kind).map((t) => t.name)} />}
-            {/* Depo məsulu bölməsi yalnız adminə görünür: yarat, hesab aç, götür */}
-            {admin && <StorekeepersCard employees={data.employees} accounts={{ enabled: data.emails !== null, emails: data.emails ?? {} }} selfId={employeeId} />}
-          </>
-        }>
-          <ToolList kind={kind} onKind={setKind} tools={data.tools} holdings={data.holdings} pieces={data.pieces} employees={data.employees} canManage={canManageTools} />
-        </WithSidePanel>
+        keepers && admin ? (
+          <KeepersPanel tabs={<KindTabs kind="keepers" onKind={pickKind} onKeepers={() => setKeepers(true)} />}
+            employees={data.employees} accounts={{ enabled: data.emails !== null, emails: data.emails ?? {} }} selfId={employeeId} />
+        ) : (
+          <WithSidePanel panel={
+            canManageTools ? <AddToolCard kind={kind} onKind={pickKind} names={data.tools.filter((t) => t.kind === kind).map((t) => t.name)} /> : null
+          }>
+            <ToolList kind={kind} onKind={pickKind} onKeepers={admin ? () => setKeepers(true) : undefined} tools={data.tools} holdings={data.holdings} pieces={data.pieces} employees={data.employees} canManage={canManageTools} />
+          </WithSidePanel>
+        )
       )}
     </Page>
   );
