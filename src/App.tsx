@@ -8,6 +8,7 @@ import EmployeesPage from "@/pages/Employees";
 import Home from "@/pages/Home";
 import LoginPage from "@/pages/Login";
 import ManagementPage from "@/pages/Management";
+import NotFoundPage from "@/pages/NotFound";
 import RequestsPage from "@/pages/Requests";
 import SitePage from "@/pages/Site";
 
@@ -41,7 +42,7 @@ export default function App() {
             <Route path="depo" element={<DepotPage />} />
             <Route path="muracietler" element={<RequestsPage />} />
             <Route path="sayt" element={<SitePage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
         <Toaster />

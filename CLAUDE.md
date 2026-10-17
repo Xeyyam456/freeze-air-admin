@@ -34,7 +34,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - `.env.local` (git-ignored, **oxuma**): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Gizli açar burada yoxdur və olmamalıdır.
 
 ## Kod quruluşu (`src/`)
-- `App.tsx`: marşrutlar `/login`, `/`, `/sirketler(/:id)`, `/magazalar(/:id)`, `/ustalar`, `/rehberlik`, `/depo`, `/muracietler`, `/sayt`; `RequireAuth` (admin üçün `ContactRequestsListener` də burada); `<Toaster />`.
+- `App.tsx`: marşrutlar `/login`, `/`, `/sirketler(/:id)`, `/magazalar(/:id)`, `/ustalar`, `/rehberlik`, `/depo`, `/muracietler`, `/sayt`; naməlum ünvan → `pages/NotFound.tsx` (tünd 404 ekranı, "Panelə qayıt"); `RequireAuth` (admin üçün `ContactRequestsListener` də burada); `<Toaster />`.
 - `auth/AuthProvider.tsx`: sessiya + `admin`, `owner`, `storekeeper`, `canManageTools` (sahib və ya depo məsulu), `name`, `position`, `linked`, `employeeId`, `photoUrl`, `reload()`.
 - `lib/`:
   - `supabase/client.ts`: tək brauzer klienti, yalnız publishable açar;
