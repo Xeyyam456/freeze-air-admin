@@ -24,7 +24,8 @@ export type Holding = {
   employees: { full_name: string; photo_url: string | null } | null;
 };
 // Depoda qalan material parçası (usta işlədib, qalanını təhvil verib): ayrı-ayrı göstərilir
-export type Piece = { id: number; tool_id: number; length: number; created_at: string; employees: { full_name: string } | null };
+// length: depoda qalan uzunluq; original_length: usta ilkin nə qədər qaytarıb (parçadan hissə veriləndə length azalır, original qalır)
+export type Piece = { id: number; tool_id: number; length: number; original_length: number | null; created_at: string; employees: { full_name: string } | null };
 export type DepotEmployee = Pick<Tables<"employees">, "id" | "full_name" | "photo_url" | "position" | "is_management" | "is_storekeeper" | "user_id">;
 
 // Hər növün mətnləri
@@ -537,11 +538,18 @@ function PieceGiveModal({ piece, unit, employees, onClose }: { piece: Piece; uni
 function PieceRow({ piece, unit, employees, canManage }: { piece: Piece; unit: string; employees: DepotEmployee[]; canManage: boolean }) {
   const [giving, setGiving] = useState(false);
   const date = piece.created_at.slice(0, 10).split("-").reverse().join(".");
+  const original = piece.original_length ?? piece.length;
+  // Qaytaran ustanın ilkin qaytardığı miqdar: "Kərimov Orxan 2 metr qaytarıb"
+  const who = piece.employees ? `${piece.employees.full_name} ${original} ${unit} qaytarıb` : "Qaytaran bilinmir";
   return (
     <li className="flex items-center gap-3 py-2">
       {giving && <PieceGiveModal piece={piece} unit={unit} employees={employees} onClose={() => setGiving(false)} />}
-      <span className="w-24 text-sm font-bold tabular-nums">{piece.length} {unit}</span>
-      <span className="muted min-w-0 flex-1 truncate text-[13px]">{piece.employees ? `${piece.employees.full_name} qaytarıb` : "Qaytaran bilinmir"} · {date}</span>
+      {/* Qalan uzunluq; hissə verilibsə ilkin miqdar da yazılır ki, "Orxan 1 metr qaytarıb" kimi yanlış təsəvvür yaranmasın */}
+      <span className="w-28 shrink-0">
+        <span className="block text-sm font-bold tabular-nums">{piece.length} {unit}</span>
+        {original > piece.length && <span className="muted block text-[11px]">qalıb · ilkin {original} {unit}</span>}
+      </span>
+      <span className="muted min-w-0 flex-1 truncate text-[13px]" title={who}>{who} · {date}</span>
       {canManage && (
         <>
           <button type="button" onClick={() => setGiving(true)} className="btn btn-secondary btn-sm !h-8">Ver</button>

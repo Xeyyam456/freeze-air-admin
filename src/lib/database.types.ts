@@ -288,9 +288,9 @@ export type Database = {
         ]
       }
       material_pieces: {
-        Row: { created_at: string; from_employee_id: number | null; id: number; length: number; tool_id: number }
-        Insert: { created_at?: string; from_employee_id?: number | null; id?: never; length: number; tool_id: number }
-        Update: { created_at?: string; from_employee_id?: number | null; id?: never; length?: number; tool_id?: number }
+        Row: { created_at: string; from_employee_id: number | null; id: number; length: number; original_length: number | null; tool_id: number }
+        Insert: { created_at?: string; from_employee_id?: number | null; id?: never; length: number; original_length?: number | null; tool_id: number }
+        Update: { created_at?: string; from_employee_id?: number | null; id?: never; length?: number; original_length?: number | null; tool_id?: number }
         Relationships: [
           {
             foreignKeyName: "material_pieces_from_employee_id_fkey"

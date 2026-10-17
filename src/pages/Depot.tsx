@@ -21,7 +21,7 @@ async function fetchDepot() {
       .eq("is_active", true)
       .order("full_name"),
     // Depodakı material parçaları (usta işlədib, qalanını təhvil verib)
-    supabase.from("material_pieces").select("id, tool_id, length, created_at, employees(full_name)").order("created_at"),
+    supabase.from("material_pieces").select("id, tool_id, length, original_length, created_at, employees(full_name)").order("created_at"),
   ]);
   return { tools: tools ?? [], holdings: (holdings ?? []) as Holding[], pieces: (pieces ?? []) as Piece[], employees: employees ?? [] };
 }
