@@ -122,7 +122,7 @@ export default function TasksPage() {
             <h2 className="min-w-44 text-center text-lg font-bold">{day === today ? "Bu gün" : formatDateAz(day)}</h2>
             <button type="button" onClick={() => setDay(shift(day, 1))} className="icon-btn" aria-label="Sonrakı gün"><ChevronRight size={18} /></button>
             {day !== today && <button type="button" onClick={() => setDay(today)} className="btn btn-soft btn-sm ml-1">Bu gün</button>}
-            <span className="ml-auto rounded-full bg-primary-soft px-3 py-1.5 text-sm font-bold text-primary">{doneCount} / {total} görülüb</span>
+            <span className="ml-auto rounded-full bg-primary-soft px-3 py-1.5 text-sm font-bold text-primary">Tapşırıq: {total} · görülən: {doneCount}</span>
           </div>
 
           <div className="min-h-0 flex-1 space-y-4 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -142,7 +142,7 @@ export default function TasksPage() {
                     <header className="flex items-center gap-3 border-b border-line px-5 py-3">
                       <Avatar employee={employee} className="!h-9 !w-9 !text-xs" />
                       <span className="flex-1 font-bold">{employee.full_name}</span>
-                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${done === items.length ? "bg-ok-soft text-ok" : "bg-bg text-muted"}`}>{done} / {items.length}</span>
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${done === items.length ? "bg-ok-soft text-ok" : "bg-bg text-muted"}`}>{items.length} tapşırıq · {done} görülən</span>
                     </header>
                     <ul>
                       {items.map((t) => (
