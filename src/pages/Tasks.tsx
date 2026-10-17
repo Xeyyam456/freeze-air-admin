@@ -152,8 +152,8 @@ export default function TasksPage() {
                             <Check size={14} strokeWidth={3} />
                           </button>
                           <span className="min-w-0 flex-1">
-                            <span className={`flex items-center gap-1.5 text-sm font-semibold ${t.done ? "text-muted line-through" : "text-primary"}`}><MapPin size={13} className="shrink-0" /> {placeOf(t)}</span>
-                            <span className={`mt-0.5 block text-sm ${t.done ? "muted line-through" : ""}`}>{t.reason}</span>
+                            <span className={`flex items-center gap-1.5 text-sm font-semibold ${t.done ? "text-ok" : "text-primary"}`}><MapPin size={13} className="shrink-0" /> {placeOf(t)}</span>
+                            <span className={`mt-0.5 block text-sm ${t.done ? "text-ok/80" : ""}`}>{t.reason}</span>
                           </span>
                           <ConfirmButton onConfirm={() => deleteTask(t.id)} success={false} className="icon-btn icon-btn-danger" title="Tapşırığı sil"
                             question={`"${t.reason}" tapşırığı silinəcək.`}>

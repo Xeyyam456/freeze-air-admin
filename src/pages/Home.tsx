@@ -197,8 +197,8 @@ export default function Home() {
                       <Check size={12} strokeWidth={3} />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className={`block truncate text-sm ${t.done ? "muted line-through" : "font-semibold"}`}>{t.employees?.full_name ?? "—"} · {taskPlace(t)}</span>
-                      <span className="muted block truncate text-xs">{t.reason}</span>
+                      <span className={`block truncate text-sm font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{t.employees?.full_name ?? "—"} · {taskPlace(t)}</span>
+                      <span className={`block truncate text-xs ${t.done ? "text-ok/80" : "muted"}`}>{t.reason}</span>
                     </span>
                   </Link>
                 </li>
