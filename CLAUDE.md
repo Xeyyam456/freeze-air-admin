@@ -63,7 +63,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 
 ### Tapşırıqlar (`/tapshiriqlar`, `pages/Tasks.tsx`; menyuda "Tapşırıqlar"; migrasiya 0039)
 - Admin və rəhbərlik (`is_admin()`) ustaya gün üçün iş verir: **usta + yer (mağaza/filial, sabit məkan və ya yazılan yer; iş qeydindəki `PlacePicker`) + səbəb + tarix** (məs. "Əlizadə Xəyyam · İzmir Villa · qaz qaçağı", "Rabitə Bank Sahil filialı · detallı yuyulma"). Cədvəl `tasks` (employee_id, task_date, store_id | company_id | place_text, reason, done, done_at, created_by).
-- Səhifə: solda gün seçimi (‹ Bu gün ›) və "N / M görülüb", ustalara görə qruplu kartlar (hər tapşırıqda yer, səbəb, **✓ qutusu**, silmə); sağ paneldə "Yeni tapşırıq" formu (ardıcıl yazmaq üçün göndərəndən sonra usta və tarix qalır, yer və səbəb təmizlənir).
+- Səhifə: solda gün seçimi (‹ Bu gün ›) və "N / M görülüb", ustalara görə **sadə yığcam siyahı** (bir kart; usta adının altında hər sətir "yer — səbəb" + **✓ qutusu**, silmə; böyük kartlar istifadəçi istəyi ilə çıxarıldı); sağ paneldə "Yeni tapşırıq" formu (ardıcıl yazmaq üçün göndərəndən sonra usta və tarix qalır, yer və səbəb təmizlənir).
 - Yetki (RLS + tətikçi `tasks_guard`): hamı oxuyur; **yaratmaq, silmək admin/rəhbərlik**; **usta yalnız ÖZ tapşırığında "görüldü"** işarəsini dəyişir (başqa sahəyə toxunsa baza xəta verir); `done_at` tətikçi ilə qoyulur. Tapşırıq yalnız aktiv ustaya verilir (rəhbərliyə yox). Usta silinəndə tapşırıqları da silinir; yer silinəndə tapşırıq qalır, "Yer silinib" yazılır. 
 - Usta paneli tərəfi (web): `/tapshiriqlar` (`components/work/TasksView.tsx`: hamının tapşırıqları, öz kartın birinci və "Sən" nişanlı, yalnız öz qutunu işarələyirsən) və `/panel`-də "Mənim bugünüm" kartında "Tapşırıq: N · görülən: M" keçidi.
 

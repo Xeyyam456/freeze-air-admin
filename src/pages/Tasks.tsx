@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, ListChecks, MapPin, Plus, Trash2 } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, ListChecks, Plus, Trash2 } from "lucide-react";
 import { addTask, deleteTask, toggleTask } from "@/actions/tasks";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
@@ -135,36 +135,39 @@ export default function TasksPage() {
                 <p className="muted text-sm">Sağdakı formdan ustaya tapşırıq ver.</p>
               </div>
             ) : (
-              groups.map(({ employee, items }) => {
-                const done = items.filter((t) => t.done).length;
-                return (
-                  <section key={employee.id} className="card !p-0">
-                    <header className="flex items-center gap-3 border-b border-line px-5 py-3">
-                      <Avatar employee={employee} className="!h-9 !w-9 !text-xs" />
-                      <span className="flex-1 font-bold">{employee.full_name}</span>
-                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${done === items.length ? "bg-ok-soft text-ok" : "bg-bg text-muted"}`}>{items.length} tapşırıq · {done} görülən</span>
-                    </header>
-                    <ul>
-                      {items.map((t) => (
-                        <li key={t.id} className="flex items-start gap-3 border-b border-line px-5 py-3 last:border-b-0">
-                          <button type="button" onClick={() => toggleTask(t.id, !t.done)} aria-pressed={t.done} title={t.done ? "Görülməyib kimi işarələ" : "Görüldü kimi işarələ"}
-                            className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg border-2 transition-colors ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent hover:border-primary"}`}>
-                            <Check size={14} strokeWidth={3} />
-                          </button>
-                          <span className="min-w-0 flex-1">
-                            <span className={`flex items-center gap-1.5 text-sm font-semibold ${t.done ? "text-ok" : "text-primary"}`}><MapPin size={13} className="shrink-0" /> {placeOf(t)}</span>
-                            <span className={`mt-0.5 block text-sm ${t.done ? "text-ok/80" : ""}`}>{t.reason}</span>
-                          </span>
-                          <ConfirmButton onConfirm={() => deleteTask(t.id)} success={false} className="icon-btn icon-btn-danger" title="Tapşırığı sil"
-                            question={`"${t.reason}" tapşırığı silinəcək.`}>
-                            <Trash2 size={15} />
-                          </ConfirmButton>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                );
-              })
+              <div className="card !p-0">
+                {groups.map(({ employee, items }) => {
+                  const done = items.filter((t) => t.done).length;
+                  return (
+                    <section key={employee.id} className="border-b border-line last:border-b-0">
+                      <header className="flex items-center gap-2.5 bg-[#f8f9fc] px-4 py-2">
+                        <Avatar employee={employee} className="!h-6 !w-6 !text-[10px]" />
+                        <span className="text-sm font-bold">{employee.full_name}</span>
+                        <span className="muted text-xs">{items.length} tapşırıq · {done} görülən</span>
+                      </header>
+                      <ul>
+                        {items.map((t) => (
+                          <li key={t.id} className="flex items-center gap-3 px-4 py-1.5">
+                            <button type="button" onClick={() => toggleTask(t.id, !t.done)} aria-pressed={t.done} title={t.done ? "Görülməyib kimi işarələ" : "Görüldü kimi işarələ"}
+                              className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 transition-colors ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent hover:border-primary"}`}>
+                              <Check size={12} strokeWidth={3} />
+                            </button>
+                            <span className="min-w-0 flex-1 truncate text-sm">
+                              <span className={`font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{placeOf(t)}</span>
+                              <span className="muted"> — </span>
+                              <span className={t.done ? "text-ok/80" : ""}>{t.reason}</span>
+                            </span>
+                            <ConfirmButton onConfirm={() => deleteTask(t.id)} success={false} className="icon-btn icon-btn-danger !h-7 !w-7" title="Tapşırığı sil"
+                              question={`"${t.reason}" tapşırığı silinəcək.`}>
+                              <Trash2 size={14} />
+                            </ConfirmButton>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>
