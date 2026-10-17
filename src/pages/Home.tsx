@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import {
   ArrowRight, Building2, CalendarDays, ClipboardList, ExternalLink, FileSpreadsheet, Globe, Inbox, MapPin, Plus, Store,
-  TriangleAlert, UserCog, UserPlus, Users, Warehouse, Wrench,
+  UserPlus, Users, Wrench,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { CountUp } from "@/components/CountUp";
@@ -247,32 +247,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-      </div>
-
-      {/* Bölmələr */}
-      <h2 className="mb-3 mt-8 text-sm font-bold text-muted">Bölmələr</h2>
-      <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-6">
-        {[
-          { href: "/sirketler", title: "Şirkətlər", icon: Building2, ready: true },
-          { href: "/magazalar", title: "Mağazalar", icon: Store, ready: true },
-          { href: "/ustalar", title: "Ustalar", icon: Users, ready: true },
-          { href: "/rehberlik", title: "Rəhbərlik", icon: UserCog, ready: true },
-          { href: "/depo", title: "Depo", icon: Warehouse, ready: true },
-          { href: "/xeta-kodlari", title: "Xəta kodları", icon: TriangleAlert, ready: false },
-        ].map(({ href, title, icon: Icon, ready }) =>
-          ready ? (
-            <Link key={href} to={href} className="card card-link flex items-center gap-3 !p-3.5">
-              <span className="icon-tile !h-9 !w-9"><Icon size={17} /></span>
-              <span className="text-sm font-semibold">{title}</span>
-            </Link>
-          ) : (
-            <div key={href} className="card flex items-center gap-3 !p-3.5 opacity-60" title="Hazırlanır">
-              <span className="icon-tile !h-9 !w-9"><Icon size={17} /></span>
-              <span className="text-sm font-semibold">{title}</span>
-              <span className="ml-auto rounded-full bg-bg px-2 py-0.5 text-[10px] font-semibold text-muted">Hazırlanır</span>
-            </div>
-          ),
-        )}
       </div>
     </Page>
   );

@@ -305,8 +305,8 @@ export function MonthDashboard({ onUsta }: { onUsta: (name: string) => void }) {
                 {s.ranking.length === 0 ? (
                   <p className="py-6 text-center text-sm text-white/60">Aktiv usta yoxdur.</p>
                 ) : (
-                  // 6 usta görünür (hər sətir 44px + 14px aralıq = 334px), çoxdursa gizli zolaqla sürüşür və aşağıda solğunlaşır
-                  <ul className={`max-h-[334px] space-y-3.5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+                  // 6 usta görünür (hər sətir ~49px + 14px aralıq = 366px), çoxdursa gizli zolaqla sürüşür və aşağıda solğunlaşır
+                  <ul className={`max-h-[366px] space-y-3.5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
                     s.ranking.length > 6 ? "[mask-image:linear-gradient(to_bottom,black_calc(100%-28px),transparent)]" : ""}`}>
                     {s.ranking.map((r, i) => (
                       <li key={r.id}>
