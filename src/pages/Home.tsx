@@ -62,10 +62,10 @@ async function fetchDashboard() {
     supabase.from("contact_requests").select("id, name, phone, message, handled, created_at").order("created_at", { ascending: false }).limit(4)
       .then((r) => r.data ?? []),
     supabase.from("contact_requests").select("*", head).eq("handled", false).then(n),
-    // Bugünkü tapşırıqlar (görülməyənlər yuxarıda)
+    // Bugünkü tapşırıqlar (görülənlər də daxil; ustaya görə qruplu)
     supabase.from("tasks")
       .select("id, done, reason, place_text, employees(full_name, photo_url), stores(name, code, companies(name)), companies(name)")
-      .eq("task_date", today).order("done").order("created_at").limit(100)
+      .eq("task_date", today).order("employee_id").order("created_at").limit(100)
       .then((r) => r.data ?? []),
   ]);
 
@@ -163,7 +163,7 @@ export default function Home() {
                         <span className="font-semibold">{l.employees?.full_name ?? "—"}</span>
                         <span className="flex min-w-0 items-center gap-1 truncate text-xs font-semibold text-primary"><MapPin size={12} /> {placeOf(l)}</span>
                       </span>
-                      <span className="muted mt-0.5 line-clamp-1 block text-sm">{l.description}</span>
+                      <span className="muted mt-0.5 block truncate text-sm">{l.description}</span>
                     </span>
                     <span className="shrink-0 text-right">
                       <span className="block text-sm font-semibold tabular-nums">{timeOf(l.created_at)}</span>
@@ -190,15 +190,19 @@ export default function Home() {
             <Empty icon={ListChecks} title="Bu gün tapşırıq yoxdur" text="Tapşırıqlar bölməsindən ustaya iş ver." />
           ) : (
             <ul className="mt-3 min-h-0 flex-1 overflow-hidden">
-              {d.tasks.slice(0, 5).map((t) => (
+              {/* Görülən (✓, yaşıl) və görülməyən (mavi) tapşırıqlar birlikdə; hər biri bir sətir */}
+              {d.tasks.slice(0, 8).map((t) => (
                 <li key={t.id}>
-                  <Link to="/tapshiriqlar" className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-bg">
+                  <Link to="/tapshiriqlar" className="flex items-center gap-3 rounded-xl px-2 py-1.5 transition-colors hover:bg-bg">
                     <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent"}`} title={t.done ? "Görülüb" : "Görülməyib"}>
                       <Check size={12} strokeWidth={3} />
                     </span>
-                    <span className="min-w-0 flex-1">
-                      <span className={`block truncate text-sm font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{t.employees?.full_name ?? "—"} · {taskPlace(t)}</span>
-                      <span className={`block truncate text-xs ${t.done ? "text-ok/80" : "muted"}`}>{t.reason}</span>
+                    <span className="min-w-0 flex-1 truncate text-sm">
+                      <span className="font-bold">{(t.employees?.full_name ?? "—").split(" ").slice(-1)[0]}</span>
+                      <span className="muted"> · </span>
+                      <span className={`font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{taskPlace(t)}</span>
+                      <span className="muted"> — </span>
+                      <span className={t.done ? "text-ok/80" : ""}>{t.reason}</span>
                     </span>
                   </Link>
                 </li>
@@ -207,7 +211,7 @@ export default function Home() {
           )}
           {!!d?.tasks.length && (
             <Link to="/tapshiriqlar" className="link mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold">
-              {d.tasks.length > 5 ? `Hamısına bax (${d.tasks.length})` : "Hamısına bax"} <ArrowRight size={14} />
+              {d.tasks.length > 8 ? `Hamısına bax (${d.tasks.length})` : "Hamısına bax"} <ArrowRight size={14} />
             </Link>
           )}
         </section>
