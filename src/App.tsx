@@ -11,7 +11,6 @@ import ManagementPage from "@/pages/Management";
 import NotFoundPage from "@/pages/NotFound";
 import RequestsPage from "@/pages/Requests";
 import SitePage from "@/pages/Site";
-import TrashPage from "@/pages/Trash";
 import TasksPage from "@/pages/Tasks";
 import WorkLogsPage from "@/pages/WorkLogs";
 
@@ -45,7 +44,6 @@ export default function App() {
             <Route path="depo" element={<DepotPage />} />
             <Route path="tapshiriqlar" element={<TasksPage />} />
             <Route path="isler" element={<WorkLogsPage />} />
-            <Route path="sebet" element={<TrashPage />} />
             <Route path="muracietler" element={<RequestsPage />} />
             <Route path="sayt" element={<SitePage />} />
             <Route path="*" element={<NotFoundPage />} />

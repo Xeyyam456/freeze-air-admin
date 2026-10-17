@@ -162,9 +162,9 @@
       white-space: nowrap;
     }
   }
-  /* Kiçik ekranlarda menyu bəndlərinin ikonları gizlənir (yer qazanmaq üçün); yalnız ikonlu bənd (Səbət) qalır */
+  /* Kiçik ekranlarda menyu bəndlərinin ikonları gizlənir (yer qazanmaq üçün) */
   @media (max-width: 1480px) {
-    .nav-link:not([aria-label]) > svg {
+    .nav-link > svg {
       display: none;
     }
   }

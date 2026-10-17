@@ -34,7 +34,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - `.env.local` (git-ignored, **oxuma**): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Gizli açar burada yoxdur və olmamalıdır.
 
 ## Kod quruluşu (`src/`)
-- `App.tsx`: marşrutlar `/login`, `/`, `/sirketler(/:id)`, `/magazalar(/:id)`, `/ustalar`, `/rehberlik`, `/depo`, `/tapshiriqlar`, `/isler`, `/muracietler`, `/sayt`, `/sebet` (yalnız admin); naməlum ünvan → `pages/NotFound.tsx` (tünd 404 ekranı, "Panelə qayıt"); `RequireAuth` (admin üçün `ContactRequestsListener` də burada); `<Toaster />`.
+- `App.tsx`: marşrutlar `/login`, `/`, `/sirketler(/:id)`, `/magazalar(/:id)`, `/ustalar`, `/rehberlik`, `/depo`, `/tapshiriqlar`, `/isler`, `/muracietler`, `/sayt`; naməlum ünvan → `pages/NotFound.tsx` (tünd 404 ekranı, "Panelə qayıt"); `RequireAuth` (admin üçün `ContactRequestsListener` də burada); `<Toaster />`.
 - `auth/AuthProvider.tsx`: sessiya + `admin`, `owner`, `storekeeper`, `canManageTools` (sahib və ya depo məsulu), `name`, `position`, `linked`, `employeeId`, `photoUrl`, `reload()`.
 - `lib/`:
   - `supabase/client.ts`: tək brauzer klienti, yalnız publishable açar;
@@ -63,17 +63,12 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 ### Tapşırıqlar (`/tapshiriqlar`, `pages/Tasks.tsx`; menyuda "Tapşırıqlar"; migrasiya 0039)
 - Admin və rəhbərlik (`is_admin()`) ustaya gün üçün iş verir: **usta + yer (mağaza/filial, sabit məkan və ya yazılan yer; iş qeydindəki `PlacePicker`) + səbəb + tarix** (məs. "Əlizadə Xəyyam · İzmir Villa · qaz qaçağı", "Rabitə Bank Sahil filialı · detallı yuyulma"). Cədvəl `tasks` (employee_id, task_date, store_id | company_id | place_text, reason, done, done_at, created_by).
 - Səhifə: solda gün seçimi (‹ Bu gün ›) və "N / M görülüb", ustalara görə qruplu kartlar (hər tapşırıqda yer, səbəb, **✓ qutusu**, silmə); sağ paneldə "Yeni tapşırıq" formu (ardıcıl yazmaq üçün göndərəndən sonra usta və tarix qalır, yer və səbəb təmizlənir).
-- Yetki (RLS + tətikçi `tasks_guard`): hamı oxuyur; **yaratmaq, silmək admin/rəhbərlik**; **usta yalnız ÖZ tapşırığında "görüldü"** işarəsini dəyişir (başqa sahəyə toxunsa baza xəta verir); `done_at` tətikçi ilə qoyulur. Tapşırıq yalnız aktiv ustaya verilir (rəhbərliyə yox). Usta silinəndə tapşırıqları da silinir; yer silinəndə tapşırıq qalır, "Yer silinib" yazılır. Tapşırıqlar Səbətə düşmür.
+- Yetki (RLS + tətikçi `tasks_guard`): hamı oxuyur; **yaratmaq, silmək admin/rəhbərlik**; **usta yalnız ÖZ tapşırığında "görüldü"** işarəsini dəyişir (başqa sahəyə toxunsa baza xəta verir); `done_at` tətikçi ilə qoyulur. Tapşırıq yalnız aktiv ustaya verilir (rəhbərliyə yox). Usta silinəndə tapşırıqları da silinir; yer silinəndə tapşırıq qalır, "Yer silinib" yazılır. 
 - Usta paneli tərəfi (web): `/tapshiriqlar` (`components/work/TasksView.tsx`: hamının tapşırıqları, öz kartın birinci və "Sən" nişanlı, yalnız öz qutunu işarələyirsən) və `/panel`-də "Mənim bugünüm" kartında "Tapşırıq: N / M görülüb" keçidi.
 
 ### Görülən işlər (`/isler`, `pages/WorkLogs.tsx`; menyuda "İşlər")
 - Sol: 4 xülasə xanası (iş sayı, iş görülən gün, usta, fərqli yer) + günlərə görə qruplu siyahı (öz içində sürüşür, klik → `WorkLogModal`). Sağ panel: **tarix aralığı** (`DatePicker` + "Bu ay / Keçən ay / Son 7 gün"), usta, şirkət/market, axtarış, **"Excel-ə ixrac"**. Standart aralıq: bu ayın 1-i → bu gün. Ən çox 2000 iş yüklənir (aşarsa xəbərdarlıq).
 - İxrac **rəngli .xlsx** faylıdır (`write-excel-file` 4.1.1, `import("write-excel-file/browser")` dinamik): tünd başlıq zolağı "Freeze Air Service — Görülən işlər", süzgəc və xülasə sətirləri (iş sayı, gün, usta, yer), mavi cədvəl başlığı (donmuş), zebra sətirlər, nazik haşiyələr, tarix `dd.mm.yyyy`, uzun mətn sarılır, bölgülər gizli, "Cəmi" sətri. Ad: `isler-<başlanğıc>_<son>.xlsx`. Əvvəlki CSV variantı Excel-də pis görünürdü (istifadəçi şikayəti).
-
-### Səbət (`/sebet`, `pages/Trash.tsx`, yalnız admin; migrasiya 0038)
-- Silinən **şirkət, mağaza/filial, usta, alət** və onlarla birlikdə silinənlər (filiallar, alətin təhvilləri və parçaları) bazadakı **BEFORE DELETE tətikçiləri** ilə `trash` cədvəlinə nüsxə kimi yazılır; eyni silmə əməliyyatı eyni `batch` (tranzaksiya nömrəsi) daşıyır. Mövcud sorğulara və silmə kodlarına toxunulmayıb.
-- Səhifədə hər batch bir sətir ("+ 10 filial/mağaza", "+ 2 təhvil"): **Bərpa et** (RPC `restore_trash(batch)`: asılılıq sırası ilə geri yazır, şirkət/mağaza silinəndə yeri boşalan iş qeydlərini yenidən bağlayır, silinən ustanın giriş hesabı yoxdursa `user_id` boş qalır; eyni ad/kod varsa xəta və heç nə dəyişmir) və **Həmişəlik sil** (`trash`-dan silir). Avtomatik təmizləmə yoxdur.
-- Diqqət: usta silinəndə giriş hesabı (auth) ayrıca silinir və bərpa olunmur; şəkillər (storage) toxunulmazdır. Test məlumatını silsən səbətə düşür: yoxladıqdan sonra "Həmişəlik sil".
 
 ### Depo (`/depo`, `pages/Depot.tsx` + `components/depot/DepotForms.tsx`)
 - **Tarixçə** düyməsi (siyahının üstündə, aktiv tabın növü üçün; `components/depot/HistoryModal.tsx`): son 400 təhvil, günlərə görə qruplu, axtarışlı: kim nə vaxt götürdü / qaytardı (materialda "işlədi N, qalan M depoya"). Tab deyil, pəncərədir (istifadəçi əvvəl "çox qəliz" demişdi).
@@ -116,7 +111,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Siyahı öz içində sürüşəndə `nice-scroll` sinfi (`index.css`: 10px tutma sahəsi, 4px görünən yuvarlaq zolaq, hover-də 6px və tünd göy; yalnız `::-webkit-scrollbar` — Chrome 121+ `scrollbar-color` verilsə webkit-i yox sayır, standart xassələr `@supports not selector(::-webkit-scrollbar)` ilə Firefox üçündür; web `globals.css` ilə eyni). Paneldəki rəqəmlər `components/CountUp.tsx` ilə sayılaraq açılır (ease-out, azaldılmış hərəkətdə yox).
 - `components/work/AllLogsModal.tsx`: bütün iş qeydləri (günlərə görə qruplu, gün başlığı yapışqan, axtarışlı, son 300). `components/work/WorkLogModal.tsx`: işin ətraflı pəncərəsi (usta, yer + xəritə, iş günü + "Əlavə edilib: tarix, saat", görülən iş, akt və şəkillər; `timeOf()`). İş yeri adı həmişə `text-primary` rəngdə; ustanın kartındakı `WorkTab`-da da saat göstərilir.
 - **Yeni müraciət**: Realtime (`contact_requests` INSERT) → tost + qısa səs + menyudakı sayğac (`NavLinks`) və siyahı yenilənir.
-- **Header kiçik ekranda sığır**: boşluqlar (`gap-3`, geniş ekranda artır), `<1600px` menyu bəndlərində az padding, `<1480px` menyu ikonları gizlənir (Səbət ikonlu qalır); admin `index.css` ↔ web `globals.css`.
+- **Header kiçik ekranda sığır**: boşluqlar (`gap-3`, geniş ekranda artır), `<1600px` menyu bəndlərində az padding, `<1480px` menyu ikonları gizlənir; admin `index.css` ↔ web `globals.css`.
 - Klik olunan hər şeydə əl kursoru (`index.css` base qaydası; deaktivdə `not-allowed`).
 - Yumşaq sürüşmə (Lenis) sınanıb və istifadəçinin istəyi ilə **silinib**: "ağırlıq yaradır". Yenidən təklif etmə.
 
@@ -178,7 +173,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da yalnız `contact_requests`. Hadisəni RLS-ə görə yalnız admin alır.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0039`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0040`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
@@ -203,7 +198,8 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0034: `give_piece`-ə `p_amount`: parçanın bir hissəsini ustaya vermək (qalan hissə parça kimi qalır);
   - 0036: qablaşdırılmış material (qaz balonu...): `tools.pack_name` (balon), `tools.pack_size` (hər qabda 11), `tool_stock`-a bu sütunlar; daxildə hər şey ölçü vahidi ilə (44 kq), qab yalnız daxiletmə və göstəriş üçün ("44 kq (4 balon)");
   - 0039: `tasks` cədvəli (iş tapşırıqları), RLS və `tasks_guard` tətikçisi;
-  - 0038: Səbət (`trash` cədvəli, silinən şirkət/mağaza/usta/alət üçün BEFORE DELETE tətikçiləri, RPC `restore_trash`) və `tools.min_stock` (+ `tool_stock`-a sütun);
+  - 0040: Səbət (0038-dəki `trash` cədvəli, tətikçilər, `restore_trash`) ləğv olundu, silindi; 0038-dən yalnız `tools.min_stock` qalır;
+  - 0038: `tools.min_stock` (minimum qalıq, `tool_stock`-a sütun) (Səbət hissəsi 0040 ilə silinib);
   - 0037: depo məsulunu istənilən admin təyin edir (əvvəl yalnız müdir): `employees_guard_storekeeper` `is_admin()` yoxlayır;
   - 0035: `material_pieces.original_length` (usta ilkin nə qədər qaytarıb; hissə veriləndə `length` azalır, ilkin qalır: sətir "1 metr · qalıb, ilkin 2 metr — Kərimov Orxan 2 metr qaytarıb" kimi oxunur).
 - RLS dəyişikliyini simulyasiya olunmuş JWT ilə DO-blokunda yoxla: `set_config('request.jwt.claims', json_build_object('sub', <uuid>, 'role', 'authenticated')::text, true)`, `set local role authenticated`. Nəticəni `raise exception 'NƏTİCƏ ...'` ilə çıxar, bu da hər şeyi geri qaytarır.
@@ -239,5 +235,5 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 - Xəta kodları bölməsi (`ac_brands`, `ac_error_codes`).
 - Saytın keşini admin dəyişikliyindən sonra dərhal təmizləmək (`revalidateTag` + web-də `/api/revalidate`).
 - Müraciətlər üçün e-poçt bildirişi (Resend və s.), brauzer bildirişi.
-- Xəritə üçün koordinat sahəsi (`site_settings`); silmək əvəzinə "Səbət" (soft-delete).
+- Xəritə üçün koordinat sahəsi (`site_settings`). (Silmək əvəzinə "Səbət" sınanıb və istifadəçinin istəyi ilə ləğv olunub: yenidən təklif etmə.)
 - Ustalar üçün mobil tətbiq (React Native, Google Maps/Waze naviqasiyası). Mobildə mağaza/filial axtarışı kodla (məs. `ARZ-045`) + "Yol tap" (Google Maps marşrutu) və Waze lazımdır; web-də bu çıxarılıb, qaralama commit `019f8e4`-dədir.
