@@ -181,31 +181,24 @@ export default function Home() {
           )}
         </section>
 
-        {/* Bugünkü tapşırıqlar (admin/rəhbərlik ustalara verir): görülməyənlər yuxarıda; hamısı /tapshiriqlar-da */}
+        {/* Bugünkü tapşırıqlar: sadə siyahı (görülməyənlər yuxarıda); sayı yuxarıdakı xanada, hamısı /tapshiriqlar-da */}
         <section className="card flex h-[374px] flex-col">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="card-title flex items-center gap-2"><ListChecks size={18} className="text-primary" /> Tapşırıqlar</h2>
-            <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-bold text-primary">
-              Bu gün: {d ? `${d.tasks.filter((t) => t.done).length} / ${d.tasks.length}` : "–"}
-            </span>
-          </div>
+          <h2 className="card-title flex items-center gap-2"><ListChecks size={18} className="text-primary" /> Tapşırıqlar</h2>
           {!d ? (
             <p className="muted mt-6 text-sm">Yüklənir...</p>
           ) : d.tasks.length === 0 ? (
             <Empty icon={ListChecks} title="Bu gün tapşırıq yoxdur" text="Tapşırıqlar bölməsindən ustaya iş ver." />
           ) : (
-            <ul className="mt-3 min-h-0 flex-1 space-y-1 overflow-hidden">
-              {d.tasks.slice(0, 4).map((t) => (
+            <ul className="mt-3 min-h-0 flex-1 overflow-hidden">
+              {d.tasks.slice(0, 5).map((t) => (
                 <li key={t.id}>
-                  <Link to="/tapshiriqlar" className="flex items-start gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-bg">
-                    <Avatar employee={{ full_name: t.employees?.full_name ?? "?", photo_url: t.employees?.photo_url ?? null }} className="!h-10 !w-10 shrink-0 !text-xs" />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold">{t.employees?.full_name ?? "—"}</span>
-                      <span className="flex min-w-0 items-center gap-1 truncate text-xs font-semibold text-primary"><MapPin size={12} className="shrink-0" /> {taskPlace(t)}</span>
-                      <span className="muted mt-0.5 line-clamp-1 block text-sm">{t.reason}</span>
+                  <Link to="/tapshiriqlar" className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-bg">
+                    <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent"}`} title={t.done ? "Görülüb" : "Görülməyib"}>
+                      <Check size={12} strokeWidth={3} />
                     </span>
-                    <span className={`mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-lg border-2 ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent"}`} title={t.done ? "Görülüb" : "Görülməyib"}>
-                      <Check size={14} strokeWidth={3} />
+                    <span className="min-w-0 flex-1">
+                      <span className={`block truncate text-sm ${t.done ? "muted line-through" : "font-semibold"}`}>{t.employees?.full_name ?? "—"} · {taskPlace(t)}</span>
+                      <span className="muted block truncate text-xs">{t.reason}</span>
                     </span>
                   </Link>
                 </li>
@@ -214,7 +207,7 @@ export default function Home() {
           )}
           {!!d?.tasks.length && (
             <Link to="/tapshiriqlar" className="link mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold">
-              {d.tasks.length > 4 ? `Hamısına bax (${d.tasks.length})` : "Hamısına bax"} <ArrowRight size={14} />
+              {d.tasks.length > 5 ? `Hamısına bax (${d.tasks.length})` : "Hamısına bax"} <ArrowRight size={14} />
             </Link>
           )}
         </section>
