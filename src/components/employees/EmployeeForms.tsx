@@ -462,8 +462,8 @@ export function EmployeeList({ employees, toolsByEmployee, todayWork, freeTools,
 
   return (
     <div className="space-y-4">
-      {/* Konteynerin yuxarı boşluğunu (pt-5) örtür: sürüşən kartlar axtarışın üstündə və altında görünmür */}
-      <div className="sticky -top-5 z-10 -mt-5 bg-[#f8f9fc] pt-5 shadow-[0_16px_0_0_#f8f9fc]">
+      {/* Axtarış öz yerində qalır; üstündəki boşluq (before) və altındakı zolaq bərk fonludur: sürüşən məzmun orada görünmür */}
+      <div className="sticky top-0 z-10 rounded-[14px] shadow-[0_16px_0_0_#f8f9fc] before:absolute before:inset-x-0 before:bottom-full before:h-8 before:bg-[#f8f9fc]">
         <div className="search">
         <Search size={20} />
         <input
