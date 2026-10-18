@@ -5,6 +5,7 @@ import { addErrorCode, addModel, deleteErrorCode, deleteModel, importErrorCodes,
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
+import { ModelDropdown } from "@/components/errors/ModelDropdown";
 import { toast } from "@/lib/toast";
 
 export type Model = { id: number; name: string };
@@ -13,13 +14,10 @@ export type ErrorCode = { id: number; model_id: number; code: string; title: str
 const norm = (s: string | null | undefined) =>
   (s ?? "").toLowerCase().replace(/ə/g, "e").replace(/ı/g, "i").replace(/ö/g, "o").replace(/ü/g, "u").replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g");
 
-// Model dropdown-u (siyahıdan seçilir)
+// Model seçimi (əlavə forması və redaktə pəncərəsi): öz dizaynımızda açılan siyahı
 function ModelSelect({ models, value, onChange, name = "model_id" }: { models: Model[]; value: string; onChange: (v: string) => void; name?: string }) {
   return (
-    <select name={name} value={value} onChange={(e) => onChange(e.target.value)} required className="field cursor-pointer">
-      <option value="">Model seç...</option>
-      {models.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
-    </select>
+    <ModelDropdown name={name} value={value} onChange={onChange} options={models.map((m) => ({ value: String(m.id), label: m.name }))} />
   );
 }
 
@@ -303,6 +301,11 @@ export function ErrorCodeList({ codes, models }: { codes: ErrorCode[]; models: M
   const [modelFilter, setModelFilter] = useState("");
   const [editing, setEditing] = useState<ErrorCode | null>(null);
   const names = useMemo(() => new Map(models.map((m) => [m.id, m.name])), [models]);
+  const counts = useMemo(() => {
+    const m = new Map<number, number>();
+    for (const c of codes) m.set(c.model_id, (m.get(c.model_id) ?? 0) + 1);
+    return m;
+  }, [codes]);
 
   const filtered = useMemo(() => {
     const words = norm(query).split(/\s+/).filter(Boolean);
@@ -322,11 +325,10 @@ export function ErrorCodeList({ codes, models }: { codes: ErrorCode[]; models: M
           <Search size={20} />
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Kod, açıqlama və ya edilecək işlə axtar..." aria-label="Xəta kodu axtarışı" />
         </div>
-        <select value={modelFilter} onChange={(e) => setModelFilter(e.target.value)} aria-label="Model süzgəci"
-          className="field !h-14 !w-56 shrink-0 cursor-pointer !rounded-[14px]">
-          <option value="">Bütün modellər</option>
-          {models.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
-        </select>
+        <div className="w-64 shrink-0">
+          <ModelDropdown all value={modelFilter} onChange={setModelFilter} className="!h-14 !rounded-[14px]"
+            options={[{ value: "", label: "Bütün modellər", hint: `${codes.length} kod` }, ...models.map((m) => ({ value: String(m.id), label: m.name, hint: `${counts.get(m.id) ?? 0} kod` }))]} />
+        </div>
       </div>
 
       {codes.length === 0 ? (
