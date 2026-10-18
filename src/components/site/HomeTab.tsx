@@ -1,6 +1,6 @@
 import { useActionState, useRef, useState } from "react";
-import { CircleCheck, ClipboardCheck, ImagePlus, Snowflake, Trash2 } from "lucide-react";
-import { updateAbout, updateHomeImage, type HomeImageField } from "@/actions/site";
+import { CircleCheck, ClipboardCheck, ImagePlus, Phone, PhoneCall, Snowflake, Trash2 } from "lucide-react";
+import { saveHeroForm, updateAbout, updateHomeImage, type HomeImageField } from "@/actions/site";
 import { removeSiteImage, uploadSiteImage } from "@/actions/siteContent";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
@@ -19,6 +19,23 @@ const CARD_COLORS = [
   { id: "white", label: "Ağ", bg: "#ffffff", fg: "#06192b", icon: "#00a3d9", sub: "rgba(6,25,43,0.6)" },
 ];
 
+// Hero-dakı sürətli müraciət formunun standart mətnləri (web/src/lib/site-texts.ts ilə eyni)
+const QUICK_DEFAULTS = {
+  "home.quick.name": "Adınız",
+  "home.quick.phone": "Telefon nömrəniz",
+  "home.quick.button": "Zəng sifariş et",
+  "home.quick.note": "Nömrənizi yazın, sizə özümüz zəng edək.",
+  "home.quick.or": "Və ya zəng edin",
+} as const;
+type QuickKey = keyof typeof QUICK_DEFAULTS;
+const QUICK_FIELDS: { key: QuickKey; label: string; max: number }[] = [
+  { key: "home.quick.name", label: "Ad sahəsinin yazısı", max: 40 },
+  { key: "home.quick.phone", label: "Telefon sahəsinin yazısı", max: 40 },
+  { key: "home.quick.button", label: "Düymənin yazısı", max: 30 },
+  { key: "home.quick.note", label: "Formun altındakı yazı", max: 120 },
+  { key: "home.quick.or", label: "Telefon nömrəsinin yanındakı yazı", max: 40 },
+];
+
 // Ana səhifənin və saytın idarə olunan hissələri: loqo, hero şəkli və "Haqqımızda" bölməsi.
 // Hər bölmənin yanında saytdakı görünüşünün kiçik önizləməsi var.
 export function HomeTab() {
@@ -26,7 +43,7 @@ export function HomeTab() {
     const supabase = createClient();
     const [{ data: settings }, { data: texts }] = await Promise.all([
       supabase.from("site_settings").select("*").eq("id", 1).maybeSingle(),
-      supabase.from("site_texts").select("key, value").in("key", ["brand.name", "brand.tagline", "home.hero.temp_label", "home.hero.temp", "home.hero.badge"]),
+      supabase.from("site_texts").select("key, value").in("key", ["brand.name", "brand.tagline", "home.hero.temp_label", "home.hero.temp", "home.hero.badge", ...Object.keys(QUICK_DEFAULTS)]),
     ]);
     const t = Object.fromEntries((texts ?? []).map((r) => [r.key, r.value])) as Record<string, string | undefined>;
     return { settings, t };
@@ -104,6 +121,8 @@ export function HomeTab() {
         </section>
       </div>
 
+      <HeroFormCard enabled={settings.hero_form_enabled} phone={settings.phone ?? ""} t={t} />
+
       {/* Haqqımızda: şəkillər | mətn | siyahı + kart */}
       <section className="card">
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -128,6 +147,76 @@ export function HomeTab() {
         </div>
       </section>
     </div>
+  );
+}
+
+// Hero-dakı sürətli müraciət: açıb-bağlamaq və mətnləri dəyişmək. Müraciətlər "Müraciətlər" səhifəsinə düşür.
+function HeroFormCard({ enabled: initialEnabled, phone, t }: { enabled: boolean; phone: string; t: Record<string, string | undefined> }) {
+  const initial = Object.fromEntries(QUICK_FIELDS.map((f) => [f.key, t[f.key] || QUICK_DEFAULTS[f.key]])) as Record<QuickKey, string>;
+  const [enabled, setEnabled] = useState(initialEnabled);
+  const [values, setValues] = useState<Record<QuickKey, string>>(initial);
+  const [pending, setPending] = useState(false);
+
+  async function save() {
+    setPending(true);
+    // Standart mətnlə eyni olan sahə boş saxlanır: saytda standart göstərilir
+    const texts = Object.fromEntries(QUICK_FIELDS.map((f) => [f.key, values[f.key].trim() === QUICK_DEFAULTS[f.key] ? "" : values[f.key].trim()]));
+    const err = await saveHeroForm(enabled, texts);
+    setPending(false);
+    if (err) return toast.error(err);
+    toast.success("Sürətli müraciət yadda saxlanıldı", SITE_DELAY);
+  }
+
+  const v = (k: QuickKey) => values[k].trim() || QUICK_DEFAULTS[k];
+
+  return (
+    <section className="card">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="card-title">Sürətli müraciət formu</h2>
+          <p className="muted mt-1 text-sm">Hero-da başlığın altında: ad və telefon yazılır, müraciət “Müraciətlər” səhifəsinə düşür. Telefon nömrəsi “Əlaqə” tabından götürülür.</p>
+        </div>
+        <label className="flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm font-semibold">
+          <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} className="h-4 w-4 accent-[var(--color-primary)]" />
+          Saytda göstər
+        </label>
+      </div>
+
+      <div className="mt-5 grid gap-6 xl:grid-cols-[1fr_1.1fr]">
+        <div className={`grid gap-4 sm:grid-cols-2 ${enabled ? "" : "opacity-50"}`}>
+          {QUICK_FIELDS.map((f) => (
+            <Field key={f.key} label={f.label}>
+              <input value={values[f.key]} maxLength={f.max} disabled={!enabled} onChange={(e) => setValues((x) => ({ ...x, [f.key]: e.target.value }))}
+                className={`field ${f.key === "home.quick.note" ? "sm:col-span-2" : ""}`} />
+            </Field>
+          ))}
+          <p className="muted text-xs sm:col-span-2">Sahəni boş qoysan, saytda standart yazı çıxır.</p>
+        </div>
+
+        {/* Saytdakı kimi canlı önizləmə */}
+        <div className="rounded-2xl bg-gradient-to-br from-[#06192b] via-[#0b3a5c] to-[#00a3d9] p-6 sm:p-8">
+          {enabled ? (
+            <>
+              <div className="flex flex-wrap gap-2 rounded-[22px] bg-white/10 p-2 ring-1 ring-white/20 backdrop-blur">
+                <span className="min-w-[110px] flex-1 rounded-xl bg-white px-3.5 py-2.5 text-sm text-[#06192b]/40">{v("home.quick.name")}</span>
+                <span className="min-w-[130px] flex-1 rounded-xl bg-white px-3.5 py-2.5 text-sm text-[#06192b]/40">{v("home.quick.phone")}</span>
+                <span className="inline-flex items-center gap-1.5 rounded-xl bg-[#ff9f1c] px-4 py-2.5 text-sm font-bold text-[#06192b]"><PhoneCall size={15} /> {v("home.quick.button")}</span>
+              </div>
+              <p className="mt-3 flex flex-wrap items-center gap-x-2 text-xs text-white/65">
+                <span>{v("home.quick.note")}</span>
+                {phone.trim() && <><span className="text-white/30">·</span><span>{v("home.quick.or")}:</span><span className="inline-flex items-center gap-1 font-bold text-white"><Phone size={12} /> {phone.trim()}</span></>}
+              </p>
+            </>
+          ) : (
+            <p className="py-6 text-center text-sm font-semibold text-white/70">Forma gizlidir: saytda hero-da yalnız mətn və keçidlər görünür.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-5 flex justify-end">
+        <button type="button" onClick={save} disabled={pending} className="btn btn-primary min-w-40">{pending ? "Gözləyin..." : "Yadda saxla"}</button>
+      </div>
+    </section>
   );
 }
 

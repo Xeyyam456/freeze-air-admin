@@ -7,6 +7,12 @@ import { createClient } from "@/lib/supabase/client";
 export async function updateSiteSettings(_prev: FormState, formData: FormData): Promise<FormState> {
   const email = text(formData, "email");
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "E-poçt düzgün deyil." };
+  // Sosial şəbəkə linkləri (footer): yalnız https://
+  const instagram = text(formData, "instagram_url");
+  const facebook = text(formData, "facebook_url");
+  for (const [name, url] of [["Instagram", instagram], ["Facebook", facebook]] as const) {
+    if (url && !/^https:\/\/\S+$/i.test(url)) return { error: `${name} linki https:// ilə başlamalıdır.` };
+  }
 
   const { error } = await createClient()
     .from("site_settings")
@@ -15,6 +21,8 @@ export async function updateSiteSettings(_prev: FormState, formData: FormData): 
       address: text(formData, "address"),
       hours: text(formData, "hours"),
       email,
+      instagram_url: instagram,
+      facebook_url: facebook,
       updated_at: new Date().toISOString(),
     })
     .eq("id", 1);
@@ -66,4 +74,14 @@ export async function saveTexts(values: Record<string, string>): Promise<string 
   if (error) return error.code === "23514" ? "Mətnlərdən biri çox uzundur." : error.message;
   revalidateSite();
   return null;
+}
+
+// Hero-dakı sürətli müraciət formu: göstər/gizlət (site_settings) və mətnləri (site_texts). Boş mətn → saytda standart mətn.
+export async function saveHeroForm(enabled: boolean, texts: Record<string, string>): Promise<string | null> {
+  const { error } = await createClient()
+    .from("site_settings")
+    .update({ hero_form_enabled: enabled, updated_at: new Date().toISOString() })
+    .eq("id", 1);
+  if (error) return error.message;
+  return saveTexts(texts);
 }

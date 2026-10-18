@@ -18,7 +18,7 @@ Kondisioner servis şirkəti **Freeze Air Service** üçün sistem: ustalar, mü
 İkisi də **eyni Supabase layihəsini** işlədir. `supabase/` qovluğu (miqrasiyalar + Edge Function) **bu (admin) reposuna aiddir**; web-də baza dəyişikliyi lazım olanda miqrasiya burada yazılır.
 
 ## Layihə strukturu, git və iş qaydaları (admin və web fayllarında eynidir)
-- **Qovluqlar** (`D:\Praqramlasirma\Projects\kondisioner-servis\`): `admin/` (Vite, 5173), `web/` (Next.js, 3000), `supabase/` (miqrasiyalar `0001`–`0049`, hamısı bazada tətbiq olunub + Edge Function `admin-accounts`; repolar ayrılanda `admin/supabase/`-a köçürüləcək), `excel/` (test və import faylları, heç bir repoya aid deyil, git-ignore). **Kökdə CLAUDE.md yoxdur**: hər platformanın öz faylı tamdır, işlədiyin platformanın qovluğundan başla (`admin/CLAUDE.md` və ya `web/CLAUDE.md`).
+- **Qovluqlar** (`D:\Praqramlasirma\Projects\kondisioner-servis\`): `admin/` (Vite, 5173), `web/` (Next.js, 3000), `supabase/` (miqrasiyalar `0001`–`0051`, hamısı bazada tətbiq olunub + Edge Function `admin-accounts`; repolar ayrılanda `admin/supabase/`-a köçürüləcək), `excel/` (test və import faylları, heç bir repoya aid deyil, git-ignore). **Kökdə CLAUDE.md yoxdur**: hər platformanın öz faylı tamdır, işlədiyin platformanın qovluğundan başla (`admin/CLAUDE.md` və ya `web/CLAUDE.md`).
 - **Yeni kompüterdə qurmaq**: `git clone https://github.com/Xeyyam456/kondisioner-servis.git`; `admin/` və `web/`-də `npm install`; hər qovluqda `.env.example`-ı `.env.local` adı ilə kopyala və publishable açarı doldur (Supabase → Project Settings → API); `npm run dev`. Gizli (service role) açar lokalda lazım deyil. Baza və Edge Function Supabase-dədir (kopyalanmır).
 - **Git**: hələlik **bir repo** (kök, budaq `main`): `admin/`, `web/`, `supabase/` birlikdə commit və push olunur, sonda ayrılacaq (məs. `git subtree split --prefix=admin`). Commit/push yalnız istifadəçi istəyəndə ("komit et", "pushla"). Commitdən əvvəl: admin `npx tsc -b`, web `npx tsc --noEmit` + `npx eslint src`. `.env*` və `excel/` repoya düşmür, `.gitattributes`: LF. İstifadəçi "hələ push etmə, xoşuma gəlməsə geri dönək" deyəndə yeni funksiya `feature/...` budağında commit olunur; təsdiqdən sonra `main`-ə `--ff-only` + push (bazadakı miqrasiyalar budaqla geri qayıtmır: miqrasiya faylının başına `drop` əmrlərini yaz).
 - **Dev serverləri Claude özü idarə edir** (2026-10-17-dən, istifadəçi istəyi): `admin/` → `npm run dev` (5173), `web/` → `npm run dev` (3000), fon prosesləri. Chrome-da hər biri üçün ayrı tab açıq qalır (admin, landing, usta paneli), tabları bağlama. Yaddaş azalıb server ölərsə yenidən başlat və tabı yenilə.
@@ -100,6 +100,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Ustalar səhifəsində ustanın "Alətlər" tabı da eyni qaydadadır (say ×N, × hamısını qaytarır, "Alət ver" `QuantityInput` ilə).
 
 ### Sayt səhifəsi (`/sayt`): açıq saytın bütün məzmunu buradan idarə olunur
+- **"Etibar və suallar" tabı (2026-10-18; `components/site/TrustTab.tsx`, migrasiya 0050)**: ana səhifənin üç bölməsi: **Rəqəmlər zolağı** (`site_stats`: rəqəm "200+" + yazı, sayğacla artır, ≥ 2 aktiv olanda görünür) və **Tez-tez verilən suallar** (`site_faq`). Hər biri üçün redaktə pəncərəsi, sıra, "Saytda göstər"; boş siyahı = saytda bölmə yoxdur. "Bizə etibar edənlər" (müştəri loqoları) ləğv olunub (2026-10-19, `site_clients` silindi; Storage-də `site/clients/` qovluğunda yetim fayllar qala bilər, SQL ilə silinmir: panelden əl ilə sil). Əməliyyatlar `actions/siteContent.ts` (`saveStat/Faq`, `delete…`). **"Əlaqə" tabında** Instagram və Facebook linkləri (https://, footer-də); xəritə `hl=az`. "Mətnlər" tabına hero formu, necə işləyirik, FAQ və footer sosial başlığı üçün yeni açarlar əlavə olunub (`home.quick.*`, `home.how.*`, `home.faq.*`, `footer.social`). **"Ana səhifə" tabında "Sürətli müraciət formu" kartı** (`HomeTab.tsx` `HeroFormCard`): "Saytda göstər" (`site_settings.hero_form_enabled`) + 5 mətn (ad/telefon sahəsi, düymə, formun altındakı yazı "Nömrənizi yazın, sizə özümüz zəng edək.", "Və ya zəng edin") + canlı önizləmə; `saveHeroForm` (actions/site.ts) hər ikisini yazır, standartla eyni mətn boş saxlanır.
 | Tab | Cədvəl | Fayl |
 |---|---|---|
 | Əlaqə | `site_settings` (phone, email, address, hours); sağda saytdakı Əlaqə blokunun canlı önizləməsi | `components/site/ContactTab.tsx` |
@@ -187,7 +188,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da yalnız `contact_requests`. Hadisəni RLS-ə görə yalnız admin alır.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0049`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0050`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
@@ -212,6 +213,8 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0034: `give_piece`-ə `p_amount`: parçanın bir hissəsini ustaya vermək (qalan hissə parça kimi qalır);
   - 0036: qablaşdırılmış material (qaz balonu...): `tools.pack_name` (balon), `tools.pack_size` (hər qabda 11), `tool_stock`-a bu sütunlar; daxildə hər şey ölçü vahidi ilə (44 kq), qab yalnız daxiletmə və göstəriş üçün ("44 kq (4 balon)");
   - 0039: `tasks` cədvəli (iş tapşırıqları), RLS və `tasks_guard` tətikçisi;
+  - 0051: `site_clients` silindi (müştəri bölməsi ləğv olundu), `site_texts.home.clients.title` silindi, `site_settings.hero_form_enabled` (hero formunu göstər/gizlət);
+  - 0050: ana səhifənin inam hissələri: `site_stats`, `site_faq` (+ `site_clients`, 0051 ilə silindi) (RLS: qonaq aktivləri oxuyur, admin yazır) + `site_settings.instagram_url/facebook_url`; ilk məzmun: 3 rəqəm (real say) və 5 sual (saytdakı mətnlərdən);
   - 0049: boru (metr) parça qaydası: `material_small_to_pieces`, `give_tool` və `settle_material` yeniləndi;
   - 0048: `settle_material(p_assignment_id, p_used, p_returned)` (bir formada işlədilib + qaytarılır, qalan ustada qalır; 0047-dəki `consume_material` silindi);
   - 0047: `consume_material` (0048 ilə əvəz olundu);
@@ -249,6 +252,9 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 - Test məlumatı uydurmadır (uydurma ünvan, telefon `+994 12 000 …`); real şəxs məlumatı uydurma. Test üçün özün yaratdığın sətirləri ("TEST" ilə başlayan) yoxladıqdan sonra dəqiq şərtlə (`id` + ad) sil. İstifadəçinin öz yazdığı qeydləri toplu silmək icazə sistemi tərəfindən bloklanır: istifadəçiyə UI-dan necə siləcəyini de.
 - Supabase dashboard-da hesab və ya tənzimləmə dəyişikliyindən əvvəl icazə al.
 - Shell-də `node -e` daxilində `\n` və `\D` kimi escape-lər pozulur; uzun skripti scratchpad-də `.cjs`/`.mjs` faylına yaz. Git Bash-in `/tmp`-i Node üçün başqa yerdir (`D:\tmp` axtarır): Node-a scratchpad-in Windows yolunu ver (`cygpath -m`). Azərbaycan hərfli böyük mətni heredoc ilə yox, Write aləti ilə fayla yaz.
+- Edge Function (`supabase/functions/admin-accounts/index.ts`) **Deno**-dur: VS Code-da "Cannot find name 'Deno'" / "npm:" səhvləri Node TS-nin yanlış yoxlamasıdır. Həll quruldu: Deno uzantısı + `.vscode/settings.json` (`deno.enablePaths: ["supabase/functions"]`) + `supabase/functions/deno.json`; pəncərəni yenilə (Reload Window). Repolar ayrılanda `.vscode` yolunu `supabase/functions`-a görə düzəlt.
+- Storage-dəki faylları SQL ilə silmək olmur (`storage.protect_delete`): yalnız Storage API (admin panelin `removeSiteImage`) və ya Supabase paneli. Test sətirlərini yazanda yalnız özün yazdığın `id`-lərlə sil (istifadəçi eyni cədvələ paralel real məlumat yaza bilər: bir dəfə onun müştəriləri sınaq sətirlərimlə qarışmışdı).
+- Dev serverdə `globals.css` və ya yeni CSS dəyişikliyi görünmürsə: port 3000-i öldür, `web/.next` sil, `npm run dev` (bu sessiyada marquee CSS belə görünmədi). Yeni cədvəldən oxuyan `use cache` məlumatı ~1 dəqiqə gec görünür (SQL ilə yazanda `revalidateSite` çağırılmır).
 - PDF oxumaq: `WebFetch` PDF-i parse edə bilmir, `Read` isə `pdftoppm` tələb edir (yoxdur). İşləyən yol: scratchpad-də `npm i pdfjs-dist@4.10.38`, `legacy/build/pdf.mjs` ilə mətn elementlərini koordinatla çıxar; cədvəl üçün `getOperatorList()`-dən xətləri (`constructPath`) götürüb xanalara böl.
 - Dəyişikliklərdən sonra Chrome-da yoxla, amma **riskli klikləri təkrarlama**: modal/HMR sıfırlanandan sonra koordinatla klik real əməliyyata (məs. "Hamısını geri al") düşə bilər. Real məlumata yazan düymələri sınaqda basma, yalnız oxuma/açma yoxla.
 
@@ -258,7 +264,8 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 - Müraciətlər üçün brauzer bildirişi (istifadəçi: "qalsın").
 - Daikin xəta kodlarında **"Edilecək iş" boşdur**: PDF-in 3–6-cı səhifələrindəki "Supposed causes" siyahısından kod başına doldurmaq (istifadəçi hələ istəməyib; "Xəta barədə məlumat yoxdur" sətirlərinə yazma). Model adları uzundur (`Daikin RA-SkyAir-VRV-PA-HRV`), istəsə "Modellər" tabında dəyişir.
 - Analitika (Vercel Analytics və ya Plausible) hələ seçilməyib, quraşdırılmayıb. Canlıya çıxanda web `NEXT_PUBLIC_SITE_URL`, `ADMIN_ORIGIN`, admin `VITE_SITE_URL` real domenlərlə yazılmalıdır.
-- Mobil başlıqda (390px) üfüqi daşma: sağdakı "Usta çağır" / "Panelə keç" düymələri 18px daşırır (düzəldilməyib).
+- **Responsivlik/mobil sonda toplu işlənəcək (istifadəçi qərarı, 2026-10-19): indi mobillə bağlı heç nə etmə.** Bilinən: mobil başlıqda (390px) üfüqi daşma, yapışan "Zəng et" zolağı (təklif idi, hələ yox).
+- **Landing planı (web `CLAUDE.md` → "Landing: qərarlar və qalan işlər")**: edilib: hero sürətli forma, rəqəmlər zolağı, necə işləyirik, FAQ, footer sosial, header telefon, xəritə dili, animasiyalar. **Qalan: "Haqqımızda" şəkilləri** (Fujitsu məhsul şəkillərinin əvəzinə öz real foto; istifadəçidən foto lazımdır, sona saxlanıb). Ləğv/qərar: xidmət təkrarının (4 kart / göy kateqoriyalar / "Xidmət növləri") təmizlənməsi **istənmədi** (5-ci təklif ləğv); "Bizə etibar edənlər" ləğv; hover ilə açılan menyu bəyənilmədi.
 - Repoların ayrılması (sonda): `supabase/`-ı `admin/`-ə köçürmək, `admin/` və `web/`-i ayrı repolara çıxarmaq (məs. `git subtree split --prefix=admin` ilə tarixçə saxlanır).
 - Xəritə üçün koordinat sahəsi (`site_settings`). (Silmək əvəzinə "Səbət" sınanıb və istifadəçinin istəyi ilə ləğv olunub: yenidən təklif etmə.)
 - Ustalar üçün mobil tətbiq (React Native, Google Maps/Waze naviqasiyası). Mobildə mağaza/filial axtarışı kodla (məs. `ARZ-045`) + "Yol tap" (Google Maps marşrutu) və Waze lazımdır; web-də bu çıxarılıb, qaralama commit `019f8e4`-dədir.

@@ -1,5 +1,5 @@
 import { useActionState, useState } from "react";
-import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Clock, Link2, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { updateSiteSettings } from "@/actions/site";
 import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import type { Tables } from "@/lib/database.types";
@@ -29,6 +29,8 @@ const FIELDS = [
   { name: "email", label: "E-poçt", icon: Mail, placeholder: "info@sirket.az", max: 120, type: "email" },
   { name: "address", label: "Ünvan", icon: MapPin, placeholder: "Bakı, Nərimanov r., ...", max: 200, type: "text", wide: true },
   { name: "hours", label: "İş saatları", icon: Clock, placeholder: "B.e.–Şənbə 09:00–19:00", max: 120, type: "text", wide: true },
+  { name: "instagram_url", label: "Instagram (istəyə görə)", icon: Link2, placeholder: "https://instagram.com/sirket", max: 200, type: "url" },
+  { name: "facebook_url", label: "Facebook (istəyə görə)", icon: Link2, placeholder: "https://facebook.com/sirket", max: 200, type: "url" },
 ] as const;
 
 type Values = Record<(typeof FIELDS)[number]["name"], string>;
@@ -53,13 +55,15 @@ function ContactEditor({ settings }: { settings: Tables<"site_settings"> }) {
     email: settings.email ?? "",
     address: settings.address ?? "",
     hours: settings.hours ?? "",
+    instagram_url: settings.instagram_url ?? "",
+    facebook_url: settings.facebook_url ?? "",
   });
 
   const phone = values.phone.trim() ? formatPhone(values.phone) : FALLBACK.phone;
   const address = values.address.trim() || FALLBACK.address;
   const hours = values.hours.trim() || FALLBACK.hours;
   const hasWhatsApp = values.phone.replace(/\D/g, "").length >= 11;
-  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(address)}&z=14&output=embed`;
+  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(address)}&z=14&output=embed&hl=az`;
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_1.15fr]">
@@ -91,7 +95,7 @@ function ContactEditor({ settings }: { settings: Tables<"site_settings"> }) {
           <div className="mt-6 rounded-xl bg-bg p-4">
             <p className="text-xs font-semibold">Saytda harada görünür</p>
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {["Footer (bütün səhifələr)", "Ana səhifə: sürətli əlaqə və xəritə", "Əlaqə səhifəsi", "Xidmət səhifələri: zəng bloku"].map((p) => (
+              {["Footer (bütün səhifələr; sosial linklər yalnız footer-də)", "Ana səhifə: sürətli əlaqə və xəritə", "Əlaqə səhifəsi", "Xidmət səhifələri: zəng bloku"].map((p) => (
                 <span key={p} className="rounded-full border border-line bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted">{p}</span>
               ))}
             </div>

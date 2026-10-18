@@ -1,20 +1,21 @@
 import { useState } from "react";
-import { AirVent, ExternalLink, Image as ImageIcon, LayoutGrid, List, Phone, Type } from "lucide-react";
+import { AirVent, ExternalLink, Image as ImageIcon, LayoutGrid, List, Phone, ShieldCheck, Type } from "lucide-react";
 import { Page } from "@/components/Page";
 import { ContactTab } from "@/components/site/ContactTab";
 import { EquipmentTab, SegmentsTab } from "@/components/site/ContentTabs";
 import { ServicesTab } from "@/components/site/ServicesTab";
 import { HomeTab } from "@/components/site/HomeTab";
 import { TextsTab } from "@/components/site/TextsTab";
+import { TrustTab } from "@/components/site/TrustTab";
 
-// Açıq saytın ünvanı (Next layihəsi)
 import { SITE_URL } from "@/lib/site";
 
-type Tab = "contact" | "texts" | "hero" | "segments" | "equipment" | "services";
+type Tab = "contact" | "texts" | "hero" | "trust" | "segments" | "equipment" | "services";
 
 const TABS: { id: Tab; label: string; icon: typeof Phone }[] = [
   { id: "contact", label: "Əlaqə", icon: Phone },
   { id: "hero", label: "Ana səhifə", icon: ImageIcon },
+  { id: "trust", label: "Etibar və suallar", icon: ShieldCheck },
   { id: "texts", label: "Mətnlər", icon: Type },
   { id: "segments", label: "Obyektlər", icon: LayoutGrid },
   { id: "equipment", label: "Avadanlıq", icon: AirVent },
@@ -44,7 +45,7 @@ export default function SitePage() {
             <ExternalLink size={14} /> Saytı aç
           </a>
         </div>
-        {tab === "contact" ? <ContactTab /> : tab === "hero" ? <HomeTab /> : tab === "texts" ? <TextsTab /> : tab === "segments" ? <SegmentsTab /> : tab === "equipment" ? <EquipmentTab /> : <ServicesTab />}
+        {tab === "contact" ? <ContactTab /> : tab === "hero" ? <HomeTab /> : tab === "trust" ? <TrustTab /> : tab === "texts" ? <TextsTab /> : tab === "segments" ? <SegmentsTab /> : tab === "equipment" ? <EquipmentTab /> : <ServicesTab />}
       </div>
     </Page>
   );

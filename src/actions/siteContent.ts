@@ -104,3 +104,33 @@ export async function deleteEquipment(id: number, imageUrl: string | null) {
   await createClient().from("site_equipment").delete().eq("id", id);
   revalidateSite();
 }
+
+// Ana səhifənin inam hissələri: rəqəmlər zolağı və tez-tez verilən suallar
+export type StatInput = Omit<Tables<"site_stats">, "id">;
+export type FaqInput = Omit<Tables<"site_faq">, "id">;
+
+export async function saveStat(id: number | null, input: StatInput): Promise<string | null> {
+  const supabase = createClient();
+  const { error } = id ? await supabase.from("site_stats").update(input).eq("id", id) : await supabase.from("site_stats").insert(input);
+  if (error) return errorText(error);
+  revalidateSite();
+  return null;
+}
+
+export async function deleteStat(id: number) {
+  await createClient().from("site_stats").delete().eq("id", id);
+  revalidateSite();
+}
+
+export async function saveFaq(id: number | null, input: FaqInput): Promise<string | null> {
+  const supabase = createClient();
+  const { error } = id ? await supabase.from("site_faq").update(input).eq("id", id) : await supabase.from("site_faq").insert(input);
+  if (error) return errorText(error);
+  revalidateSite();
+  return null;
+}
+
+export async function deleteFaq(id: number) {
+  await createClient().from("site_faq").delete().eq("id", id);
+  revalidateSite();
+}

@@ -183,6 +183,12 @@ export type Database = {
         Update: { id?: number; image_url?: string | null; is_active?: boolean; key?: string; place?: string; sort?: number; text?: string; title?: string }
         Relationships: []
       }
+      site_faq: {
+        Row: { answer: string; id: number; is_active: boolean; question: string; sort: number }
+        Insert: { answer: string; id?: number; is_active?: boolean; question: string; sort?: number }
+        Update: { answer?: string; id?: number; is_active?: boolean; question?: string; sort?: number }
+        Relationships: []
+      }
       site_segments: {
         Row: { equipment: string[]; id: number; image_position: string; image_url: string | null; is_active: boolean; issues: string[]; lead: string; note: string; slug: string; sort: number; summary: string; title: string; updated_at: string; work: string[] }
         Insert: { equipment?: string[]; id?: number; image_position?: string; image_url?: string | null; is_active?: boolean; issues?: string[]; lead?: string; note?: string; slug: string; sort?: number; summary?: string; title: string; updated_at?: string; work?: string[] }
@@ -196,9 +202,15 @@ export type Database = {
         Relationships: []
       }
       site_settings: {
-        Row: { about_card_color: string; about_card_text: string | null; about_card_title: string | null; about_image_main_url: string | null; about_image_side_url: string | null; about_points: string | null; about_text: string | null; about_title: string | null; address: string | null; email: string | null; hero_image_url: string | null; hours: string | null; id: number; logo_url: string | null; phone: string | null; updated_at: string }
-        Insert: { about_card_color?: string; about_card_text?: string | null; about_card_title?: string | null; about_image_main_url?: string | null; about_image_side_url?: string | null; about_points?: string | null; about_text?: string | null; about_title?: string | null; address?: string | null; email?: string | null; hero_image_url?: string | null; hours?: string | null; id?: number; logo_url?: string | null; phone?: string | null; updated_at?: string }
-        Update: { about_card_color?: string; about_card_text?: string | null; about_card_title?: string | null; about_image_main_url?: string | null; about_image_side_url?: string | null; about_points?: string | null; about_text?: string | null; about_title?: string | null; address?: string | null; email?: string | null; hero_image_url?: string | null; hours?: string | null; id?: number; logo_url?: string | null; phone?: string | null; updated_at?: string }
+        Row: { about_card_color: string; about_card_text: string | null; about_card_title: string | null; about_image_main_url: string | null; about_image_side_url: string | null; about_points: string | null; about_text: string | null; about_title: string | null; address: string | null; email: string | null; facebook_url: string | null; hero_form_enabled: boolean; hero_image_url: string | null; hours: string | null; id: number; instagram_url: string | null; logo_url: string | null; phone: string | null; updated_at: string }
+        Insert: { about_card_color?: string; about_card_text?: string | null; about_card_title?: string | null; about_image_main_url?: string | null; about_image_side_url?: string | null; about_points?: string | null; about_text?: string | null; about_title?: string | null; address?: string | null; email?: string | null; facebook_url?: string | null; hero_form_enabled?: boolean; hero_image_url?: string | null; hours?: string | null; id?: number; instagram_url?: string | null; logo_url?: string | null; phone?: string | null; updated_at?: string }
+        Update: { about_card_color?: string; about_card_text?: string | null; about_card_title?: string | null; about_image_main_url?: string | null; about_image_side_url?: string | null; about_points?: string | null; about_text?: string | null; about_title?: string | null; address?: string | null; email?: string | null; facebook_url?: string | null; hero_form_enabled?: boolean; hero_image_url?: string | null; hours?: string | null; id?: number; instagram_url?: string | null; logo_url?: string | null; phone?: string | null; updated_at?: string }
+        Relationships: []
+      }
+      site_stats: {
+        Row: { id: number; is_active: boolean; label: string; sort: number; value: string }
+        Insert: { id?: number; is_active?: boolean; label: string; sort?: number; value: string }
+        Update: { id?: number; is_active?: boolean; label?: string; sort?: number; value?: string }
         Relationships: []
       }
       site_texts: {

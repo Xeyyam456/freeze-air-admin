@@ -38,6 +38,7 @@ export const TEXT_GROUPS: TextGroup[] = [
           { key: "footer.pages", label: "1-ci sütunun başlığı" },
           { key: "footer.services", label: "2-ci sütunun başlığı" },
           { key: "footer.contact", label: "3-cü sütunun başlığı" },
+          { key: "footer.social", label: "Sosial şəbəkə başlığı" },
           { key: "footer.copyright", label: "Ən aşağı, solda" },
           { key: "footer.slogan", label: "Ən aşağı, sağda" },
         ],
@@ -76,6 +77,28 @@ export const TEXT_GROUPS: TextGroup[] = [
           { key: "home.segments.title", label: "Başlıq" },
           { key: "home.segments.lead", label: "Alt mətn" },
           { key: "home.segments.more", label: "Kartdakı keçid" },
+        ],
+      },
+      {
+        title: "Sürətli müraciət (hero-dakı kiçik forma)",
+        fields: [
+          { key: "home.quick.title", label: "Başlıq" },
+          { key: "home.quick.name", label: "Ad sahəsi" },
+          { key: "home.quick.phone", label: "Telefon sahəsi" },
+          { key: "home.quick.button", label: "Düymə" },
+          { key: "home.quick.note", label: "Düymə altındakı yazı" },
+          { key: "home.quick.or", label: "Telefon nömrəsinin yanındakı yazı" },
+        ],
+      },
+      {
+        title: "Necə işləyirik və Suallar (başlıqlar; sualların məzmunu Sayt → Etibar və suallar)",
+        fields: [
+          { key: "home.how.title", label: "Necə işləyirik: başlıq" },
+          { key: "home.how.lead", label: "Necə işləyirik: alt mətn" },
+          { key: "home.how.button", label: "Necə işləyirik: düymə" },
+          { key: "home.faq.title", label: "Suallar: başlıq" },
+          { key: "home.faq.lead", label: "Suallar: alt mətn" },
+          { key: "home.faq.button", label: "Suallar: düymə" },
         ],
       },
       {
