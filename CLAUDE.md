@@ -242,8 +242,8 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 
 ## Növbəti işlər
 - **Supabase ehtiyat nüsxəsi (backup)**: canlı məlumata keçməzdən əvvəl avtomatik ehtiyat nüsxənin açıq olduğunu yoxlamaq (tənzimləmədir; iş qeydləri kimi silinənlər geri qayıtmır, Səbət ləğv olunub).
-- **Migrasiya `0046_requests_throttle_notify.sql` yazılıb, bazaya HƏLƏ tətbiq olunmayıb** (icazə sistemi istehsal bazasına tətbiqi blokladı): müraciət formuna sürət limiti (eyni telefondan saatda 3, ümumi 10 dəq-də 20), Telegram bildirişi (Vault-da `telegram_bot_token` + `telegram_chat_id` olanda işləyir, yoxdursa səssiz keçir), trigger funksiyalarının RPC-dən bağlanması. Tətbiqdən sonra web `elaqe/actions.ts` artıq `too_many_requests` xətasını başa düşür.
-- Müraciətlər üçün brauzer bildirişi (istifadəçi: "qalsın"); e-poçt bildirişi əvəzinə Telegram seçilib (0046).
+- Müraciət formunun sürət limiti bazada tətbiq olunub (`0046`): eyni telefondan saatda 3, ümumi 10 dəq-də 20; web `elaqe/actions.ts` `too_many_requests` xətasını başa düşür. Telegram bildirişi istəmir (istifadəçi, 2026-10-18): müraciətlər yalnız admin → "Müraciətlər" səhifəsində görünür.
+- Müraciətlər üçün brauzer bildirişi (istifadəçi: "qalsın").
 - Repoların ayrılması (sonda): `supabase/`-ı `admin/`-ə köçürmək, `admin/` və `web/`-i ayrı repolara çıxarmaq (məs. `git subtree split --prefix=admin` ilə tarixçə saxlanır).
 - Xəritə üçün koordinat sahəsi (`site_settings`). (Silmək əvəzinə "Səbət" sınanıb və istifadəçinin istəyi ilə ləğv olunub: yenidən təklif etmə.)
 - Ustalar üçün mobil tətbiq (React Native, Google Maps/Waze naviqasiyası). Mobildə mağaza/filial axtarışı kodla (məs. `ARZ-045`) + "Yol tap" (Google Maps marşrutu) və Waze lazımdır; web-də bu çıxarılıb, qaralama commit `019f8e4`-dədir.

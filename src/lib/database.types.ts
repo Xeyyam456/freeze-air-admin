@@ -554,6 +554,7 @@ export type Database = {
       is_storekeeper: { Args: never; Returns: boolean }
       my_employee_id: { Args: never; Returns: number }
       return_tool: { Args: { p_assignment_id: number; p_quantity: number }; Returns: undefined }
+      settle_material: { Args: { p_assignment_id: number; p_returned: number; p_used: number }; Returns: undefined }
       set_employee_photo: { Args: { p_employee_id: number; p_url: string | null }; Returns: undefined }
       public_employees: {
         Args: never

@@ -1,7 +1,7 @@
 
 import { useActionState, useMemo, useRef, useState } from "react";
-import { History, KeyRound, Pencil, Plus, Search, ShieldCheck, Trash2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
-import { addStorekeeper, addTool, deleteTool, discardPiece, finishMaterial, givePiece, giveTool, returnTool, setStorekeeper, updateTool } from "@/actions/tools";
+import { History, KeyRound, Pencil, Plus, Search, ShieldCheck, Trash2, Undo2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
+import { addStorekeeper, addTool, deleteTool, discardPiece, givePiece, giveTool, giveTools, returnAllTools, returnTool, setStorekeeper, settleMaterial, updateTool } from "@/actions/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { HistoryModal } from "@/components/depot/HistoryModal";
 import { AccountSection, Avatar, type Accounts } from "@/components/employees/EmployeeForms";
@@ -64,6 +64,31 @@ function norm(s: string | null | undefined) {
     .replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g");
 }
 
+// Ustada nə qədərdir: bu qədər gündən çox qalan alət xəbərdarlıq rəngində göstərilir
+const STALE_DAYS = 14;
+// max(0): kompüterin saatı bazadan bir neçə saniyə geri qalanda yeni götürülən "-1 gün" göstərməsin
+const daysSince = (iso: string) => Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000));
+
+function HeldBadge({ takenAt, always = false }: { takenAt: string; always?: boolean }) {
+  const d = daysSince(takenAt);
+  const stale = d >= STALE_DAYS;
+  if (!stale && !always) return null;
+  const date = takenAt.slice(0, 10).split("-").reverse().join(".");
+  return (
+    <span title={`Götürüb: ${date}`} className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${stale ? "bg-[#fff4e0] text-[#b45309]" : "muted"}`}>
+      {d === 0 ? "bu gün" : `${d} gün`}
+    </span>
+  );
+}
+
+// Siyahıda "Kimdədir" mətni: "Məmmədov Anar, Əliyev Orxan ×2" (materialda "Anar 5 metr")
+function holdersText(hs: Holding[], t: Tool) {
+  return hs.map((h) => {
+    const name = h.employees?.full_name ?? "?";
+    return t.kind === "material" ? `${name} ${h.quantity} ${t.unit}` : `${name}${h.quantity > 1 ? ` ×${h.quantity}` : ""}`;
+  }).join(", ");
+}
+
 // Depoda minimum qalıq həddinə çatıb: depodakı tam say (materialda + parçalar) həddə bərabər və ya ondan azdır
 export function isLowStock(t: { min_stock: number | null; available: number; pieces_total: number }) {
   return t.min_stock != null && t.available + t.pieces_total <= t.min_stock;
@@ -76,7 +101,8 @@ export function isLowStock(t: { min_stock: number | null; available: number; pie
 function ToolFields({ t, kind, names = [] }: { t?: Tool; kind: Kind; names?: string[] }) {
   const tx = TEXT[kind];
   const editing = !!t;
-  const [count, setCount] = useState(t?.quantity ?? 1);
+  const [countText, setCountText] = useState(String(t?.quantity ?? 1)); // mətn: sahəni silib yenidən yazmaq olsun
+  const count = Number(countText);
   const [unit, setUnit] = useState(t?.unit ?? "ədəd");
   const [packName, setPackName] = useState("");
   const [packSize, setPackSize] = useState("");
@@ -93,7 +119,7 @@ function ToolFields({ t, kind, names = [] }: { t?: Tool; kind: Kind; names?: str
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label={packed ? `Say (${packName.trim()})` : tx.qty}>
-          <input name="quantity" type="number" min={0} step={1} value={count} onChange={(e) => setCount(Number(e.target.value))} required className="field" />
+          <input name="quantity" type="number" min={0} step={1} value={countText} onChange={(e) => setCountText(e.target.value)} required className="field" />
         </Field>
         <Field label="Vahid">
           <UnitSelect value={unit} onChange={setUnit} options={unitOptions} />
@@ -326,16 +352,19 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
   const open = allTools.find((t) => t.id === openId) ?? null;
   const [history, setHistory] = useState(false);
   const openPerson = employees.find((e) => e.id === openEmp) ?? null;
+  const [quickId, setQuickId] = useState<number | null>(null); // sətirdən "Ver"
+  const quick = allTools.find((t) => t.id === quickId) ?? null;
 
   return (
     <div className="flex h-full flex-col gap-4">
+      {quick && quick.available > 0 && <QuickGiveModal tool={quick} employees={employees} onClose={() => setQuickId(null)} />}
       {open && (
         <ToolModal tool={open} holders={allHoldings.filter((h) => h.tool_id === open.id)} pieces={pieces.filter((p) => p.tool_id === open.id)}
           employees={employees} canManage={canManage} onClose={() => setOpenId(null)} />
       )}
       {history && <HistoryModal kind={kind} onClose={() => setHistory(false)} />}
       {openPerson && (
-        <PersonModal emp={openPerson} kind={kind} holds={byEmployee[openPerson.id] ?? []} toolInfo={toolInfo} canManage={canManage} onClose={() => setOpenEmp(null)} />
+        <PersonModal emp={openPerson} kind={kind} holds={byEmployee[openPerson.id] ?? []} toolInfo={toolInfo} tools={tools} canManage={canManage} onClose={() => setOpenEmp(null)} />
       )}
 
       {/* Axtarış və tablar yerində qalır; yalnız aşağıdakı siyahı bloku öz içində sürüşür (scrollbar gizli) */}
@@ -373,6 +402,7 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                 <th className="px-4 py-3">Usta</th>
                 <th className="px-4 py-3">{tx.hint}</th>
                 <th className="w-24 px-4 py-3 text-center">{tx.peopleCol}</th>
+                <th className="w-20 px-4 py-3"><span className="sr-only">Bax</span></th>
               </tr>
             </thead>
             <tbody>
@@ -380,14 +410,11 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                 const holds = byEmployee[e.id] ?? [];
                 // Alətdə ədədlərin cəmi, materialda növ sayı (vahidlər fərqli ola bilər: metr + ədəd)
                 const total = kind === "tool" ? holds.reduce((n, h) => n + h.quantity, 0) : holds.length;
-                const label = (h: Holding) => {
-                  const t = toolInfo.get(h.tool_id);
-                  if (!t) return "—";
-                  return kind === "material" ? `${t.name} ${h.quantity} ${t.unit}${packSuffix(h.quantity, t)}` : `${t.name}${h.quantity > 1 ? ` ×${h.quantity}` : ""}`;
-                };
+                // Adlar sətrə sığmır (10 alət ola bilər): yalnız say, siyahı "Bax" ilə pəncərədə açılır
+                const oldest = holds.reduce<Holding | null>((o, h) => (!o || h.taken_at < o.taken_at ? h : o), null);
                 return (
                   <tr key={e.id} onClick={() => setOpenEmp(e.id)} tabIndex={0}
-                    onKeyDown={(ev) => (ev.key === "Enter" || ev.key === " ") && setOpenEmp(e.id)}
+                    onKeyDown={(ev) => ev.target === ev.currentTarget && (ev.key === "Enter" || ev.key === " ") && setOpenEmp(e.id)}
                     className="cursor-pointer border-t border-line transition-colors hover:bg-primary-soft/40">
                     <td className="px-4 py-3">
                       <span className="flex items-center gap-2.5">
@@ -395,13 +422,19 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                         <span className="font-semibold">{e.full_name}</span>
                       </span>
                     </td>
-                    <td className="max-w-0 px-4 py-3">
-                      <span className="block truncate text-[13px]" title={holds.map(label).join(", ")}>
-                        {holds.length === 0 ? <span className="muted">Yoxdur</span> : holds.map(label).join(", ")}
-                      </span>
+                    <td className="px-4 py-3 text-[13px]">
+                      {holds.length === 0 ? <span className="muted">Yoxdur</span> : (
+                        <span className="flex items-center gap-2">
+                          {holds.length} növ {kind === "tool" ? "alət" : "material"}
+                          {oldest && <HeldBadge takenAt={oldest.taken_at} />}
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-center tabular-nums">
                       {total ? <span className="inline-block min-w-8 rounded-full bg-primary-soft px-2 py-0.5 text-xs font-bold text-primary">{total}</span> : <span className="muted">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <button type="button" onClick={(ev) => { ev.stopPropagation(); setOpenEmp(e.id); }} className="btn btn-secondary btn-sm !h-8">Bax</button>
                     </td>
                   </tr>
                 );
@@ -416,23 +449,37 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
             <thead className="sticky top-0 z-[1] bg-[#f8f9fc] text-left text-xs font-semibold text-muted">
               <tr>
                 <th className="px-4 py-3">{tx.col}</th>
+                <th className="w-[30%] px-4 py-3">Kimdədir</th>
                 <th className="w-28 px-4 py-3 text-center">Cəmi</th>
                 <th className="w-28 px-4 py-3 text-center">Ustalarda</th>
                 <th className="w-28 px-4 py-3 text-center">{kind === "material" ? "Tam (depoda)" : "Depoda"}</th>
                 {kind === "material" && <th className="w-40 px-4 py-3 text-center">Parçalar</th>}
+                {canManage && <th className="w-20 px-4 py-3"><span className="sr-only">Ver</span></th>}
               </tr>
             </thead>
             <tbody>
-              {filtered.map((t) => (
+              {filtered.map((t) => {
+                const hs = byTool[t.id] ?? [];
+                const oldest = hs.reduce<Holding | null>((o, h) => (!o || h.taken_at < o.taken_at ? h : o), null);
+                const who = holdersText(hs, t);
+                return (
                 <tr key={t.id} onClick={() => setOpenId(t.id)} tabIndex={0}
-                  onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setOpenId(t.id)}
-                  className="cursor-pointer border-t border-line transition-colors hover:bg-primary-soft/40">
+                  onKeyDown={(e) => e.target === e.currentTarget && (e.key === "Enter" || e.key === " ") && setOpenId(t.id)}
+                  className="h-[49px] cursor-pointer border-t border-line transition-colors hover:bg-primary-soft/40">
                   <td className="px-4 py-3">
                     <span className="flex items-center gap-2.5">
                       <Wrench size={15} className="shrink-0 text-primary" />
                       <span className="font-semibold">{t.name}</span>
                       {t.inventory_code && <span className="muted text-xs">{t.inventory_code}</span>}
                     </span>
+                  </td>
+                  <td className="max-w-0 px-4 py-3">
+                    {hs.length === 0 ? <span className="muted">—</span> : (
+                      <span className="flex items-center gap-2">
+                        <span className="truncate text-[13px]" title={who}>{who}</span>
+                        {oldest && <HeldBadge takenAt={oldest.taken_at} />}
+                      </span>
+                    )}
                   </td>
                   {/* Cəmi = tam hissə + parçalar (ümumilikdə nə qədər var) */}
                   <td className="px-4 py-3 text-center font-semibold tabular-nums">{withUnit(t.quantity + t.pieces_total, t)}</td>
@@ -449,8 +496,16 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                       {t.pieces_count ? `${t.pieces_count} ədəd · ${t.pieces_total} ${t.unit}` : <span className="muted">—</span>}
                     </td>
                   )}
+                  {canManage && (
+                    <td className="px-4 py-3 text-right">
+                      {t.available > 0 && (
+                        <button type="button" onClick={(e) => { e.stopPropagation(); setQuickId(t.id); }} className="btn btn-secondary btn-sm !h-8">Ver</button>
+                      )}
+                    </td>
+                  )}
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
           {filtered.length === 0 && <p className="muted border-t border-line py-8 text-center text-sm">Heç nə tapılmadı.</p>}
@@ -468,34 +523,40 @@ function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = f
   holding: Holding; canManage: boolean; toolName?: string; unit?: string; material?: boolean; pack?: PackInfo | null;
 }) {
   const [asking, setAsking] = useState(false);
-  // Material: "İşlədilib" və ya "Qaytarılır" (usta qaz balonundan 5 kq qaytarır): eyni nəticə, fərqli yazılış
-  const [mode, setMode] = useState<"used" | "left">("used");
-  const [val, setVal] = useState(0);
+  // Material təhvili: usta neçə işlədib və neçə qaytarır; qalan hissə ustada qalır.
+  // İkisi də 0 ola bilər (biri kifayətdir); cəmi ustada olandan çox olmaz; cəmi hamıya bərabərdirsə, təhvil bağlanır.
+  const [usedVal, setUsedVal] = useState(0);
+  const [retVal, setRetVal] = useState(0);
   // Qablı materialda (balon...) təhvil də balonla və ya ölçü vahidi ilə (kq) yazıla bilər (verəndə olduğu kimi)
   const [byPack, setByPack] = useState(false);
   const packed = !!pack?.pack_size && !!pack?.pack_name;
   const factor = packed && byPack ? pack!.pack_size! : 1;
   const unitLabel = packed && byPack ? pack!.pack_name! : unit;
-  const valBase = val * factor; // ölçü vahidi ilə
-  const used = mode === "used" ? valBase : holding.quantity - valBase;
-  const invalid = valBase > holding.quantity;
+  const usedBase = usedVal * factor; // ölçü vahidi ilə
+  const retBase = retVal * factor;
+  const invalid = usedBase + retBase > holding.quantity;
   const limit = Math.floor(holding.quantity / factor);
   const [state, action, pending] = useActionState(
     async (_prev: Awaited<ReturnType<typeof returnTool>>, fd: FormData) => {
-      const raw = Number(fd.get("quantity") ?? holding.quantity);
-      const qty = material ? raw * factor : raw; // material: yazılan balon da olsa, baza ölçü vahidi ilə işləyir
+      if (material) return settleMaterial(holding.id, usedBase, retBase);
+      const qty = Number(fd.get("quantity") ?? holding.quantity);
       if (qty > holding.quantity) return { error: `Ustada cəmi ${holding.quantity} ${unit} var.` };
-      if (material) return finishMaterial(holding.id, mode === "used" ? qty : holding.quantity - qty);
       return returnTool(holding.id, qty);
     },
     null,
   );
-  useOnSuccess(state, () => { setAsking(false); setVal(0); setMode("used"); setByPack(false); }, material ? "Təhvil alındı" : "Geri alındı");
+  const resetForm = () => { setAsking(false); setUsedVal(0); setRetVal(0); setByPack(false); };
+  useOnSuccess(state, resetForm, material ? "Təhvil yazıldı" : "Geri alındı");
 
-  const leftover = holding.quantity - used;
-  const hint = used === 0 ? `Heç nə işlənməyib: ${holding.quantity} ${unit} tam depoya qayıdır.`
-    : leftover > 0 ? `${showQty(leftover, unit, pack)} qalıb: depoya ayrıca parça kimi yazılır.`
-    : "Hamısı işlənib: depoya heç nə qayıtmır.";
+  const rest = holding.quantity - usedBase - retBase;
+  const parts = [
+    usedBase > 0 && `${showQty(usedBase, unit, pack)} sərf olunur`,
+    retBase > 0 && `${showQty(retBase, unit, pack)} depoya qayıdır`,
+    rest > 0 ? `${showQty(rest, unit, pack)} ustada qalır` : "ustada heç nə qalmır",
+  ].filter(Boolean);
+  const hint = invalid ? "İşlədilən və qaytarılanın cəmi ustada olandan çox ola bilməz."
+    : usedBase + retBase === 0 ? "Neçə işlədiyini və/və ya neçə qaytardığını yaz, qalanı ustada qalır."
+    : parts.join(" · ");
 
   return (
     <li className="py-2">
@@ -511,6 +572,7 @@ function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = f
             <span className="min-w-0 flex-1 truncate text-sm font-semibold">{holding.employees?.full_name ?? "—"}</span>
           </>
         )}
+        <HeldBadge takenAt={holding.taken_at} always />
         <span className="text-sm font-bold tabular-nums text-primary">{showQty(holding.quantity, unit, pack)}</span>
         {canManage && material && !asking && (
           <button type="button" onClick={() => setAsking(true)} className="btn btn-secondary btn-sm !h-8">Təhvil ver</button>
@@ -531,22 +593,21 @@ function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = f
       </div>
       {canManage && material && asking && (
         <ActionForm action={action} className="mt-2 rounded-xl bg-bg p-3">
-          <div className="mb-2 inline-flex gap-0.5 rounded-lg bg-line/60 p-0.5" role="tablist" aria-label="Təhvil yazılışı">
-            {([["used", "İşlədilib"], ["left", "Qaytarılır"]] as const).map(([m, label]) => (
-              <button key={m} type="button" role="tab" aria-selected={mode === m} onClick={() => { setMode(m); setVal(0); }}
-                className={`rounded-md px-3 py-1 text-xs font-semibold transition-colors ${mode === m ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
-                {label}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold">{mode === "used" ? "İşlədilib:" : "Qaytarılır:"}</span>
-            <QuantityInput key={`${mode}-${byPack}`} min={0} defaultValue={0} limit={limit} className="!h-8 !w-20" onValue={setVal}
-              limitText={(l) => `Ustada cəmi ${l} ${unitLabel} var.`} />
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <label className="flex items-center gap-2">
+              <span className="text-sm font-semibold">İşlədilib</span>
+              <QuantityInput key={`u-${byPack}`} min={0} defaultValue={0} limit={limit} className="!h-8 !w-20" onValue={setUsedVal}
+                limitText={(l) => `Ustada cəmi ${l} ${unitLabel} var.`} />
+            </label>
+            <label className="flex items-center gap-2">
+              <span className="text-sm font-semibold">Qaytarılır</span>
+              <QuantityInput key={`r-${byPack}`} min={0} defaultValue={0} limit={limit} className="!h-8 !w-20" onValue={setRetVal}
+                limitText={(l) => `Ustada cəmi ${l} ${unitLabel} var.`} />
+            </label>
             {packed ? (
               <span className="inline-flex shrink-0 gap-0.5 rounded-lg bg-line/60 p-0.5" role="tablist" aria-label="Vahid">
                 {([[false, unit], [true, pack!.pack_name!]] as const).map(([v, label]) => (
-                  <button key={String(v)} type="button" role="tab" aria-selected={byPack === v} onClick={() => { setByPack(v); setVal(0); }}
+                  <button key={String(v)} type="button" role="tab" aria-selected={byPack === v} onClick={() => { setByPack(v); setUsedVal(0); setRetVal(0); }}
                     className={`h-7 rounded-md px-2 text-xs font-semibold transition-colors ${byPack === v ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
                     {label}
                   </button>
@@ -555,23 +616,128 @@ function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = f
             ) : (
               <span className="muted text-sm">{unit}</span>
             )}
-            <button type="submit" disabled={pending || invalid} className="btn btn-primary btn-sm !h-8 ml-auto">{pending ? "..." : "Təhvil al"}</button>
-            <button type="button" onClick={() => { setAsking(false); setVal(0); setMode("used"); setByPack(false); }} className="btn btn-cancel btn-sm !h-8">Ləğv</button>
           </div>
-          <p className="muted mt-2 text-xs">{invalid ? "Ustada olandan çox ola bilməz." : hint}</p>
+          <div className="mt-3 flex items-center gap-2">
+            <p className={`min-w-0 flex-1 text-xs ${invalid ? "font-semibold text-danger" : "muted"}`}>{hint}</p>
+            <button type="submit" disabled={pending || invalid || usedBase + retBase === 0} className="btn btn-primary btn-sm !h-8">{pending ? "..." : "Təhvil al"}</button>
+            <button type="button" onClick={resetForm} className="btn btn-cancel btn-sm !h-8">Ləğv</button>
+          </div>
         </ActionForm>
       )}
     </li>
   );
 }
 
-function GiveForm({ tool, employees }: { tool: Tool; employees: DepotEmployee[] }) {
+// Siyahıdakı sətirdən sürətli "Ver": alətin pəncərəsini açmadan usta seç, say yaz, ver
+function QuickGiveModal({ tool, employees, onClose }: { tool: Tool; employees: DepotEmployee[]; onClose: () => void }) {
+  return (
+    <Modal onClose={onClose} labelledBy="quick-give-title" className="!max-w-md">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 id="quick-give-title" className="truncate text-lg font-bold">{tool.name}: kimə verilir?</h2>
+          <p className="muted text-sm">Depoda <b className="text-ok">{withUnit(tool.available, tool)}</b></p>
+        </div>
+        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+      </div>
+      <GiveForm tool={tool} employees={employees} onDone={onClose} />
+    </Modal>
+  );
+}
+
+// Bir ustaya bir neçə alət/material birdən: siyahıdan seç, hər birinin sayını yaz, bir düymə ilə ver
+function BulkGiveModal({ emp, kind, tools, onClose }: { emp: DepotEmployee; kind: Kind; tools: Tool[]; onClose: () => void }) {
+  const [query, setQuery] = useState("");
+  const [qty, setQty] = useState<Record<number, string>>({}); // seçilənlər: id → yazılan say (mətn: sahəni tam silib yenidən yazmaq olsun)
+  const num = (id: number) => (qty[id]?.trim() === "" ? NaN : Number(qty[id]));
+  const [pending, setPending] = useState(false);
+  const available = useMemo(() => tools.filter((t) => t.available > 0), [tools]);
+  const shown = useMemo(() => {
+    const words = norm(query).split(/\s+/).filter(Boolean);
+    return available.filter((t) => words.every((w) => norm(`${t.name} ${t.inventory_code}`).includes(w)));
+  }, [available, query]);
+  const chosen = available.filter((t) => qty[t.id] !== undefined);
+  const okQty = (t: Tool) => Number.isInteger(num(t.id)) && num(t.id) >= 1 && num(t.id) <= t.available;
+  const valid = chosen.length > 0 && chosen.every(okQty);
+
+  const toggle = (t: Tool) => setQty((q) => {
+    const next = { ...q };
+    if (next[t.id] === undefined) next[t.id] = "1"; else delete next[t.id];
+    return next;
+  });
+
+  async function give() {
+    if (!valid) return;
+    setPending(true);
+    const r = await giveTools(emp.id, chosen.map((t) => ({ toolId: t.id, name: t.name, quantity: num(t.id) })));
+    setPending(false);
+    if (r?.error) return toast.error(r.error);
+    toast.success(`${chosen.length} ${kind === "tool" ? "alət" : "material"} verildi`);
+    onClose();
+  }
+
+  return (
+    <Modal onClose={onClose} labelledBy="bulk-give-title" className="!max-w-lg">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 id="bulk-give-title" className="truncate text-lg font-bold">{emp.full_name}: {kind === "tool" ? "alət ver" : "material ver"}</h2>
+          <p className="muted text-sm">Lazım olanları işarələ, sayını yaz, bir dəfəyə ver.</p>
+        </div>
+        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+      </div>
+
+      <div className="search">
+        <Search size={16} className="!left-4" />
+        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={TEXT[kind].search.split(" və ")[0] + " axtar..."} aria-label="Axtarış" autoFocus
+          className="!h-10 !pl-10 !text-sm" />
+      </div>
+
+      {available.length === 0 ? (
+        <p className="muted py-6 text-center text-sm">Depoda verilə bilən boş {kind === "tool" ? "alət" : "material"} yoxdur.</p>
+      ) : (
+        <ul className="nice-scroll mt-3 max-h-[min(360px,calc(100vh-340px))] divide-y divide-line overflow-y-auto">
+          {shown.map((t) => {
+            const on = qty[t.id] !== undefined;
+            return (
+              <li key={t.id} className="flex items-center gap-3 py-2">
+                <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
+                  <input type="checkbox" checked={on} onChange={() => toggle(t)} className="h-4 w-4 shrink-0 accent-[var(--color-primary)]" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold">{t.name}</span>
+                    <span className="muted block text-[11px]">depoda {withUnit(t.available, t)}{t.inventory_code ? ` · ${t.inventory_code}` : ""}</span>
+                  </span>
+                </label>
+                {on && (
+                  <span className="flex shrink-0 items-center gap-1.5">
+                    <input type="number" min={1} max={t.available} step={1} value={qty[t.id]} aria-label={`${t.name} sayı`}
+                      onChange={(e) => setQty((q) => ({ ...q, [t.id]: e.target.value }))}
+                      className={`field !h-8 !w-20 !px-2 !text-[13px] ${okQty(t) ? "" : "!border-danger"}`} />
+                    <span className="muted text-xs">{t.kind === "material" ? t.unit : "ədəd"}</span>
+                  </span>
+                )}
+              </li>
+            );
+          })}
+          {shown.length === 0 && <li className="muted py-6 text-center text-sm">Heç nə tapılmadı.</li>}
+        </ul>
+      )}
+
+      <div className="mt-4 flex gap-2 border-t border-line pt-4">
+        <button type="button" disabled={pending || !valid} onClick={give} className="btn btn-primary flex-1">
+          {pending ? "Gözləyin..." : chosen.length ? `Seçilənləri ver (${chosen.length})` : `Yuxarıdan ${kind === "tool" ? "alət" : "material"} seç`}
+        </button>
+        <button type="button" onClick={onClose} className="btn btn-cancel">Ləğv et</button>
+      </div>
+    </Modal>
+  );
+}
+
+function GiveForm({ tool, employees, onDone }: { tool: Tool; employees: DepotEmployee[]; onDone?: () => void }) {
   const [state, action, pending] = useActionState(giveTool, null);
   const [picked, setPicked] = useState<number | null>(null);
   const [formKey, setFormKey] = useState(0);
   // Qablı materialda (balon...) say qabla ("1 balon") və ya ölçü vahidi ilə ("11 kq") yazıla bilər
   const [byPack, setByPack] = useState(false);
-  useOnSuccess(state, () => { setPicked(null); setFormKey((k) => k + 1); }, "Verildi");
+  useOnSuccess(state, () => { setPicked(null); setFormKey((k) => k + 1); onDone?.(); }, "Verildi");
   // Alət/material yalnız ustaya verilir (rəhbərlik siyahıda yoxdur; bazada da trigger yoxlayır)
   const items = employees.filter((e) => !e.is_management).map((e) => ({ id: e.id, name: e.full_name }));
   const packed = !!tool.pack_size && !!tool.pack_name;
@@ -804,14 +970,16 @@ function ToolModal({ tool, holders, pieces, employees, canManage, onClose }: {
 }
 
 // Ustanın pəncərəsi: üzərində hansı alət/material nə qədər var (geri almaq da olur)
-function PersonModal({ emp, kind, holds, toolInfo, canManage, onClose }: {
+function PersonModal({ emp, kind, holds, toolInfo, tools, canManage, onClose }: {
   emp: DepotEmployee;
   kind: Kind;
   holds: Holding[];
   toolInfo: Map<number, Tool>;
+  tools: Tool[];
   canManage: boolean;
   onClose: () => void;
 }) {
+  const [giving, setGiving] = useState(false);
   const total = kind === "tool" ? holds.reduce((n, h) => n + h.quantity, 0) : holds.length;
   const summary = !total ? (kind === "tool" ? "Üzərində alət yoxdur" : "Üzərində material yoxdur")
     : kind === "tool" ? `Üzərində ${total} ədəd alət var` : `Üzərində ${total} növ material var`;
@@ -825,6 +993,25 @@ function PersonModal({ emp, kind, holds, toolInfo, canManage, onClose }: {
         </div>
         <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
       </div>
+      {giving && <BulkGiveModal emp={emp} kind={kind} tools={tools} onClose={() => setGiving(false)} />}
+      {canManage && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button type="button" onClick={() => setGiving(true)} className="btn btn-primary btn-sm !h-9">
+            <Plus size={14} /> {kind === "tool" ? "Alət ver" : "Material ver"}
+          </button>
+          {/* Yalnız alətdə: materialda "nə qədər işlədi" deyilməlidir, ona görə tək-tək təhvil alınır */}
+          {kind === "tool" && holds.length > 1 && (
+            <ConfirmButton className="btn btn-secondary btn-sm !h-9" title="Hamısını geri al" confirmLabel="Bəli, geri al" success={false}
+              question={`${emp.full_name} üzərindəki ${total} ədəd alət depoya qaytarılacaq.`}
+              onConfirm={async () => {
+                const r = await returnAllTools(holds.map((h) => ({ id: h.id, quantity: h.quantity })));
+                if (r?.error) toast.error(r.error); else toast.success("Hamısı geri alındı");
+              }}>
+              <Undo2 size={14} /> Hamısını geri al
+            </ConfirmButton>
+          )}
+        </div>
+      )}
       {holds.length > 0 && (
         <ul className="nice-scroll mt-4 max-h-[min(433px,calc(100vh-260px))] divide-y divide-line overflow-y-auto">
           {holds.map((h) => (
