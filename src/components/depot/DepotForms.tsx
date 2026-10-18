@@ -1,12 +1,13 @@
 
-import { useActionState, useMemo, useRef, useState } from "react";
-import { History, KeyRound, Pencil, Plus, Search, ShieldCheck, Trash2, Undo2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { ChevronDown, History, KeyRound, Pencil, Plus, Search, ShieldCheck, Trash2, Undo2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
 import { addStorekeeper, addTool, deleteTool, discardPiece, givePiece, giveTool, giveTools, returnAllTools, returnTool, setStorekeeper, settleMaterial, updateTool } from "@/actions/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { HistoryModal } from "@/components/depot/HistoryModal";
 import { AccountSection, Avatar, type Accounts } from "@/components/employees/EmployeeForms";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal, useEscapeLayer } from "@/components/Modal";
 import { giveLimitText, QuantityInput } from "@/components/QuantityInput";
 import { ToolPicker } from "@/components/ToolPicker";
 import { UnitSelect } from "@/components/UnitSelect";
@@ -54,6 +55,8 @@ const packSuffix = (n: number, p: PackInfo) => (p.pack_size && p.pack_name && n 
 // "12 metr" / "44 kq (4 balon)" (material) | "12" (alət)
 const withUnit = (n: number, t: Pick<Tool, "kind" | "unit" | "pack_name" | "pack_size">) => (t.kind === "material" ? `${n} ${t.unit}${packSuffix(n, t)}` : String(n));
 // Ustada olan miqdar: "11 kq (1 balon)"
+// Boru (metr): bu qədər və ya az qaytarılan hissə parça olur, çoxu tam boruya qatılır (bazada settle_material ilə eyni hədd)
+const PIECE_MAX = 3;
 const showQty = (n: number, unit: string, p?: PackInfo | null) => `${n} ${unit}${p ? packSuffix(n, p) : ""}`;
 
 // Axtarış üçün sadələşdirmə: "Əlizadə" və "elizade" eyni tapılsın.
@@ -81,12 +84,66 @@ function HeldBadge({ takenAt, always = false }: { takenAt: string; always?: bool
   );
 }
 
-// Siyahıda "Kimdədir" mətni: "Məmmədov Anar, Əliyev Orxan ×2" (materialda "Anar 5 metr")
-function holdersText(hs: Holding[], t: Tool) {
-  return hs.map((h) => {
-    const name = h.employees?.full_name ?? "?";
-    return t.kind === "material" ? `${name} ${h.quantity} ${t.unit}` : `${name}${h.quantity > 1 ? ` ×${h.quantity}` : ""}`;
-  }).join(", ");
+// Bir ustadakı say: "×2" (alət) | "5 metr" (material)
+function holdQty(h: Holding, t: Tool) {
+  return t.kind === "material" ? `${h.quantity} ${t.unit}` : h.quantity > 1 ? `×${h.quantity}` : "";
+}
+
+// Siyahıda "Kimdədir": həmişə "N usta" düyməsi (1 usta olsa da), basanda ad siyahısı açılır
+// (10 adı sətirə sığdırmaq olmur). Siyahı cədvəlin sürüşməsindən kəsilməsin deyə body-də açılır.
+function HoldersCell({ holders, tool }: { holders: Holding[]; tool: Tool }) {
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const btn = useRef<HTMLButtonElement>(null);
+  useEscapeLayer(() => setPos(null), pos !== null);
+  useEffect(() => {
+    if (!pos) return;
+    const close = () => setPos(null);
+    const onDown = (e: MouseEvent) => {
+      if (!(e.target as Element).closest("[data-holders-pop]") && !btn.current?.contains(e.target as Node)) close();
+    };
+    document.addEventListener("mousedown", onDown);
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("resize", close);
+    };
+  }, [pos]);
+
+  const oldest = holders.reduce<Holding | null>((o, h) => (!o || h.taken_at < o.taken_at ? h : o), null);
+  return (
+    <>
+      <span className="flex items-center gap-2">
+        <button ref={btn} type="button" aria-expanded={pos !== null} aria-haspopup="true"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (pos) return setPos(null);
+            const r = e.currentTarget.getBoundingClientRect();
+            setPos({ top: r.bottom + 6, left: Math.min(r.left, window.innerWidth - 304) });
+          }}
+          className="inline-flex h-7 items-center gap-1.5 rounded-lg bg-primary-soft px-2.5 text-[13px] font-semibold text-primary transition-colors hover:bg-[#dbe8ff]">
+          {holders.length} usta <ChevronDown size={13} className={pos ? "rotate-180" : ""} />
+        </button>
+        {oldest && <HeldBadge takenAt={oldest.taken_at} />}
+      </span>
+      {pos && createPortal(
+        <div data-holders-pop style={{ top: pos.top, left: pos.left }}
+          className="fixed z-50 w-72 rounded-xl border border-line bg-surface p-1.5 shadow-[0_16px_40px_rgba(16,24,40,0.18)]">
+          <ul className="nice-scroll max-h-64 overflow-y-auto">
+            {holders.map((h) => (
+              <li key={h.id} className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-[13px]">
+                <span className="min-w-0 flex-1 truncate font-semibold">{h.employees?.full_name ?? "?"}</span>
+                <span className="tabular-nums text-primary">{holdQty(h, tool)}</span>
+                <HeldBadge takenAt={h.taken_at} always />
+              </li>
+            ))}
+          </ul>
+        </div>,
+        document.body,
+      )}
+    </>
+  );
 }
 
 // Depoda minimum qalıq həddinə çatıb: depodakı tam say (materialda + parçalar) həddə bərabər və ya ondan azdır
@@ -460,8 +517,6 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
             <tbody>
               {filtered.map((t) => {
                 const hs = byTool[t.id] ?? [];
-                const oldest = hs.reduce<Holding | null>((o, h) => (!o || h.taken_at < o.taken_at ? h : o), null);
-                const who = holdersText(hs, t);
                 return (
                 <tr key={t.id} onClick={() => setOpenId(t.id)} tabIndex={0}
                   onKeyDown={(e) => e.target === e.currentTarget && (e.key === "Enter" || e.key === " ") && setOpenId(t.id)}
@@ -470,16 +525,10 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
                     <span className="flex items-center gap-2.5">
                       <Wrench size={15} className="shrink-0 text-primary" />
                       <span className="font-semibold">{t.name}</span>
-                      {t.inventory_code && <span className="muted text-xs">{t.inventory_code}</span>}
                     </span>
                   </td>
                   <td className="max-w-0 px-4 py-3">
-                    {hs.length === 0 ? <span className="muted">—</span> : (
-                      <span className="flex items-center gap-2">
-                        <span className="truncate text-[13px]" title={who}>{who}</span>
-                        {oldest && <HeldBadge takenAt={oldest.taken_at} />}
-                      </span>
-                    )}
+                    {hs.length === 0 ? <span className="muted text-[13px]">Depoda</span> : <HoldersCell holders={hs} tool={t} />}
                   </td>
                   {/* Cəmi = tam hissə + parçalar (ümumilikdə nə qədər var) */}
                   <td className="px-4 py-3 text-center font-semibold tabular-nums">{withUnit(t.quantity + t.pieces_total, t)}</td>
@@ -551,7 +600,7 @@ function HolderRow({ holding, canManage, toolName, unit = "ədəd", material = f
   const rest = holding.quantity - usedBase - retBase;
   const parts = [
     usedBase > 0 && `${showQty(usedBase, unit, pack)} sərf olunur`,
-    retBase > 0 && `${showQty(retBase, unit, pack)} depoya qayıdır`,
+    retBase > 0 && `${showQty(retBase, unit, pack)} depoya qayıdır${unit.trim().toLowerCase() === "metr" ? (retBase <= PIECE_MAX ? " (parça)" : " (tam boru)") : ""}`,
     rest > 0 ? `${showQty(rest, unit, pack)} ustada qalır` : "ustada heç nə qalmır",
   ].filter(Boolean);
   const hint = invalid ? "İşlədilən və qaytarılanın cəmi ustada olandan çox ola bilməz."
@@ -703,7 +752,7 @@ function BulkGiveModal({ emp, kind, tools, onClose }: { emp: DepotEmployee; kind
                   <input type="checkbox" checked={on} onChange={() => toggle(t)} className="h-4 w-4 shrink-0 accent-[var(--color-primary)]" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold">{t.name}</span>
-                    <span className="muted block text-[11px]">depoda {withUnit(t.available, t)}{t.inventory_code ? ` · ${t.inventory_code}` : ""}</span>
+                    <span className="muted block text-[11px]">depoda {withUnit(t.available, t)}</span>
                   </span>
                 </label>
                 {on && (
@@ -859,7 +908,7 @@ function PieceRow({ piece, unit, employees, canManage }: { piece: Piece; unit: s
   const date = piece.created_at.slice(0, 10).split("-").reverse().join(".");
   const original = piece.original_length ?? piece.length;
   // Qaytaran ustanın ilkin qaytardığı miqdar: "Kərimov Orxan 2 metr qaytarıb"
-  const who = piece.employees ? `${piece.employees.full_name} ${original} ${unit} qaytarıb` : "Qaytaran bilinmir";
+  const who = piece.employees ? `${piece.employees.full_name} ${original} ${unit} qaytarıb` : "Depoda qalan hissə";
   return (
     <li className="flex items-center gap-3 py-2">
       {giving && <PieceGiveModal piece={piece} unit={unit} employees={employees} onClose={() => setGiving(false)} />}
