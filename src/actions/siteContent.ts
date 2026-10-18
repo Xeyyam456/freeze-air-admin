@@ -1,5 +1,5 @@
 import type { Tables } from "@/lib/database.types";
-import { revalidate } from "@/lib/revalidate";
+import { revalidateSite } from "@/lib/site";
 import { createClient } from "@/lib/supabase/client";
 
 const BUCKET = "site";
@@ -31,14 +31,14 @@ export async function saveSegment(id: number | null, input: SegmentInput): Promi
     ? await supabase.from("site_segments").update({ ...input, updated_at: new Date().toISOString() }).eq("id", id)
     : await supabase.from("site_segments").insert(input);
   if (error) return errorText(error);
-  revalidate();
+  revalidateSite();
   return null;
 }
 
 export async function deleteSegment(id: number, imageUrl: string | null) {
   await removeSiteImage(imageUrl);
   await createClient().from("site_segments").delete().eq("id", id);
-  revalidate();
+  revalidateSite();
 }
 
 export async function saveService(id: number | null, input: ServiceInput): Promise<string | null> {
@@ -47,14 +47,14 @@ export async function saveService(id: number | null, input: ServiceInput): Promi
     ? await supabase.from("site_services").update(input).eq("id", id)
     : await supabase.from("site_services").insert(input);
   if (error) return errorText(error);
-  revalidate();
+  revalidateSite();
   return null;
 }
 
 export async function deleteService(id: number, imageUrl: string | null) {
   await removeSiteImage(imageUrl);
   await createClient().from("site_services").delete().eq("id", id);
-  revalidate();
+  revalidateSite();
 }
 
 // Şəkli ən çox 1600px enə kiçildib WebP edir (nisbət saxlanır)
@@ -95,12 +95,12 @@ export async function saveEquipment(id: number | null, input: EquipmentInput): P
     ? await supabase.from("site_equipment").update(input).eq("id", id)
     : await supabase.from("site_equipment").insert(input);
   if (error) return errorText(error);
-  revalidate();
+  revalidateSite();
   return null;
 }
 
 export async function deleteEquipment(id: number, imageUrl: string | null) {
   await removeSiteImage(imageUrl);
   await createClient().from("site_equipment").delete().eq("id", id);
-  revalidate();
+  revalidateSite();
 }

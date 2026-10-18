@@ -9,7 +9,7 @@ import { ServiceEditor, serviceIcon } from "./ServiceEditor";
 
 type Service = Tables<"site_services">;
 
-const SITE_URL = "http://localhost:3000";
+import { SITE_URL } from "@/lib/site";
 
 // Xidmət səhifəsinin hissələri: dolğunluq zolağı və "nə çatışmır" siyahısı üçün
 const PARTS: { label: string; done: (s: Service) => boolean }[] = [

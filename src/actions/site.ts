@@ -1,6 +1,6 @@
 import type { Database } from "@/lib/database.types";
 import { text, type FormState } from "@/lib/form-state";
-import { revalidate } from "@/lib/revalidate";
+import { revalidateSite } from "@/lib/site";
 import { createClient } from "@/lib/supabase/client";
 
 // Açıq saytın əlaqə məlumatları (tək sətir, id = 1). Saytda ən gec ~1 dəqiqəyə yenilənir.
@@ -20,7 +20,7 @@ export async function updateSiteSettings(_prev: FormState, formData: FormData): 
     .eq("id", 1);
 
   if (error) return { error: error.message };
-  revalidate();
+  revalidateSite();
   return { ok: true };
 }
 
@@ -33,7 +33,7 @@ export async function updateHomeImage(field: HomeImageField, url: string | null)
     .update({ [field]: url, updated_at: new Date().toISOString() } as Database["public"]["Tables"]["site_settings"]["Update"])
     .eq("id", 1);
   if (error) return error.message;
-  revalidate();
+  revalidateSite();
   return null;
 }
 
@@ -53,7 +53,7 @@ export async function updateAbout(_prev: FormState, formData: FormData): Promise
     .eq("id", 1);
 
   if (error) return { error: error.code === "23514" ? "Mətnlərdən biri çox uzundur." : error.message };
-  revalidate();
+  revalidateSite();
   return { ok: true };
 }
 
@@ -64,6 +64,6 @@ export async function saveTexts(values: Record<string, string>): Promise<string 
   if (rows.length === 0) return null;
   const { error } = await createClient().from("site_texts").upsert(rows);
   if (error) return error.code === "23514" ? "Mətnlərdən biri çox uzundur." : error.message;
-  revalidate();
+  revalidateSite();
   return null;
 }

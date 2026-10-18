@@ -8,7 +8,7 @@ import { HomeTab } from "@/components/site/HomeTab";
 import { TextsTab } from "@/components/site/TextsTab";
 
 // Açıq saytın ünvanı (Next layihəsi)
-const SITE_URL = "http://localhost:3000";
+import { SITE_URL } from "@/lib/site";
 
 type Tab = "contact" | "texts" | "hero" | "segments" | "equipment" | "services";
 

@@ -105,8 +105,8 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 
 - Şəkillər `site` bucket-inə gedir (`actions/siteContent.ts`: `uploadSiteImage` brauzerdə WebP-yə, ən çox 1600px; `removeSiteImage`). Ana səhifə şəkilləri yüklənən kimi saxlanır.
 - Tövsiyə olunan ölçülər: obyekt 16:9 (1600×900), avadanlıq 16:9 (1600×900), hero 4:3 (1600×1200), Haqqımızda böyük şəkil 16:9, kiçik şəkil kvadrat (800×800), əməkdaş kvadrat (ən azı 512).
-- Saytda dəyişikliklər ~5 saniyəyə görünür (web-də `lib/site-cache.ts` → `cacheLife(SITE_CACHE)`, səhifəni yeniləmək lazımdır). Dərhal təmizləmə (`revalidateTag` API) hələ edilməyib.
-- `SITE_URL = "http://localhost:3000"` `pages/Site.tsx` və `components/site/ContentTabs.tsx`-də sabitdir; deploy-da env-ə keçirilməlidir.
+- Saytda dəyişikliklər ~5 saniyəyə görünür (web-də `lib/site-cache.ts` → `cacheLife(SITE_CACHE)`, səhifəni yeniləmək lazımdır). Admin dəyişikliyindən sonra `revalidateSite()` (`lib/site.ts`) web-in `POST /api/revalidate`-ini çağırır: keş dərhal təmizlənir (admin JWT + `is_admin()`; alınmasa ~5 saniyəyə özü yenilənir).
+- Saytın ünvanı `lib/site.ts` → `SITE_URL` (`VITE_SITE_URL`, standart `http://localhost:3000`); canlıda env-də yaz.
 
 ## UI qaydaları
 - **Bildirişlər yalnız tostla** (`lib/toast.ts` + `components/Toaster.tsx`; `toast.success/error`). Formalarda `useOnSuccess(state, fn, "uğur mesajı")` xəta və uğur tostunu özü göstərir; `ConfirmButton` uğurda "Silindi" göstərir (`success` prop, `false` = tost yox). Formun içində `alert-error` və "Saxlanıldı" sətirləri yazma.
@@ -144,7 +144,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 | `site_segments` | slug, title, summary, lead, issues[], work[], note, equipment[] (site_equipment.key), image_url, image_position, sort, is_active | obyekt növləri → `/xidmetler/[slug]` |
 | `site_equipment` | key, title, text, place, image_url, sort, is_active | avadanlıq növləri |
 | `site_services` | slug, title, text, icon, lead, details, includes[], steps[], note, image_url, sort, is_active | xidmətlər siyahısı + hər xidmətin səhifəsi `/xidmet/[slug]` |
-| `ac_brands`, `ac_error_codes` | brend; kod, model_series, title, cause, solution | Xəta kodları bölməsi üçün (UI hələ yoxdur) |
+| `ac_models`, `ac_error_codes` | model; model_id, code, title, solution | Xəta kodları (`/xeta-kodlari`); `ac_brands` və `model_series` istifadə olunmur |
 
 ### Funksiyalar və trigger-lər (hamısı `security definer`)
 - `is_admin()`, `is_owner()` (sahib = müdir), `my_employee_id()`: RLS qaydalarının əsası.
@@ -241,11 +241,10 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 - Shell-də `node -e` daxilində `\n` və `\D` kimi escape-lər pozulur; uzun skripti scratchpad-də `.cjs` faylına yaz.
 
 ## Növbəti işlər
-- **Admin panelin giriş səhifəsi** usta panelindəkindən köhnədir: eyni müasir dizayna keçirmək (istifadəçi: "sonda baxarıq").
 - **Supabase ehtiyat nüsxəsi (backup)**: canlı məlumata keçməzdən əvvəl avtomatik ehtiyat nüsxənin açıq olduğunu yoxlamaq (tənzimləmədir; iş qeydləri kimi silinənlər geri qayıtmır, Səbət ləğv olunub).
-- Müraciətlər üçün e-poçt bildirişi (Resend və s.), brauzer bildirişi (istifadəçi: "qalsın").
+- **Migrasiya `0046_requests_throttle_notify.sql` yazılıb, bazaya HƏLƏ tətbiq olunmayıb** (icazə sistemi istehsal bazasına tətbiqi blokladı): müraciət formuna sürət limiti (eyni telefondan saatda 3, ümumi 10 dəq-də 20), Telegram bildirişi (Vault-da `telegram_bot_token` + `telegram_chat_id` olanda işləyir, yoxdursa səssiz keçir), trigger funksiyalarının RPC-dən bağlanması. Tətbiqdən sonra web `elaqe/actions.ts` artıq `too_many_requests` xətasını başa düşür.
+- Müraciətlər üçün brauzer bildirişi (istifadəçi: "qalsın"); e-poçt bildirişi əvəzinə Telegram seçilib (0046).
 - Repoların ayrılması (sonda): `supabase/`-ı `admin/`-ə köçürmək, `admin/` və `web/`-i ayrı repolara çıxarmaq (məs. `git subtree split --prefix=admin` ilə tarixçə saxlanır).
-- Saytın keşini admin dəyişikliyindən sonra dərhal təmizləmək (`revalidateTag` + web-də `/api/revalidate`).
 - Xəritə üçün koordinat sahəsi (`site_settings`). (Silmək əvəzinə "Səbət" sınanıb və istifadəçinin istəyi ilə ləğv olunub: yenidən təklif etmə.)
 - Ustalar üçün mobil tətbiq (React Native, Google Maps/Waze naviqasiyası). Mobildə mağaza/filial axtarışı kodla (məs. `ARZ-045`) + "Yol tap" (Google Maps marşrutu) və Waze lazımdır; web-də bu çıxarılıb, qaralama commit `019f8e4`-dədir.
 - Hazır olanlar (təkrar təklif etmə): "Görülən işlər" səhifəsi (`/isler`), Depo tarixçəsi və minimum qalıq, tapşırıqlar, xəta kodları.

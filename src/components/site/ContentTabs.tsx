@@ -8,7 +8,7 @@ import { useData } from "@/lib/useData";
 import { EquipmentEditor } from "./EquipmentEditor";
 import { SegmentEditor } from "./SegmentEditor";
 
-const SITE_URL = "http://localhost:3000";
+import { SITE_URL } from "@/lib/site";
 function useEquipmentList() {
   return useData(async () => {
     const { data } = await createClient().from("site_equipment").select("*").order("sort").order("id");
