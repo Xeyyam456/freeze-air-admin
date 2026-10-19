@@ -7,15 +7,15 @@
   --color-ink: #0e1726;
   --color-muted: #667085;
   --color-line: #e6e9f0;
-  --color-primary: #1f6feb;
-  --color-primary-dark: #1757c2;
-  --color-primary-soft: #eaf2fe;
-  --color-frost: #22c3e6;
+  --color-primary: #0a7ea4;
+  --color-primary-dark: #086685;
+  --color-primary-soft: #e3f3f8;
+  --color-frost: #2dd4bf;
   --color-danger: #e5484d;
   --color-danger-soft: #fdecec;
   --color-ok: #12a150;
   --color-ok-soft: #e7f6ee;
-  --color-navy: #0a1a33;
+  --color-navy: #0b1324;
 
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
@@ -108,8 +108,8 @@
     width: var(--nav);
     color: #fff;
     background:
-      radial-gradient(320px 220px at 0% 100%, rgba(31, 111, 235, 0.28), transparent 70%),
-      linear-gradient(180deg, #0a1a33 0%, #0d2448 100%);
+      radial-gradient(320px 220px at 0% 100%, rgba(10, 126, 164, 0.28), transparent 70%),
+      linear-gradient(180deg, #0b1324 0%, #0d2448 100%);
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     /* En dəyişəndə (yığ/aç) yazılar menyudan kənara daşmasın: kəsilir, en açıldıqca görünür */
     overflow: hidden;
@@ -172,8 +172,8 @@
   }
   .side-link[aria-current="page"] {
     color: #fff;
-    background: linear-gradient(90deg, rgba(34, 195, 230, 0.22), rgba(31, 111, 235, 0.12));
-    box-shadow: inset 0 0 0 1px rgba(34, 195, 230, 0.22);
+    background: linear-gradient(90deg, rgba(45, 212, 191, 0.22), rgba(10, 126, 164, 0.12));
+    box-shadow: inset 0 0 0 1px rgba(45, 212, 191, 0.22);
   }
   /* Aktiv bəndin solunda parlayan zolaq */
   .side-link[aria-current="page"]::before {
@@ -241,11 +241,10 @@
     align-items: center;
     height: var(--header-h);
     color: #fff;
-    box-shadow: 0 4px 16px rgba(10, 26, 51, 0.14);
-    background:
-      radial-gradient(900px 160px at 85% 0%, rgba(34, 195, 230, 0.3), transparent 70%),
-      radial-gradient(600px 160px at 10% 120%, rgba(31, 111, 235, 0.45), transparent 70%),
-      linear-gradient(90deg, #0a1a33 0%, #0f2a55 55%, #0e3b6e 100%);
+    box-shadow: 0 4px 16px rgba(11, 19, 36, 0.14);
+    /* Soldakı menyunun yuxarı hissəsi ilə eyni rəng: menyu və başlıq vahid tünd çərçivə kimi görünür */
+    background: linear-gradient(90deg, #0b1324 0%, #0c1830 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     overflow: hidden;
   }
   /* İncə şəbəkə naxışı: kondisioner barmaqlığını xatırladır */
@@ -272,7 +271,7 @@
     height: 40px;
     border-radius: 12px;
     background: linear-gradient(135deg, var(--color-frost), var(--color-primary));
-    box-shadow: 0 6px 20px rgba(34, 195, 230, 0.35);
+    box-shadow: 0 6px 20px rgba(45, 212, 191, 0.35);
   }
 
   .cmdk kbd {
@@ -295,13 +294,13 @@
     font-weight: 700;
     white-space: nowrap;
     color: var(--color-navy);
-    background: linear-gradient(135deg, #ffffff, #e3f4fb);
-    box-shadow: 0 6px 18px rgba(34, 195, 230, 0.25);
+    background: linear-gradient(135deg, #ffffff, #dcf7f2);
+    box-shadow: 0 6px 18px rgba(45, 212, 191, 0.25);
     transition: transform 150ms ease, box-shadow 150ms ease;
   }
   .hero-action:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 24px rgba(34, 195, 230, 0.35);
+    box-shadow: 0 10px 24px rgba(45, 212, 191, 0.35);
   }
 
   .user-chip {
@@ -383,7 +382,7 @@
     /* Forma açılıb məzmun uzananda da sürüşmə işləyir, amma scrollbar görünmür (istifadəçi qərarı: gizli) */
     scrollbar-width: none;
     background:
-      radial-gradient(420px 180px at 100% 0%, rgba(34, 195, 230, 0.10), transparent 70%),
+      radial-gradient(420px 180px at 100% 0%, rgba(45, 212, 191, 0.10), transparent 70%),
       var(--color-surface);
     border: 1px solid var(--color-line);
     border-radius: 18px;
@@ -455,8 +454,8 @@
     transition: border-color 150ms ease, box-shadow 150ms ease;
   }
   .store-card:hover {
-    border-color: #c9dafb;
-    box-shadow: 0 8px 24px rgba(31, 111, 235, 0.1);
+    border-color: #b5e3ee;
+    box-shadow: 0 8px 24px rgba(10, 126, 164, 0.1);
   }
   /* Kod kvadratı: tünd göy, işıq effektli — kart siyahısında gözün ilk tutduğu yer */
   .store-code {
@@ -467,8 +466,8 @@
     height: 60px;
     border-radius: 14px;
     background:
-      radial-gradient(40px 30px at 80% 10%, rgba(34, 195, 230, 0.45), transparent 70%),
-      linear-gradient(140deg, #0f2a55, #0a1a33);
+      radial-gradient(40px 30px at 80% 10%, rgba(45, 212, 191, 0.45), transparent 70%),
+      linear-gradient(140deg, #11243a, #0b1324);
     color: #fff;
     font-size: 17px;
     font-weight: 800;
@@ -489,7 +488,7 @@
     color: #fff;
     font-size: 18px;
     font-weight: 800;
-    box-shadow: 0 6px 16px rgba(31, 111, 235, 0.25);
+    box-shadow: 0 6px 16px rgba(10, 126, 164, 0.25);
   }
 
   /* ---------- Kartlar ---------- */
@@ -519,14 +518,14 @@
     background: transparent;
   }
   .nice-scroll::-webkit-scrollbar-thumb {
-    background: rgba(31, 111, 235, 0.28);
+    background: rgba(10, 126, 164, 0.28);
     background-clip: padding-box;
     border: 3px solid transparent;
     border-radius: 999px;
     transition: background-color 150ms ease;
   }
   .nice-scroll:hover::-webkit-scrollbar-thumb {
-    background-color: rgba(31, 111, 235, 0.45);
+    background-color: rgba(10, 126, 164, 0.45);
     background-clip: padding-box;
   }
   .nice-scroll::-webkit-scrollbar-thumb:hover {
@@ -542,7 +541,7 @@
   @supports not selector(::-webkit-scrollbar) {
     .nice-scroll {
       scrollbar-width: thin;
-      scrollbar-color: rgba(31, 111, 235, 0.4) transparent;
+      scrollbar-color: rgba(10, 126, 164, 0.4) transparent;
     }
   }
 
@@ -552,8 +551,8 @@
   }
   .card-link:hover {
     transform: translateY(-2px);
-    border-color: #c9dafb;
-    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.04), 0 16px 32px rgba(31, 111, 235, 0.12);
+    border-color: #b5e3ee;
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.04), 0 16px 32px rgba(10, 126, 164, 0.12);
   }
 
   .icon-tile {
@@ -697,7 +696,7 @@
     z-index: 100;
     display: grid;
     place-items: center;
-    background: rgba(10, 26, 51, 0.55);
+    background: rgba(11, 19, 36, 0.55);
     backdrop-filter: blur(3px);
     animation: modal-fade 120ms ease-out;
   }
@@ -707,7 +706,7 @@
     background: var(--color-surface);
     border-radius: 18px;
     padding: 24px;
-    box-shadow: 0 24px 64px rgba(10, 26, 51, 0.3);
+    box-shadow: 0 24px 64px rgba(11, 19, 36, 0.3);
     animation: modal-pop 160ms ease-out;
   }
   @keyframes modal-fade {
@@ -914,7 +913,7 @@
     overflow: hidden;
     border-radius: 18px;
     background: var(--color-surface);
-    box-shadow: 0 30px 80px rgba(10, 26, 51, 0.35);
+    box-shadow: 0 30px 80px rgba(11, 19, 36, 0.35);
     animation: modal-fade 120ms ease-out;
   }
   .cmdk-input {

@@ -4,7 +4,7 @@ import { Home, Snowflake } from "lucide-react";
 // 404: tünd gecə-mavisi fon, iri "404" və qar dənəsi (saytın 404 ekranı ilə eyni üslub)
 export default function NotFoundPage() {
   return (
-    <main className="relative grid min-h-screen place-items-center overflow-hidden bg-[linear-gradient(135deg,#091428,#0f2447_60%,#123a6a)] px-5 text-white">
+    <main className="relative grid min-h-screen place-items-center overflow-hidden bg-[linear-gradient(135deg,#091428,#10233a_60%,#134152)] px-5 text-white">
       <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-frost/20 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-primary/25 blur-3xl" aria-hidden="true" />
 
@@ -17,7 +17,7 @@ export default function NotFoundPage() {
         <p className="mt-3 text-sm leading-relaxed text-white/70">
           Axtardığın ünvan idarəetmə panelində mövcud deyil. Ünvanı yoxla və ya panelə qayıt.
         </p>
-        <Link to="/" className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#0f2447] transition-transform hover:-translate-y-0.5">
+        <Link to="/" className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#10233a] transition-transform hover:-translate-y-0.5">
           <Home size={16} /> Panelə qayıt
         </Link>
       </div>

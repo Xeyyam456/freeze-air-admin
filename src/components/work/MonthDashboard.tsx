@@ -112,19 +112,19 @@ function Chart({ y, m, series, todayDay, cumulative }: { y: number; m: number; s
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
             <defs>
               <linearGradient id="md-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#22c3e6" stopOpacity="0.38" />
-                <stop offset="1" stopColor="#1f6feb" stopOpacity="0.02" />
+                <stop offset="0" stopColor="#2dd4bf" stopOpacity="0.38" />
+                <stop offset="1" stopColor="#0a7ea4" stopOpacity="0.02" />
               </linearGradient>
             </defs>
             {area && <path d={area} fill="url(#md-fill)" />}
             {line && (
               <path d={line} fill="none" stroke="#5fd8f0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke"
-                style={{ filter: "drop-shadow(0 0 6px rgba(34,195,230,0.65))" }} />
+                style={{ filter: "drop-shadow(0 0 6px rgba(45,212,191,0.65))" }} />
             )}
           </svg>
           {/* Son və ya ən hündür nöqtə: yalnız bir rəqəm (hər nöqtəyə yox) */}
           {peak >= 0 && values[peak] > 0 && hover === null && (
-            <span className="pointer-events-none absolute grid h-3 w-3 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-frost shadow-[0_0_12px_rgba(34,195,230,0.9)] ring-[3px] ring-[#0f2a55]"
+            <span className="pointer-events-none absolute grid h-3 w-3 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-frost shadow-[0_0_12px_rgba(45,212,191,0.9)] ring-[3px] ring-[#11243a]"
               style={{ left: `${xOf(peak)}%`, top: `${yOf(values[peak])}%` }}>
               <span className="absolute -top-6 text-[11px] font-bold tabular-nums text-white">{values[peak]}</span>
             </span>
@@ -143,10 +143,10 @@ function Chart({ y, m, series, todayDay, cumulative }: { y: number; m: number; s
                   {hover === i && !disabled && (
                     <>
                       <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-gradient-to-b from-white/50 to-white/5" />
-                      <span className="pointer-events-none absolute left-1/2 grid h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-frost shadow-[0_0_14px_rgba(34,195,230,0.95)] ring-[3px] ring-[#0f2a55]"
+                      <span className="pointer-events-none absolute left-1/2 grid h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-frost shadow-[0_0_14px_rgba(45,212,191,0.95)] ring-[3px] ring-[#11243a]"
                         style={{ top: `${yOf(values[i])}%` }} />
                       <div role="tooltip" style={{ bottom: `calc(${(values[i] / top) * 100}% + 20px)` }}
-                        className={`pointer-events-none absolute z-10 whitespace-nowrap rounded-xl border border-white/15 bg-[#0a1a33]/95 px-3 py-2 text-xs text-white shadow-[0_12px_32px_rgba(0,0,0,0.45)] backdrop-blur ${align}`}>
+                        className={`pointer-events-none absolute z-10 whitespace-nowrap rounded-xl border border-white/15 bg-[#0b1324]/95 px-3 py-2 text-xs text-white shadow-[0_12px_32px_rgba(0,0,0,0.45)] backdrop-blur ${align}`}>
                         <p className="text-sm font-bold">{series[i]} iş{cumulative && <span className="font-medium text-white/60"> · yığım {values[i]}</span>}</p>
                         <p className="text-white/60">{day} {MONTHS[m].toLowerCase()}, {wd}</p>
                       </div>
@@ -217,10 +217,10 @@ export function MonthDashboard({ onUsta }: { onUsta: (name: string) => void }) {
   const navBtn = "grid h-9 w-9 place-items-center rounded-lg text-white/70 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent";
 
   return (
-    <section className="relative overflow-hidden rounded-[18px] bg-[linear-gradient(135deg,#0a1a33,#0f2a55_55%,#0e3b6e)] text-white shadow-[0_18px_48px_rgba(10,26,51,0.35)] ring-1 ring-white/10">
+    <section className="relative overflow-hidden rounded-[18px] bg-[linear-gradient(135deg,#0b1324,#11243a_55%,#0f3d4c)] text-white shadow-[0_18px_48px_rgba(10,26,51,0.35)] ring-1 ring-white/10">
       {/* Yumşaq işıq ləkələri (dekor) */}
-      <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#22c3e6]/20 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute -bottom-32 -left-16 h-72 w-72 rounded-full bg-[#1f6feb]/25 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#2dd4bf]/20 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -bottom-32 -left-16 h-72 w-72 rounded-full bg-[#0a7ea4]/25 blur-3xl" aria-hidden="true" />
 
       <div className="relative">
         {/* Başlıq zolağı: ay seçimi və rejim keçidləri */}
@@ -319,7 +319,7 @@ export function MonthDashboard({ onUsta }: { onUsta: (name: string) => void }) {
                             <span className={`shrink-0 text-sm font-bold tabular-nums ${r.n ? "text-white" : "text-white/40"}`}>{r.n}</span>
                           </span>
                           <span className="ml-[26px] mt-1.5 block h-1.5 overflow-hidden rounded-full bg-white/10">
-                            <span className="block h-full rounded-full bg-gradient-to-r from-[#22c3e6] to-[#6da7ec] shadow-[0_0_10px_rgba(34,195,230,0.7)] transition-[width] duration-500"
+                            <span className="block h-full rounded-full bg-gradient-to-r from-[#2dd4bf] to-[#6da7ec] shadow-[0_0_10px_rgba(45,212,191,0.7)] transition-[width] duration-500"
                               style={{ width: `${r.n ? Math.max(6, (r.n / maxN) * 100) : 0}%` }} />
                           </span>
                         </button>

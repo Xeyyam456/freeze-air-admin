@@ -65,7 +65,7 @@ type ExportInfo = { from: string; to: string; employee: string; company: string;
 
 async function exportXlsx(logs: Log[], info: ExportInfo) {
   const { default: writeXlsxFile } = await import("write-excel-file/browser");
-  const NAVY = "#0a1a33", BLUE = "#1f6feb", LINE = "#d9dfeb", ZEBRA = "#f4f7fc", MUTED = "#667085";
+  const NAVY = "#0b1324", BLUE = "#0a7ea4", LINE = "#d9dfeb", ZEBRA = "#f4f7fc", MUTED = "#667085";
   const cols = 5;
   const span = (value: string, style: Record<string, unknown>) => [{ value, columnSpan: cols, ...style }, ...Array(cols - 1).fill(null)];
   const days = new Set(logs.map((l) => l.work_date)).size;
@@ -79,7 +79,7 @@ async function exportXlsx(logs: Log[], info: ExportInfo) {
   const data = [
     span("Freeze Air Service — Görülən işlər", { fontWeight: "bold", fontSize: 16, textColor: "#ffffff", backgroundColor: NAVY, alignVertical: "center", height: 34, indent: 1 }),
     span(filters, { fontSize: 10, textColor: MUTED, alignVertical: "center", height: 20, indent: 1 }),
-    span(`İş sayı: ${logs.length}     İş görülən gün: ${days}     Usta: ${masters}     Fərqli yer: ${places}`, { fontWeight: "bold", textColor: BLUE, backgroundColor: "#eaf2fe", alignVertical: "center", height: 26, indent: 1 }),
+    span(`İş sayı: ${logs.length}     İş görülən gün: ${days}     Usta: ${masters}     Fərqli yer: ${places}`, { fontWeight: "bold", textColor: BLUE, backgroundColor: "#e3f3f8", alignVertical: "center", height: 26, indent: 1 }),
     Array(cols).fill(null),
     [head("Tarix", "center"), head("Saat", "center"), head("Usta"), head("İş yeri"), head("Görülən iş")],
     ...logs.map((l, i) => {
@@ -94,7 +94,7 @@ async function exportXlsx(logs: Log[], info: ExportInfo) {
         { ...base, value: l.description ?? "", wrap: true },
       ];
     }),
-    [{ value: "Cəmi", columnSpan: 4, fontWeight: "bold" as const, align: "right" as const, backgroundColor: "#eaf2fe", ...border }, null, null, null, { value: `${logs.length} iş`, fontWeight: "bold" as const, textColor: BLUE, backgroundColor: "#eaf2fe", ...border }],
+    [{ value: "Cəmi", columnSpan: 4, fontWeight: "bold" as const, align: "right" as const, backgroundColor: "#e3f3f8", ...border }, null, null, null, { value: `${logs.length} iş`, fontWeight: "bold" as const, textColor: BLUE, backgroundColor: "#e3f3f8", ...border }],
   ];
 
   await writeXlsxFile(data, {

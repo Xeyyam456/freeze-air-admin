@@ -109,11 +109,11 @@ export default function Home() {
 
       {/* Göstəricilər */}
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
-        <Stat to="/sirketler" icon={Building2} label="Şirkət" value={d?.companies} sub={d && `${d.branches} filial`} tone="from-[#1f6feb] to-[#22c3e6]" />
-        <Stat to="/magazalar" icon={Store} label="Market" value={d?.markets} sub={d && `${d.shops} mağaza`} tone="from-[#0ea5a4] to-[#22c3e6]" />
-        <Stat to="/ustalar" icon={Users} label="Usta" value={d?.masters.length} sub={d && `${d.managers} rəhbər`} tone="from-[#6d5efc] to-[#1f6feb]" />
+        <Stat to="/sirketler" icon={Building2} label="Şirkət" value={d?.companies} sub={d && `${d.branches} filial`} tone="from-[#0a7ea4] to-[#2dd4bf]" />
+        <Stat to="/magazalar" icon={Store} label="Market" value={d?.markets} sub={d && `${d.shops} mağaza`} tone="from-[#0ea5a4] to-[#2dd4bf]" />
+        <Stat to="/ustalar" icon={Users} label="Usta" value={d?.masters.length} sub={d && `${d.managers} rəhbər`} tone="from-[#6d5efc] to-[#0a7ea4]" />
         <Stat to="/depo" icon={Wrench} label="Alət" value={d?.tools.total} sub={d && `${d.tools.total - d.tools.out} depoda, ${d.tools.out} ustalarda`} tone="from-[#f59e0b] to-[#f97316]" />
-        <Stat to="/tapshiriqlar" icon={ListChecks} label="Tapşırıq" value={d?.tasks.length} sub={d && `bu gün: ${d.tasks.filter((t) => t.done).length} görülüb, ${d.tasks.filter((t) => !t.done).length} qalıb`} tone="from-[#10b981] to-[#22c3e6]" />
+        <Stat to="/tapshiriqlar" icon={ListChecks} label="Tapşırıq" value={d?.tasks.length} sub={d && `bu gün: ${d.tasks.filter((t) => t.done).length} görülüb, ${d.tasks.filter((t) => !t.done).length} qalıb`} tone="from-[#10b981] to-[#2dd4bf]" />
       </div>
 
       {/* Depoda azalanlar: minimum qalıq həddinə çatan alət və materiallar */}
@@ -309,7 +309,7 @@ function Stat({ to, icon: Icon, label, value, sub, tone }: {
     <Link to={to} className="card card-link group relative overflow-hidden">
       <Icon size={110} strokeWidth={1} className="pointer-events-none absolute -bottom-6 -right-5 text-primary/[0.06]" />
       <div className="relative flex items-center gap-4">
-        <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${tone} text-white shadow-[0_8px_18px_rgba(31,111,235,0.22)]`}>
+        <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${tone} text-white shadow-[0_8px_18px_rgba(10,126,164,0.22)]`}>
           <Icon size={22} />
         </span>
         <div className="min-w-0">

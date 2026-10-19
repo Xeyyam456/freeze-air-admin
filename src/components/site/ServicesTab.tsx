@@ -69,7 +69,7 @@ function ServiceCard({ service: s, onEdit }: { service: Service; onEdit: () => v
       <button type="button" onClick={onEdit} className="absolute inset-0 z-0" aria-label={`${s.title}: redaktə et`} />
 
       <div className="pointer-events-none relative flex items-start gap-4 p-5 pb-4">
-        <span className="relative grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-frost to-primary text-white shadow-[0_8px_20px_rgba(31,111,235,0.25)]">
+        <span className="relative grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-frost to-primary text-white shadow-[0_8px_20px_rgba(10,126,164,0.25)]">
           <Icon size={26} />
           <span className="absolute -right-1.5 -top-1.5 grid h-6 min-w-6 place-items-center rounded-full border-2 border-surface bg-ink px-1 text-[11px] font-bold text-white">{s.sort}</span>
         </span>

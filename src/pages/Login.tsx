@@ -34,7 +34,7 @@ export default function LoginPage() {
   return (
     <main className="grid min-h-screen bg-[#f4f7fc] lg:grid-cols-[1.1fr_1fr]">
       {/* Sol: tünd marka hissəsi */}
-      <section className="relative hidden overflow-hidden bg-[linear-gradient(145deg,#091428,#0f2447_55%,#123a6a)] p-14 text-white lg:flex lg:flex-col lg:justify-between xl:px-20">
+      <section className="relative hidden overflow-hidden bg-[linear-gradient(145deg,#091428,#10233a_55%,#134152)] p-14 text-white lg:flex lg:flex-col lg:justify-between xl:px-20">
         <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-frost/25 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -bottom-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-primary/30 blur-3xl" aria-hidden="true" />
         <Snowflake size={420} strokeWidth={0.6} className="pointer-events-none absolute -bottom-24 -right-20 text-white/[0.05]" aria-hidden="true" />
@@ -54,7 +54,7 @@ export default function LoginPage() {
           <ul className="mt-10 space-y-4">
             {FEATURES.map(({ icon: Icon, title, text }) => (
               <li key={title} className="flex items-start gap-4 rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10 backdrop-blur">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-frost shadow-[0_8px_20px_rgba(31,111,235,0.4)]">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-frost shadow-[0_8px_20px_rgba(10,126,164,0.4)]">
                   <Icon size={19} />
                 </span>
                 <span>

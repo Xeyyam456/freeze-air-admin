@@ -33,7 +33,7 @@ function ago(iso: string) {
 const digits = (phone: string) => phone.replace(/\D/g, "");
 
 // Addan sabit rəng: eyni adam həmişə eyni rəngdə
-const TONES = ["from-[#1f6feb] to-[#22c3e6]", "from-[#6d5efc] to-[#1f6feb]", "from-[#0ea5a4] to-[#22c3e6]", "from-[#f59e0b] to-[#f97316]", "from-[#e5484d] to-[#f97316]"];
+const TONES = ["from-[#0a7ea4] to-[#2dd4bf]", "from-[#6d5efc] to-[#0a7ea4]", "from-[#0ea5a4] to-[#2dd4bf]", "from-[#f59e0b] to-[#f97316]", "from-[#e5484d] to-[#f97316]"];
 const toneOf = (name: string) => TONES[[...name].reduce((s, c) => s + c.charCodeAt(0), 0) % TONES.length];
 
 const norm = (s: string | null) =>

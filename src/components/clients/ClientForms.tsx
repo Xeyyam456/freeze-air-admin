@@ -143,7 +143,7 @@ function ClientInfoCard({ company, kind, unitCount, admin }: {
       {/* Vizit kartı: baş hərf, ad, növ və filial sayı */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-3">
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-frost to-primary text-xl font-extrabold text-white shadow-[0_6px_16px_rgba(31,111,235,0.3)]">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-frost to-primary text-xl font-extrabold text-white shadow-[0_6px_16px_rgba(10,126,164,0.3)]">
             {company.name.charAt(0)}
           </span>
           <div className="min-w-0">
