@@ -59,9 +59,6 @@ export const TEXT_GROUPS: TextGroup[] = [
           { key: "home.hero.lead", label: "Alt mətn", kind: "text" },
           { key: "home.hero.cta", label: "Birinci düymə" },
           { key: "home.hero.cta2", label: "İkinci düymə" },
-          { key: "home.hero.temp_label", label: "Kiçik kart: yazı" },
-          { key: "home.hero.temp", label: "Kiçik kart: rəqəm" },
-          { key: "home.hero.badge", label: "Tünd nişan (şəklin üstü)" },
         ],
       },
       {
@@ -102,7 +99,7 @@ export const TEXT_GROUPS: TextGroup[] = [
         ],
       },
       {
-        title: "Xidmət kateqoriyaları (göy zolaq)",
+        title: "Xidmət kateqoriyaları (tünd aurora zolaq)",
         fields: [
           { key: "home.categories.title", label: "Başlıq" },
           { key: "home.categories.lead", label: "Alt mətn" },
@@ -165,7 +162,6 @@ export const TEXT_GROUPS: TextGroup[] = [
           { key: "service.steps", label: "“Necə edirik” başlığı" },
           { key: "service.aside_title", label: "Sağ blok: başlıq" },
           { key: "service.aside_text", label: "Sağ blok: mətn", kind: "text" },
-          { key: "service.cta", label: "Düymə" },
           { key: "service.others", label: "Digər xidmətlər başlığı" },
           { key: "service.more", label: "Kartdakı keçid" },
         ],
@@ -229,14 +225,12 @@ export const TEXT_GROUPS: TextGroup[] = [
         fields: [
           { key: "team.title", label: "Başlıq" },
           { key: "team.lead", label: "Alt mətn", kind: "text" },
-          { key: "team.management", label: "Rəhbərlik bölməsinin başlığı" },
-          { key: "team.masters", label: "Ustalar bölməsinin başlığı" },
           { key: "team.empty", label: "Usta yoxdursa" },
           { key: "team.specialty", label: "İxtisas yazılmayıbsa" },
           { key: "team.experience", label: "Təcrübə yazısı" },
           { key: "team.new", label: "Təcrübə yoxdursa" },
-          { key: "team.cta_text", label: "Aşağı zolaq: mətn" },
-          { key: "team.cta_button", label: "Aşağı zolaq: düymə" },
+          { key: "team.cta_text", label: "Sol panel: çağırış mətni" },
+          { key: "team.cta_button", label: "Sol panel: düymə" },
           { key: "team.type.master", label: "İş növü: usta (sayda və nişanda)" },
           { key: "team.type.assistant", label: "İş növü: köməkçi" },
           { key: "team.type.driver", label: "İş növü: sürücü" },

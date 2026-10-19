@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExternalLink, EyeOff, ImageOff, Pencil, Plus, Trash2 } from "lucide-react";
+import { EyeOff, ImageOff, Pencil, Plus, Trash2 } from "lucide-react";
 import { deleteEquipment, deleteSegment } from "@/actions/siteContent";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import type { Tables } from "@/lib/database.types";
@@ -8,7 +8,6 @@ import { useData } from "@/lib/useData";
 import { EquipmentEditor } from "./EquipmentEditor";
 import { SegmentEditor } from "./SegmentEditor";
 
-import { SITE_URL } from "@/lib/site";
 function useEquipmentList() {
   return useData(async () => {
     const { data } = await createClient().from("site_equipment").select("*").order("sort").order("id");
@@ -76,10 +75,7 @@ export function SegmentsTab() {
 
             <div className="flex flex-1 flex-col p-4">
               <h3 className="card-title truncate">{s.title}</h3>
-              <a href={`${SITE_URL}/xidmetler/${s.slug}`} target="_blank" rel="noopener noreferrer"
-                className="link inline-flex w-fit items-center gap-1 text-xs">
-                /xidmetler/{s.slug} <ExternalLink size={11} />
-              </a>
+              <span className="muted text-xs">/xidmetler/{s.slug}</span>
               <p className="muted mb-3 mt-2 line-clamp-2 text-sm">{s.summary || "Qısa mətn yoxdur"}</p>
               <div className="mt-auto flex flex-wrap gap-1.5 border-t border-dashed border-line pt-3 text-[11px] font-semibold">
                 {s.equipment.length

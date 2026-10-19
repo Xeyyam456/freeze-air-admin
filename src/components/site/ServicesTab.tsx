@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExternalLink, EyeOff, ListChecks, Pencil, Plus, Route, Trash2 } from "lucide-react";
+import { EyeOff, ListChecks, Pencil, Plus, Route, Trash2 } from "lucide-react";
 import { deleteService } from "@/actions/siteContent";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import type { Tables } from "@/lib/database.types";
@@ -9,7 +9,6 @@ import { ServiceEditor, serviceIcon } from "./ServiceEditor";
 
 type Service = Tables<"site_services">;
 
-import { SITE_URL } from "@/lib/site";
 
 // Xidmət səhifəsinin hissələri: dolğunluq zolağı və "nə çatışmır" siyahısı üçün
 const PARTS: { label: string; done: (s: Service) => boolean }[] = [
@@ -103,10 +102,7 @@ function ServiceCard({ service: s, onEdit }: { service: Service; onEdit: () => v
       </div>
 
       <div className="relative mt-auto flex items-center gap-2 px-5 py-4">
-        <a href={`${SITE_URL}/xidmet/${s.slug}`} target="_blank" rel="noopener noreferrer"
-          className="link z-10 mr-auto inline-flex min-w-0 items-center gap-1 truncate text-xs">
-          /xidmet/{s.slug} <ExternalLink size={11} className="shrink-0" />
-        </a>
+        <span className="muted mr-auto min-w-0 truncate text-xs">/xidmet/{s.slug}</span>
         <button type="button" onClick={onEdit} className="icon-btn z-10" title="Redaktə et" aria-label="Redaktə et"><Pencil size={16} /></button>
         <ConfirmButton onConfirm={() => deleteService(s.id, s.image_url)} className="icon-btn icon-btn-danger z-10" title={`${s.title} silinsin`}>
           <Trash2 size={16} />

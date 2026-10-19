@@ -102,10 +102,11 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - Ustalar səhifəsində ustanın "Alətlər" tabı da eyni qaydadadır (say ×N, × hamısını qaytarır, "Alət ver" `QuantityInput` ilə).
 
 ### Sayt səhifəsi (`/sayt`): açıq saytın bütün məzmunu buradan idarə olunur
+- **2026-10-20 yeni üsluba uyğunlaşdırma** (istifadəçi: "adminde hər şeyi yeni üslubla uyğunlaşdır, artıq olanı sil, Saytı aç düymələrini ləğv et"): "Saytı aç" düyməsi və obyekt/xidmət kartlarındakı sayt keçidləri **silinib** (yenidən əlavə etmə; ünvan yalnız mətn kimi göstərilir). Önizləmələr saytın yeni dizaynındadır: header (bir sətir, ağ şüşə, tünd "Usta çağır"), hero (tam enli fon şəkli + soldan tünd keçid, tövsiyə 16:9 1920×1080; üzən künc kartları yoxdur), Əlaqə (tünd aurora panel + forma + xəritədə döyünən nişan, "Marşrut qur"). İstifadə olunmayan mətn sahələri Mətnlər tabından və bazadan silinib (0055).
 - **"Etibar və suallar" tabı (2026-10-18; `components/site/TrustTab.tsx`, migrasiya 0050)**: ana səhifənin üç bölməsi: **Rəqəmlər zolağı** (`site_stats`: rəqəm "200+" + yazı, sayğacla artır, ≥ 2 aktiv olanda görünür) və **Tez-tez verilən suallar** (`site_faq`). Hər biri üçün redaktə pəncərəsi, sıra, "Saytda göstər"; boş siyahı = saytda bölmə yoxdur. "Bizə etibar edənlər" (müştəri loqoları) ləğv olunub (2026-10-19, `site_clients` silindi; Storage-də `site/clients/` qovluğunda yetim fayllar qala bilər, SQL ilə silinmir: panelden əl ilə sil). Əməliyyatlar `actions/siteContent.ts` (`saveStat/Faq`, `delete…`). **"Əlaqə" tabında** Instagram və Facebook linkləri (https://, footer-də); xəritə `hl=az`. "Mətnlər" tabına hero formu, necə işləyirik, FAQ və footer sosial başlığı üçün yeni açarlar əlavə olunub (`home.quick.*`, `home.how.*`, `home.faq.*`, `footer.social`). **"Ana səhifə" tabında "Sürətli müraciət formu" kartı** (`HomeTab.tsx` `HeroFormCard`): "Saytda göstər" (`site_settings.hero_form_enabled`) + 5 mətn (ad/telefon sahəsi, düymə, formun altındakı yazı "Nömrənizi yazın, sizə özümüz zəng edək.", "Və ya zəng edin") + canlı önizləmə; `saveHeroForm` (actions/site.ts) hər ikisini yazır, standartla eyni mətn boş saxlanır.
 | Tab | Cədvəl | Fayl |
 |---|---|---|
-| Əlaqə | `site_settings` (phone, email, address, hours); sağda saytdakı Əlaqə blokunun canlı önizləməsi | `components/site/ContactTab.tsx` |
+| Əlaqə | `site_settings` (phone, email, address, hours); sağda saytdakı Əlaqə səhifəsinin canlı önizləməsi (2026-10-20 yeni dizayna uyğunlaşdırılıb: tünd aurora panel, forma, xəritədə döyünən nişan + "Marşrut qur") | `components/site/ContactTab.tsx` |
 | Ana səhifə | `site_settings`: `logo_url` (saytın loqosu, header + footer), `hero_image_url`, `about_*` (Haqqımızda mətni, siyahı, kart, 2 şəkil), `about_card_color` (`night`/`cold`/`ice`/`white`); header, hero künc nişanları və kartın canlı önizləməsi | `components/site/HomeTab.tsx` |
 | Mətnlər | `site_texts` (saytın bütün sabit mətnləri, səhifələrə görə qruplar) | `components/site/TextsTab.tsx`, `textFields.ts` |
 | Obyektlər | `site_segments` (+ `image_position`, bağlı avadanlıq) | `components/site/ContentTabs.tsx`, `SegmentEditor.tsx` |
@@ -149,7 +150,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 | `work_files` | work_log_id, kind, path | `work` bucket-dəki fayllar |
 | `contact_requests` | name, phone, email, message, handled | saytdakı "Bizə yazın"; Realtime-da |
 | `site_settings` | tək sətir (id = 1): phone, address, hours, email, logo_url, hero_image_url, about_title, about_text, about_points, about_card_title, about_card_text, about_card_color, about_image_main_url, about_image_side_url | saytın əlaqə və ana səhifə məlumatları |
-| `site_texts` | key, value | saytın sabit mətnləri (111 açar) |
+| `site_texts` | key, value | saytın sabit mətnləri (126 açar) |
 | `site_segments` | slug, title, summary, lead, issues[], work[], note, equipment[] (site_equipment.key), image_url, image_position, sort, is_active | obyekt növləri → `/xidmetler/[slug]` |
 | `site_equipment` | key, title, text, place, image_url, sort, is_active | avadanlıq növləri |
 | `site_services` | slug, title, text, icon, lead, details, includes[], steps[], note, image_url, sort, is_active | xidmətlər siyahısı + hər xidmətin səhifəsi `/xidmet/[slug]` |
@@ -190,7 +191,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da yalnız `contact_requests`. Hadisəni RLS-ə görə yalnız admin alır.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0054`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0055`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
@@ -215,6 +216,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0034: `give_piece`-ə `p_amount`: parçanın bir hissəsini ustaya vermək (qalan hissə parça kimi qalır);
   - 0036: qablaşdırılmış material (qaz balonu...): `tools.pack_name` (balon), `tools.pack_size` (hər qabda 11), `tool_stock`-a bu sütunlar; daxildə hər şey ölçü vahidi ilə (44 kq), qab yalnız daxiletmə və göstəriş üçün ("44 kq (4 balon)");
   - 0039: `tasks` cədvəli (iş tapşırıqları), RLS və `tasks_guard` tətikçisi;
+  - 0055: istifadə olunmayan mətnlər silindi (hero üzən kartları `home.hero.temp*`, `home.hero.badge`, `service.cta`, `team.management`, `team.masters`);
   - 0054: `site_texts.contact.route*` (Əlaqə xəritəsində "Marşrut qur");
   - 0053: `site_texts.contact.map_reset` ("Ünvana qayıt");
   - 0052: `employees.worker_type` (usta / köməkçi / sürücü), `public_employees()` növü qaytarır (usta → köməkçi → sürücü sırası), mətnlər `team.type.*`;

@@ -63,7 +63,7 @@ function ContactEditor({ settings }: { settings: Tables<"site_settings"> }) {
   const address = values.address.trim() || FALLBACK.address;
   const hours = values.hours.trim() || FALLBACK.hours;
   const hasWhatsApp = values.phone.replace(/\D/g, "").length >= 11;
-  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(address)}&z=14&output=embed&hl=az`;
+  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(address)}&z=16&output=embed&hl=az`;
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_1.15fr]">
@@ -113,33 +113,57 @@ function ContactEditor({ settings }: { settings: Tables<"site_settings"> }) {
         <p className="mb-3 flex items-center gap-2 px-1 text-xs font-semibold text-muted">
           <span className="h-2 w-2 animate-pulse rounded-full bg-ok" /> Saytda belə görünəcək
         </p>
-        <div className="grid gap-3 rounded-2xl bg-[#eaf3f8] p-3 lg:grid-cols-[1.4fr_1fr]">
-          <div className="relative flex flex-col justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#00a3d9] to-[#0077b6] p-6 text-white">
-            <Phone size={150} strokeWidth={1} className="pointer-events-none absolute -bottom-8 -right-6 text-white/10" />
-            <span className="relative grid h-10 w-10 place-items-center rounded-xl bg-white/15"><Phone size={18} /></span>
-            <p className="relative mt-4 text-xs font-semibold text-white/75">Bizə zəng edin</p>
-            <p className="relative mt-0.5 whitespace-nowrap text-2xl font-extrabold tracking-tight">{phone}</p>
+        {/* Saytın yeni Əlaqə səhifəsi (2026-10-20): solda tünd aurora panel (telefon, düymələr, ünvan / saat / e-poçt sətirləri),
+            sağda "Bizə yazın" forması, aşağıda xəritə (ortada döyünən nişan + "Marşrut qur"). Rənglər saytın palitrasıdır. */}
+        <div className="grid gap-3 rounded-2xl bg-[#eaf3f8] p-3 lg:grid-cols-[1fr_1.05fr]">
+          <div className="relative flex flex-col overflow-hidden rounded-2xl bg-[#06192b] p-5 text-white"
+            style={{ backgroundImage: "radial-gradient(60% 50% at 15% 20%, rgba(0,163,217,0.35), transparent 70%), radial-gradient(50% 45% at 90% 85%, rgba(79,209,255,0.2), transparent 70%)" }}>
+            <Phone size={130} strokeWidth={0.8} className="pointer-events-none absolute -right-6 -top-6 text-[#00a3d9]/10" />
+            <p className="relative text-xs font-semibold text-white/60">Bizə zəng edin</p>
+            <p className="relative mt-1 whitespace-nowrap text-xl font-extrabold tracking-tight">{phone}</p>
             <div className="relative mt-4 flex flex-wrap gap-2">
-              <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white px-3.5 text-xs font-bold text-[#06192b]"><Phone size={13} /> Zəng et</span>
+              <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#00a3d9] px-3.5 text-xs font-bold text-white"><Phone size={13} /> Zəng et</span>
               {hasWhatsApp && (
                 <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#25D366] px-3.5 text-xs font-bold text-white"><MessageCircle size={13} /> WhatsApp</span>
               )}
             </div>
+            <ul className="relative mt-5 divide-y divide-white/10">
+              {[
+                { icon: MapPin, label: "Ünvan", value: address, empty: !values.address.trim() },
+                { icon: Clock, label: "İş saatları", value: hours, empty: !values.hours.trim() },
+                ...(values.email.trim() ? [{ icon: Mail, label: "E-poçt", value: values.email.trim(), empty: false }] : []),
+              ].map(({ icon: Icon, label, value, empty }) => (
+                <li key={label} className="flex items-center gap-3 py-2.5">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#00a3d9]/15 text-[#00a3d9] ring-1 ring-[#00a3d9]/30"><Icon size={14} /></span>
+                  <span className="min-w-0">
+                    <span className="block text-[10px] text-white/50">{label}</span>
+                    <span className={`block truncate text-xs font-semibold ${empty ? "text-white/35" : ""}`}>{value}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="grid gap-3">
-            {[
-              { icon: MapPin, label: "Ünvan", value: address, empty: !values.address.trim() },
-              { icon: Clock, label: "İş saatları", value: hours, empty: !values.hours.trim() },
-              ...(values.email.trim() ? [{ icon: Mail, label: "E-poçt", value: values.email.trim(), empty: false }] : []),
-            ].map(({ icon: Icon, label, value, empty }) => (
-              <div key={label} className="rounded-2xl bg-white p-4">
-                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[#06192b]/55"><Icon size={13} /> {label}</span>
-                <p className={`mt-1.5 text-sm font-bold ${empty ? "text-[#06192b]/35" : "text-[#06192b]"}`}>{value}</p>
-              </div>
-            ))}
+
+          {/* Forma (yalnız görünüş) */}
+          <div className="flex flex-col rounded-2xl bg-white p-5 text-[#06192b]">
+            <p className="text-base font-extrabold">Bizə yazın</p>
+            <p className="mt-0.5 text-[11px] text-[#06192b]/55">Mesajınızı yazın, sizə özümüz zəng edək.</p>
+            <div className="mt-4 grid flex-1 content-start gap-2">
+              {[Phone, Mail].map((Icon, i) => (
+                <span key={i} className="flex h-9 items-center gap-2 rounded-xl border border-[#06192b]/10 bg-[#eaf3f8]/70 px-3 text-[#06192b]/35"><Icon size={13} /><span className="h-1.5 w-20 rounded bg-[#06192b]/10" /></span>
+              ))}
+              <span className="h-16 rounded-xl border border-[#06192b]/10 bg-[#eaf3f8]/70" />
+            </div>
+            <span className="mt-3 flex h-9 items-center justify-center rounded-xl bg-[#06192b] text-xs font-bold text-white">Göndər</span>
           </div>
-          <div className="overflow-hidden rounded-2xl bg-white lg:col-span-2">
+
+          <div className="relative overflow-hidden rounded-2xl bg-white lg:col-span-2">
             <iframe src={mapUrl} title={`Xəritə: ${address}`} className="h-56 w-full" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+            <span className="pointer-events-none absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center">
+              <span className="absolute inset-0 animate-ping rounded-full bg-[#00a3d9]/40" />
+              <span className="relative grid h-9 w-9 place-items-center rounded-full bg-[#00a3d9] text-white ring-[3px] ring-white"><MapPin size={16} /></span>
+            </span>
+            <span className="pointer-events-none absolute bottom-3 left-1/2 inline-flex h-8 -translate-x-1/2 items-center gap-1.5 rounded-full bg-[#00a3d9] px-3.5 text-xs font-bold text-white shadow-lg">Marşrut qur</span>
           </div>
         </div>
       </div>

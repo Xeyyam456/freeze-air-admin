@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AirVent, ExternalLink, Image as ImageIcon, LayoutGrid, List, Phone, ShieldCheck, Type } from "lucide-react";
+import { AirVent, Image as ImageIcon, LayoutGrid, List, Phone, ShieldCheck, Type } from "lucide-react";
 import { Page } from "@/components/Page";
 import { ContactTab } from "@/components/site/ContactTab";
 import { EquipmentTab, SegmentsTab } from "@/components/site/ContentTabs";
@@ -8,7 +8,6 @@ import { HomeTab } from "@/components/site/HomeTab";
 import { TextsTab } from "@/components/site/TextsTab";
 import { TrustTab } from "@/components/site/TrustTab";
 
-import { SITE_URL } from "@/lib/site";
 
 type Tab = "contact" | "texts" | "hero" | "trust" | "segments" | "equipment" | "services";
 
@@ -30,7 +29,7 @@ export default function SitePage() {
   return (
     <Page title="Sayt" subtitle="Açıq saytın məzmunu: dəyişikliklər saytda ən gec 1 dəqiqəyə görünür">
       <div className="space-y-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="inline-flex gap-1 rounded-xl bg-line/60 p-1" role="tablist">
             {TABS.map(({ id, label, icon: Icon }) => (
               <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
@@ -41,9 +40,6 @@ export default function SitePage() {
               </button>
             ))}
           </div>
-          <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm">
-            <ExternalLink size={14} /> Saytı aç
-          </a>
         </div>
         {tab === "contact" ? <ContactTab /> : tab === "hero" ? <HomeTab /> : tab === "trust" ? <TrustTab /> : tab === "texts" ? <TextsTab /> : tab === "segments" ? <SegmentsTab /> : tab === "equipment" ? <EquipmentTab /> : <ServicesTab />}
       </div>

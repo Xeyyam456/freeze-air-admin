@@ -43,7 +43,7 @@ export function HomeTab() {
     const supabase = createClient();
     const [{ data: settings }, { data: texts }] = await Promise.all([
       supabase.from("site_settings").select("*").eq("id", 1).maybeSingle(),
-      supabase.from("site_texts").select("key, value").in("key", ["brand.name", "brand.tagline", "home.hero.temp_label", "home.hero.temp", "home.hero.badge", ...Object.keys(QUICK_DEFAULTS)]),
+      supabase.from("site_texts").select("key, value").in("key", ["brand.name", "brand.tagline", "header.cta", "home.hero.title", ...Object.keys(QUICK_DEFAULTS)]),
     ]);
     const t = Object.fromEntries((texts ?? []).map((r) => [r.key, r.value])) as Record<string, string | undefined>;
     return { settings, t };
@@ -59,18 +59,17 @@ export function HomeTab() {
         <section className="card flex flex-col">
           <h2 className="card-title">Loqo</h2>
           <p className="muted mt-1 text-sm">Saytın bütün səhifələrində: header-də şirkət adının solunda və footer-də.</p>
+          {/* Saytın yeni header-i (2026-10-20): bir sətir, şüşə ağ fon; solda loqo, sağda tünd "Usta çağır" (menyu həbləri dar kartda sığmadığı üçün göstərilmir) */}
           <div className="mt-4 overflow-hidden rounded-xl border border-line">
-            <div className="flex h-16 items-center gap-3 bg-white px-4">
+            <div className="flex h-16 items-center gap-3 bg-white/90 px-4">
               {settings.logo_url
-                ? <img src={settings.logo_url} alt="" className="h-10 w-auto max-w-[120px] object-contain" />
-                : <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#00a3d9] to-[#06192b] text-white"><Snowflake size={20} /></span>}
+                ? <img src={settings.logo_url} alt="" className="h-9 w-auto max-w-[100px] object-contain" />
+                : <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#00a3d9] to-[#06192b] text-white shadow-[0_6px_14px_rgba(0,163,217,0.35)]"><Snowflake size={18} /></span>}
               <span className="min-w-0 leading-tight">
-                <span className="block truncate text-sm font-extrabold text-[#06192b]">{t["brand.name"] ?? "Freeze Air Service"}</span>
-                <span className="block truncate text-[11px] text-[#06192b]/50">{t["brand.tagline"] ?? ""}</span>
+                <span className="block truncate text-[13px] font-extrabold text-[#06192b]">{t["brand.name"] ?? "Freeze Air Service"}</span>
+                <span className="block truncate text-[10px] text-[#06192b]/50">{t["brand.tagline"] ?? ""}</span>
               </span>
-            </div>
-            <div className="flex h-7 items-center gap-3 bg-[#00a3d9] px-4 text-[10px] font-semibold text-white/85">
-              <span className="rounded bg-[#06192b] px-1.5 py-0.5 text-white">Əsas</span> Avadanlıq <span>Xidmətlər</span> <span>Əlaqə</span>
+              <span className="ml-auto shrink-0 rounded-full bg-[#06192b] px-3 py-1.5 text-[10px] font-bold text-white">{t["header.cta"] ?? "Usta çağır"}</span>
             </div>
           </div>
           <p className="muted mb-4 mt-1.5 text-[11px]">Header önizləməsi</p>
@@ -81,36 +80,35 @@ export function HomeTab() {
           </div>
         </section>
 
-        {/* Hero: şəklin üstündə saytdakı kimi künc nişanları */}
+        {/* Hero: saytdakı kimi tam enli fon şəkli, soldan tünd keçid, üstündə başlıq və sürətli forma */}
         <section className="card">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <h2 className="card-title">Hero şəkli</h2>
-              <p className="muted mt-1 text-sm">Saytın ən üstündə, başlığın sağında. Künc nişanları şəklin üstünə düşür: vacib detalı oraya qoymayın.</p>
+              <p className="muted mt-1 text-sm">Saytın ən üstündə bütün ekranı tutan fon şəkli. Solda mətn və forma durur: kondisioner və vacib detal sağ yuxarıda olsun.</p>
             </div>
-            <span className="muted rounded-full bg-bg px-3 py-1 text-xs">Tövsiyə: 4:3, 1600×1200 px</span>
+            <span className="muted rounded-full bg-bg px-3 py-1 text-xs">Tövsiyə: 16:9, 1920×1080 px</span>
           </div>
           <div className="mt-4 grid gap-5 lg:grid-cols-[1.3fr_1fr]">
-            <div className="relative rounded-2xl bg-gradient-to-br from-[#06192b] via-[#0b3a5c] to-[#00a3d9] p-6 sm:p-8">
-              <div className="relative mx-4">
-                {settings.hero_image_url
-                  ? <img src={settings.hero_image_url} alt="" className="block h-auto w-full rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.35)]" />
-                  : <div className="grid aspect-[4/3] place-items-center rounded-2xl bg-gradient-to-br from-white to-[#cfe8f3] text-center text-xs text-[#06192b]/50">Şəkil yoxdur: saytda kondisioner illüstrasiyası</div>}
-                <span className="absolute -bottom-3 -left-4 rounded-xl bg-white px-3 py-2 shadow-lg">
-                  <span className="block text-[9px] font-semibold text-[#06192b]/50">{t["home.hero.temp_label"] ?? "Otaq temperaturu"}</span>
-                  <span className="block text-base font-extrabold text-[#00a3d9]">{t["home.hero.temp"] ?? "+22°"}</span>
-                </span>
-                <span className="absolute -right-4 -top-3 flex items-center gap-1.5 rounded-xl bg-[#06192b] px-3 py-2 text-[11px] font-semibold text-white shadow-lg">
-                  <CircleCheck size={13} className="text-[#00a3d9]" /> {t["home.hero.badge"] ?? "Akt ilə təhvil"}
+            <div className="relative aspect-video overflow-hidden rounded-2xl bg-gradient-to-br from-[#06192b] via-[#0b3a5c] to-[#00a3d9]">
+              {settings.hero_image_url && <img src={settings.hero_image_url} alt="" className="absolute inset-0 h-full w-full object-cover object-top" />}
+              <span className="absolute inset-0 bg-gradient-to-r from-[#06192b]/90 via-[#06192b]/60 to-[#06192b]/10" />
+              <div className="absolute inset-y-0 left-0 flex w-3/5 flex-col justify-center gap-2 p-5 text-white">
+                <span className="h-1.5 w-16 rounded-full bg-white/30" />
+                <span className="text-lg font-extrabold leading-tight">{t["home.hero.title"] ?? "Kondisioner təmiri və servisi"}</span>
+                <span className="h-1.5 w-4/5 rounded-full bg-white/25" />
+                <span className="mt-1 flex gap-1 rounded-xl bg-white/10 p-1 ring-1 ring-white/20">
+                  <span className="h-5 flex-1 rounded-md bg-white" /><span className="h-5 flex-1 rounded-md bg-white" /><span className="h-5 w-12 rounded-md bg-[#ff9f1c]" />
                 </span>
               </div>
             </div>
             <div className="flex flex-col justify-between gap-4">
               <ul className="space-y-2.5 text-sm">
                 {[
-                  "Şəkil kəsilmir, öz nisbətində göstərilir.",
-                  "Şəkil yoxdursa, saytda kondisioner illüstrasiyası çıxır.",
-                  "Künc nişanlarının mətni: Sayt → Mətnlər → Ana səhifə.",
+                  "Şəkil bütün ekranı örtür; ekran nisbətinə görə aşağı hissəsi kəsilə bilər.",
+                  "Şəklin sol tərəfi mətn oxunsun deyə tündləşdirilir.",
+                  "Kondisionerin üstündə saytda hava axını animasiyası oynayır.",
+                  "Şəkil yoxdursa, saytda tünd mavi fon görünür.",
                 ].map((x) => (
                   <li key={x} className="flex gap-2"><CircleCheck size={16} className="mt-0.5 shrink-0 text-primary" /> <span className="muted">{x}</span></li>
                 ))}
