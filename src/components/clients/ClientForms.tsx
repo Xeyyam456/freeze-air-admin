@@ -45,10 +45,10 @@ function ClientFields({ c, kind }: { c?: Tables<"companies">; kind: Kind }) {
   );
 }
 
-function AddClientFields({ kind }: { kind: Kind }) {
+function AddClientFields({ kind, onDone }: { kind: Kind; onDone: () => void }) {
   const [state, action, pending] = useActionState(addCompany, null);
   const ref = useRef<HTMLFormElement>(null);
-  useOnSuccess(state, () => ref.current?.reset(), `${KIND[kind].One} əlavə edildi`);
+  useOnSuccess(state, onDone, `${KIND[kind].One} əlavə edildi`);
 
   return (
     <ActionForm ref={ref} action={action} className="space-y-4">
@@ -58,16 +58,24 @@ function AddClientFields({ kind }: { kind: Kind }) {
   );
 }
 
-// Sağ paneldəki "Yeni şirkət" / "Yeni market" kartı
-export function AddClientCard({ kind }: { kind: Kind }) {
+// "Yeni şirkət" / "Yeni market": başlıqdakı düymə pəncərə açır, siyahı bütün eni tutur
+export function AddClientButton({ kind }: { kind: Kind }) {
+  const [open, setOpen] = useState(false);
   return (
-    <div className="card space-y-4">
-      <div className="flex items-center gap-3">
-        <span className="icon-tile !h-9 !w-9"><Plus size={18} /></span>
-        <h2 className="card-title">Yeni {KIND[kind].one}</h2>
-      </div>
-      <AddClientFields kind={kind} />
-    </div>
+    <>
+      <button type="button" onClick={() => setOpen(true)} className="hero-action">
+        <Plus size={17} /> Yeni {KIND[kind].one}
+      </button>
+      {open && (
+        <Modal onClose={() => setOpen(false)} labelledBy="add-client-title" className="!max-w-lg">
+          <div className="mb-5 flex items-center gap-3">
+            <span className="icon-tile !h-10 !w-10"><Plus size={18} /></span>
+            <h2 id="add-client-title" className="card-title">Yeni {KIND[kind].one}</h2>
+          </div>
+          <AddClientFields kind={kind} onDone={() => setOpen(false)} />
+        </Modal>
+      )}
+    </>
   );
 }
 

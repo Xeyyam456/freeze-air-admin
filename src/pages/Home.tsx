@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import {
-  ArrowRight, Building2, CalendarDays, Check, ClipboardList, ExternalLink, FileSpreadsheet, Globe, ListChecks, MapPin, Plus, Store,
+  ArrowRight, Building2, CalendarDays, Check, ClipboardList, FileSpreadsheet, Globe, ListChecks, MapPin, Plus, Store,
   TriangleAlert, UserPlus, Users, Wrench,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
@@ -15,7 +15,6 @@ import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 
-import { SITE_URL } from "@/lib/site";
 const MONTHS = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avqust", "sentyabr", "oktyabr", "noyabr", "dekabr"];
 const DAYS = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
 
@@ -104,12 +103,7 @@ export default function Home() {
   return (
     <Page
       title={firstName ? `Salam, ${firstName}` : "Xoş gəldin"}
-      subtitle={`${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`}
-      actions={
-        <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-glass btn-sm">
-          <ExternalLink size={14} /> Saytı aç
-        </a>
-      }>
+      subtitle={`${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`}>
       {openLog && <WorkLogModal logId={openLog} onClose={() => setOpenLog(null)} />}
       {allLogs !== null && <AllLogsModal initialQuery={allLogs} onClose={() => setAllLogs(null)} />}
 

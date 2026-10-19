@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router";
 import { AuthProvider, useAuth } from "@/auth/AuthProvider";
+import { AppLayout } from "@/components/AppLayout";
 import { ContactRequestsListener } from "@/components/ContactRequestsListener";
 import { Toaster } from "@/components/Toaster";
 import { ClientPage, ClientsPage } from "@/pages/Clients";
@@ -21,10 +22,10 @@ function RequireAuth() {
   if (loading) return null;
   if (!session) return <Navigate to="/login" replace />;
   return (
-    <>
+    <AppLayout>
       {admin && <ContactRequestsListener />}
       <Outlet />
-    </>
+    </AppLayout>
   );
 }
 

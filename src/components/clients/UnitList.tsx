@@ -1,4 +1,5 @@
 
+import { urlQuery } from "@/lib/urlQuery";
 import { useMemo, useState } from "react";
 import { Building2, Search, Store } from "lucide-react";
 import { StoreCard } from "@/components/StoreCard";
@@ -16,7 +17,7 @@ function norm(s: string | null | undefined) {
 
 // Şirkətin filialları və ya marketin mağazaları: axtarış + kartlar
 export function UnitList({ units, kind, admin }: { units: Tables<"stores">[]; kind: Kind; admin: boolean }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(urlQuery);
   const k = KIND[kind];
   const Icon = kind === "market" ? Store : Building2;
 

@@ -1,4 +1,5 @@
 
+import { urlQuery } from "@/lib/urlQuery";
 import { useActionState, useMemo, useRef, useState } from "react";
 import { Briefcase, CalendarDays, ClipboardList, KeyRound, Pencil, Phone, Plus, Search, Trash2, User, Users, X } from "lucide-react";
 import { createEmployeeAccount, deleteEmployeeAccount, resetEmployeePassword } from "@/actions/accounts";
@@ -335,7 +336,7 @@ export function EmployeeList({ employees, todayWork, accounts, admin }: {
   employees: Employee[];
   admin: boolean;
 }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(urlQuery);
 
   const filtered = useMemo(() => {
     const words = norm(query).split(/\s+/).filter(Boolean);

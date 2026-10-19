@@ -1,3 +1,4 @@
+import { urlQuery } from "@/lib/urlQuery";
 import { useActionState, useRef, useState } from "react";
 import { Briefcase, CalendarDays, Pencil, Phone, Plus, Search, ShieldCheck, Trash2, UserCog, X } from "lucide-react";
 import { addEmployee, deleteEmployee, updateEmployee } from "@/actions/employees";
@@ -209,7 +210,7 @@ export function ManagerList({ managers, accounts, canEdit, myUserId }: {
   canEdit: boolean;
   myUserId: string | null;
 }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(urlQuery);
   const words = norm(query).split(/\s+/).filter(Boolean);
   const filtered = managers.filter((m) => {
     const haystack = norm(`${m.full_name} ${m.position} ${m.phone}`);

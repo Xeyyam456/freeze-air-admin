@@ -1,4 +1,5 @@
 
+import { urlQuery } from "@/lib/urlQuery";
 import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, History, KeyRound, Pencil, Plus, Search, ShieldCheck, Trash2, Undo2, UserPlus, Users, Warehouse, Wrench, X } from "lucide-react";
@@ -366,7 +367,7 @@ export function ToolList({ kind, onKind, tools: allTools, holdings: allHoldings,
   canManage: boolean;
 }) {
   const tx = TEXT[kind];
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(urlQuery);
   const [openId, setOpenId] = useState<number | null>(null);
   const [view, setView] = useState<"list" | "people">("list");
   const [openEmp, setOpenEmp] = useState<number | null>(null);
