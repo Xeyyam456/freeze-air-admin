@@ -27,6 +27,7 @@ Kondisioner servis şirkəti **Freeze Air Service** üçün sistem: ustalar, mü
 ## Komandalar
 Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - `npm run dev` (port 5173), `npx tsc -b` (tip yoxlaması), `npm run build`. ESLint qoşulmayıb.
+- Vercel: `vercel.json` bütün ünvanları `/index.html`-ə yönləndirir (SPA; yoxsa `/depo` kimi səhifə yenilənəndə 404 olur).
 - Dev serveri Claude özü fonda işlədir və Chrome-da ayrı tabı açıq saxlayır (yuxarıda "Layihə strukturu, git və iş qaydaları"). Server ölərsə, yenidən başladıb tabı yenilə.
 - Brauzer testi: Claude in Chrome; admin hesabı (Anar) brauzerdə artıq daxil olub. Parol yazma.
 - Brauzer viewport 1536×735 (DPR 1.25): hündürlüyə həssas dizayn (`@media (max-height:820px)`, CSS dəyişənləri `--gutter`, `--panel-w`, `--header-h`).
