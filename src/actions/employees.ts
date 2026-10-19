@@ -12,6 +12,13 @@ function employeeFields(formData: FormData) {
   };
 }
 
+// İş növü (usta / köməkçi / sürücü) və ona uyğun vəzifə adı; rəhbərlik formasında bu sahə yoxdur
+const WORKER_POSITION: Record<string, string> = { master: "Usta", assistant: "Köməkçi", driver: "Sürücü" };
+function workerType(formData: FormData) {
+  const type = text(formData, "worker_type");
+  return type && type in WORKER_POSITION ? { worker_type: type, position: WORKER_POSITION[type] } : null;
+}
+
 export async function addEmployee(_prev: FormState, formData: FormData): Promise<FormState> {
   const fields = employeeFields(formData);
   if (!fields.full_name) return { error: "Ad və soyad vacibdir." };
@@ -22,7 +29,8 @@ export async function addEmployee(_prev: FormState, formData: FormData): Promise
   const { error } = await supabase.from("employees").insert({
     ...fields,
     full_name: fields.full_name,
-    position: management ? (text(formData, "position") ?? "Rəhbərlik") : "Usta",
+    ...(management ? {} : workerType(formData)),
+    position: management ? (text(formData, "position") ?? "Rəhbərlik") : (workerType(formData)?.position ?? "Usta"),
     is_management: management,
   });
   if (error) return { error: error.message };
@@ -35,7 +43,7 @@ export async function updateEmployee(id: number, _prev: FormState, formData: For
   if (!fields.full_name) return { error: "Ad və soyad vacibdir." };
 
   const supabase = createClient();
-  const position = formData.has("position") ? { position: text(formData, "position") ?? "Rəhbərlik" } : {};
+  const position = formData.has("position") ? { position: text(formData, "position") ?? "Rəhbərlik" } : (workerType(formData) ?? {});
   const { error } = await supabase.from("employees").update({ ...fields, ...position, full_name: fields.full_name }).eq("id", id);
   if (error) return { error: error.message };
   revalidate();

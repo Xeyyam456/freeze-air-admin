@@ -133,6 +133,7 @@ export type Database = {
           position: string
           specialty: string | null
           start_date: string | null
+          worker_type: string
           user_id: string | null
         }
         Insert: {
@@ -147,6 +148,7 @@ export type Database = {
           is_storekeeper?: boolean
           specialty?: string | null
           start_date?: string | null
+          worker_type?: string
           user_id?: string | null
         }
         Update: {
@@ -161,6 +163,7 @@ export type Database = {
           is_storekeeper?: boolean
           specialty?: string | null
           start_date?: string | null
+          worker_type?: string
           user_id?: string | null
         }
         Relationships: []
@@ -570,7 +573,7 @@ export type Database = {
       set_employee_photo: { Args: { p_employee_id: number; p_url: string | null }; Returns: undefined }
       public_employees: {
         Args: never
-        Returns: { full_name: string; id: number; photo_url: string | null; specialty: string | null; start_date: string | null }[]
+        Returns: { full_name: string; id: number; photo_url: string | null; specialty: string | null; start_date: string | null; worker_type: string }[]
       }
       public_management: {
         Args: never

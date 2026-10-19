@@ -26,9 +26,39 @@ function norm(s: string | null | undefined) {
     .replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g");
 }
 
+// İş növü: işə qəbul zamanı seçilir (bazada employees.worker_type; saytın "Ustalarımız" səhifəsi növə görə sayır)
+export const WORKER_TYPES = [
+  { value: "master", label: "Usta" },
+  { value: "assistant", label: "Köməkçi" },
+  { value: "driver", label: "Sürücü" },
+] as const;
+
+export function workerTypeLabel(type: string | null | undefined) {
+  return WORKER_TYPES.find((w) => w.value === type)?.label ?? "Usta";
+}
+
+// Üç seçim olduğu üçün açılan siyahı yox, keçid düymələri (seçim gizli sahədə göndərilir)
+function WorkerTypeField({ defaultValue = "master" }: { defaultValue?: string }) {
+  const [value, setValue] = useState(defaultValue);
+  return (
+    <Field label="İş növü">
+      <input type="hidden" name="worker_type" value={value} />
+      <div className="seg w-full" role="radiogroup" aria-label="İş növü">
+        {WORKER_TYPES.map((w) => (
+          <button key={w.value} type="button" role="radio" aria-checked={value === w.value} aria-selected={value === w.value}
+            onClick={() => setValue(w.value)} className="!h-9 !w-auto flex-1 text-sm font-semibold">
+            {w.label}
+          </button>
+        ))}
+      </div>
+    </Field>
+  );
+}
+
 function EmployeeFields({ e }: { e?: Employee }) {
   return (
     <>
+      <WorkerTypeField defaultValue={e?.worker_type} />
       <Field label="Soyad və ad">
         <input name="full_name" defaultValue={e?.full_name} placeholder="Məmmədov Əli" required className="field" />
       </Field>
@@ -146,7 +176,7 @@ function EmployeeDetailsModal({ employee, accounts, admin, onClose }: {
       <div className="relative -mt-12 px-6 pb-6 text-center">
         <Avatar employee={employee} className="mx-auto !h-24 !w-24 !text-2xl ring-4 ring-white" />
         <h2 id={`emp-${employee.id}-title`} className="mt-3 text-xl font-bold">{employee.full_name}</h2>
-        <p className="muted text-sm">{employee.specialty ?? "İxtisas yazılmayıb"}</p>
+        <p className="muted text-sm"><span className="mr-1.5 rounded-full bg-primary-soft px-2 py-0.5 text-xs font-bold text-primary">{workerTypeLabel(employee.worker_type)}</span>{employee.specialty ?? "İxtisas yazılmayıb"}</p>
 
         <div className="mt-5 flex gap-1 rounded-xl bg-bg p-1" role="tablist">
           <button type="button" role="tab" aria-selected={tab === "about"} onClick={() => setTab("about")} className={tabClass("about")}>
@@ -292,7 +322,7 @@ function EmployeeCard({ employee, todayCount, accounts, admin }: {
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <h3 className="truncate text-[15px] font-bold">{employee.full_name}</h3>
-              <p className="muted text-[13px]">{employee.specialty ?? "İxtisas yazılmayıb"}</p>
+              <p className="muted text-[13px]"><span className="mr-1.5 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-bold text-primary">{workerTypeLabel(employee.worker_type)}</span>{employee.specialty ?? "İxtisas yazılmayıb"}</p>
             </div>
             {admin && (
               // Redaktə/sil kliki karta keçməsin (yoxsa detallar da açılar)
