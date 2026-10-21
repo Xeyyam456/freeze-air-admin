@@ -29,7 +29,8 @@ async function fetchLog(id: number) {
       stores(code, name, address, lat, lng, companies(name)),
       companies(name, address, lat, lng),
       work_files(id, kind, path),
-      tasks(reason, note)`)
+      tasks(reason, note),
+      work_log_materials(id, amount, tools(name, unit))`)
     .eq("id", id)
     .maybeSingle();
   if (!data) return undefined; // tapılmadı (null = hələ yüklənir)
@@ -120,6 +121,20 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
             <div>
               <span className="label">Görülən iş</span>
               <p className="whitespace-pre-line rounded-xl border border-line p-4 text-sm leading-relaxed">{log.description}</p>
+            </div>
+          )}
+
+          {/* Usta bu işdə üzərindəki materialdan nə qədər işlədib (migrasiya 0060; depoda say dəyişmir) */}
+          {log.work_log_materials.length > 0 && (
+            <div>
+              <span className="label">İşlədilən material</span>
+              <div className="flex flex-wrap gap-2">
+                {log.work_log_materials.map((m) => (
+                  <span key={m.id} className="rounded-lg border border-line bg-bg px-3 py-1.5 text-sm">
+                    <b>{m.tools?.name ?? "—"}</b> <span className="muted">· {m.amount} {m.tools?.unit}</span>
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 

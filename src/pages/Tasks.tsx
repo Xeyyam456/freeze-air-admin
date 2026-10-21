@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, ListChecks, Paperclip, Plus, Trash2 } from "lucide-react";
-import { addTask, deleteTask, toggleTask } from "@/actions/tasks";
-import { ConfirmButton } from "@/components/ConfirmButton";
+import { ArrowRight, Check, ChevronLeft, ChevronRight, ListChecks, Paperclip, Plus, Undo2, X } from "lucide-react";
+import { addTask, withdrawTask } from "@/actions/tasks";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
+import { Modal } from "@/components/Modal";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
 import { WithSidePanel } from "@/components/SidePanel";
@@ -24,14 +24,22 @@ async function fetchTasks(day: string) {
   const supabase = createClient();
   const [tasks, employees] = await Promise.all([
     supabase.from("tasks")
-      .select("id, employee_id, reason, done, done_at, note, place_text, store_id, company_id, stores(name, code, companies(name)), companies(name), work_logs(work_files(id))")
+      .select("id, employee_id, reason, done, done_at, note, place_text, store_id, company_id, cancelled_at, reassigned_to, stores(name, code, companies(name)), companies(name), work_logs(work_files(id))")
       .eq("task_date", day).order("created_at").then((r) => r.data ?? []),
     supabase.from("employees").select("id, full_name, photo_url").eq("is_management", false).eq("is_active", true).order("full_name").then((r) => r.data ?? []),
   ]);
-  return { tasks, employees };
+  // Geri alınıb başqasına verilənlər: yeni tapşırıq kimdədir ("Geri alınıb → Ad")
+  const nextIds = tasks.flatMap((t) => (t.reassigned_to ? [t.reassigned_to] : []));
+  const nextName = new Map<number, string>();
+  if (nextIds.length) {
+    const { data } = await supabase.from("tasks").select("id, employees(full_name)").in("id", nextIds);
+    for (const n of data ?? []) if (n.employees) nextName.set(n.id, n.employees.full_name);
+  }
+  return { tasks: tasks.map((t) => ({ ...t, nextName: t.reassigned_to ? nextName.get(t.reassigned_to) : undefined })), employees };
 }
 
 type Task = Awaited<ReturnType<typeof fetchTasks>>["tasks"][number];
+type Employee = Awaited<ReturnType<typeof fetchTasks>>["employees"][number];
 
 // Yer: mağaza/filial (şirkət adı ilə) | sabit məkanlı şirkət | siyahıda olmayan yer | silinib
 function placeOf(t: Task) {
@@ -40,7 +48,53 @@ function placeOf(t: Task) {
   return t.place_text ?? "Yer silinib";
 }
 
-// Admin və rəhbərlik ustaya gün üçün iş təyin edir: usta, yer, səbəb. Usta öz tapşırığını "görüldü" işarələyir.
+// Geri almaq: istəyə görə başqa ustaya verilir (eyni yer və səbəblə yeni tapşırıq). Köhnəsi siyahıda "Geri alınıb" kimi qalır.
+function WithdrawModal({ task, employees, onClose }: { task: Task; employees: Employee[]; onClose: () => void }) {
+  const [to, setTo] = useState("");
+  const [pending, setPending] = useState(false);
+  const current = employees.find((e) => e.id === task.employee_id);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setPending(true);
+    const ok = await withdrawTask(task.id, to ? Number(to) : null);
+    setPending(false);
+    if (ok) onClose();
+  }
+
+  return (
+    <Modal onClose={onClose} labelledBy="withdraw-title" className="!max-w-md">
+      <form onSubmit={submit}>
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <h2 id="withdraw-title" className="flex items-center gap-2 text-lg font-bold"><Undo2 size={18} className="text-primary" /> Tapşırığı geri al</h2>
+          <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+        </div>
+        <div className="rounded-xl bg-bg px-4 py-3 text-sm">
+          <p className="font-semibold text-primary">{placeOf(task)}</p>
+          <p className="mt-0.5">{task.reason}</p>
+          <p className="muted mt-1.5 text-xs">Usta: <b className="text-ink">{current?.full_name ?? "—"}</b></p>
+        </div>
+        <label className="mt-4 block">
+          <span className="label">Başqa ustaya ver (istəyə görə)</span>
+          <select value={to} onChange={(e) => setTo(e.target.value)} className="field cursor-pointer">
+            <option value="">Heç kimə, sadəcə geri al</option>
+            {employees.filter((e) => e.id !== task.employee_id).map((e) => <option key={e.id} value={e.id}>{e.full_name}</option>)}
+          </select>
+        </label>
+        <p className="muted mt-2 text-xs">Tapşırıq silinmir: siyahıda "Geri alınıb" kimi qalır.</p>
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={onClose} className="btn btn-soft">Ləğv et</button>
+          <button type="submit" disabled={pending} className="btn btn-primary">
+            <Undo2 size={16} /> {pending ? "..." : to ? "Geri al və ver" : "Geri al"}
+          </button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
+// Admin və rəhbərlik ustaya gün üçün iş təyin edir (usta, yer, səbəb), lazım olsa geri alır (başqa ustaya verir).
+// "Görüldü" işarəsini yalnız usta qoyur (usta panelində): burada qutu yalnız vəziyyəti göstərir. Silmək yoxdur (0057).
 export default function TasksPage() {
   const today = iso(new Date());
   const [day, setDay] = useState(today);
@@ -53,6 +107,7 @@ export default function TasksPage() {
   const [reason, setReason] = useState("");
   const [places, setPlaces] = useState<Place[]>([]);
   const [pending, setPending] = useState(false);
+  const [withdrawing, setWithdrawing] = useState<Task | null>(null);
   useEffect(() => { loadPlaces().then(setPlaces); }, []);
 
   async function submit(e: React.FormEvent) {
@@ -80,8 +135,10 @@ export default function TasksPage() {
       .map((e) => ({ employee: e, items: data.tasks.filter((t) => t.employee_id === e.id) }))
       .filter((g) => g.items.length > 0);
   }, [data]);
-  const total = data?.tasks.length ?? 0;
-  const doneCount = data?.tasks.filter((t) => t.done).length ?? 0;
+  // Geri alınanlar saya düşmür (siyahıda tarixçə kimi qalır)
+  const active = data?.tasks.filter((t) => !t.cancelled_at) ?? [];
+  const total = active.length;
+  const doneCount = active.filter((t) => t.done).length;
 
   const panel = (
     <form onSubmit={submit} className="card space-y-4">
@@ -115,6 +172,7 @@ export default function TasksPage() {
 
   return (
     <Page title="Tapşırıqlar" subtitle="Ustalara günün işi: hansı usta, harada, nə üçün">
+      {withdrawing && data && <WithdrawModal key={withdrawing.id} task={withdrawing} employees={data.employees} onClose={() => setWithdrawing(null)} />}
       <WithSidePanel stack panel={panel}>
         <div className="flex h-full flex-col gap-4">
           <div className="flex shrink-0 flex-wrap items-center gap-2">
@@ -137,39 +195,51 @@ export default function TasksPage() {
             ) : (
               <div className="card !p-0">
                 {groups.map(({ employee, items }) => {
-                  const done = items.filter((t) => t.done).length;
+                  const live = items.filter((t) => !t.cancelled_at);
+                  const done = live.filter((t) => t.done).length;
                   return (
                     <section key={employee.id} className="border-b border-line last:border-b-0">
                       <header className="flex items-center gap-2.5 bg-[#f8f9fc] px-4 py-2">
                         <Avatar employee={employee} className="!h-6 !w-6 !text-[10px]" />
                         <span className="text-sm font-bold">{employee.full_name}</span>
-                        <span className="muted text-xs">{items.length} tapşırıq · {done} görülən</span>
+                        <span className="muted text-xs">{live.length} tapşırıq · {done} görülən</span>
                       </header>
                       <ul>
-                        {items.map((t) => (
-                          <li key={t.id} className="flex items-center gap-3 px-4 py-1.5">
-                            <button type="button" onClick={() => toggleTask(t.id, !t.done)} aria-pressed={t.done} title={t.done ? "Görülməyib kimi işarələ" : "Görüldü kimi işarələ"}
-                              className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 transition-colors ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent hover:border-primary"}`}>
-                              <Check size={12} strokeWidth={3} />
-                            </button>
+                        {items.map((t) => {
+                          const cancelled = !!t.cancelled_at;
+                          const nextName = t.nextName;
+                          return (
+                          <li key={t.id} className={`flex items-center gap-3 px-4 py-1.5 ${cancelled ? "opacity-60" : ""}`}>
+                            {/* Yalnız vəziyyət: "görüldü"nü usta özü işarələyir */}
+                            <span title={cancelled ? "Geri alınıb" : t.done ? "Görülüb" : "Görülməyib"}
+                              className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 ${cancelled ? "border-line bg-bg text-muted" : t.done ? "border-ok bg-ok text-white" : "border-line text-transparent"}`}>
+                              {cancelled ? <Undo2 size={11} strokeWidth={3} /> : <Check size={12} strokeWidth={3} />}
+                            </span>
                             <span className="min-w-0 flex-1">
-                              <span className="block truncate text-sm">
-                                <span className={`font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{placeOf(t)}</span>
+                              <span className={`block truncate text-sm ${cancelled ? "line-through" : ""}`}>
+                                <span className={`font-semibold ${cancelled ? "text-muted" : t.done ? "text-ok" : "text-primary"}`}>{placeOf(t)}</span>
                                 <span className="muted"> — </span>
-                                <span className={t.done ? "text-ok/80" : ""}>{t.reason}</span>
+                                <span className={cancelled ? "text-muted" : t.done ? "text-ok/80" : ""}>{t.reason}</span>
                               </span>
                               {/* Usta görüləndən sonra təmir barədə yazıbsa və fayl əlavə edibsə burada görünür */}
                               {t.note && <span className={`block truncate text-xs ${t.done ? "text-[#d97706]" : "muted"}`}><b>Təmir:</b> {t.note}</span>}
                             </span>
+                            {cancelled && (
+                              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-bg px-2.5 py-0.5 text-[11px] font-semibold text-muted">
+                                Geri alınıb{nextName && <><ArrowRight size={11} /> {nextName}</>}
+                              </span>
+                            )}
                             {(t.work_logs?.work_files.length ?? 0) > 0 && (
                               <span className="inline-flex shrink-0 items-center gap-0.5 text-xs text-muted" title="Usta fayl əlavə edib (iş qeydində)"><Paperclip size={13} />{t.work_logs?.work_files.length}</span>
                             )}
-                            <ConfirmButton onConfirm={() => deleteTask(t.id)} success={false} className="icon-btn icon-btn-danger !h-7 !w-7" title="Tapşırığı sil"
-                              question={`"${t.reason}" tapşırığı silinəcək.`}>
-                              <Trash2 size={14} />
-                            </ConfirmButton>
+                            {!cancelled && !t.done && (
+                              <button type="button" onClick={() => setWithdrawing(t)} className="icon-btn !h-7 !w-7" title="Geri al (başqa ustaya ver)" aria-label="Tapşırığı geri al">
+                                <Undo2 size={14} />
+                              </button>
+                            )}
                           </li>
-                        ))}
+                          );
+                        })}
                       </ul>
                     </section>
                   );

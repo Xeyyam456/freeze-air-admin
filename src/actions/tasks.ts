@@ -2,8 +2,8 @@ import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
 
-// Tapşırıqlar: yaratmaq və silmək yalnız admin və rəhbərlik (RLS: is_admin()); "görüldü" işarəsini usta yalnız öz
-// tapşırığında dəyişir (bazadakı tətikçi başqa sahələrə toxunmağa icazə vermir). Xəta mətnləri bazadan gəlir.
+// Tapşırıqlar: admin və rəhbərlik yalnız VERİR və GERİ ALIR (migrasiya 0057). "Görüldü" işarəsini yalnız usta qoyur,
+// silmək yoxdur: geri alınan tapşırıq tarixçədə qalır, istəsən başqa ustaya verilir. Xəta mətnləri bazadan gəlir.
 
 export type TaskInput = {
   employee_id: number;
@@ -25,18 +25,14 @@ export async function addTask(input: TaskInput): Promise<boolean> {
   return true;
 }
 
-export async function toggleTask(id: number, done: boolean) {
-  const { error } = await createClient().from("tasks").update({ done }).eq("id", id);
-  if (error) toast.error(error.message);
-  revalidate();
-}
-
-export async function deleteTask(id: number) {
-  const { error } = await createClient().from("tasks").delete().eq("id", id);
+// Geri al; newEmployeeId verilsə eyni yer və səbəblə həmin ustaya yeni tapşırıq yaranır
+export async function withdrawTask(id: number, newEmployeeId: number | null): Promise<boolean> {
+  const { error } = await createClient().rpc("task_withdraw", { p_task_id: id, ...(newEmployeeId ? { p_new_employee_id: newEmployeeId } : {}) });
   if (error) {
     toast.error(error.message);
-    return;
+    return false;
   }
   revalidate();
-  toast.success("Tapşırıq silindi");
+  toast.success(newEmployeeId ? "Tapşırıq geri alındı və başqa ustaya verildi" : "Tapşırıq geri alındı");
+  return true;
 }

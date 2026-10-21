@@ -2,12 +2,15 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router";
 import { AuthProvider, useAuth } from "@/auth/AuthProvider";
 import { AppLayout } from "@/components/AppLayout";
 import { ContactRequestsListener } from "@/components/ContactRequestsListener";
+import { TasksListener } from "@/components/TasksListener";
 import { Toaster } from "@/components/Toaster";
 import { ClientPage, ClientsPage } from "@/pages/Clients";
 import DepotPage from "@/pages/Depot";
 import EmployeesPage from "@/pages/Employees";
 import ErrorCodesPage from "@/pages/ErrorCodes";
 import Home from "@/pages/Home";
+import AttendancePage from "@/pages/Attendance";
+import LeavesPage from "@/pages/Leaves";
 import LoginPage from "@/pages/Login";
 import ManagementPage from "@/pages/Management";
 import NotFoundPage from "@/pages/NotFound";
@@ -24,6 +27,7 @@ function RequireAuth() {
   return (
     <AppLayout>
       {admin && <ContactRequestsListener />}
+      {admin && <TasksListener />}
       <Outlet />
     </AppLayout>
   );
@@ -43,6 +47,8 @@ export default function App() {
             <Route path="magazalar/:id" element={<ClientPage kind="market" />} />
             <Route path="ustalar" element={<EmployeesPage />} />
             <Route path="rehberlik" element={<ManagementPage />} />
+            <Route path="davamiyyet" element={<AttendancePage />} />
+            <Route path="icazeler" element={<LeavesPage />} />
             <Route path="depo" element={<DepotPage />} />
             <Route path="tapshiriqlar" element={<TasksPage />} />
             <Route path="isler" element={<WorkLogsPage />} />

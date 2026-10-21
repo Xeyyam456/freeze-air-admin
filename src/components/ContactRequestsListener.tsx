@@ -10,7 +10,7 @@ let unseen = 0;
 let baseTitle = "";
 function markTitle() {
   if (!document.hidden) return;
-  baseTitle ||= document.title.replace(/^(d+) /, "");
+  baseTitle ||= document.title.replace(/^\(\d+\) .*? · /, "");
   unseen += 1;
   document.title = `(${unseen}) Yeni müraciət · ${baseTitle}`;
 }

@@ -1,13 +1,13 @@
 import { Link, useLocation } from "react-router";
 import {
-  Building2, ClipboardList, Globe, Inbox, LayoutGrid, ListChecks, PanelLeftClose, PanelLeftOpen,
+  Building2, CalendarCheck, CalendarOff, ClipboardList, Globe, Inbox, LayoutGrid, ListChecks, PanelLeftClose, PanelLeftOpen,
   Snowflake, Store, TriangleAlert, UserCog, Users, Warehouse,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 import { isLowStock } from "@/components/depot/DepotForms";
 
-type Badge = "requests" | "tasks" | "stock";
+type Badge = "requests" | "tasks" | "stock" | "leave";
 
 // Menyu qrupları: gündəlik iş yuxarıda, nadir açılan bölmələr aşağıda
 const GROUPS: { title: string; items: { href: string; label: string; icon: typeof LayoutGrid; badge?: Badge }[] }[] = [
@@ -31,6 +31,8 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: typeo
     title: "Komanda",
     items: [
       { href: "/ustalar", label: "Ustalar", icon: Users },
+      { href: "/davamiyyet", label: "Davamiyyət", icon: CalendarCheck },
+      { href: "/icazeler", label: "İcazələr", icon: CalendarOff, badge: "leave" },
       { href: "/rehberlik", label: "Rəhbərlik", icon: UserCog },
     ],
   },
@@ -63,13 +65,14 @@ function localDate(d = new Date()) {
 function useBadges() {
   return useData(async () => {
     const supabase = createClient();
-    const [requests, tasks, stock] = await Promise.all([
+    const [requests, tasks, stock, leave] = await Promise.all([
       supabase.from("contact_requests").select("*", { count: "exact", head: true }).eq("handled", false).then((r) => r.count ?? 0),
-      supabase.from("tasks").select("*", { count: "exact", head: true }).eq("task_date", localDate()).eq("done", false).then((r) => r.count ?? 0),
+      supabase.from("tasks").select("*", { count: "exact", head: true }).eq("task_date", localDate()).eq("done", false).is("cancelled_at", null).then((r) => r.count ?? 0),
       supabase.from("tool_stock").select("min_stock, available, pieces_total")
         .then((r) => (r.data ?? []).filter((t) => isLowStock({ min_stock: t.min_stock, available: t.available ?? 0, pieces_total: t.pieces_total ?? 0 })).length),
+      supabase.from("leave_requests").select("*", { count: "exact", head: true }).eq("status", "pending").then((r) => r.count ?? 0),
     ]);
-    return { requests, tasks, stock } satisfies Record<Badge, number>;
+    return { requests, tasks, stock, leave } satisfies Record<Badge, number>;
   });
 }
 
@@ -77,11 +80,13 @@ const BADGE_STYLE: Record<Badge, string> = {
   requests: "bg-danger text-white",
   tasks: "bg-primary text-white",
   stock: "bg-amber-400 text-navy",
+  leave: "bg-amber-500 text-white",
 };
 const BADGE_TITLE: Record<Badge, string> = {
   requests: "baxılmamış müraciət",
   tasks: "bu gün gözləyən tapşırıq",
   stock: "depoda azalan",
+  leave: "gözləyən icazə sorğusu",
 };
 
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {

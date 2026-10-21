@@ -58,10 +58,10 @@ async function fetchDashboard() {
       .order("created_at", { ascending: false }).limit(4)
       .then((r) => r.data ?? []),
     supabase.from("work_logs").select("employee_id").eq("work_date", today).then((r) => r.data ?? []),
-    // Bugünkü tapşırıqlar (görülənlər də daxil; ustaya görə qruplu)
+    // Bugünkü tapşırıqlar (görülənlər də daxil, geri alınanlar yox; ustaya görə qruplu)
     supabase.from("tasks")
       .select("id, done, reason, place_text, employees(full_name, photo_url), stores(name, code, companies(name)), companies(name)")
-      .eq("task_date", today).order("employee_id").order("created_at").limit(100)
+      .eq("task_date", today).is("cancelled_at", null).order("employee_id").order("created_at").limit(100)
       .then((r) => r.data ?? []),
   ]);
 

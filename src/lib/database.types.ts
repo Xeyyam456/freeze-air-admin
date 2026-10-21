@@ -269,8 +269,118 @@ export type Database = {
           },
         ]
       }
+      attendance: {
+        Row: {
+          checked_in_at: string
+          checked_out_at: string | null
+          day: string
+          employee_id: number
+          id: number
+        }
+        Insert: {
+          checked_in_at?: string
+          checked_out_at?: string | null
+          day: string
+          employee_id: number
+          id?: never
+        }
+        Update: {
+          checked_in_at?: string
+          checked_out_at?: string | null
+          day?: string
+          employee_id?: number
+          id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attendance_absences: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          day: string
+          employee_id: number
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          day: string
+          employee_id: number
+          id?: never
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          day?: string
+          employee_id?: number
+          id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_absences_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leave_requests: {
+        Row: {
+          created_at: string
+          date_from: string
+          date_to: string
+          decided_at: string | null
+          decided_by: string | null
+          employee_id: number
+          id: number
+          reason: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          date_from: string
+          date_to: string
+          decided_at?: string | null
+          decided_by?: string | null
+          employee_id: number
+          id?: never
+          reason?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          date_from?: string
+          date_to?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          employee_id?: number
+          id?: never
+          reason?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leave_requests_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tasks: {
         Row: {
+          cancelled_at: string | null
+          cancelled_by: string | null
           company_id: number | null
           created_at: string
           created_by: string | null
@@ -281,11 +391,14 @@ export type Database = {
           note: string | null
           place_text: string | null
           reason: string
+          reassigned_to: number | null
           store_id: number | null
           task_date: string
           work_log_id: number | null
         }
         Insert: {
+          cancelled_at?: string | null
+          cancelled_by?: string | null
           company_id?: number | null
           created_at?: string
           created_by?: string | null
@@ -296,11 +409,14 @@ export type Database = {
           note?: string | null
           place_text?: string | null
           reason: string
+          reassigned_to?: number | null
           store_id?: number | null
           task_date?: string
           work_log_id?: number | null
         }
         Update: {
+          cancelled_at?: string | null
+          cancelled_by?: string | null
           company_id?: number | null
           created_at?: string
           created_by?: string | null
@@ -311,11 +427,19 @@ export type Database = {
           note?: string | null
           place_text?: string | null
           reason?: string
+          reassigned_to?: number | null
           store_id?: number | null
           task_date?: string
           work_log_id?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "tasks_reassigned_to_fkey"
+            columns: ["reassigned_to"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "tasks_work_log_id_fkey"
             columns: ["work_log_id"]
@@ -474,6 +598,42 @@ export type Database = {
           },
         ]
       }
+      work_log_materials: {
+        Row: {
+          amount: number
+          id: number
+          tool_id: number
+          work_log_id: number
+        }
+        Insert: {
+          amount: number
+          id?: never
+          tool_id: number
+          work_log_id: number
+        }
+        Update: {
+          amount?: number
+          id?: never
+          tool_id?: number
+          work_log_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_log_materials_work_log_id_fkey"
+            columns: ["work_log_id"]
+            isOneToOne: false
+            referencedRelation: "work_logs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_log_materials_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       work_logs: {
         Row: {
           company_id: number | null
@@ -561,6 +721,11 @@ export type Database = {
       can_manage_tools: { Args: never; Returns: boolean }
       task_set_done: { Args: { p_done: boolean; p_task_id: number }; Returns: undefined }
       task_set_note: { Args: { p_note: string; p_task_id: number }; Returns: number }
+      task_withdraw: { Args: { p_new_employee_id?: number; p_task_id: number }; Returns: number }
+      check_in: { Args: never; Returns: string }
+      check_out: { Args: never; Returns: string }
+      leave_decide: { Args: { p_approve: boolean; p_id: number }; Returns: undefined }
+      leave_cancel: { Args: { p_id: number }; Returns: undefined }
       finish_material: { Args: { p_assignment_id: number; p_used: number }; Returns: undefined }
       give_piece: { Args: { p_amount?: number; p_employee_id: number; p_piece_id: number }; Returns: undefined }
       give_tool: { Args: { p_employee_id: number; p_quantity: number; p_tool_id: number }; Returns: undefined }
