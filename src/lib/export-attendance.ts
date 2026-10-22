@@ -1,4 +1,4 @@
-import { fetchEmployeeMonth, monthDays, MONTHS_AZ, timeBaku, type DayStatus, type Presence } from "@/lib/attendance";
+import { durationText, fetchEmployeeMonth, monthDays, MONTHS_AZ, presenceText, timeBaku, todayBaku, type DayStatus, type MonthAttendance } from "@/lib/attendance";
 import { toast } from "@/lib/toast";
 
 // Davamiyyətin Excel ixracı (write-excel-file 4.1.1, "Görülən işlər" ixracı ilə eyni üslub: tünd başlıq, mavi cədvəl başlığı,
@@ -26,11 +26,6 @@ function period(month: string) {
   const days = monthDays(month);
   return `Dövr: ${ddmm(days[0])} – ${ddmm(days[days.length - 1])} · iş həftəsi 6 gün (bazar istirahət)`;
 }
-function duration(p: Presence) {
-  if (!p.out) return "";
-  const min = Math.max(0, Math.round((new Date(p.out).getTime() - new Date(p.in).getTime()) / 60000));
-  return `${Math.floor(min / 60)} saat ${min % 60} dəq`;
-}
 
 // Gün-gün cədvəlində xana: işarə və rəng
 const MARK: Record<DayStatus, { v: string; bg?: string; color?: string }> = {
@@ -52,6 +47,18 @@ const STATUS_TEXT: Record<DayStatus, { v: string; color: string }> = {
   before: { v: "Qeyd yoxdur", color: MUTED },
 };
 
+// "Bu gün" sütunu (Davamiyyət səhifəsindəki həblə eyni mətn)
+function todayText(a: MonthAttendance): { v: string; color: string } {
+  const p = a.today.presence;
+  switch (a.today.status) {
+    case "present": return p?.out ? { v: `İşi bitirib · ${presenceText(p)}`, color: "#111827" } : { v: `İşdədir · ${p ? presenceText(p) : ""}`, color: OK };
+    case "leave": return { v: "İcazəlidir", color: VIOLET };
+    case "absent": return { v: "İşdə olmayıb", color: RED };
+    case "off": return { v: "Bazar: istirahət", color: SLATE };
+    default: return { v: "Hələ gəlməyib", color: MUTED };
+  }
+}
+
 async function writer() {
   return (await import("write-excel-file/browser")).default;
 }
@@ -65,14 +72,29 @@ export async function exportAttendanceAll(month: string, emps: Emp[]) {
   const label = `${MONTHS_AZ[m - 1]} ${y}`;
 
   // 1) Xülasə
-  const C1 = 10;
+  const isCurrent = month === todayBaku().slice(0, 7);
+  const C1 = isCurrent ? 11 : 10;
+  // Yuxarıdakı zolaq səhifədəki kimi: cari ayda bu günün vəziyyəti (cəmlənmiş "işdə olub" günləri yox)
+  const t = { here: 0, done: 0, leave: 0, missing: 0, absent: 0, pending: 0 };
+  for (const d of data) {
+    const a = d.summary;
+    t.pending += a.pendingLeave;
+    if (a.today.status === "present" && a.today.presence?.out) t.done += 1;
+    else if (a.today.status === "present") t.here += 1;
+    else if (a.today.status === "leave") t.leave += 1;
+    else if (a.today.status === "pending") t.missing += 1;
+    else if (a.today.status === "absent") t.absent += 1;
+  }
+  const todayLine = isCurrent
+    ? `Bu gün (${todayBaku().split("-").reverse().join(".")}):  hazırda işdə ${t.here} · işi bitirib ${t.done} · icazəli ${t.leave} · hələ gəlməyib ${t.missing} · işdə olmayıb ${t.absent} · gözləyən icazə sorğusu ${t.pending}`
+    : `Usta sayı: ${emps.length}`;
   const summary = [
     title(C1, `Freeze Air Service — Davamiyyət: ${label}`),
     sub(C1, period(month)),
-    note(C1, `Usta sayı: ${emps.length}     İşdə olub: ${data.reduce((s, d) => s + d.summary.present, 0)} gün     İcazəsiz qalıb: ${data.reduce((s, d) => s + d.summary.absent, 0)} gün`),
+    note(C1, todayLine),
     Array(C1).fill(null),
     [head("№"), head("Usta", "left"), head("İxtisas", "left"), head("İş günü"), head("İşdə olub (gün)"), head("İcazə aldı (dəfə)"),
-      head("İcazəli (gün)"), head("İcazəsiz qalıb (gün)"), head("İşdə olmayıb, cəmi (gün)"), head("Bazar günü işə çıxıb (dəfə)")],
+      head("İcazəli (gün)"), head("İcazəsiz qalıb (gün)"), head("İşdə olmayıb, cəmi (gün)"), head("Bazar günü işə çıxıb (dəfə)"), ...(isCurrent ? [head("Bu gün", "left")] : [])],
     ...emps.map((e, i) => {
       const s = data[i].summary;
       const base = { alignVertical: "center" as const, height: 22, ...(i % 2 ? { backgroundColor: ZEBRA } : {}), ...border };
@@ -83,6 +105,7 @@ export async function exportAttendanceAll(month: string, emps: Emp[]) {
         { ...base, value: e.specialty ?? "", textColor: MUTED },
         num(s.workdays), num(s.present, OK), num(s.leaveTimes, VIOLET), num(s.leave, VIOLET), num(s.absent, RED),
         num(s.leave + s.absent), num(s.extra, SLATE),
+        ...(isCurrent ? [{ ...base, value: todayText(s).v, textColor: todayText(s).color, fontWeight: "bold" as const }] : []),
       ];
     }),
   ];
@@ -108,7 +131,7 @@ export async function exportAttendanceAll(month: string, emps: Emp[]) {
 
   const write = await writer();
   await write([
-    { data: summary, sheet: "Xülasə", columns: [{ width: 5 }, { width: 26 }, { width: 22 }, ...Array(7).fill({ width: 13 })], stickyRowsCount: 5, showGridLines: false, orientation: "landscape" },
+    { data: summary, sheet: "Xülasə", columns: [{ width: 5 }, { width: 26 }, { width: 22 }, ...Array(7).fill({ width: 13 }), ...(isCurrent ? [{ width: 34 }] : [])], stickyRowsCount: 5, showGridLines: false, orientation: "landscape" },
     { data: grid, sheet: "Gün-gün", columns: [{ width: 24 }, ...days.map(() => ({ width: 5 }))], stickyRowsCount: 4, stickyColumnsCount: 1, showGridLines: false, orientation: "landscape" },
   ], { fontFamily: "Calibri", fontSize: 11 }).toFile(`davamiyyet-${month}.xlsx`);
   toast.success(`${emps.length} ustanın davamiyyəti Excel fayla yazıldı`);
@@ -130,15 +153,16 @@ export async function exportAttendanceEmployee(month: string, emp: Pick<Emp, "id
     ...rows.map(({ day, status, presence }, i) => {
       const st = STATUS_TEXT[status];
       const sunday = status === "off" || weekday(day) === 0;
-      const base = { alignVertical: "center" as const, height: 22, ...(sunday ? { backgroundColor: "#f1f5f9" } : i % 2 ? { backgroundColor: ZEBRA } : {}), ...border };
+      const base = { alignVertical: "center" as const, height: 22 * Math.max(1, presence?.sessions.length ?? 1), ...(sunday ? { backgroundColor: "#f1f5f9" } : i % 2 ? { backgroundColor: ZEBRA } : {}), ...border };
       const [yy, mm, dd] = day.split("-").map(Number);
       return [
         { ...base, value: new Date(Date.UTC(yy, mm - 1, dd)), type: Date, format: "dd.mm.yyyy", align: "center" as const },
         { ...base, value: WEEKDAY[weekday(day)], textColor: sunday ? SLATE : "#111827" },
         { ...base, value: st.v, textColor: st.color, fontWeight: "bold" as const },
-        { ...base, value: presence ? timeBaku(presence.in) : "", align: "center" as const },
-        { ...base, value: presence?.out ? timeBaku(presence.out) : presence ? "işdədir" : "", align: "center" as const, textColor: presence?.out ? "#111827" : MUTED },
-        { ...base, value: presence ? duration(presence) : "", align: "center" as const, textColor: MUTED },
+        // Bir neçə seans (yenidən işə çıxıb): hər biri xananın içində ayrıca sətirdə
+        { ...base, value: presence ? presence.sessions.map((x) => timeBaku(x.in)).join("\n") : "", align: "center" as const, wrap: true },
+        { ...base, value: presence ? presence.sessions.map((x) => (x.out ? timeBaku(x.out) : "işdədir")).join("\n") : "", align: "center" as const, wrap: true, textColor: presence?.out ? "#111827" : MUTED },
+        { ...base, value: presence ? durationText(presence) : "", align: "center" as const, textColor: MUTED },
       ];
     }),
   ];

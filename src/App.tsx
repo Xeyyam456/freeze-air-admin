@@ -19,6 +19,12 @@ import SitePage from "@/pages/Site";
 import TasksPage from "@/pages/Tasks";
 import WorkLogsPage from "@/pages/WorkLogs";
 
+// Saytın məzmunu yalnız müdirə (0069): digər rəhbər ünvanı yazsa Panelə qaytarılır
+function OwnerOnly({ children }: { children: React.ReactNode }) {
+  const { owner } = useAuth();
+  return owner ? children : <Navigate to="/" replace />;
+}
+
 // Giriş etməyən istifadəçi yalnız /login səhifəsini görür
 function RequireAuth() {
   const { session, loading, admin } = useAuth();
@@ -54,7 +60,7 @@ export default function App() {
             <Route path="isler" element={<WorkLogsPage />} />
             <Route path="xeta-kodlari" element={<ErrorCodesPage />} />
             <Route path="muracietler" element={<RequestsPage />} />
-            <Route path="sayt" element={<SitePage />} />
+            <Route path="sayt" element={<OwnerOnly><SitePage /></OwnerOnly>} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

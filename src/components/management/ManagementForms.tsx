@@ -2,6 +2,9 @@ import { urlQuery } from "@/lib/urlQuery";
 import { useActionState, useRef, useState } from "react";
 import { Briefcase, CalendarDays, Pencil, Phone, Plus, Search, ShieldCheck, Trash2, UserCog, X } from "lucide-react";
 import { addEmployee, deleteEmployee, updateEmployee } from "@/actions/employees";
+import { revalidate } from "@/lib/revalidate";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "@/lib/toast";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { DatePicker } from "@/components/DatePicker";
 import { AvatarUpload } from "@/components/employees/AvatarUpload";
@@ -13,7 +16,7 @@ import { experience } from "@/lib/experience";
 
 type Manager = Tables<"employees">;
 
-const ACCOUNT_NOTE = "Rəhbərlik hesabı admin yetkisi alır: idarəetmə panelinə daxil olub hər şeyi dəyişə bilər.";
+const ACCOUNT_NOTE = "Rəhbərlik hesabı admin yetkisi alır: tapşırıq, icazə, davamiyyət, müştərilər, ustalar; saytın məzmununu yalnız müdir dəyişir.";
 
 function norm(s: string | null | undefined) {
   return (s ?? "")
@@ -100,6 +103,43 @@ function EditManagerModal({ manager, onClose }: { manager: Manager; onClose: () 
   );
 }
 
+// Müdir olmayan rəhbər (və müdir öz kartında): yalnız telefon və şəkil (bazada employees_guard_management, 0069)
+function ContactModal({ manager, onClose }: { manager: Manager; onClose: () => void }) {
+  const [phone, setPhone] = useState(manager.phone ?? "");
+  const [pending, setPending] = useState(false);
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault();
+    setPending(true);
+    const { error } = await createClient().from("employees").update({ phone: phone.trim() || null }).eq("id", manager.id);
+    setPending(false);
+    if (error) return toast.error(error.message);
+    toast.success("Telefon yadda saxlanıldı");
+    revalidate();
+    onClose();
+  }
+
+  return (
+    <Modal onClose={onClose} labelledBy="contact-manager-title" className="!max-w-md">
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <div>
+          <h2 id="contact-manager-title" className="text-lg font-bold">Telefon və şəkil</h2>
+          <p className="muted text-sm">{manager.full_name}</p>
+        </div>
+        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+      </div>
+      <div className="mb-4"><AvatarUpload employee={manager} /></div>
+      <form onSubmit={save} className="space-y-4">
+        <Field label="Telefon">
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+994 50 000 00 00" className="field" />
+        </Field>
+        <p className="muted text-xs">Ad, vəzifə və hesabı yalnız müdir dəyişir.</p>
+        <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
+      </form>
+    </Modal>
+  );
+}
+
 function ManagerDetailsModal({ manager, accounts, canEdit, onClose }: {
   manager: Manager;
   accounts: Accounts;
@@ -145,8 +185,9 @@ function ManagerDetailsModal({ manager, accounts, canEdit, onClose }: {
   );
 }
 
-function ManagerCard({ manager, accounts, canEdit, isMe }: { manager: Manager; accounts: Accounts; canEdit: boolean; isMe: boolean }) {
+function ManagerCard({ manager, accounts, canEdit, canContact, isMe }: { manager: Manager; accounts: Accounts; canEdit: boolean; canContact: boolean; isMe: boolean }) {
   const [editing, setEditing] = useState(false);
+  const [contact, setContact] = useState(false);
   const [viewing, setViewing] = useState(false);
   const exp = experience(manager.start_date);
 
@@ -154,6 +195,7 @@ function ManagerCard({ manager, accounts, canEdit, isMe }: { manager: Manager; a
     <>
       {viewing && <ManagerDetailsModal manager={manager} accounts={accounts} canEdit={canEdit} onClose={() => setViewing(false)} />}
       {editing && <EditManagerModal manager={manager} onClose={() => setEditing(false)} />}
+      {contact && <ContactModal manager={manager} onClose={() => setContact(false)} />}
 
       <div
         className={`store-card cursor-pointer ${isMe ? "!border-primary" : ""}`}
@@ -172,6 +214,11 @@ function ManagerCard({ manager, accounts, canEdit, isMe }: { manager: Manager; a
                 <p className="muted text-[13px]">{manager.position}</p>
               </div>
               {isMe && <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-primary">Sən</span>}
+              {!canEdit && canContact && (
+                <button type="button" onClick={(e) => { e.stopPropagation(); setContact(true); }} className="icon-btn shrink-0" title="Telefon və şəkli dəyiş" aria-label="Telefon və şəkli dəyiş">
+                  <Pencil size={16} />
+                </button>
+              )}
               {canEdit && <div className="flex shrink-0 items-center gap-1" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                 <button type="button" onClick={() => setEditing(true)} className="icon-btn" title="Redaktə et" aria-label="Redaktə et">
                   <Pencil size={16} />
@@ -203,11 +250,13 @@ function ManagerCard({ manager, accounts, canEdit, isMe }: { manager: Manager; a
   );
 }
 
-// canEdit: sahibdir; myUserId: öz kartı yalnız baxış üçündür (özünü silib idarəsiz qalmasın)
-export function ManagerList({ managers, accounts, canEdit, myUserId }: {
+// canEdit: sahibdir; myUserId: öz kartı tam redaktə olunmur (özünü silib idarəsiz qalmasın);
+// canContact: istənilən rəhbər (admin) telefon və şəkli dəyişir (0069)
+export function ManagerList({ managers, accounts, canEdit, canContact = false, myUserId }: {
   managers: Manager[];
   accounts: Accounts;
   canEdit: boolean;
+  canContact?: boolean;
   myUserId: string | null;
 }) {
   const [query, setQuery] = useState(urlQuery);
@@ -242,7 +291,7 @@ export function ManagerList({ managers, accounts, canEdit, myUserId }: {
       ) : (
         <div className="grid grid-cols-2 gap-4">
           {filtered.map((m) => <ManagerCard key={m.id} manager={m} accounts={accounts} isMe={m.user_id === myUserId}
-              canEdit={canEdit && m.user_id !== myUserId} />)}
+              canEdit={canEdit && m.user_id !== myUserId} canContact={canContact} />)}
         </div>
       )}
     </div>

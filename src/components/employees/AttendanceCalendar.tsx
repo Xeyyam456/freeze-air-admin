@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Clock, FileSpreadsheet, LogIn, LogOut, X } from "lucide-react";
 import { exportAttendanceEmployee } from "@/lib/export-attendance";
 import { Modal } from "@/components/Modal";
-import { fetchEmployeeMonth, MONTHS_AZ, presenceText, shiftMonth, timeBaku, todayBaku, useAttendanceLive, type DayStatus, type Presence } from "@/lib/attendance";
+import { fetchEmployeeMonth, MONTHS_AZ, presenceText, shiftMonth, timeBaku, todayBaku, useAttendanceLive, durationText, type DayStatus } from "@/lib/attendance";
 
 const WEEK = ["B.e", "Ç.a", "Ç", "C.a", "C", "Ş", "B"];
 const WEEKDAY = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
@@ -10,12 +10,6 @@ const WEEKDAY = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşən
 // "21.10.2026"
 const fullDate = (d: string) => `${d.slice(8)}.${d.slice(5, 7)}.${d.slice(0, 4)}`;
 const weekday = (d: string) => WEEKDAY[new Date(`${d}T12:00:00Z`).getUTCDay()];
-// İş müddəti: "9 saat 2 dəq" (getmə yazılıbsa)
-function duration(p: Presence) {
-  if (!p.out) return null;
-  const min = Math.max(0, Math.round((new Date(p.out).getTime() - new Date(p.in).getTime()) / 60000));
-  return `${Math.floor(min / 60)} saat ${min % 60} dəq`;
-}
 
 // Gün xanasının görünüşü: işdə yaşıl ✓, icazəli bənövşəyi, gəlmədi qırmızı, bazar tünd boz, gələcək solğun
 const CELL: Record<DayStatus, string> = {
@@ -123,23 +117,30 @@ export function AttendanceCalendar({ employeeId, name, onClose }: { employeeId: 
           <ul className="max-h-[468px] flex-1 divide-y divide-line overflow-y-auto rounded-xl border border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {current.days.filter((d) => d.presence && d.status === "present").reverse().map(({ day, presence }) => {
               const p = presence!;
-              const dur = duration(p);
+              const dur = durationText(p);
               return (
                 <li key={day} className="flex items-center gap-3 px-3 py-2">
                   <span className="min-w-0 flex-1">
                     <span className="block text-sm font-bold tabular-nums">{fullDate(day)}</span>
-                    <span className="muted block text-[11px]">{weekday(day)}{dur && ` · ${dur}`}</span>
+                    <span className="muted block text-[11px]">{weekday(day)}{dur && ` · ${dur}`}{p.sessions.length > 1 && ` · ${p.sessions.length} dəfə`}</span>
                   </span>
-                  <span className="flex shrink-0 items-center gap-1 rounded-lg bg-ok-soft px-2 py-1 text-xs font-bold tabular-nums text-ok" title="Gəlmə saatı">
-                    <LogIn size={12} /> {timeBaku(p.in)}
+                  {/* Hər seans ayrıca sətir: işi bitirib yenidən işə çıxıbsa bir neçə gəlmə – getmə */}
+                  <span className="flex shrink-0 flex-col items-end gap-1" title={presenceText(p)}>
+                    {p.sessions.map((x) => (
+                      <span key={x.in} className="flex items-center gap-1.5">
+                        <span className="flex items-center gap-1 rounded-lg bg-ok-soft px-2 py-1 text-xs font-bold tabular-nums text-ok" title="Gəlmə saatı">
+                          <LogIn size={12} /> {timeBaku(x.in)}
+                        </span>
+                        {x.out ? (
+                          <span className="flex items-center gap-1 rounded-lg bg-bg px-2 py-1 text-xs font-bold tabular-nums" title="Getmə saatı">
+                            <LogOut size={12} /> {timeBaku(x.out)}
+                          </span>
+                        ) : (
+                          <span className="rounded-lg bg-primary-soft px-2 py-1 text-xs font-semibold text-primary">hələ işdədir</span>
+                        )}
+                      </span>
+                    ))}
                   </span>
-                  {p.out ? (
-                    <span className="flex shrink-0 items-center gap-1 rounded-lg bg-bg px-2 py-1 text-xs font-bold tabular-nums" title="Getmə saatı">
-                      <LogOut size={12} /> {timeBaku(p.out)}
-                    </span>
-                  ) : (
-                    <span className="shrink-0 rounded-lg bg-primary-soft px-2 py-1 text-xs font-semibold text-primary" title={presenceText(p)}>hələ işdədir</span>
-                  )}
                 </li>
               );
             })}

@@ -35,14 +35,14 @@ function storagePath(url: string | null) {
 type Person = Pick<Tables<"employees">, "id" | "full_name" | "photo_url">;
 
 // Əməkdaşın şəkli: yüklə / sil, dəyişiklik dərhal saxlanır.
-// Yalnız əməkdaşın özü və müdir görür (baza da yalnız onlara icazə verir: set_employee_photo).
+// Əməkdaşın özü və istənilən rəhbər (admin) görür (baza da yalnız onlara icazə verir: set_employee_photo, 0069).
 export function AvatarUpload({ employee, onChange }: { employee: Person; onChange?: () => void }) {
-  const { owner, employeeId } = useAuth();
+  const { admin, employeeId } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
   const [photoUrl, setPhotoUrl] = useState(employee.photo_url);
   const [pending, setPending] = useState(false);
 
-  if (!owner && employeeId !== employee.id) return null;
+  if (!admin && employeeId !== employee.id) return null;
 
   async function save(url: string | null) {
     const supabase = createClient();

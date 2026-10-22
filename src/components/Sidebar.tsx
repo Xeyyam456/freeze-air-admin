@@ -3,6 +3,7 @@ import {
   Building2, CalendarCheck, CalendarOff, ClipboardList, Globe, Inbox, LayoutGrid, ListChecks, PanelLeftClose, PanelLeftOpen,
   Snowflake, Store, TriangleAlert, UserCog, Users, Warehouse,
 } from "lucide-react";
+import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 import { isLowStock } from "@/components/depot/DepotForms";
@@ -10,7 +11,8 @@ import { isLowStock } from "@/components/depot/DepotForms";
 type Badge = "requests" | "tasks" | "stock" | "leave";
 
 // Menyu qrupları: gündəlik iş yuxarıda, nadir açılan bölmələr aşağıda
-const GROUPS: { title: string; items: { href: string; label: string; icon: typeof LayoutGrid; badge?: Badge }[] }[] = [
+// ownerOnly: yalnız müdir görür (saytın məzmununu digər rəhbərlər dəyişmir, 0069)
+const GROUPS: { title: string; items: { href: string; label: string; icon: typeof LayoutGrid; badge?: Badge; ownerOnly?: boolean }[] }[] = [
   {
     title: "Gündəlik iş",
     items: [
@@ -45,7 +47,7 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: typeo
   },
   {
     title: "Sayt",
-    items: [{ href: "/sayt", label: "Saytın məzmunu", icon: Globe }],
+    items: [{ href: "/sayt", label: "Saytın məzmunu", icon: Globe, ownerOnly: true }],
   },
 ];
 
@@ -92,6 +94,7 @@ const BADGE_TITLE: Record<Badge, string> = {
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const { pathname } = useLocation();
   const badges = useBadges();
+  const { owner } = useAuth();
 
   return (
     <aside className="app-sidebar" data-collapsed={collapsed || undefined}>
@@ -104,7 +107,7 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
       </Link>
 
       <nav className="sidebar-nav nice-scroll">
-        {GROUPS.map((g) => (
+        {GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => !i.ownerOnly || owner) })).filter((g) => g.items.length > 0).map((g) => (
           <div key={g.title} className="sidebar-group">
             <p className="sidebar-group-title">{g.title}</p>
             {g.items.map(({ href, label, icon: Icon, badge }) => {

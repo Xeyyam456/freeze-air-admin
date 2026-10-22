@@ -103,8 +103,12 @@ export function WorkTab({ employeeId, employeeName, admin }: { employeeId: numbe
 
   async function remove(log: WorkLog) {
     const supabase = createClient();
+    // Əvvəl iş qeydi silinir, sonra fayllar (silinmə alınmasa akt/şəkillər itməsin). Baza qaydası bloklasa xəta göstərilir:
+    // RLS silməyə icazə verməyəndə xəta yox, 0 sətir qaytarır, ona görə silinən sətir yoxlanır.
+    const { data: gone, error } = await supabase.from("work_logs").delete().eq("id", log.id).select("id");
+    if (error) throw new Error(error.message);
+    if (!gone?.length) throw new Error("İş silinmədi: icazə yoxdur.");
     if (log.work_files.length) await supabase.storage.from("work").remove(log.work_files.map((f) => f.path));
-    await supabase.from("work_logs").delete().eq("id", log.id);
     await load();
   }
 

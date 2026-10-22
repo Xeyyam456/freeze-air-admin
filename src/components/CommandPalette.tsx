@@ -41,7 +41,7 @@ async function loadItems(): Promise<Item[]> {
   ];
 }
 
-const PAGES: Item[] = NAV_ITEMS.map((n) => ({ key: `p${n.href}`, group: "Bölmələr", label: n.label, icon: n.icon, href: n.href }));
+const PAGES: Item[] = NAV_ITEMS.filter((n) => !n.ownerOnly).map((n) => ({ key: `p${n.href}`, group: "Bölmələr", label: n.label, icon: n.icon, href: n.href }));
 const LIMIT = 40;
 
 export function CommandPalette({ onClose }: { onClose: () => void }) {

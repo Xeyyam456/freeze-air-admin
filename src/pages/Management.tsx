@@ -20,13 +20,13 @@ export default function ManagementPage() {
   const data = useData(() => fetchManagers(admin), [admin]);
 
   return (
-    <Page title="Rəhbərlik" subtitle={owner ? "Müdir, servis müdirləri və maliyyəçi: hesabları admin yetkisi alır" : "Rəhbərlik heyətinin məlumatlarını yalnız müdir dəyişə bilər"}>
+    <Page title="Rəhbərlik" subtitle={owner ? "Müdir, servis müdirləri və maliyyəçi: hesabları admin yetkisi alır" : "Rəhbərlərin telefonunu və şəklini dəyişə bilərsən; qalan məlumatları müdir dəyişir"}>
       {!data ? (
         <div className="card muted">Yüklənir...</div>
       ) : (
         // Rəhbərlik heyətini yalnız sahib (müdir) dəyişir; digər adminlər baxır
         <WithSidePanel panel={owner ? <AddManagerCard /> : null}>
-          <ManagerList managers={data.managers} canEdit={owner} myUserId={session?.user.id ?? null}
+          <ManagerList managers={data.managers} canEdit={owner} canContact={admin} myUserId={session?.user.id ?? null}
             accounts={{ enabled: data.emails !== null, emails: data.emails ?? {} }} />
         </WithSidePanel>
       )}

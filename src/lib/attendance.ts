@@ -8,7 +8,10 @@ import { createClient } from "@/lib/supabase/client";
 
 export type DayStatus = "present" | "leave" | "absent" | "pending" | "off" | "future" | "before";
 // pending = bu gün, hələ basmayıb; off = bazar; before = davamiyyət başlamazdan əvvəl
-export type Presence = { in: string; out: string | null };
+// Günün seansları (0066: işi bitirəndən sonra yenidən işə çıxa bilər). in = ilk gəlmə, out = son getmə (açıq seans varsa null),
+// minutes = bağlanmış seansların cəmi
+export type Session = { in: string; out: string | null };
+export type Presence = { in: string; out: string | null; sessions: Session[]; minutes: number };
 export type MonthAttendance = {
   workdays: number; // ayın bu günə qədər iş günləri (B.e.–Şənbə; ATTENDANCE_START-dan)
   present: number; // işdə olduğu günlər
@@ -90,7 +93,17 @@ export function summarize(month: string, today: string, presence: Map<string, Pr
   return r;
 }
 
-const toPresence = (rows: AttRow[]) => new Map(rows.map((a) => [a.day, { in: a.checked_in_at, out: a.checked_out_at }]));
+function toPresence(rows: AttRow[]) {
+  const map = new Map<string, Presence>();
+  for (const a of [...rows].sort((x, y) => x.checked_in_at.localeCompare(y.checked_in_at))) {
+    const p = map.get(a.day) ?? { in: a.checked_in_at, out: null, sessions: [], minutes: 0 };
+    p.sessions.push({ in: a.checked_in_at, out: a.checked_out_at });
+    if (a.checked_out_at) p.minutes += Math.max(0, Math.round((new Date(a.checked_out_at).getTime() - new Date(a.checked_in_at).getTime()) / 60000));
+    p.out = p.sessions.every((s) => s.out) ? a.checked_out_at : null;
+    map.set(a.day, p);
+  }
+  return map;
+}
 
 async function fetchRange(from: string, to: string, employeeId?: number) {
   const supabase = createClient();
@@ -181,7 +194,12 @@ export function timeBaku(iso: string) {
   return new Intl.DateTimeFormat("az", { timeZone: "Asia/Baku", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(iso));
 }
 
-// "09:02 – 18:10" və ya "09:02-dən"
+// Seanslar: "09:02 – 13:00, 15:10-dən" (bir seansdırsa "09:02 – 18:10")
 export function presenceText(p: Presence) {
-  return p.out ? `${timeBaku(p.in)} – ${timeBaku(p.out)}` : `${timeBaku(p.in)}-dən`;
+  return p.sessions.map((x) => (x.out ? `${timeBaku(x.in)} – ${timeBaku(x.out)}` : `${timeBaku(x.in)}-dən`)).join(", ");
+}
+
+// İşdə olduğu müddət (bağlanmış seansların cəmi): "9 saat 2 dəq"
+export function durationText(p: Presence) {
+  return p.minutes ? `${Math.floor(p.minutes / 60)} saat ${p.minutes % 60} dəq` : "";
 }

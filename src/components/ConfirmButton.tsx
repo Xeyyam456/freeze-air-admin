@@ -41,8 +41,9 @@ export function ConfirmButton({
           try {
             await onConfirm();
             if (success) toast.success(success);
-          } catch {
-            toast.error("Alınmadı. Yenidən yoxlayın.");
+          } catch (e) {
+            // onConfirm xəta atıbsa onun mətni (məs. bazadan), yoxsa ümumi mesaj
+            toast.error(e instanceof Error && e.message ? e.message : "Alınmadı. Yenidən yoxlayın.");
           }
           setOpen(false);
         })}
