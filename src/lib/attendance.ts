@@ -27,8 +27,8 @@ type AttRow = { employee_id: number; day: string; checked_in_at: string; checked
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-// Davamiyyət bu gündən aparılır (sistem işə düşdü): əvvəlki günlər qeydsizdir, "gəlmədi" sayılmamalıdır
-export const ATTENDANCE_START = "2026-10-21";
+// Davamiyyət bu gündən aparılır (sınaq məlumatı silinəndən sonra təmiz başlanğıc): əvvəlki günlər "gəlmədi" sayılmır
+export const ATTENDANCE_START = "2026-10-22";
 
 // Bakı vaxtı ilə bu gün "YYYY-MM-DD"
 export function todayBaku() {
