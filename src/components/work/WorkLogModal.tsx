@@ -131,7 +131,7 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
               <div className="flex flex-wrap gap-2">
                 {log.work_log_materials.map((m) => (
                   <span key={m.id} className="rounded-lg border border-line bg-bg px-3 py-1.5 text-sm">
-                    <b>{m.tools?.name ?? "—"}</b> <span className="muted">· {m.amount} {m.tools?.unit}</span>
+                    <b>{m.tools?.name ?? "—"}</b> <span className="muted">· {String(m.amount).replace(".", ",")} {m.tools?.unit}</span>
                   </span>
                 ))}
               </div>

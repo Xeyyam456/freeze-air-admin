@@ -5,7 +5,7 @@ import {
   TriangleAlert, UserPlus, Users, Wrench,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
-import { isLowStock } from "@/components/depot/DepotForms";
+import { fmt, isLowStock } from "@/components/depot/depotUtils";
 import { CountUp } from "@/components/CountUp";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
@@ -139,7 +139,7 @@ export default function Home() {
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-bold text-[#92400e]">Depoda azalıb: {d.lowStock.length} {d.lowStock.length === 1 ? "mövqe" : "mövqe"}</span>
             <span className="mt-0.5 block text-sm text-[#92400e]/90">
-              {d.lowStock.map((t) => `${t.name} (${t.available + t.pieces_total} ${t.kind === "material" ? t.unit : "ədəd"} qalıb)`).join(", ")}
+              {d.lowStock.map((t) => `${t.name} (${fmt(t.available + t.pieces_total)} ${t.kind === "material" ? t.unit : "ədəd"} qalıb)`).join(", ")}
             </span>
           </span>
           <ArrowRight size={16} className="mt-2 shrink-0 text-[#b45309]" />

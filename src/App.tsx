@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router";
 import { AuthProvider, useAuth } from "@/auth/AuthProvider";
 import { AppLayout } from "@/components/AppLayout";
 import { ContactRequestsListener } from "@/components/ContactRequestsListener";
+import { DepotListener } from "@/components/DepotListener";
 import { TasksListener } from "@/components/TasksListener";
 import { Toaster } from "@/components/Toaster";
 import { ClientPage, ClientsPage } from "@/pages/Clients";
@@ -28,13 +29,14 @@ function OwnerOnly({ children }: { children: React.ReactNode }) {
 
 // Giriş etməyən istifadəçi yalnız /login səhifəsini görür
 function RequireAuth() {
-  const { session, loading, admin } = useAuth();
+  const { session, loading, admin, canManageTools } = useAuth();
   if (loading) return null;
   if (!session) return <Navigate to="/login" replace />;
   return (
     <AppLayout>
       {admin && <ContactRequestsListener />}
       {admin && <TasksListener />}
+      {canManageTools && <DepotListener />}
       <Outlet />
     </AppLayout>
   );

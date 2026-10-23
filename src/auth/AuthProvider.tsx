@@ -9,7 +9,7 @@ type AuthState = {
   admin: boolean;
   owner: boolean; // sahib (müdir): rəhbərlik heyətini yalnız o dəyişir
   storekeeper: boolean; // depo məsulu (əməkdaş kartında işarə; təyin edən müdirdir)
-  canManageTools: boolean; // depo: alət əlavə etmək, ustaya vermək — depo məsulu və müdir
+  canManageTools: boolean; // depo: mədaxil, vermək, təsdiqləmək — adminlər və depo məsulu (0084)
   // Profildə göstərilən ad: əməkdaşın adı, yoxdursa hesabın öz adı (profiles.full_name)
   name: string | null;
   position: string | null;
@@ -37,7 +37,7 @@ async function loadState(session: Session | null): Promise<AuthState> {
   const storekeeper = !!employee?.is_storekeeper && !!employee.is_active;
   return {
     loading: false, session, email: session.user.email ?? null, admin: admin === true, owner: owner === true,
-    storekeeper, canManageTools: owner === true || storekeeper,
+    storekeeper, canManageTools: admin === true || storekeeper,
     name: employee?.full_name ?? profile?.full_name ?? null,
     position: employee?.position ?? null,
     linked: !!employee,

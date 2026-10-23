@@ -6,7 +6,7 @@ import {
 import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
-import { isLowStock } from "@/components/depot/DepotForms";
+import { isLowStock } from "@/components/depot/depotUtils";
 
 type Badge = "requests" | "tasks" | "stock" | "leave";
 
@@ -64,20 +64,24 @@ function localDate(d = new Date()) {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
-// Nişanlar (hamısı qırmızı): baxılmamış müraciət, bugünkü gözləyən tapşırıq, depoda azalan, gözləyən icazə
+// Nişanlar (hamısı qırmızı): baxılmamış müraciət, bugünkü gözləyən tapşırıq, depo (təsdiq gözləyən sənəd + "Almadım" + azalan), gözləyən icazə
 function useBadges() {
   return useData(async () => {
     const supabase = createClient();
-    const [requests, tasks, stock, leave] = await Promise.all([
+    const [requests, tasks, low, docs, disputed, leave] = await Promise.all([
       supabase.from("contact_requests").select("*", { count: "exact", head: true }).eq("handled", false).then((r) => r.count ?? 0),
       // Qrup tapşırığı (0071) bir tapşırıq sayılır
       supabase.from("tasks").select("group_id").eq("task_date", localDate()).eq("done", false).is("cancelled_at", null)
         .then((r) => new Set((r.data ?? []).map((t, i) => t.group_id ?? `t${i}`)).size),
       supabase.from("tool_stock").select("min_stock, available, pieces_total")
         .then((r) => (r.data ?? []).filter((t) => isLowStock({ min_stock: t.min_stock, available: t.available ?? 0, pieces_total: t.pieces_total ?? 0 })).length),
+      // Depo sənədləri (0084): təsdiq gözləyən və ustanın "Almadım" dediyi
+      supabase.from("depot_requests").select("*", { count: "exact", head: true }).eq("status", "pending").then((r) => r.count ?? 0),
+      supabase.from("tool_assignments").select("*", { count: "exact", head: true }).is("returned_at", null).is("received_at", null).not("disputed_at", "is", null)
+        .then((r) => r.count ?? 0),
       supabase.from("leave_requests").select("*", { count: "exact", head: true }).eq("status", "pending").then((r) => r.count ?? 0),
     ]);
-    return { requests, tasks, stock, leave } satisfies Record<Badge, number>;
+    return { requests, tasks, stock: low + docs + disputed, leave, stockTitle: [docs && `${docs} sənəd təsdiq gözləyir`, disputed && `${disputed} «Almadım»`, low && `${low} azalan`].filter(Boolean).join(" · ") };
   });
 }
 
@@ -91,7 +95,7 @@ const BADGE_STYLE: Record<Badge, string> = {
 const BADGE_TITLE: Record<Badge, string> = {
   requests: "baxılmamış müraciət",
   tasks: "bu gün gözləyən tapşırıq",
-  stock: "depoda azalan",
+  stock: "depo",
   leave: "gözləyən icazə sorğusu",
 };
 
@@ -122,7 +126,7 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
                   <Icon size={18} strokeWidth={2.1} />
                   <span className="sidebar-text flex-1 truncate">{label}</span>
                   {!!n && (
-                    <span className={`side-badge ${BADGE_STYLE[badge!]}`} title={`${n} ${BADGE_TITLE[badge!]}`}>{n}</span>
+                    <span className={`side-badge ${BADGE_STYLE[badge!]}`} title={badge === "stock" ? badges?.stockTitle : `${n} ${BADGE_TITLE[badge!]}`}>{n}</span>
                   )}
                 </Link>
               );

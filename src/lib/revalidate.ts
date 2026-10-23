@@ -16,5 +16,6 @@ export function useRevalidateVersion() {
       return () => listeners.delete(cb);
     },
     () => version,
+    () => 0, // server render (web usta paneli, Next): hələ heç nə dəyişməyib
   );
 }
