@@ -120,8 +120,191 @@ export type Database = {
         }
         Relationships: []
       }
+      crew_members: {
+        Row: {
+          crew_id: number
+          employee_id: number
+        }
+        Insert: {
+          crew_id: number
+          employee_id: number
+        }
+        Update: {
+          crew_id?: number
+          employee_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crew_members_crew_id_fkey"
+            columns: ["crew_id"]
+            isOneToOne: false
+            referencedRelation: "crews"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crew_members_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crews: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: number
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: never
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: never
+          name?: string | null
+        }
+        Relationships: []
+      }
+      fuel_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          day: string
+          employee_id: number
+          id: number
+          note: string | null
+          status: string
+          status_at: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          day?: string
+          employee_id: number
+          id?: never
+          note?: string | null
+          status?: string
+          status_at?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          day?: string
+          employee_id?: number
+          id?: never
+          note?: string | null
+          status?: string
+          status_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fuel_payments_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fuel_settings: {
+        Row: {
+          diesel_price: number | null
+          id: number
+          petrol_price: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          diesel_price?: number | null
+          id?: number
+          petrol_price?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          diesel_price?: number | null
+          id?: number
+          petrol_price?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      mileage_logs: {
+        Row: {
+          cost: number | null
+          created_at: string
+          day: string
+          employee_id: number
+          end_at: string | null
+          end_km: number | null
+          end_photo: string | null
+          fuel_per_100: number | null
+          fuel_price: number | null
+          fuel_type: string | null
+          id: number
+          km: number | null
+          liters: number | null
+          start_at: string
+          start_km: number
+          start_photo: string | null
+        }
+        Insert: {
+          created_at?: string
+          day?: string
+          employee_id: number
+          end_at?: string | null
+          end_km?: number | null
+          end_photo?: string | null
+          fuel_per_100?: number | null
+          fuel_price?: number | null
+          fuel_type?: string | null
+          id?: never
+          start_at?: string
+          start_km: number
+          start_photo?: string | null
+        }
+        Update: {
+          created_at?: string
+          day?: string
+          employee_id?: number
+          end_at?: string | null
+          end_km?: number | null
+          end_photo?: string | null
+          fuel_per_100?: number | null
+          fuel_price?: number | null
+          fuel_type?: string | null
+          id?: never
+          start_at?: string
+          start_km?: number
+          start_photo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mileage_logs_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employees: {
         Row: {
+          car_model: string | null
+          car_plate: string | null
+          fuel_per_100: number | null
+          fuel_type: string | null
+          has_car: boolean
           created_at: string
           full_name: string
           id: number
@@ -137,6 +320,11 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          car_model?: string | null
+          car_plate?: string | null
+          fuel_per_100?: number | null
+          fuel_type?: string | null
+          has_car?: boolean
           created_at?: string
           full_name: string
           id?: never
@@ -152,6 +340,11 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          car_model?: string | null
+          car_plate?: string | null
+          fuel_per_100?: number | null
+          fuel_type?: string | null
+          has_car?: boolean
           created_at?: string
           full_name?: string
           id?: never
@@ -387,6 +580,7 @@ export type Database = {
           done: boolean
           done_at: string | null
           employee_id: number
+          group_id: string | null
           id: number
           note: string | null
           place_text: string | null
@@ -405,6 +599,7 @@ export type Database = {
           done?: boolean
           done_at?: string | null
           employee_id: number
+          group_id?: string | null
           id?: never
           note?: string | null
           place_text?: string | null
@@ -423,6 +618,7 @@ export type Database = {
           done?: boolean
           done_at?: string | null
           employee_id?: number
+          group_id?: string | null
           id?: never
           note?: string | null
           place_text?: string | null
@@ -725,7 +921,16 @@ export type Database = {
       check_in: { Args: never; Returns: string }
       check_out: { Args: never; Returns: string }
       leave_decide: { Args: { p_approve: boolean; p_id: number }; Returns: undefined }
+      task_add_member: {
+        Args: { p_employee_id: number; p_task_id: number }
+        Returns: number
+      }
+      fuel_payment_confirm: {
+        Args: { p_id: number; p_received: boolean }
+        Returns: undefined
+      }
       leave_cancel: { Args: { p_id: number }; Returns: undefined }
+      mileage_fill_missing: { Args: never; Returns: number }
       finish_material: { Args: { p_assignment_id: number; p_used: number }; Returns: undefined }
       give_piece: { Args: { p_amount?: number; p_employee_id: number; p_piece_id: number }; Returns: undefined }
       give_tool: { Args: { p_employee_id: number; p_quantity: number; p_tool_id: number }; Returns: undefined }

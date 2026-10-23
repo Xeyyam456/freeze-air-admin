@@ -102,11 +102,12 @@ const navBtn = "grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-b
 
 // Gün seçimi ("YYYY-MM-DD").
 // Formada: name + defaultValue (gizli <input> ilə göndərilir). Filtrdə: value + onChange (xaricdən idarə olunur).
-export function DatePicker({ name, defaultValue, value: controlled, onChange, max, required, small, placeholder = "Tarix seç" }: {
+export function DatePicker({ name, defaultValue, value: controlled, onChange, min, max, required, small, placeholder = "Tarix seç" }: {
   name?: string;
   defaultValue?: string | null;
   value?: string;
   onChange?: (v: string) => void;
+  min?: string; // bundan əvvəlki günlər seçilmir (məs. tapşırıq: keçmiş günə verilmir)
   max?: string;
   required?: boolean;
   small?: boolean;
@@ -126,6 +127,7 @@ export function DatePicker({ name, defaultValue, value: controlled, onChange, ma
   const days = new Date(view.y, view.m + 1, 0).getDate();
   const cells = [...Array(offset).fill(null), ...Array.from({ length: days }, (_, i) => i + 1)];
   const nextDisabled = !!max && iso(view.y, view.m + 1, 1) > max;
+  const prevDisabled = !!min && iso(view.y, view.m, 1) <= min;
 
   const shift = (delta: number) =>
     setView((v) => {
@@ -153,7 +155,7 @@ export function DatePicker({ name, defaultValue, value: controlled, onChange, ma
       {open && (
         <Popover anchorRef={btnRef} onClose={() => setOpen(false)}>
           <div className="mb-2 flex items-center justify-between">
-            <button type="button" onClick={() => shift(-1)} className={navBtn} aria-label="Əvvəlki ay"><ChevronLeft size={18} /></button>
+            <button type="button" onClick={() => shift(-1)} disabled={prevDisabled} className={navBtn} aria-label="Əvvəlki ay"><ChevronLeft size={18} /></button>
             <span className="text-sm font-bold">{MONTHS[view.m]} {view.y}</span>
             <button type="button" onClick={() => shift(1)} disabled={nextDisabled} className={navBtn} aria-label="Növbəti ay"><ChevronRight size={18} /></button>
           </div>
@@ -162,7 +164,7 @@ export function DatePicker({ name, defaultValue, value: controlled, onChange, ma
             {cells.map((d, i) => {
               if (d === null) return <span key={`e${i}`} />;
               const v = iso(view.y, view.m, d);
-              const disabled = !!max && v > max;
+              const disabled = (!!max && v > max) || (!!min && v < min);
               const selected = v === value;
               const isToday = v === today;
               return (
@@ -178,7 +180,7 @@ export function DatePicker({ name, defaultValue, value: controlled, onChange, ma
             })}
           </div>
           <div className="mt-2 flex items-center justify-between border-t border-line pt-2">
-            <button type="button" onClick={() => pick(today)} disabled={!!max && today > max} className="link text-[13px]">Bu gün</button>
+            <button type="button" onClick={() => pick(today)} disabled={(!!max && today > max) || (!!min && today < min)} className="link text-[13px]">Bu gün</button>
             {!required && value && (
               <button type="button" onClick={() => pick("")} className="text-[13px] font-semibold text-danger hover:underline">Təmizlə</button>
             )}

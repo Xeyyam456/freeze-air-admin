@@ -12,6 +12,23 @@ function employeeFields(formData: FormData) {
   };
 }
 
+// Maşın (0076): yalnız usta formasında var (gizli "car_form"); rəhbərlik formasında yoxdur, mövcud dəyərə toxunulmur.
+// Normallaşdırma (böyük hərf, maşın yoxdursa nömrənin silinməsi) bazada tətikçidədir.
+function carFields(formData: FormData) {
+  if (!formData.has("car_form")) return {};
+  const per100 = text(formData, "fuel_per_100")?.replace(",", ".");
+  return {
+    has_car: formData.get("has_car") === "1", car_plate: text(formData, "car_plate"), car_model: text(formData, "car_model"),
+    fuel_per_100: per100 && Number(per100) > 0 ? Number(per100) : null,
+    fuel_type: text(formData, "fuel_type") === "diesel" ? "diesel" : "petrol",
+  };
+}
+
+// Eyni nömrə iki ustada ola bilməz (unikal indeks)
+function carError(message: string, code?: string) {
+  return code === "23505" && message.includes("car_plate") ? "Bu maşın nömrəsi artıq başqa ustada yazılıb." : message;
+}
+
 // İş növü (usta / köməkçi / sürücü) və ona uyğun vəzifə adı; rəhbərlik formasında bu sahə yoxdur
 const WORKER_POSITION: Record<string, string> = { master: "Usta", assistant: "Köməkçi", driver: "Sürücü" };
 function workerType(formData: FormData) {
@@ -28,12 +45,13 @@ export async function addEmployee(_prev: FormState, formData: FormData): Promise
   const supabase = createClient();
   const { error } = await supabase.from("employees").insert({
     ...fields,
+    ...carFields(formData),
     full_name: fields.full_name,
     ...(management ? {} : workerType(formData)),
     position: management ? (text(formData, "position") ?? "Rəhbərlik") : (workerType(formData)?.position ?? "Usta"),
     is_management: management,
   });
-  if (error) return { error: error.message };
+  if (error) return { error: carError(error.message, error.code) };
   revalidate();
   return { ok: true };
 }
@@ -44,8 +62,8 @@ export async function updateEmployee(id: number, _prev: FormState, formData: For
 
   const supabase = createClient();
   const position = formData.has("position") ? { position: text(formData, "position") ?? "Rəhbərlik" } : (workerType(formData) ?? {});
-  const { error } = await supabase.from("employees").update({ ...fields, ...position, full_name: fields.full_name }).eq("id", id);
-  if (error) return { error: error.message };
+  const { error } = await supabase.from("employees").update({ ...fields, ...carFields(formData), ...position, full_name: fields.full_name }).eq("id", id);
+  if (error) return { error: carError(error.message, error.code) };
   revalidate();
   return { ok: true };
 }

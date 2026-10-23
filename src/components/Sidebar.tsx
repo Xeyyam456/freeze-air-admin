@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router";
 import {
   Building2, CalendarCheck, CalendarOff, ClipboardList, Globe, Inbox, LayoutGrid, ListChecks, PanelLeftClose, PanelLeftOpen,
-  Snowflake, Store, TriangleAlert, UserCog, Users, Warehouse,
+  Snowflake, Store, TriangleAlert, UserCog, Users, Warehouse, Fuel,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
@@ -35,6 +35,7 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: typeo
       { href: "/ustalar", label: "Ustalar", icon: Users },
       { href: "/davamiyyet", label: "Davamiyyət", icon: CalendarCheck },
       { href: "/icazeler", label: "İcazələr", icon: CalendarOff, badge: "leave" },
+      { href: "/yanacaq", label: "Yanacaq", icon: Fuel },
       { href: "/rehberlik", label: "Rəhbərlik", icon: UserCog },
     ],
   },
@@ -63,13 +64,15 @@ function localDate(d = new Date()) {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
-// Nişanlar: baxılmamış müraciət (qırmızı), bugünkü gözləyən tapşırıq (mavi), depoda azalan (sarı)
+// Nişanlar (hamısı qırmızı): baxılmamış müraciət, bugünkü gözləyən tapşırıq, depoda azalan, gözləyən icazə
 function useBadges() {
   return useData(async () => {
     const supabase = createClient();
     const [requests, tasks, stock, leave] = await Promise.all([
       supabase.from("contact_requests").select("*", { count: "exact", head: true }).eq("handled", false).then((r) => r.count ?? 0),
-      supabase.from("tasks").select("*", { count: "exact", head: true }).eq("task_date", localDate()).eq("done", false).is("cancelled_at", null).then((r) => r.count ?? 0),
+      // Qrup tapşırığı (0071) bir tapşırıq sayılır
+      supabase.from("tasks").select("group_id").eq("task_date", localDate()).eq("done", false).is("cancelled_at", null)
+        .then((r) => new Set((r.data ?? []).map((t, i) => t.group_id ?? `t${i}`)).size),
       supabase.from("tool_stock").select("min_stock, available, pieces_total")
         .then((r) => (r.data ?? []).filter((t) => isLowStock({ min_stock: t.min_stock, available: t.available ?? 0, pieces_total: t.pieces_total ?? 0 })).length),
       supabase.from("leave_requests").select("*", { count: "exact", head: true }).eq("status", "pending").then((r) => r.count ?? 0),
@@ -78,11 +81,12 @@ function useBadges() {
   });
 }
 
+// Bütün nişanlar qırmızıdır (istifadəçi, 2026-10-23); növ fərqi başlıqdakı izahdadır (BADGE_TITLE)
 const BADGE_STYLE: Record<Badge, string> = {
   requests: "bg-danger text-white",
-  tasks: "bg-primary text-white",
-  stock: "bg-amber-400 text-navy",
-  leave: "bg-amber-500 text-white",
+  tasks: "bg-danger text-white",
+  stock: "bg-danger text-white",
+  leave: "bg-danger text-white",
 };
 const BADGE_TITLE: Record<Badge, string> = {
   requests: "baxılmamış müraciət",

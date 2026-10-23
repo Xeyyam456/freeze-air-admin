@@ -1,6 +1,6 @@
 import { urlQuery } from "@/lib/urlQuery";
-import { useActionState, useRef, useState } from "react";
-import { Briefcase, CalendarDays, Pencil, Phone, Plus, Search, ShieldCheck, Trash2, UserCog, X } from "lucide-react";
+import { useActionState, useState } from "react";
+import { Briefcase, CalendarDays, Crown, Pencil, Phone, Plus, Search, ShieldCheck, Trash2, UserCog, X } from "lucide-react";
 import { addEmployee, deleteEmployee, updateEmployee } from "@/actions/employees";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
@@ -9,6 +9,7 @@ import { ConfirmButton } from "@/components/ConfirmButton";
 import { DatePicker } from "@/components/DatePicker";
 import { AvatarUpload } from "@/components/employees/AvatarUpload";
 import { AccountSection, Avatar, formatDate, type Accounts } from "@/components/employees/EmployeeForms";
+import { PersonCard } from "@/components/employees/PersonCard";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
 import type { Tables } from "@/lib/database.types";
@@ -53,28 +54,35 @@ function ManagerFields({ m }: { m?: Manager }) {
   );
 }
 
-// Sağ paneldəki "Yeni rəhbər" kartı
-export function AddManagerCard() {
+// "Yeni rəhbər" (yalnız müdir): başlıqdakı düymə pəncərə açır, siyahı bütün eni tutur
+function AddManagerForm({ onDone }: { onDone: () => void }) {
   const [state, action, pending] = useActionState(addEmployee, null);
-  const ref = useRef<HTMLFormElement>(null);
-  // Təqvim öz vəziyyətini saxlayır, form.reset() onu təmizləmir: uğurdan sonra sahələri yenidən yaradırıq
-  const [formKey, setFormKey] = useState(0);
-  useOnSuccess(state, () => {
-    ref.current?.reset();
-    setFormKey((k) => k + 1);
-  }, "Rəhbər əlavə edildi");
-
+  useOnSuccess(state, onDone, "Rəhbər əlavə edildi");
   return (
-    <div className="card space-y-4">
-      <div className="flex items-center gap-3">
-        <span className="icon-tile !h-9 !w-9"><Plus size={18} /></span>
-        <h2 className="card-title">Yeni rəhbər</h2>
-      </div>
-      <ActionForm ref={ref} action={action} className="space-y-4">
-        <ManagerFields key={formKey} />
-        <Buttons pending={pending} label="Rəhbəri əlavə et" />
-      </ActionForm>
-    </div>
+    <ActionForm action={action} className="space-y-4">
+      <ManagerFields />
+      <Buttons pending={pending} label="Rəhbəri əlavə et" />
+    </ActionForm>
+  );
+}
+
+export function AddManagerButton() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)} className="hero-action">
+        <Plus size={17} /> Yeni rəhbər
+      </button>
+      {open && (
+        <Modal onClose={() => setOpen(false)} labelledBy="add-manager-title" className="!max-w-lg">
+          <div className="mb-5 flex items-center gap-3">
+            <span className="icon-tile !h-10 !w-10"><Plus size={18} /></span>
+            <h2 id="add-manager-title" className="card-title">Yeni rəhbər</h2>
+          </div>
+          <AddManagerForm onDone={() => setOpen(false)} />
+        </Modal>
+      )}
+    </>
   );
 }
 
@@ -185,69 +193,115 @@ function ManagerDetailsModal({ manager, accounts, canEdit, onClose }: {
   );
 }
 
-function ManagerCard({ manager, accounts, canEdit, canContact, isMe }: { manager: Manager; accounts: Accounts; canEdit: boolean; canContact: boolean; isMe: boolean }) {
+type CardProps = { manager: Manager; accounts: Accounts; canEdit: boolean; canContact: boolean; isMe: boolean };
+
+// Kartın düymələri: müdir redaktə edir və silir; digər admin yalnız telefon və şəkli dəyişir (0069)
+function CardActions({ manager, canEdit, canContact, onEdit, onContact, light = false }: CardProps & { onEdit: () => void; onContact: () => void; light?: boolean }) {
+  const btn = `icon-btn !h-8 !w-8${light ? " !text-white/75 hover:!bg-white/15 hover:!text-white" : ""}`;
+  if (canEdit) {
+    return (
+      <>
+        <button type="button" onClick={onEdit} className={btn} title="Redaktə et" aria-label="Redaktə et"><Pencil size={15} /></button>
+        <ConfirmButton onConfirm={() => deleteEmployee(manager.id)} className={btn} title="Rəhbəri sil"><Trash2 size={15} /></ConfirmButton>
+      </>
+    );
+  }
+  if (canContact) {
+    return <button type="button" onClick={onContact} className={btn} title="Telefon və şəkli dəyiş" aria-label="Telefon və şəkli dəyiş"><Pencil size={15} /></button>;
+  }
+  return null;
+}
+
+function AccountLine({ manager }: { manager: Manager }) {
+  return manager.user_id
+    ? <span className="flex items-center gap-1.5 text-ok"><ShieldCheck size={13} /> Admin hesabı var</span>
+    : <span className="muted flex items-center gap-1.5"><ShieldCheck size={13} /> Hesab açılmayıb</span>;
+}
+
+// Kart + onun pəncərələri (məlumat, redaktə, telefon/şəkil)
+function useManagerModals(props: CardProps) {
   const [editing, setEditing] = useState(false);
   const [contact, setContact] = useState(false);
   const [viewing, setViewing] = useState(false);
+  const modals = (
+    <>
+      {viewing && <ManagerDetailsModal manager={props.manager} accounts={props.accounts} canEdit={props.canEdit} onClose={() => setViewing(false)} />}
+      {editing && <EditManagerModal manager={props.manager} onClose={() => setEditing(false)} />}
+      {contact && <ContactModal manager={props.manager} onClose={() => setContact(false)} />}
+    </>
+  );
+  return { modals, open: () => setViewing(true), edit: () => setEditing(true), contact: () => setContact(true) };
+}
+
+function ManagerCard(props: CardProps) {
+  const { manager, isMe } = props;
+  const m = useManagerModals(props);
+  return (
+    <>
+      {m.modals}
+      <PersonCard
+        person={manager}
+        subtitle={manager.position ?? "Rəhbərlik"}
+        badge={isMe ? "Sən" : undefined}
+        highlight={isMe}
+        actions={<CardActions {...props} onEdit={m.edit} onContact={m.contact} />}
+        footer={<AccountLine manager={manager} />}
+        onOpen={m.open}
+      />
+    </>
+  );
+}
+
+// Müdirin iri tünd kartı (rəhbərliyin başı)
+function LeadCard(props: CardProps) {
+  const { manager, isMe } = props;
+  const m = useManagerModals(props);
   const exp = experience(manager.start_date);
+  const actions = <CardActions {...props} onEdit={m.edit} onContact={m.contact} light />;
 
   return (
     <>
-      {viewing && <ManagerDetailsModal manager={manager} accounts={accounts} canEdit={canEdit} onClose={() => setViewing(false)} />}
-      {editing && <EditManagerModal manager={manager} onClose={() => setEditing(false)} />}
-      {contact && <ContactModal manager={manager} onClose={() => setContact(false)} />}
-
+      {m.modals}
       <div
-        className={`store-card cursor-pointer ${isMe ? "!border-primary" : ""}`}
+        className="relative flex cursor-pointer flex-wrap items-center gap-x-6 gap-y-4 rounded-[18px] bg-[linear-gradient(120deg,#0b1324,#11243a_55%,#0f3d4c)] px-6 py-6 text-white transition-transform hover:-translate-y-0.5"
         role="button"
         tabIndex={0}
         aria-label={`${manager.full_name}: məlumatlara bax`}
-        onClick={() => setViewing(true)}
-        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && e.target === e.currentTarget && setViewing(true)}
+        onClick={m.open}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && e.target === e.currentTarget && m.open()}
       >
-        <div className="flex gap-4">
-          <Avatar employee={manager} />
-          <div className="min-w-0 flex-1">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <h3 className="truncate text-[15px] font-bold">{manager.full_name}</h3>
-                <p className="muted text-[13px]">{manager.position}</p>
-              </div>
-              {isMe && <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-primary">Sən</span>}
-              {!canEdit && canContact && (
-                <button type="button" onClick={(e) => { e.stopPropagation(); setContact(true); }} className="icon-btn shrink-0" title="Telefon və şəkli dəyiş" aria-label="Telefon və şəkli dəyiş">
-                  <Pencil size={16} />
-                </button>
-              )}
-              {canEdit && <div className="flex shrink-0 items-center gap-1" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-                <button type="button" onClick={() => setEditing(true)} className="icon-btn" title="Redaktə et" aria-label="Redaktə et">
-                  <Pencil size={16} />
-                </button>
-                <ConfirmButton onConfirm={() => deleteEmployee(manager.id)} className="icon-btn icon-btn-danger" title="Rəhbəri sil">
-                  <Trash2 size={16} />
-                </ConfirmButton>
-              </div>}
-            </div>
-            <p className="mt-1 flex items-center gap-1.5 text-[13px]">
-              <Phone size={14} className="muted shrink-0" />
-              {manager.phone
-                ? <a href={`tel:${manager.phone}`} className="link" onClick={(e) => e.stopPropagation()}>{manager.phone}</a>
-                : <span className="muted">Telefon yoxdur</span>}
-            </p>
-          </div>
-        </div>
-        <div className="mt-3 flex items-center justify-between gap-2 border-t border-dashed border-line pt-3 text-xs font-semibold">
-          <span className="flex items-center gap-2">
-            <Briefcase size={14} className="text-primary" />
-            {exp ? <span>Təcrübə: {exp}</span> : <span className="muted">İşə başlama tarixi yazılmayıb</span>}
+        <Avatar employee={manager} className="!h-24 !w-24 !text-2xl ring-4 ring-white/15" />
+        <div className="min-w-0 flex-[1_1_260px]">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-frost">
+            <Crown size={12} /> {manager.position ?? "Rəhbər"}{isMe && " · Sən"}
           </span>
-          {manager.user_id
-            ? <span className="flex items-center gap-1.5 text-ok"><ShieldCheck size={13} /> Admin hesabı var</span>
-            : <span className="muted flex items-center gap-1.5"><ShieldCheck size={13} /> Hesab açılmayıb</span>}
+          <h2 className="mt-1.5 truncate text-2xl font-extrabold">{manager.full_name}</h2>
+          <p className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-white/65">
+            <span className="flex items-center gap-1.5"><Briefcase size={14} className="text-white/45" />{exp ? `Təcrübə: ${exp}` : "Təcrübə yazılmayıb"}</span>
+            <span className={`flex items-center gap-1.5 ${manager.user_id ? "text-[#4ade80]" : ""}`}>
+              <ShieldCheck size={14} />{manager.user_id ? "Admin hesabı var" : "Hesab açılmayıb"}
+            </span>
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+          {manager.phone ? (
+            <a href={`tel:${manager.phone}`} className="btn !bg-white !text-[#0b1324] hover:!bg-frost"><Phone size={16} /> {manager.phone}</a>
+          ) : (
+            <span className="flex items-center gap-1.5 text-sm text-white/50"><Phone size={15} /> Telefon yazılmayıb</span>
+          )}
+          {actions}
         </div>
       </div>
     </>
   );
+}
+
+// Vəzifə sırası: müdir ən üstdə, sonra servis müdirləri, sonra qalanlar (maliyyəçi və s.)
+function rank(position: string | null) {
+  const p = (position ?? "").toLocaleLowerCase("az");
+  if (p === "müdir") return 0;
+  if (p.includes("müdir")) return 1;
+  return 2;
 }
 
 // canEdit: sahibdir; myUserId: öz kartı tam redaktə olunmur (özünü silib idarəsiz qalmasın);
@@ -261,38 +315,62 @@ export function ManagerList({ managers, accounts, canEdit, canContact = false, m
 }) {
   const [query, setQuery] = useState(urlQuery);
   const words = norm(query).split(/\s+/).filter(Boolean);
-  const filtered = managers.filter((m) => {
-    const haystack = norm(`${m.full_name} ${m.position} ${m.phone}`);
-    return words.every((w) => haystack.includes(w));
-  });
+  const filtered = managers
+    .filter((m) => {
+      const haystack = norm(`${m.full_name} ${m.position} ${m.phone}`);
+      return words.every((w) => haystack.includes(w));
+    })
+    .sort((a, b) => rank(a.position) - rank(b.position) || a.full_name.localeCompare(b.full_name, "az"));
 
   if (managers.length === 0) {
     return (
       <div className="card py-12 text-center">
         <span className="icon-tile mx-auto"><UserCog size={20} /></span>
         <p className="mt-3 font-semibold">Hələ rəhbər yoxdur</p>
-        {canEdit && <p className="muted text-sm">Sağdakı formdan müdir, servis müdiri və ya maliyyəçini əlavə et.</p>}
+        {canEdit && <p className="muted text-sm">Yuxarıdakı «Yeni rəhbər» düyməsi ilə müdir, servis müdiri və ya maliyyəçini əlavə et.</p>}
       </div>
     );
   }
 
+  const props = (m: Manager): CardProps => ({
+    manager: m, accounts, isMe: m.user_id === myUserId, canEdit: canEdit && m.user_id !== myUserId, canContact,
+  });
+  const lead = filtered[0] && rank(filtered[0].position) === 0 ? filtered[0] : null;
+  const rest = lead ? filtered.slice(1) : filtered;
+
   return (
-    <div className="space-y-4">
-      {/* Axtarış öz yerində qalır; üstündəki boşluq (before) və altındakı zolaq bərk fonludur: sürüşən məzmun orada görünmür */}
-      <div className="sticky top-0 z-10 rounded-[14px] shadow-[0_16px_0_0_#f8f9fc] before:absolute before:inset-x-0 before:bottom-full before:h-8 before:bg-[#f8f9fc]">
-        <div className="search">
-        <Search size={20} />
-        <input value={query} onChange={(e) => setQuery(e.target.value)}
-          placeholder="Ad, vəzifə və ya telefon ilə axtar..." aria-label="Rəhbər axtarışı" />
+    <div className="space-y-5">
+      {/* Axtarış yuxarıda yapışıq qalır */}
+      <div className="sticky top-[var(--header-h)] z-20 -mx-1 bg-bg/90 px-1 py-2 backdrop-blur">
+        <label className="flex h-11 items-center gap-2.5 rounded-xl bg-surface px-3.5 ring-1 ring-line focus-within:ring-2 focus-within:ring-primary">
+          <Search size={18} className="shrink-0 text-muted" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)}
+            placeholder="Ad, vəzifə və ya telefon ilə axtar..." aria-label="Rəhbər axtarışı"
+            className="h-full min-w-0 flex-1 bg-transparent text-[15px] outline-none" />
+          {query && (
+            <button type="button" onClick={() => setQuery("")} className="text-muted hover:text-ink" aria-label="Axtarışı təmizlə">
+              <X size={16} />
+            </button>
+          )}
+        </label>
       </div>
-      </div>
+
       {filtered.length === 0 ? (
         <div className="card muted py-10 text-center text-sm">Bu axtarışa uyğun rəhbər tapılmadı.</div>
       ) : (
-        <div className="grid grid-cols-2 gap-4">
-          {filtered.map((m) => <ManagerCard key={m.id} manager={m} accounts={accounts} isMe={m.user_id === myUserId}
-              canEdit={canEdit && m.user_id !== myUserId} canContact={canContact} />)}
-        </div>
+        <>
+          {lead && <LeadCard {...props(lead)} />}
+          {rest.length > 0 && (
+            <section>
+              <h2 className="muted mb-3 text-xs font-semibold uppercase tracking-wider">{lead ? "Komanda rəhbərləri" : "Rəhbərlik"} · {rest.length}</h2>
+              <div className="flex flex-wrap gap-4">
+                {rest.map((m) => (
+                  <div key={m.id} className="flex min-w-0 grow basis-[320px] [&>*]:flex-1"><ManagerCard {...props(m)} /></div>
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
     </div>
   );

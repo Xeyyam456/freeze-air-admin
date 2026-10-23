@@ -8,6 +8,7 @@ import { ClientPage, ClientsPage } from "@/pages/Clients";
 import DepotPage from "@/pages/Depot";
 import EmployeesPage from "@/pages/Employees";
 import ErrorCodesPage from "@/pages/ErrorCodes";
+import FuelPage from "@/pages/Fuel";
 import Home from "@/pages/Home";
 import AttendancePage from "@/pages/Attendance";
 import LeavesPage from "@/pages/Leaves";
@@ -53,6 +54,7 @@ export default function App() {
             <Route path="magazalar/:id" element={<ClientPage kind="market" />} />
             <Route path="ustalar" element={<EmployeesPage />} />
             <Route path="rehberlik" element={<ManagementPage />} />
+            <Route path="yanacaq" element={<FuelPage />} />
             <Route path="davamiyyet" element={<AttendancePage />} />
             <Route path="icazeler" element={<LeavesPage />} />
             <Route path="depo" element={<DepotPage />} />

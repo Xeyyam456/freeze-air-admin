@@ -1,11 +1,12 @@
 
 import { urlQuery } from "@/lib/urlQuery";
-import { useActionState, useMemo, useRef, useState } from "react";
-import { Briefcase, CalendarDays, ClipboardList, KeyRound, Pencil, Phone, Plus, Search, Trash2, User, Users, X } from "lucide-react";
+import { useActionState, useMemo, useState } from "react";
+import { Briefcase, CalendarDays, Car, Fuel, ClipboardList, KeyRound, Pencil, Phone, Plus, Search, Trash2, User, Users, X } from "lucide-react";
 import { createEmployeeAccount, deleteEmployeeAccount, resetEmployeePassword } from "@/actions/accounts";
 import { addEmployee, deleteEmployee, updateEmployee } from "@/actions/employees";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { AvatarUpload } from "./AvatarUpload";
+import { PersonCard, type PersonStatus } from "./PersonCard";
 import { DatePicker } from "@/components/DatePicker";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
@@ -14,6 +15,7 @@ import type { Tables } from "@/lib/database.types";
 import { experience, initials } from "@/lib/experience";
 
 type Employee = Tables<"employees">;
+export type TodayStatus = PersonStatus;
 
 // Ustaların giriş hesabları: enabled — gizli açar qurulubmu; emails — usta id → e-poçt
 export type Accounts = { enabled: boolean; emails: Record<number, string> };
@@ -55,6 +57,54 @@ function WorkerTypeField({ defaultValue = "master" }: { defaultValue?: string })
   );
 }
 
+// Maşın (0076): "Yoxdur / Var"; var olanda nömrə (məcburi) və marka/model (istəyə görə, gələcəkdə benzin hesabı üçün)
+function CarFields({ e }: { e?: Employee }) {
+  const [hasCar, setHasCar] = useState(e?.has_car ?? false);
+  // Yanacaq növü (0079): hesab bu növün qiyməti ilə aparılır, ona görə maşın varsa mütləq seçilir (standart benzin)
+  const [fuel, setFuel] = useState<"petrol" | "diesel">(e?.fuel_type === "diesel" ? "diesel" : "petrol");
+  const opt = (on: boolean, label: string) => (
+    <button type="button" onClick={() => setHasCar(on)} aria-pressed={hasCar === on}
+      className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-sm font-semibold transition-colors ${
+        hasCar === on ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
+      {on && <Car size={14} />} {label}
+    </button>
+  );
+  return (
+    <div className="space-y-2">
+      <input type="hidden" name="car_form" value="1" />
+      <input type="hidden" name="has_car" value={hasCar ? "1" : "0"} />
+      <span className="label">Maşın</span>
+      <div className="flex gap-1 rounded-xl bg-bg p-1">{opt(false, "Yoxdur")}{opt(true, "Var")}</div>
+      {hasCar && (
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Maşın nömrəsi">
+            <input name="car_plate" defaultValue={e?.car_plate ?? ""} placeholder="10-AB-123" required className="field uppercase" />
+          </Field>
+          <Field label="Marka, model">
+            <input name="car_model" defaultValue={e?.car_model ?? ""} placeholder="Toyota Prius" className="field" />
+          </Field>
+          <div>
+            <span className="label">Yanacaq</span>
+            <input type="hidden" name="fuel_type" value={fuel} />
+            <div className="flex h-[42px] gap-1 rounded-xl bg-bg p-1" role="radiogroup" aria-label="Yanacaq növü">
+              {(["petrol", "diesel"] as const).map((k) => (
+                <button key={k} type="button" role="radio" aria-checked={fuel === k} onClick={() => setFuel(k)}
+                  className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                    fuel === k ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
+                  <Fuel size={14} className={fuel === k ? (k === "diesel" ? "text-amber-600" : "text-primary") : ""} /> {k === "petrol" ? "Benzin" : "Dizel"}
+                </button>
+              ))}
+            </div>
+          </div>
+          <Field label="100 km-ə sərf (litr)">
+            <input name="fuel_per_100" defaultValue={e?.fuel_per_100 ?? ""} inputMode="decimal" placeholder="8" className="field" />
+          </Field>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function EmployeeFields({ e }: { e?: Employee }) {
   return (
     <>
@@ -80,32 +130,40 @@ function EmployeeFields({ e }: { e?: Employee }) {
           <input name="phone" defaultValue={e?.phone ?? ""} placeholder="+994 50 000 00 00" className="field" />
         </Field>
       </div>
+      <CarFields e={e} />
     </>
   );
 }
 
-// Sağ paneldəki "Yeni usta" kartı
-export function AddEmployeeCard() {
+// "Yeni usta": başlıqdakı düymə pəncərə açır (Şirkətlər kimi), siyahı bütün eni tutur
+function AddEmployeeForm({ onDone }: { onDone: () => void }) {
   const [state, action, pending] = useActionState(addEmployee, null);
-  const ref = useRef<HTMLFormElement>(null);
-  // Təqvim öz vəziyyətini saxlayır, form.reset() onu təmizləmir: uğurdan sonra sahələri yenidən yaradırıq
-  const [formKey, setFormKey] = useState(0);
-  useOnSuccess(state, () => {
-    ref.current?.reset();
-    setFormKey((k) => k + 1);
-  }, "Usta əlavə edildi");
-
+  useOnSuccess(state, onDone, "Usta əlavə edildi");
   return (
-    <div className="card space-y-4">
-      <div className="flex items-center gap-3">
-        <span className="icon-tile !h-9 !w-9"><Plus size={18} /></span>
-        <h2 className="card-title">Yeni usta</h2>
-      </div>
-      <ActionForm ref={ref} action={action} className="space-y-4">
-        <EmployeeFields key={formKey} />
-        <Buttons pending={pending} label="Ustanı əlavə et" />
-      </ActionForm>
-    </div>
+    <ActionForm action={action} className="space-y-4">
+      <EmployeeFields />
+      <Buttons pending={pending} label="Ustanı əlavə et" />
+    </ActionForm>
+  );
+}
+
+export function AddEmployeeButton() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)} className="hero-action">
+        <Plus size={17} /> Yeni usta
+      </button>
+      {open && (
+        <Modal onClose={() => setOpen(false)} labelledBy="add-employee-title" className="!max-w-lg">
+          <div className="mb-5 flex items-center gap-3">
+            <span className="icon-tile !h-10 !w-10"><Plus size={18} /></span>
+            <h2 id="add-employee-title" className="card-title">Yeni usta</h2>
+          </div>
+          <AddEmployeeForm onDone={() => setOpen(false)} />
+        </Modal>
+      )}
+    </>
   );
 }
 
@@ -199,11 +257,18 @@ function EmployeeDetailsModal({ employee, accounts, admin, onClose }: {
             <p className="muted flex items-center gap-1.5 text-xs font-medium"><CalendarDays size={13} /> İşə başlayıb</p>
             <p className="font-semibold">{formatDate(employee.start_date) ?? "—"}</p>
           </div>
-          <div className="col-span-2 rounded-xl bg-bg px-3 py-2">
+          <div className="rounded-xl bg-bg px-3 py-2">
             <p className="muted flex items-center gap-1.5 text-xs font-medium"><Phone size={13} /> Telefon</p>
             {employee.phone
               ? <a href={`tel:${employee.phone}`} className="link">{employee.phone}</a>
               : <p className="font-semibold">—</p>}
+          </div>
+          <div className="rounded-xl bg-bg px-3 py-2">
+            <p className="muted flex items-center gap-1.5 text-xs font-medium"><Car size={13} /> Maşın</p>
+            {employee.has_car
+              ? <p className="font-semibold"><span className="plate">{employee.car_plate ?? "Nömrə yazılmayıb"}</span>{employee.car_model && <span className="muted ml-1.5 text-xs font-medium">{employee.car_model}</span>}
+                <span className="muted block text-xs font-medium">{employee.fuel_type === "diesel" ? "Dizel" : employee.fuel_type === "petrol" ? "Benzin" : "Yanacaq seçilməyib"}{employee.fuel_per_100 && ` · ${employee.fuel_per_100} l / 100 km`}</span></p>
+              : <p className="muted font-semibold">Yoxdur</p>}
           </div>
           {admin && (
             <div className="col-span-2">
@@ -291,78 +356,76 @@ export function AccountSection({ employeeId, email, hasAccount, enabled, note = 
   );
 }
 
-function EmployeeCard({ employee, todayCount, accounts, admin }: {
+function EmployeeCard({ employee, todayCount, monthCount, status, accounts, admin }: {
   accounts: Accounts;
   todayCount: number;
+  monthCount: number;
+  status?: TodayStatus;
   employee: Employee;
   admin: boolean;
 }) {
   const [editing, setEditing] = useState(false);
   const [viewing, setViewing] = useState(false);
-  const exp = experience(employee.start_date);
 
   return (
     <>
       {/* Modallar kartın çölündədir: içlərindəki kliklər karta keçib detalları yenidən açmasın */}
       {viewing && <EmployeeDetailsModal employee={employee} accounts={accounts} admin={admin} onClose={() => setViewing(false)} />}
       {editing && <EditEmployeeModal employee={employee} onClose={() => setEditing(false)} />}
-
-    {/* Kartın istənilən yerinə klik məlumat pəncərəsini açır */}
-    <div
-      className="store-card cursor-pointer"
-      role="button"
-      tabIndex={0}
-      aria-label={`${employee.full_name}: məlumatlara bax`}
-      onClick={() => setViewing(true)}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && e.target === e.currentTarget && setViewing(true)}
-    >
-      <div className="flex gap-4">
-        <Avatar employee={employee} />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h3 className="truncate text-[15px] font-bold">{employee.full_name}</h3>
-              <p className="muted text-[13px]"><span className="mr-1.5 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-bold text-primary">{workerTypeLabel(employee.worker_type)}</span>{employee.specialty ?? "İxtisas yazılmayıb"}</p>
-            </div>
-            {admin && (
-              // Redaktə/sil kliki karta keçməsin (yoxsa detallar da açılar)
-              <div className="flex shrink-0 items-center gap-1" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-                <button type="button" onClick={() => setEditing(true)} className="icon-btn" title="Redaktə et" aria-label="Redaktə et">
-                  <Pencil size={16} />
-                </button>
-                <ConfirmButton onConfirm={() => deleteEmployee(employee.id)} className="icon-btn icon-btn-danger" title="Ustanı sil">
-                  <Trash2 size={16} />
-                </ConfirmButton>
-              </div>
-            )}
-          </div>
-          <p className="mt-1 flex items-center gap-1.5 text-[13px]">
-            <Phone size={14} className="muted shrink-0" />
-            {employee.phone
-              ? <a href={`tel:${employee.phone}`} className="link" onClick={(e) => e.stopPropagation()}>{employee.phone}</a>
-              : <span className="muted">Telefon yoxdur</span>}
-          </p>
-        </div>
-      </div>
-      <div className="mt-3 flex items-center justify-between gap-2 border-t border-dashed border-line pt-3 text-xs font-semibold">
-        <span className="flex items-center gap-2">
-          <Briefcase size={14} className="text-primary" />
-          {exp ? <span>Təcrübə: {exp}</span> : <span className="muted">İşə başlama tarixi yazılmayıb</span>}
-        </span>
-        <span className="flex shrink-0 items-center gap-3">
-          <span className={`flex items-center gap-1.5 ${todayCount ? "text-ok" : "muted"}`} title="Bu gün yazılan işlər">
-            <ClipboardList size={13} /> Bu gün: {todayCount} iş
+      <PersonCard
+        person={employee}
+        badge={workerTypeLabel(employee.worker_type)}
+        subtitle={employee.specialty ?? "İxtisas yazılmayıb"}
+        status={status}
+        stats={[
+          { label: "Bu gün iş", value: todayCount, tone: todayCount ? "text-ok" : "" },
+          { label: "Bu ay iş", value: monthCount, tone: monthCount ? "text-primary" : "" },
+        ]}
+        actions={admin && (
+          <>
+            <button type="button" onClick={() => setEditing(true)} className="icon-btn !h-8 !w-8" title="Redaktə et" aria-label="Redaktə et">
+              <Pencil size={15} />
+            </button>
+            <ConfirmButton onConfirm={() => deleteEmployee(employee.id)} className="icon-btn !h-8 !w-8" title="Ustanı sil">
+              <Trash2 size={15} />
+            </ConfirmButton>
+          </>
+        )}
+        footer={
+          <span className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+            {employee.has_car
+              ? <span className="flex items-center gap-1.5" title={employee.car_model ?? "Maşın"}><Car size={13} className="text-primary" /><span className="plate">{employee.car_plate ?? "Nömrəsiz"}</span>
+                <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${employee.fuel_type === "diesel" ? "bg-[#fff6e5] text-amber-700" : employee.fuel_type === "petrol" ? "bg-primary-soft text-primary" : "bg-danger-soft text-danger"}`}>
+                  {employee.fuel_type === "diesel" ? "Dizel" : employee.fuel_type === "petrol" ? "Benzin" : "Yanacaq?"}
+                </span></span>
+              : <span className="muted flex items-center gap-1.5"><Car size={13} /> Maşını yoxdur</span>}
+            {admin && accounts.enabled && (employee.user_id
+              ? <span className="flex items-center gap-1.5 text-ok"><KeyRound size={13} /> Giriş hesabı var</span>
+              : <span className="muted flex items-center gap-1.5"><KeyRound size={13} /> Hesab açılmayıb</span>)}
           </span>
-        </span>
-      </div>
-    </div>
+        }
+        onOpen={() => setViewing(true)}
+      />
     </>
   );
 }
 
-export function EmployeeList({ employees, todayWork, accounts, admin }: {
+// Tünd xülasədəki rəqəm
+function SummaryStat({ label, value, tone = "" }: { label: string; value: number; tone?: string }) {
+  return (
+    <div>
+      <dt className="text-xs text-white/55">{label}</dt>
+      <dd className={`text-2xl font-extrabold tabular-nums ${tone}`}>{value}</dd>
+    </div>
+  );
+}
+
+// Ustalar: tünd xülasə (növlər, bu gün işdə / icazəli, işlər), yapışan axtarış, profil kartları
+export function EmployeeList({ employees, todayWork, monthWork, status, accounts, admin }: {
   accounts: Accounts;
   todayWork: Record<number, number>; // usta id → bu gün yazılan iş sayı
+  monthWork: Record<number, number>; // usta id → bu ay yazılan iş sayı
+  status: Record<number, TodayStatus>; // usta id → bu günkü davamiyyət vəziyyəti
   employees: Employee[];
   admin: boolean;
 }) {
@@ -371,7 +434,7 @@ export function EmployeeList({ employees, todayWork, accounts, admin }: {
   const filtered = useMemo(() => {
     const words = norm(query).split(/\s+/).filter(Boolean);
     return employees.filter((e) => {
-      const haystack = norm(`${e.full_name} ${e.specialty} ${e.phone}`);
+      const haystack = norm(`${e.full_name} ${e.specialty} ${e.phone} ${workerTypeLabel(e.worker_type)}`);
       return words.every((w) => haystack.includes(w));
     });
   }, [employees, query]);
@@ -381,30 +444,66 @@ export function EmployeeList({ employees, todayWork, accounts, admin }: {
       <div className="card py-12 text-center">
         <span className="icon-tile mx-auto"><Users size={20} /></span>
         <p className="mt-3 font-semibold">Hələ usta yoxdur</p>
-        <p className="muted text-sm">Sağdakı formdan ilk ustanı əlavə et.</p>
+        {admin && <p className="muted text-sm">Yuxarıdakı «Yeni usta» düyməsi ilə ilk ustanı əlavə et.</p>}
       </div>
     );
   }
 
+  const count = (kind: TodayStatus["kind"]) => employees.filter((e) => status[e.id]?.kind === kind).length;
+  const sum = (r: Record<number, number>) => Object.values(r).reduce((n, v) => n + v, 0);
+  const types = (["master", "assistant", "driver"] as const)
+    .map((t) => ({ label: workerTypeLabel(t), n: employees.filter((e) => (e.worker_type ?? "master") === t).length }))
+    .filter((t) => t.n > 0);
+
   return (
-    <div className="space-y-4">
-      {/* Axtarış öz yerində qalır; üstündəki boşluq (before) və altındakı zolaq bərk fonludur: sürüşən məzmun orada görünmür */}
-      <div className="sticky top-0 z-10 rounded-[14px] shadow-[0_16px_0_0_#f8f9fc] before:absolute before:inset-x-0 before:bottom-full before:h-8 before:bg-[#f8f9fc]">
-        <div className="search">
-        <Search size={20} />
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Ad, ixtisas və ya telefon ilə axtar..."
-          aria-label="Usta axtarışı"
-        />
+    <div className="space-y-5">
+      <section className="flex flex-wrap items-center gap-x-10 gap-y-4 rounded-[18px] bg-[linear-gradient(120deg,#0b1324,#11243a_55%,#0f3d4c)] px-6 py-5 text-white">
+        <div className="flex items-center gap-4">
+          {/* Komandanın üzləri: ilk 4 usta üst-üstə */}
+          <div className="flex -space-x-3">
+            {employees.slice(0, 4).map((e) => <Avatar key={e.id} employee={e} className="!h-11 !w-11 !text-xs ring-2 ring-[#0b1324]" />)}
+          </div>
+          <div>
+            <p className="text-2xl font-extrabold leading-tight">{employees.length} əməkdaş</p>
+            <p className="text-xs text-white/55">{types.map((t) => `${t.n} ${t.label.toLocaleLowerCase("az")}`).join(" · ")}</p>
+          </div>
+        </div>
+        <dl className="flex flex-1 flex-wrap gap-x-10 gap-y-3">
+          <SummaryStat label="Bu gün işdə" value={count("in")} tone="text-[#4ade80]" />
+          <SummaryStat label="İşi bitirib" value={count("done")} />
+          <SummaryStat label="İcazəli" value={count("leave")} tone={count("leave") ? "text-amber-400" : ""} />
+          <SummaryStat label="Bu gün iş" value={sum(todayWork)} tone="text-frost" />
+          <SummaryStat label="Bu ay iş" value={sum(monthWork)} />
+        </dl>
+      </section>
+
+      {/* Axtarış yuxarıda yapışıq qalır */}
+      <div className="sticky top-[var(--header-h)] z-20 -mx-1 bg-bg/90 px-1 py-2 backdrop-blur">
+        <label className="flex h-11 items-center gap-2.5 rounded-xl bg-surface px-3.5 ring-1 ring-line focus-within:ring-2 focus-within:ring-primary">
+          <Search size={18} className="shrink-0 text-muted" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Ad, ixtisas, növ və ya telefon ilə axtar..."
+            aria-label="Usta axtarışı"
+            className="h-full min-w-0 flex-1 bg-transparent text-[15px] outline-none"
+          />
+          {query && (
+            <button type="button" onClick={() => setQuery("")} className="text-muted hover:text-ink" aria-label="Axtarışı təmizlə">
+              <X size={16} />
+            </button>
+          )}
+        </label>
       </div>
-      </div>
+
       {filtered.length === 0 ? (
         <div className="card muted py-10 text-center text-sm">Bu axtarışa uyğun usta tapılmadı.</div>
       ) : (
-        <div className="grid grid-cols-2 gap-4">
-          {filtered.map((e) => <EmployeeCard key={e.id} employee={e} todayCount={todayWork[e.id] ?? 0} accounts={accounts} admin={admin} />)}
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((e) => (
+            <EmployeeCard key={e.id} employee={e} todayCount={todayWork[e.id] ?? 0} monthCount={monthWork[e.id] ?? 0}
+              status={status[e.id]} accounts={accounts} admin={admin} />
+          ))}
         </div>
       )}
     </div>

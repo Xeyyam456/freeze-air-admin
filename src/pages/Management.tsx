@@ -1,6 +1,5 @@
 import { Page } from "@/components/Page";
-import { WithSidePanel } from "@/components/SidePanel";
-import { AddManagerCard, ManagerList } from "@/components/management/ManagementForms";
+import { AddManagerButton, ManagerList } from "@/components/management/ManagementForms";
 import { listAccountEmails } from "@/actions/accounts";
 import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
@@ -20,15 +19,13 @@ export default function ManagementPage() {
   const data = useData(() => fetchManagers(admin), [admin]);
 
   return (
-    <Page title="Rəhbərlik" subtitle={owner ? "Müdir, servis müdirləri və maliyyəçi: hesabları admin yetkisi alır" : "Rəhbərlərin telefonunu və şəklini dəyişə bilərsən; qalan məlumatları müdir dəyişir"}>
+    <Page title="Rəhbərlik" actions={owner ? <AddManagerButton /> : undefined} subtitle={owner ? "Müdir, servis müdirləri və maliyyəçi: hesabları admin yetkisi alır" : "Rəhbərlərin telefonunu və şəklini dəyişə bilərsən; qalan məlumatları müdir dəyişir"}>
       {!data ? (
         <div className="card muted">Yüklənir...</div>
       ) : (
         // Rəhbərlik heyətini yalnız sahib (müdir) dəyişir; digər adminlər baxır
-        <WithSidePanel panel={owner ? <AddManagerCard /> : null}>
-          <ManagerList managers={data.managers} canEdit={owner} canContact={admin} myUserId={session?.user.id ?? null}
-            accounts={{ enabled: data.emails !== null, emails: data.emails ?? {} }} />
-        </WithSidePanel>
+        <ManagerList managers={data.managers} canEdit={owner} canContact={admin} myUserId={session?.user.id ?? null}
+          accounts={{ enabled: data.emails !== null, emails: data.emails ?? {} }} />
       )}
     </Page>
   );

@@ -60,9 +60,10 @@ async function fetchDashboard() {
     supabase.from("work_logs").select("employee_id").eq("work_date", today).then((r) => r.data ?? []),
     // Bugünkü tapşırıqlar (görülənlər də daxil, geri alınanlar yox; ustaya görə qruplu)
     supabase.from("tasks")
-      .select("id, done, reason, place_text, employees(full_name, photo_url), stores(name, code, companies(name)), companies(name)")
+      .select("id, done, reason, place_text, group_id, employees(full_name, photo_url), stores(name, code, companies(name)), companies(name)")
       .eq("task_date", today).is("cancelled_at", null).order("employee_id").order("created_at").limit(100)
-      .then((r) => r.data ?? []),
+      // Qrup tapşırığı (0071) bir sətirdir: üzvlərin adları birləşir
+      .then((r) => mergeGroups(r.data ?? [])),
   ]);
 
   const masters = employees.filter((e) => !e.is_management);
@@ -78,6 +79,21 @@ async function fetchDashboard() {
 
 type Log = Awaited<ReturnType<typeof fetchDashboard>>["logs"][number];
 type TaskRow = Awaited<ReturnType<typeof fetchDashboard>>["tasks"][number];
+
+// Eyni group_id-li sətirlər bir tapşırıq olur; names: üzvlərin adları
+function mergeGroups<T extends { group_id: string | null; employees: { full_name: string } | null }>(rows: T[]) {
+  const out: (T & { names: string[] })[] = [];
+  const byGroup = new Map<string, T & { names: string[] }>();
+  for (const t of rows) {
+    const name = t.employees?.full_name ?? "—";
+    const g = t.group_id ? byGroup.get(t.group_id) : undefined;
+    if (g) { g.names.push(name); continue; }
+    const row = { ...t, names: [name] };
+    out.push(row);
+    if (t.group_id) byGroup.set(t.group_id, row);
+  }
+  return out;
+}
 
 function taskPlace(t: TaskRow) {
   if (t.stores) return `${t.stores.companies?.name ?? ""} · ${t.stores.name}`;
@@ -202,7 +218,7 @@ export default function Home() {
                             </span>
                             <span className="min-w-0 flex-1 leading-tight">
                               <span className="block truncate text-sm">
-                                <span className="font-bold">{(t.employees?.full_name ?? "—").split(" ").slice(-1)[0]}</span>
+                                <span className="font-bold">{t.names.map((n) => n.split(" ").slice(-1)[0]).join(" + ")}</span>
                                 <span className="muted"> · </span>
                                 <span className={`font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{taskPlace(t)}</span>
                               </span>

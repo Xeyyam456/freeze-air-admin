@@ -44,6 +44,20 @@ export function TasksListener() {
         playNotify();
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "attendance" }, () => revalidate())
+      // Yanacaq (0080-0082): usta ödənişi təsdiqləyəndə tost + səs; yürüş və ödəniş dəyişəndə Yanacaq səhifəsi yenilənir
+      .on("postgres_changes", { event: "*", schema: "public", table: "mileage_logs" }, () => revalidate())
+      .on("postgres_changes", { event: "*", schema: "public", table: "fuel_payments" }, async (payload) => {
+        revalidate();
+        if (payload.eventType !== "UPDATE") return;
+        const p = payload.new as Tables<"fuel_payments">;
+        const o = payload.old as Partial<Tables<"fuel_payments">>;
+        if (p.status === o.status || p.status === "pending") return; // yalnız ustanın cavabı (aldım / almadım)
+        const { data: e } = await supabase.from("employees").select("full_name").eq("id", p.employee_id).maybeSingle();
+        const sum = `${Number(p.amount).toFixed(2)} ₼`;
+        if (p.status === "received") toast.success(`Yanacaq pulunu aldı: ${e?.full_name ?? "usta"}`, sum);
+        else toast.error(`Yanacaq pulunu almadığını deyir: ${e?.full_name ?? "usta"}`, `${sum} · yoxla`);
+        playNotify();
+      })
       .subscribe();
     return () => {
       supabase.removeChannel(channel);
