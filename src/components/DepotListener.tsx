@@ -4,10 +4,7 @@ import { isSoundReady, playNotify } from "@/lib/sound";
 import { createClient } from "@/lib/supabase/client";
 import type { Tables } from "@/lib/database.types";
 import { toast } from "@/lib/toast";
-
-const TYPE: Record<string, string> = {
-  receipt: "Mədaxil", return: "Qaytarma", writeoff: "Silinmə aktı", count: "Sayım", request: "Alət istəyi",
-};
+import { requestLabel } from "@/components/depot/depotUtils";
 
 // Depo Realtime ilə (0084), yalnız depo məsulu və adminlərdə: yeni sənəd (ustanın qaytarması, istəyi, mədaxil...) → tost + səs;
 // usta verilən aləti "Aldım" / "Almadım" deyəndə tost. Hər dəyişiklikdə Depo səhifəsi və menyu nişanı yenilənir. Ekranda heç nə çəkmir.
@@ -22,7 +19,7 @@ export function DepotListener() {
         const r = payload.new as Tables<"depot_requests">;
         const u = r.tool_kind === "material" ? r.unit : "ədəd";
         const silent = !isSoundReady();
-        toast.success(`${TYPE[r.type] ?? "Depo sənədi"}: ${r.created_by_name ?? ""}`, `${r.tool_name} · ${r.quantity ?? ""} ${u}${silent ? " · səs üçün səhifədə bir dəfə klik et" : ""}`);
+        toast.success(`${requestLabel(r)}: ${r.created_by_name ?? ""}`, `${r.tool_name} · ${r.quantity ?? ""} ${u}${silent ? " · səs üçün səhifədə bir dəfə klik et" : ""}`);
         playNotify();
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "tool_assignments" }, async (payload) => {

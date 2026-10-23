@@ -97,7 +97,7 @@ export const REQUEST_TYPES: Record<string, { label: string; tone: string }> = {
   return: { label: "Qaytarma", tone: "bg-primary-soft text-primary" },
   writeoff: { label: "Silinmə aktı", tone: "bg-danger-soft text-danger" },
   count: { label: "Sayım", tone: "bg-[#f1ebff] text-[#6d28d9]" },
-  request: { label: "Alət istəyi", tone: "bg-[#fff4e0] text-[#b45309]" },
+  request: { label: "İstək", tone: "bg-[#fff4e0] text-[#b45309]" },
 };
 // Təsdiqlənmiş silinmə (itki): siyahıda "1 xarab olub", hamısı gedibsə vəziyyət "Xarab olub"
 export type Loss = Pick<DepotRequest, "tool_id" | "quantity" | "reason" | "note" | "decided_at">;
@@ -107,6 +107,9 @@ export function lossText(list: Loss[], unit: string) {
   for (const l of list) by.set(l.reason ?? "other", (by.get(l.reason ?? "other") ?? 0) + (l.quantity ?? 0));
   return [...by].map(([r, n]) => `${fmt(n)} ${unit} ${(REASONS[r] ?? r).toLocaleLowerCase("az")}`).join(" · ");
 }
+// Sənədin adı: ustanın istəyi materialdırsa "Material istəyi", alətdirsə "Alət istəyi" (istifadəçi: material istəyi "alət istəyi" görünürdü)
+export const requestLabel = (r: Pick<DepotRequest, "type" | "tool_kind">) =>
+  r.type === "request" ? (r.tool_kind === "material" ? "Material istəyi" : "Alət istəyi") : REQUEST_TYPES[r.type]?.label ?? r.type;
 export const REASONS: Record<string, string> = {
   broken: "Xarab olub",
   lost: "İtib",

@@ -4,7 +4,8 @@ import { Page } from "@/components/Page";
 import { PendingBlock } from "@/components/depot/Approvals";
 import { DepotBoard, type DepotView } from "@/components/depot/DepotBoard";
 import { CountModal, ReceiptModal } from "@/components/depot/DepotDocs";
-import { exportStock, MoreMenu, ShoppingModal } from "@/components/depot/DepotExtras";
+import { ExcelModal } from "@/components/depot/DepotExcel";
+import { MoreMenu, ShoppingModal } from "@/components/depot/DepotExtras";
 import { KeeperModal } from "@/components/depot/DepotForms";
 import { HistoryModal } from "@/components/depot/HistoryModal";
 import { isLowStock, type DepotRequest, type Holding, type Kind, type Piece, type Loss, type Repair, type Tool } from "@/components/depot/depotUtils";
@@ -50,7 +51,7 @@ export default function DepotPage() {
   const data = useData(() => fetchDepot(admin), [admin]);
   const [tab, setTab] = useState<DepotView>("home");
   const [openToolId, setOpenToolId] = useState<number | null>(null);
-  const [modal, setModal] = useState<"receipt" | "count" | "shopping" | "keeper" | "journal" | null>(null);
+  const [modal, setModal] = useState<"receipt" | "count" | "shopping" | "keeper" | "journal" | "excel" | null>(null);
   const [receiptTool, setReceiptTool] = useState<Tool | null>(null);
   const kind: Kind = tab === "material" ? "material" : "tool";
 
@@ -76,7 +77,7 @@ export default function DepotPage() {
             <MoreMenu dark items={[
               ...(canManageTools ? [{ label: "Sayım", icon: ClipboardCheck, onClick: () => setModal("count") }] : []),
               { label: "Alınmalı", icon: ShoppingCart, onClick: () => setModal("shopping"), badge: low },
-              { label: "Excel", icon: FileSpreadsheet, onClick: () => exportStock(tools, holdings) },
+              { label: "Excel", icon: FileSpreadsheet, onClick: () => setModal("excel") },
               { label: "Jurnal", icon: History, onClick: () => setModal("journal") },
             ]} />
           )}
@@ -96,6 +97,7 @@ export default function DepotPage() {
           {modal === "count" && <CountModal tools={tools} kind={kind} onClose={() => setModal(null)} />}
           {modal === "shopping" && <ShoppingModal tools={tools} onReceipt={(t) => openReceipt(t)} onClose={() => setModal(null)} />}
           {modal === "journal" && <HistoryModal kind={kind} onClose={() => setModal(null)} />}
+          {modal === "excel" && <ExcelModal tools={tools} holdings={holdings} employees={data.employees} onClose={() => setModal(null)} />}
           {modal === "keeper" && (
             <KeeperModal employees={data.employees} accounts={{ enabled: data.emails !== null, emails: data.emails ?? {} }} selfId={employeeId} onClose={() => setModal(null)} />
           )}

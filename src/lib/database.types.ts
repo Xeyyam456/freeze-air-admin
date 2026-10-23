@@ -279,6 +279,7 @@ export type Database = {
       depot_requests: {
         Row: {
           assignment_id: number | null
+          batch: string | null
           created_at: string
           created_by: string
           created_by_name: string | null
@@ -306,6 +307,7 @@ export type Database = {
         }
         Insert: {
           assignment_id?: number | null
+          batch?: string | null
           created_at?: string
           created_by?: string
           created_by_name?: string | null
@@ -333,6 +335,7 @@ export type Database = {
         }
         Update: {
           assignment_id?: number | null
+          batch?: string | null
           created_at?: string
           created_by?: string
           created_by_name?: string | null
@@ -1604,7 +1607,7 @@ export type Database = {
       }
       depot_request_cancel: { Args: { p_id: number }; Returns: undefined }
       depot_request_create: {
-        Args: { p_note?: string; p_quantity: number; p_tool_id: number }
+        Args: { p_batch?: string; p_note?: string; p_quantity: number; p_tool_id: number }
         Returns: number
       }
       depot_return_create: {
