@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Clock, FileSpreadsheet, LogIn, LogOut, X } from "lucide-react";
 import { exportAttendanceEmployee } from "@/lib/export-attendance";
 import { Modal } from "@/components/Modal";
-import { fetchEmployeeMonth, MONTHS_AZ, presenceText, shiftMonth, timeBaku, todayBaku, useAttendanceLive, durationText, type DayStatus } from "@/lib/attendance";
+import { fetchEmployeeMonth, MONTHS_AZ, presenceText, sessionNo, shiftMonth, timeBaku, todayBaku, useAttendanceLive, durationText, type DayStatus } from "@/lib/attendance";
 
 const WEEK = ["B.e", "Ç.a", "Ç", "C.a", "C", "Ş", "B"];
 const WEEKDAY = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
@@ -126,8 +126,9 @@ export function AttendanceCalendar({ employeeId, name, onClose }: { employeeId: 
                   </span>
                   {/* Hər seans ayrıca sətir: işi bitirib yenidən işə çıxıbsa bir neçə gəlmə – getmə */}
                   <span className="flex shrink-0 flex-col items-end gap-1" title={presenceText(p)}>
-                    {p.sessions.map((x) => (
+                    {p.sessions.map((x, i) => (
                       <span key={x.in} className="flex items-center gap-1.5">
+                        {p.sessions.length > 1 && <span className="muted w-5 text-right text-xs font-bold tabular-nums">{sessionNo(i, p.sessions.length).trim()}</span>}
                         <span className="flex items-center gap-1 rounded-lg bg-ok-soft px-2 py-1 text-xs font-bold tabular-nums text-ok" title="Gəlmə saatı">
                           <LogIn size={12} /> {timeBaku(x.in)}
                         </span>

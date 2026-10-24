@@ -88,24 +88,46 @@ export function AttendanceBoard({ meId = null, canMark = false }: { meId?: numbe
   const [y, m] = month.split("-").map(Number);
   const isCurrent = month === thisMonth;
 
+  // "Bu gün" xanası: vəziyyət nişanı; admin üçün bu gün gəlməyəni "İşdə olmayıb" qeyd etmək / geri almaq
+  function todayCell(e: (typeof rows)[number], a: ReturnType<NonNullable<typeof att>["byEmployee"]["get"]> | null, t: ReturnType<typeof todayBadge> | null) {
+    if (t && canMark && (a?.today.status === "pending" || a?.today.status === "absent")) {
+      return (
+        <span className="inline-flex items-center gap-2" onClick={(ev) => ev.stopPropagation()}>
+          <span className={`inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ${t.cls}`}>{t.text}</span>
+          {a.today.status === "pending" ? (
+            <button type="button" disabled={busy === e.id} onClick={() => mark(e, true)} className="btn btn-soft btn-sm !h-7 !px-2 text-xs text-danger" title="Bu gün işə gəlməyib: gəlmədi sayılsın">
+              <CalendarX size={13} /> İşdə olmayıb
+            </button>
+          ) : (
+            <button type="button" disabled={busy === e.id} onClick={() => mark(e, false)} className="btn btn-soft btn-sm !h-7 !px-2 text-xs" title="Qeydi geri al">
+              <Undo2 size={13} /> Geri al
+            </button>
+          )}
+        </span>
+      );
+    }
+    return t ? <span className={`inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ${t.cls}`}>{t.text}</span>
+      : <span className="muted inline-flex items-center gap-1 text-xs"><CalendarCheck size={13} /> Təqvim</span>;
+  }
+
   return (
     <div className="space-y-4">
       {open && <AttendanceCalendar employeeId={open.id} name={open.full_name} onClose={() => setOpen(null)} />}
       {exporting && emps && <ExportModal month={month} emps={emps} onClose={() => setExporting(false)} />}
 
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 max-sm:flex-1">
           <button type="button" onClick={() => setMonth(shiftMonth(month, -1))} className="icon-btn" aria-label="Əvvəlki ay"><ChevronLeft size={18} /></button>
-          <h2 className="min-w-40 text-center text-lg font-bold">{MONTHS_AZ[m - 1]} {y}</h2>
+          <h2 className="min-w-40 text-center text-lg font-bold max-sm:min-w-0 max-sm:flex-1 max-sm:whitespace-nowrap">{MONTHS_AZ[m - 1]} {y}</h2>
           <button type="button" onClick={() => setMonth(shiftMonth(month, 1))} disabled={isCurrent} className="icon-btn disabled:opacity-30" aria-label="Sonrakı ay"><ChevronRight size={18} /></button>
           {!isCurrent && <button type="button" onClick={() => setMonth(thisMonth)} className="btn btn-soft btn-sm ml-1">Bu ay</button>}
         </div>
-        <div className="search min-w-56 flex-1">
+        <div className="search min-w-56 flex-1 max-sm:order-last max-sm:min-w-0 max-sm:basis-full">
           <Search size={20} />
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Usta adı ilə axtar..." aria-label="Usta axtarışı" />
         </div>
-        <button type="button" onClick={() => setExporting(true)} disabled={!emps?.length} className="btn btn-soft !h-12 shrink-0" title="Davamiyyəti Excel fayla çıxar">
-          <FileSpreadsheet size={18} className="text-ok" /> Excel
+        <button type="button" onClick={() => setExporting(true)} disabled={!emps?.length} className="btn btn-soft !h-12 shrink-0" title="Davamiyyəti Excel fayla çıxar" aria-label="Excel">
+          <FileSpreadsheet size={18} className="text-ok" /><span className="max-[400px]:hidden">Excel</span>
         </button>
       </div>
 
@@ -127,8 +149,53 @@ export function AttendanceBoard({ meId = null, canMark = false }: { meId?: numbe
         </div>
       )}
 
-      <div className="card overflow-x-auto !p-0">
-        <table className="w-full min-w-[980px] text-sm">
+      {/* < 1280: hər usta bir kart; göstəricilər (gün) bir sırada: İşdə, İcazə, İcazəsiz, Bazar (cədvəl dar ekranda yana sürüşürdü, sağ sütunlar görünmürdü) */}
+      <div className="flex flex-wrap gap-3 xl:hidden">
+        {emps === null ? (
+          <p className="card muted w-full py-10 text-center text-sm">Yüklənir...</p>
+        ) : rows.length === 0 ? (
+          <p className="card muted w-full py-10 text-center text-sm">Usta tapılmadı.</p>
+        ) : rows.map((e) => {
+          const a = att ? att.byEmployee.get(e.id) ?? att.empty : null;
+          const t = a && isCurrent ? todayBadge(a) : null;
+          const cells: [string, React.ReactNode, string][] = [
+            ["İşdə", a?.present ?? "…", "text-ok"],
+            ["İcazə", a?.leaveTimes ? a.leave : "—", "text-violet-600"],
+            ["İcazəsiz", a?.absent || "—", a?.absent ? "text-danger" : "text-muted"],
+            ["Bazar", a?.extra || "—", "text-slate-600"],
+          ];
+          return (
+            <div key={e.id} role="button" tabIndex={0} onClick={() => setOpen(e)} onKeyDown={(ev) => ev.key === "Enter" && setOpen(e)}
+              className={`card grow basis-[320px] cursor-pointer !p-4 transition-colors hover:bg-primary-soft/30 ${e.id === meId ? "ring-2 ring-primary/30" : ""}`}>
+              <div className="flex items-center gap-3">
+                {e.photo_url
+                  // eslint-disable-next-line @next/next/no-img-element -- storage avatarı
+                  ? <img src={e.photo_url} alt={e.full_name} className="h-10 w-10 shrink-0 rounded-full object-cover" />
+                  : <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary">{initials(e.full_name)}</span>}
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2 font-semibold">
+                    <span className="truncate">{e.full_name}</span>
+                    {e.id === meId && <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-bold text-primary">Sən</span>}
+                  </span>
+                  <span className="muted block truncate text-xs">{e.specialty ?? ""}{a ? `${e.specialty ? " · " : ""}${a.workdays} iş günü` : ""}</span>
+                </span>
+              </div>
+              <div className="mt-3 grid grid-cols-4 gap-1.5">
+                {cells.map(([l, v, c]) => (
+                  <span key={l} className="min-w-0 rounded-xl bg-bg px-2.5 py-2 text-center">
+                    <span className="muted block whitespace-nowrap text-[11px] font-semibold">{l}</span>
+                    <b className={`block text-[15px] tabular-nums ${v === "—" ? "text-muted" : c}`}>{v}</b>
+                  </span>
+                ))}
+              </div>
+              {t && <div className="mt-3 flex flex-wrap items-center justify-end gap-2 border-t border-line pt-3">{todayCell(e, a, t)}</div>}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="card overflow-x-auto !p-0 max-xl:hidden">
+        <table className="w-full min-w-[900px] text-sm">
           <thead>
             <tr className="border-b border-line bg-[#f8f9fc] text-left text-xs font-semibold text-muted">
               <th className="px-4 py-2.5">Usta</th>
@@ -175,21 +242,7 @@ export function AttendanceBoard({ meId = null, canMark = false }: { meId?: numbe
                   <td className="px-2 py-2.5 text-center tabular-nums">{a && a.leave + a.absent ? <><b className="text-ink">{a.leave + a.absent}</b> <span className="muted text-xs">gün</span></> : <span className="muted">—</span>}</td>
                   <td className="px-2 py-2.5 text-center tabular-nums">{a?.extra ? <><b className="text-slate-600">{a.extra}</b> <span className="muted text-xs">dəfə</span></> : <span className="muted">—</span>}</td>
                   <td className="px-4 py-2.5 text-right">
-                    {t && canMark && (a?.today.status === "pending" || a?.today.status === "absent") ? (
-                      <span className="inline-flex items-center gap-2" onClick={(ev) => ev.stopPropagation()}>
-                        <span className={`inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ${t.cls}`}>{t.text}</span>
-                        {a.today.status === "pending" ? (
-                          <button type="button" disabled={busy === e.id} onClick={() => mark(e, true)} className="btn btn-soft btn-sm !h-7 !px-2 text-xs text-danger" title="Bu gün işə gəlməyib: gəlmədi sayılsın">
-                            <CalendarX size={13} /> İşdə olmayıb
-                          </button>
-                        ) : (
-                          <button type="button" disabled={busy === e.id} onClick={() => mark(e, false)} className="btn btn-soft btn-sm !h-7 !px-2 text-xs" title="Qeydi geri al">
-                            <Undo2 size={13} /> Geri al
-                          </button>
-                        )}
-                      </span>
-                    ) : t ? <span className={`inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ${t.cls}`}>{t.text}</span>
-                      : <span className="muted inline-flex items-center gap-1 text-xs"><CalendarCheck size={13} /> Təqvim</span>}
+                    {todayCell(e, a, t)}
                   </td>
                 </tr>
               );
@@ -220,7 +273,6 @@ function ExportModal({ month, emps, onClose }: { month: string; emps: Emp[]; onC
       setPending(false);
     }
   }
-
   return (
     <Modal onClose={onClose} labelledBy="att-export-title" className="!max-w-md">
       <div className="mb-4 flex items-start justify-between gap-3">

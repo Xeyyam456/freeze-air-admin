@@ -194,9 +194,15 @@ export function timeBaku(iso: string) {
   return new Intl.DateTimeFormat("az", { timeZone: "Asia/Baku", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(iso));
 }
 
-// Seanslar: "09:02 – 13:00, 15:10-dən" (bir seansdırsa "09:02 – 18:10")
-export function presenceText(p: Presence) {
-  return p.sessions.map((x) => (x.out ? `${timeBaku(x.in)} – ${timeBaku(x.out)}` : `${timeBaku(x.in)}-dən`)).join(", ");
+// Seansın sıra nömrəsi: yenidən işə çıxanda "1) ", "2) " ... (tək seansda boş)
+export function sessionNo(i: number, count: number) {
+  return count > 1 ? `${i + 1}) ` : "";
+}
+
+// Seanslar: "1) 09:02 – 13:00, 2) 15:10-dən" (bir seansdırsa "09:02 – 18:10")
+// sep = "\n": hər seans ayrıca sətirdə (whitespace-pre-line ilə göstər)
+export function presenceText(p: Presence, sep = ", ") {
+  return p.sessions.map((x, i) => sessionNo(i, p.sessions.length) + (x.out ? `${timeBaku(x.in)} – ${timeBaku(x.out)}` : `${timeBaku(x.in)}-dən`)).join(sep);
 }
 
 // İşdə olduğu müddət (bağlanmış seansların cəmi): "9 saat 2 dəq"

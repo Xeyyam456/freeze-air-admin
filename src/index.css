@@ -728,6 +728,8 @@
     z-index: 100;
     display: grid;
     place-items: center;
+    /* Kənarlarda boşluq: mobildə pəncərə ekranın kənarına yapışmasın */
+    padding: 16px;
     background: rgba(11, 19, 36, 0.55);
     backdrop-filter: blur(3px);
     animation: modal-fade 120ms ease-out;
@@ -735,11 +737,23 @@
   .modal {
     width: 100%;
     max-width: 440px;
+    /* Ekrandan uzun pəncərə öz içində sürüşür (zolaq gizli) */
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    scrollbar-width: none;
     background: var(--color-surface);
     border-radius: 18px;
     padding: 24px;
     box-shadow: 0 24px 64px rgba(11, 19, 36, 0.3);
     animation: modal-pop 160ms ease-out;
+  }
+  .modal::-webkit-scrollbar {
+    display: none;
+  }
+  @media (width < 640px) {
+    .modal {
+      padding: 20px 16px;
+    }
   }
   @keyframes modal-fade {
     from { opacity: 0; }

@@ -755,7 +755,7 @@ export function PersonModal({ emp, kind: initialKind, holds: allHolds, toolInfo,
   return (
     <Modal onClose={onClose} labelledBy={`emp-${emp.id}-title`} className="!max-w-2xl">
       {giving && <BulkGiveModal emp={emp} kind={kind} tools={allTools.filter((t) => t.kind === kind)} onClose={() => setGiving(false)} />}
-      <div className="-mx-6 -mt-6 mb-5 overflow-hidden rounded-t-[18px] bg-[linear-gradient(135deg,#7c3aed,#4f46e5_60%,#2563eb)] px-6 pb-5 pt-5 text-white">
+      <div className="-mx-6 -mt-6 max-sm:-mx-4 max-sm:-mt-5 mb-5 overflow-hidden rounded-t-[18px] bg-[linear-gradient(135deg,#7c3aed,#4f46e5_60%,#2563eb)] px-6 max-sm:px-4 pb-5 pt-5 text-white">
         <div className="flex items-start gap-4">
           <Avatar employee={emp} className="!h-14 !w-14 !text-base ring-4 ring-white/25" />
           <div className="min-w-0 flex-1 pt-1">

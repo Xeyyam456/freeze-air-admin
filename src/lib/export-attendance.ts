@@ -1,4 +1,4 @@
-import { durationText, fetchEmployeeMonth, monthDays, MONTHS_AZ, presenceText, timeBaku, todayBaku, type DayStatus, type MonthAttendance } from "@/lib/attendance";
+import { durationText, fetchEmployeeMonth, monthDays, MONTHS_AZ, presenceText, sessionNo, timeBaku, todayBaku, type DayStatus, type MonthAttendance } from "@/lib/attendance";
 import { toast } from "@/lib/toast";
 
 // Davamiyyətin Excel ixracı (write-excel-file 4.1.1, "Görülən işlər" ixracı ilə eyni üslub: tünd başlıq, mavi cədvəl başlığı,
@@ -160,8 +160,8 @@ export async function exportAttendanceEmployee(month: string, emp: Pick<Emp, "id
         { ...base, value: WEEKDAY[weekday(day)], textColor: sunday ? SLATE : "#111827" },
         { ...base, value: st.v, textColor: st.color, fontWeight: "bold" as const },
         // Bir neçə seans (yenidən işə çıxıb): hər biri xananın içində ayrıca sətirdə
-        { ...base, value: presence ? presence.sessions.map((x) => timeBaku(x.in)).join("\n") : "", align: "center" as const, wrap: true },
-        { ...base, value: presence ? presence.sessions.map((x) => (x.out ? timeBaku(x.out) : "işdədir")).join("\n") : "", align: "center" as const, wrap: true, textColor: presence?.out ? "#111827" : MUTED },
+        { ...base, value: presence ? presence.sessions.map((x, j, all) => sessionNo(j, all.length) + timeBaku(x.in)).join("\n") : "", align: "center" as const, wrap: true },
+        { ...base, value: presence ? presence.sessions.map((x, j, all) => sessionNo(j, all.length) + (x.out ? timeBaku(x.out) : "işdədir")).join("\n") : "", align: "center" as const, wrap: true, textColor: presence?.out ? "#111827" : MUTED },
         { ...base, value: presence ? durationText(presence) : "", align: "center" as const, textColor: MUTED },
       ];
     }),

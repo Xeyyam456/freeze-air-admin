@@ -39,7 +39,7 @@ export function DHead({ id, icon, tone, title, sub, onClose, children, flush = f
   id: string; icon: LucideIcon; tone: Tone; title: string; sub?: React.ReactNode; onClose: () => void; children?: React.ReactNode; flush?: boolean;
 }) {
   return (
-    <div className={`${flush ? "" : "-mx-6 -mt-6 mb-5 "}flex items-center gap-3.5 rounded-t-[18px] border-b border-line bg-[linear-gradient(180deg,#f7f9fd,#ffffff)] px-6 py-4`}>
+    <div className={`${flush ? "" : "-mx-6 -mt-6 max-sm:-mx-4 max-sm:-mt-5 mb-5 "}flex items-center gap-3.5 rounded-t-[18px] border-b border-line bg-[linear-gradient(180deg,#f7f9fd,#ffffff)] px-6 max-sm:px-4 py-4`}>
       <IconTile icon={icon} tone={tone} />
       <div className="min-w-0 flex-1">
         <h2 id={id} className="truncate text-[17px] font-bold leading-tight tracking-[-0.01em]">{title}</h2>
