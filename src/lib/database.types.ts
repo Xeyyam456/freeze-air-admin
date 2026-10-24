@@ -1649,6 +1649,10 @@ export type Database = {
       is_owner: { Args: never; Returns: boolean }
       is_storekeeper: { Args: never; Returns: boolean }
       leave_cancel: { Args: { p_id: number }; Returns: undefined }
+      place_set_location: {
+        Args: { p_accuracy?: number; p_address?: string; p_id: number; p_kind: string; p_lat?: number; p_lng?: number }
+        Returns: undefined
+      }
       leave_decide: {
         Args: { p_approve: boolean; p_id: number }
         Returns: undefined
