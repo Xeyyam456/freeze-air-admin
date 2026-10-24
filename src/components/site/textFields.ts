@@ -259,6 +259,7 @@ export const TEXT_GROUPS: TextGroup[] = [
           { key: "contact.route_loading", label: "Xəritə: yer təyin olunarkən" },
           { key: "contact.route_denied", label: "Xəritə: yer təyin olunmadıqda (xəta)" },
           { key: "contact.route_open", label: "Xəritə: Google Maps naviqasiyası düyməsi" },
+          { key: "contact.waze", label: "Xəritə: Waze düyməsi (planşet və telefonda)" },
         ],
       },
       {

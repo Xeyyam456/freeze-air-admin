@@ -43,7 +43,7 @@ export function DHead({ id, icon, tone, title, sub, onClose, children, flush = f
       <IconTile icon={icon} tone={tone} />
       <div className="min-w-0 flex-1">
         <h2 id={id} className="truncate text-[17px] font-bold leading-tight tracking-[-0.01em]">{title}</h2>
-        {sub && <div className="muted mt-0.5 truncate text-[13px]">{sub}</div>}
+        {sub && <div className="muted mt-0.5 truncate text-[13px] max-sm:!whitespace-normal max-sm:line-clamp-2 max-sm:text-xs max-sm:leading-snug">{sub}</div>}
       </div>
       {children}
       <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
