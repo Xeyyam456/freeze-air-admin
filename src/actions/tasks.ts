@@ -28,12 +28,13 @@ export async function addTask({ employee_ids, ...input }: TaskInput): Promise<bo
 }
 
 // Geri al; newEmployeeId verilsə eyni yer və səbəblə həmin ustaya yeni tapşırıq yaranır
-export async function withdrawTask(id: number, newEmployeeId: number | null): Promise<boolean> {
+export async function withdrawTask(id: number, newEmployeeId: number | null, quiet = false): Promise<boolean> {
   const { error } = await createClient().rpc("task_withdraw", { p_task_id: id, ...(newEmployeeId ? { p_new_employee_id: newEmployeeId } : {}) });
   if (error) {
     toast.error(error.message);
     return false;
   }
+  if (quiet) return true;
   revalidate();
   toast.success(newEmployeeId ? "Tapşırıq geri alındı və başqa ustaya verildi" : "Tapşırıq geri alındı");
   return true;

@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 import { asKind, KIND, type Kind } from "@/lib/kinds";
 import { mapEmbedUrl } from "@/lib/navigation";
-import { ClientAside } from "./ClientForms";
+import { ClientAside, ClientInfo, ClientTools } from "./ClientForms";
 import { UnitList } from "./UnitList";
 
 // Filialı olmayan (sabit məkanlı) şirkət: siyahı əvəzinə yeri böyük xəritədə
@@ -74,7 +74,11 @@ export function ClientDetail({ id, kind }: { id: number; kind: Kind }) {
       subtitle={fixedPlace ? (client.address ?? "Sabit məkan") : `${list.length} ${k.unit}`}
       back={{ href: k.route, label: k.section }}
     >
-      <WithSidePanel fill={fixedPlace} stack={!fixedPlace} panel={<ClientAside key={client.id} company={client} unitCount={list.length} admin={admin} />}>
+      <WithSidePanel fill={fixedPlace} stack={!fixedPlace} inline={fixedPlace}
+        narrowTop={fixedPlace ? undefined : <ClientInfo key={client.id} company={client} unitCount={list.length} admin={admin} />}
+        narrowPanel={fixedPlace ? undefined : <ClientTools key={client.id} company={client} unitCount={list.length} admin={admin} />}
+        fabLabel="Filial / mağaza əlavə et"
+        panel={<ClientAside key={client.id} company={client} unitCount={list.length} admin={admin} />}>
         {fixedPlace ? <LocationView company={client} /> : <UnitList units={list} kind={kind} admin={admin} />}
       </WithSidePanel>
     </Page>

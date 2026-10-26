@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import {
-  ArrowRight, Building2, CalendarDays, Check, ClipboardList, FileSpreadsheet, Globe, ListChecks, MapPin, Plus, Store,
+  ArrowRight, Building2, CalendarDays, ClipboardList, FileSpreadsheet, Globe, ListChecks, MapPin, Plus, Store,
   TriangleAlert, UserPlus, Users, Wrench,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
@@ -13,6 +13,7 @@ import { AllLogsModal } from "@/components/work/AllLogsModal";
 import { MonthDashboard } from "@/components/work/MonthDashboard";
 import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { createClient } from "@/lib/supabase/client";
+import { countJobs, fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
 import { useData } from "@/lib/useData";
 
 const MONTHS = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avqust", "sentyabr", "oktyabr", "noyabr", "dekabr"];
@@ -40,7 +41,7 @@ async function fetchDashboard() {
   const n = (r: { count: number | null }) => r.count ?? 0;
   const today = localDate();
 
-  const [lowStock, companies, branches, markets, shops, tools, employees, logs, todayLogs, tasks] = await Promise.all([
+  const [lowStock, companies, branches, markets, shops, tools, employees, logs, todayLogs, todayGroups, tasks] = await Promise.all([
     // Minimum qalıq həddi olan və həddə çatan alət/materiallar: paneldə xəbərdarlıq
     supabase.from("tool_stock").select("id, name, kind, unit, available, pieces_total, min_stock").not("min_stock", "is", null)
       .then((r) => (r.data ?? []).filter(isLowStock).sort((a, b) => a.name.localeCompare(b.name, "az"))),
@@ -55,9 +56,10 @@ async function fetchDashboard() {
       .then((r) => r.data ?? []),
     supabase.from("work_logs")
       .select("id, work_date, created_at, description, place_text, employee_id, employees(full_name, photo_url), stores(name, code, companies(name)), companies(name)")
-      .order("created_at", { ascending: false }).limit(4)
+      .order("created_at", { ascending: false }).limit(16)
       .then((r) => r.data ?? []),
-    supabase.from("work_logs").select("employee_id").eq("work_date", today).then((r) => r.data ?? []),
+    supabase.from("work_logs").select("id, employee_id").eq("work_date", today).then((r) => r.data ?? []),
+    fetchGroupMap(today, today),
     // Bugünkü tapşırıqlar (görülənlər də daxil, geri alınanlar yox; ustaya görə qruplu)
     supabase.from("tasks")
       .select("id, done, reason, place_text, group_id, employees(full_name, photo_url), stores(name, code, companies(name)), companies(name)")
@@ -66,39 +68,57 @@ async function fetchDashboard() {
       .then((r) => mergeGroups(r.data ?? [])),
   ]);
 
+  const recentGroups = await fetchGroupMap(logs.at(-1)?.work_date);
+  const shownLogs = mergeGroupLogs(logs, recentGroups).slice(0, 4);
   const masters = employees.filter((e) => !e.is_management);
   const todayCount: Record<number, number> = {};
   for (const l of todayLogs) todayCount[l.employee_id] = (todayCount[l.employee_id] ?? 0) + 1;
 
+  // "Ustalar bu gün" kartları: tək işləyən öz kartında; qrupla işləyənlər (eyni tapşırıq) bir qrup kartında, qrupun işi bir say
+  const soloCount: Record<number, number> = {};
+  const groupMembers = new Map<string, Set<number>>();
+  for (const l of todayLogs) {
+    const g = todayGroups.get(l.id);
+    if (!g) { soloCount[l.employee_id] = (soloCount[l.employee_id] ?? 0) + 1; continue; }
+    groupMembers.set(g, (groupMembers.get(g) ?? new Set<number>()).add(l.employee_id));
+  }
+  const crews = new Map<string, { ids: number[]; n: number }>();
+  for (const set of groupMembers.values()) {
+    const ids = [...set].sort((x, y) => x - y);
+    const key = ids.join("-");
+    const c = crews.get(key);
+    if (c) c.n += 1; else crews.set(key, { ids, n: 1 });
+  }
+  const inCrew = new Set([...crews.values()].flatMap((c) => c.ids));
+  const cards = [
+    ...masters.filter((m) => !inCrew.has(m.id) || soloCount[m.id]).map((m) => ({ key: `m${m.id}`, members: [m], n: soloCount[m.id] ?? 0 })),
+    ...[...crews].map(([key, c]) => ({ key: `g${key}`, members: c.ids.map((id) => employees.find((e) => e.id === id)).filter((e) => !!e), n: c.n })),
+  ].sort((a, b) => b.n - a.n);
+
   return {
-    companies, branches, markets, shops, tools,
+    companies, branches, markets, shops, tools, cards,
     masters, managers: employees.length - masters.length,
-    logs, todayTotal: todayLogs.length, todayCount, lowStock, tasks,
+    logs: shownLogs, todayTotal: countJobs(todayLogs, todayGroups), todayCount, lowStock, tasks,
   };
 }
 
 type Log = Awaited<ReturnType<typeof fetchDashboard>>["logs"][number];
-type TaskRow = Awaited<ReturnType<typeof fetchDashboard>>["tasks"][number];
 
 // Eyni group_id-li sətirlər bir tapşırıq olur; names: üzvlərin adları
-function mergeGroups<T extends { group_id: string | null; employees: { full_name: string } | null }>(rows: T[]) {
-  const out: (T & { names: string[] })[] = [];
-  const byGroup = new Map<string, T & { names: string[] }>();
+function mergeGroups<T extends { group_id: string | null; employees: { full_name: string; photo_url: string | null } | null }>(rows: T[]) {
+  type Row = T & { names: string[]; people: { full_name: string; photo_url: string | null }[] };
+  const out: Row[] = [];
+  const byGroup = new Map<string, Row>();
   for (const t of rows) {
     const name = t.employees?.full_name ?? "—";
+    const person = { full_name: name, photo_url: t.employees?.photo_url ?? null };
     const g = t.group_id ? byGroup.get(t.group_id) : undefined;
-    if (g) { g.names.push(name); continue; }
-    const row = { ...t, names: [name] };
+    if (g) { g.names.push(name); g.people.push(person); continue; }
+    const row: Row = { ...t, names: [name], people: [person] };
     out.push(row);
     if (t.group_id) byGroup.set(t.group_id, row);
   }
   return out;
-}
-
-function taskPlace(t: TaskRow) {
-  if (t.stores) return `${t.stores.companies?.name ?? ""} · ${t.stores.name}`;
-  if (t.companies) return t.companies.name;
-  return t.place_text ?? "Yer silinib";
 }
 
 // İş yeri: mağaza/filial (şirkətin adı ilə) | sabit məkanlı şirkət | siyahıda olmayan yer
@@ -124,12 +144,12 @@ export default function Home() {
       {allLogs !== null && <AllLogsModal initialQuery={allLogs} onClose={() => setAllLogs(null)} />}
 
       {/* Göstəricilər */}
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 sm:gap-5 sm:max-lg:grid-cols-6 sm:max-lg:[&>*]:!col-span-2 sm:max-lg:[&>*:nth-child(n+4)]:!col-span-3 lg:grid-cols-5 [&>*:last-child]:col-span-2 lg:[&>*]:!col-span-1">
         <Stat to="/sirketler" icon={Building2} label="Şirkət" value={d?.companies} sub={d && `${d.branches} filial`} tone="from-[#0a7ea4] to-[#2dd4bf]" />
         <Stat to="/magazalar" icon={Store} label="Market" value={d?.markets} sub={d && `${d.shops} mağaza`} tone="from-[#0ea5a4] to-[#2dd4bf]" />
         <Stat to="/ustalar" icon={Users} label="Usta" value={d?.masters.length} sub={d && `${d.managers} rəhbər`} tone="from-[#6d5efc] to-[#0a7ea4]" />
-        <Stat to="/depo" icon={Wrench} label="Alət" value={d?.tools.total} sub={d && `${d.tools.total - d.tools.out} depoda, ${d.tools.out} ustalarda`} tone="from-[#f59e0b] to-[#f97316]" />
-        <Stat to="/tapshiriqlar" icon={ListChecks} label="Tapşırıq" value={d?.tasks.length} sub={d && `bu gün: ${d.tasks.filter((t) => t.done).length} görülüb, ${d.tasks.filter((t) => !t.done).length} qalıb`} tone="from-[#10b981] to-[#2dd4bf]" />
+        <Stat to="/depo" icon={Wrench} label="Alət" value={d?.tools.total} sub={d && `${d.tools.total - d.tools.out} depoda · ${d.tools.out} ustada`} tone="from-[#f59e0b] to-[#f97316]" />
+        <Stat to="/tapshiriqlar" icon={ListChecks} label="Tapşırıq" value={d?.tasks.length} sub={d && `${d.tasks.filter((t) => t.done).length} görülüb · ${d.tasks.filter((t) => !t.done).length} qalıb`} tone="from-[#10b981] to-[#2dd4bf]" />
       </div>
 
       {/* Depoda azalanlar: minimum qalıq həddinə çatan alət və materiallar */}
@@ -146,9 +166,9 @@ export default function Home() {
         </Link>
       )}
 
-      <div className="mt-5 grid gap-5 xl:grid-cols-[1fr_1.35fr]">
+      <div className="mt-5">
         {/* Bu gün: iş qeydləri (son 4; hamısı pəncərədə) */}
-        <section className="card flex h-[374px] flex-col">
+        <section className="card flex h-[374px] flex-col max-sm:h-auto">
           <div className="flex items-center justify-between gap-3">
             <h2 className="card-title flex items-center gap-2"><ClipboardList size={18} className="text-primary" /> İş qeydləri</h2>
             <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-bold text-primary">Bu gün: {d ? d.todayTotal : "–"}</span>
@@ -163,18 +183,18 @@ export default function Home() {
                 <li key={l.id}>
                   {/* Klik: işin ətraflı pəncərəsi */}
                   <button type="button" onClick={() => setOpenLog(l.id)}
-                    className="group flex w-full items-start gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-bg">
-                    <Avatar employee={{ full_name: l.employees?.full_name ?? "?", photo_url: l.employees?.photo_url ?? null }} className="!h-10 !w-10 shrink-0 !text-xs" />
+                    className="group flex w-full items-start gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-bg max-sm:gap-2 max-sm:px-0 max-sm:py-1.5">
+                    <Avatar employee={{ full_name: l.employees?.full_name ?? "?", photo_url: l.employees?.photo_url ?? null }} className="!h-10 !w-10 shrink-0 !text-xs max-sm:!h-7 max-sm:!w-7 max-sm:!text-[9px]" />
                     <span className="min-w-0 flex-1">
                       <span className="flex flex-wrap items-center gap-x-2 text-sm">
-                        <span className="font-semibold">{l.employees?.full_name ?? "—"}</span>
-                        <span className="flex min-w-0 items-center gap-1 truncate text-xs font-semibold text-primary"><MapPin size={12} /> {placeOf(l)}</span>
+                        <span className="font-semibold max-sm:flex max-sm:min-w-0 max-sm:basis-full max-sm:flex-col max-sm:text-[12px] max-sm:leading-tight">{(l.employees?.full_name ?? "—").split(" + ").map((n, i, all) => <span key={n} className="max-sm:min-w-0"><span className="block truncate sm:hidden">{n}</span><span className="max-sm:hidden">{n}{i < all.length - 1 && " + "}</span></span>)}</span>
+                        <span className="flex min-w-0 items-center gap-1 text-xs font-semibold text-primary max-sm:basis-full max-sm:text-[11px]"><MapPin size={12} className="shrink-0" /> <span className="truncate">{placeOf(l)}</span></span>
                       </span>
-                      <span className="muted mt-0.5 block truncate text-sm">{l.description}</span>
+                      <span className="muted mt-0.5 block truncate text-sm max-sm:line-clamp-1 max-sm:text-[12px] max-sm:leading-snug">{l.description}</span>
                     </span>
                     <span className="shrink-0 text-right">
-                      <span className="block text-sm font-semibold tabular-nums">{timeOf(l.created_at)}</span>
-                      <span className="muted block text-[11px]">{l.work_date === localDate() ? ago(l.created_at) : l.work_date.split("-").reverse().join(".")}</span>
+                      <span className="block text-sm font-semibold tabular-nums max-sm:text-xs">{timeOf(l.created_at)}</span>
+                      <span className="muted block text-[11px] max-sm:hidden">{l.work_date === localDate() ? ago(l.created_at) : l.work_date.split("-").reverse().join(".")}</span>
                     </span>
                   </button>
                 </li>
@@ -187,59 +207,6 @@ export default function Home() {
             </button>
           )}
         </section>
-
-        {/* Bugünkü tapşırıqlar: sadə siyahı (görülməyənlər yuxarıda); sayı yuxarıdakı xanada, hamısı /tapshiriqlar-da */}
-        <section className="card flex h-[374px] flex-col">
-          <h2 className="card-title flex items-center gap-2"><ListChecks size={18} className="text-primary" /> Tapşırıqlar</h2>
-          {!d ? (
-            <p className="muted mt-6 text-sm">Yüklənir...</p>
-          ) : d.tasks.length === 0 ? (
-            <Empty icon={ListChecks} title="Bu gün tapşırıq yoxdur" text="Tapşırıqlar bölməsindən ustaya iş ver." />
-          ) : (
-            <div className="mt-3 grid min-h-0 flex-1 grid-cols-2 divide-x divide-line overflow-hidden">
-              {/* Ortadan iki sütun: solda gözləyənlər (mavi), sağda görülənlər (✓, yaşıl) */}
-              {([
-                { key: "wait", title: "Gözləyənlər", items: d.tasks.filter((t) => !t.done), max: 5, tone: "text-primary", empty: "Hamısı görülüb" },
-                { key: "done", title: "Görülənlər", items: d.tasks.filter((t) => t.done), max: 5, tone: "text-ok", empty: "Hələ görülən yoxdur" },
-              ] as const).map((g) => (
-                <div key={g.key} className="min-w-0 px-4 first:pl-0 last:pr-0">
-                  <p className={`flex items-center gap-2 pb-1.5 text-xs font-bold ${g.tone}`}>
-                    {g.title} <span className="rounded-full bg-bg px-2 py-0.5 text-[11px] text-muted">{g.items.length}</span>
-                  </p>
-                  {g.items.length === 0 ? (
-                    <p className="muted py-1.5 text-sm">{g.empty}</p>
-                  ) : (
-                    <ul>
-                      {g.items.slice(0, g.max).map((t) => (
-                        <li key={t.id}>
-                          <Link to="/tapshiriqlar" className="flex items-center gap-2.5 rounded-xl px-1.5 py-1.5 transition-colors hover:bg-bg">
-                            <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 ${t.done ? "border-ok bg-ok text-white" : "border-line text-transparent"}`} title={t.done ? "Görülüb" : "Görülməyib"}>
-                              <Check size={12} strokeWidth={3} />
-                            </span>
-                            <span className="min-w-0 flex-1 leading-tight">
-                              <span className="block truncate text-sm">
-                                <span className="font-bold">{t.names.map((n) => n.split(" ").slice(-1)[0]).join(" + ")}</span>
-                                <span className="muted"> · </span>
-                                <span className={`font-semibold ${t.done ? "text-ok" : "text-primary"}`}>{taskPlace(t)}</span>
-                              </span>
-                              <span className={`block truncate text-xs ${t.done ? "text-ok/80" : "muted"}`}>{t.reason}</span>
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                      {g.items.length > g.max && <li className="muted px-1.5 pt-0.5 text-xs">+ {g.items.length - g.max} daha</li>}
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-          {!!d?.tasks.length && (
-            <Link to="/tapshiriqlar" className="link mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold">
-              Hamısına bax ({d.tasks.length}) <ArrowRight size={14} />
-            </Link>
-          )}
-        </section>
       </div>
 
       {/* Ayın icmalı: iş qeydləri ilə ustalar arasında (bütün ustaların ay üzrə gördüyü işlər) */}
@@ -247,7 +214,7 @@ export default function Home() {
         <MonthDashboard onUsta={(name) => setAllLogs(name)} />
       </div>
 
-      <div className="mt-5 grid gap-5 xl:grid-cols-[1.7fr_1fr]">
+      <div className="mt-5 grid grid-cols-[minmax(0,1fr)] gap-5 xl:grid-cols-[1.7fr_1fr]">
         {/* Ustalar bu gün */}
         <section className="card">
           <div className="flex items-center justify-between gap-3">
@@ -259,27 +226,28 @@ export default function Home() {
             )}
           </div>
           {d && d.masters.length > 0 ? (
-            <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {/* Ən çox iş görən yuxarıda; sağda bugünkü iş sayı nişanı (klik → ustanın işləri) */}
-              {[...d.masters].sort((a, b) => (d.todayCount[b.id] ?? 0) - (d.todayCount[a.id] ?? 0)).map((m) => {
-                const count = d.todayCount[m.id] ?? 0;
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2 min-[2400px]:grid-cols-3">
+              {/* Ən çox iş görən yuxarıda; sağda bugünkü iş sayı nişanı (klik → işlər). Qrupla işləyənlər bir kartdadır */}
+              {d.cards.map((c) => {
+                const crew = c.members.length > 1;
+                const m = c.members[0];
                 return (
-                  <li key={m.id} className="flex items-center gap-3 rounded-xl border border-line px-3 py-2.5">
-                    <span className="relative shrink-0">
-                      <Avatar employee={m} className="!h-10 !w-10 !text-xs" />
-                      <span className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-surface ${count ? "bg-ok" : "bg-line"}`} />
+                  <li key={c.key} className="flex items-center gap-3 rounded-xl border border-line px-3 py-2.5 max-lg:gap-2.5 max-lg:px-2.5 max-lg:py-1.5">
+                    <span className="relative flex shrink-0 -space-x-3">
+                      {c.members.slice(0, 3).map((e) => <Avatar key={e.id} employee={e} className="!h-10 !w-10 !text-xs ring-2 ring-surface max-lg:!h-8 max-lg:!w-8 max-lg:!text-[10px]" />)}
+                      {!crew && <span className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-surface max-lg:h-3 max-lg:w-3 ${c.n ? "bg-ok" : "bg-line"}`} />}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold">{m.full_name}</span>
-                      <span className="muted block truncate text-xs">{m.specialty ?? "Usta"}</span>
+                      <span className="block truncate text-sm font-semibold max-lg:text-[13px] max-lg:leading-tight" title={c.members.map((e) => e.full_name).join(" + ")}>{crew ? c.members.map((e) => e.full_name.split(" ").slice(-1)[0]).join(" + ") : m.full_name}</span>
+                      <span className="muted block truncate text-xs max-lg:text-[11px] max-lg:leading-tight">{crew ? "Qrup işi" : m.specialty ?? "Usta"}</span>
                     </span>
-                    {count > 0 ? (
-                      <button type="button" onClick={() => setAllLogs(m.full_name)} title={`Bu gün ${count} iş: bax`}
-                        className="flex h-8 min-w-8 shrink-0 items-center justify-center gap-1 rounded-full bg-ok px-2.5 text-sm font-bold text-white shadow-[0_4px_10px_rgba(18,161,80,0.3)] transition-transform hover:scale-105">
-                        {count} <span className="text-[10px] font-semibold opacity-90">iş</span>
+                    {c.n > 0 ? (
+                      <button type="button" onClick={() => setAllLogs(m.full_name)} title={`Bu gün ${c.n} iş: bax`}
+                        className="flex h-8 min-w-8 shrink-0 items-center justify-center gap-1 rounded-full bg-ok px-2.5 text-sm font-bold text-white max-lg:h-7 max-lg:min-w-7 max-lg:px-2 max-lg:text-xs shadow-[0_4px_10px_rgba(18,161,80,0.3)] transition-transform hover:scale-105">
+                        {c.n} <span className="text-[10px] font-semibold opacity-90">iş</span>
                       </button>
                     ) : (
-                      <span className="grid h-8 min-w-8 shrink-0 place-items-center rounded-full bg-bg px-2.5 text-sm font-bold text-muted" title="Bu gün iş yazmayıb">0</span>
+                      <span className="grid h-8 min-w-8 shrink-0 place-items-center rounded-full bg-bg px-2.5 text-sm font-bold text-muted max-lg:h-7 max-lg:min-w-7 max-lg:px-2 max-lg:text-xs" title="Bu gün iş yazmayıb">0</span>
                     )}
                   </li>
                 );
@@ -322,19 +290,18 @@ function Stat({ to, icon: Icon, label, value, sub, tone }: {
   tone: string;
 }) {
   return (
-    <Link to={to} className="card card-link group relative overflow-hidden">
-      <Icon size={110} strokeWidth={1} className="pointer-events-none absolute -bottom-6 -right-5 text-primary/[0.06]" />
-      <div className="relative flex items-center gap-4">
-        <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${tone} text-white shadow-[0_8px_18px_rgba(10,126,164,0.22)]`}>
+    <Link to={to} className="card card-link group relative overflow-hidden max-sm:!p-3.5 sm:max-xl:!p-3.5">
+      <div className="relative flex items-center gap-4 max-sm:gap-3 sm:max-xl:gap-2.5">
+        <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl max-sm:h-10 max-sm:w-10 max-sm:rounded-xl sm:max-xl:h-9 sm:max-xl:w-9 sm:max-xl:rounded-xl bg-gradient-to-br ${tone} text-white shadow-[0_8px_18px_rgba(10,126,164,0.22)]`}>
           <Icon size={22} />
         </span>
         <div className="min-w-0">
-          <div className="stat-value leading-none">{value == null ? "–" : <CountUp value={value} />}</div>
+          <div className="stat-value leading-none max-sm:!text-2xl sm:max-xl:!text-2xl">{value == null ? "–" : <CountUp value={value} />}</div>
           <div className="muted mt-1 text-sm font-medium">{label}</div>
         </div>
-        <ArrowRight size={18} className="ml-auto text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+        <ArrowRight size={18} className="ml-auto text-muted opacity-0 transition-opacity group-hover:opacity-100 sm:max-xl:hidden" />
       </div>
-      <p className="relative mt-4 border-t border-line pt-3 text-xs font-semibold text-muted">{sub || " "}</p>
+      <p className="relative mt-4 truncate border-t border-line pt-3 text-xs font-semibold text-muted max-sm:mt-3 max-sm:pt-2 sm:max-xl:mt-2.5 sm:max-xl:pt-2">{sub || " "}</p>
     </Link>
   );
 }

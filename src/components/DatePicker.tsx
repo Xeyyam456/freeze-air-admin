@@ -1,5 +1,6 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
+import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEscapeLayer } from "./Modal";
@@ -38,13 +39,13 @@ function Popover({ anchorRef, onClose, children }: {
     const anchor = anchorRef.current;
     if (!anchor) return;
     const place = () => {
-      const a = anchor.getBoundingClientRect();
+      const a = rectOf(anchor);
       const h = ref.current?.offsetHeight ?? 0;
       const w = ref.current?.offsetWidth ?? 0;
-      const below = a.bottom + 6 + h <= window.innerHeight;
+      const below = a.bottom + 6 + h <= viewport().h;
       setPos({
         top: below ? a.bottom + 6 : Math.max(8, a.top - 6 - h),
-        left: Math.min(a.left, window.innerWidth - w - 8),
+        left: Math.min(a.left, viewport().w - w - 8),
       });
     };
     place();

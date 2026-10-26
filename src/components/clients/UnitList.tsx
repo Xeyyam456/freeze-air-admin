@@ -62,7 +62,7 @@ export function UnitList({ units, kind, admin }: { units: Tables<"stores">[]; ki
         <div className="card muted py-10 text-center text-sm">Bu axtarışa uyğun {k.unit} tapılmadı.</div>
       ) : (
         <div className="-mx-1 -my-1 min-h-0 flex-1 overflow-y-auto px-1 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 min-[760px]:grid-cols-2 lg:max-[1199px]:grid-cols-1">
           {filtered.map((u) =>
             admin ? <StoreAdminCard key={u.id} store={u} kind={kind} /> : <StoreCard key={u.id} store={u} />,
           )}

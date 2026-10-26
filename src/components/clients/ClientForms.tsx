@@ -79,6 +79,16 @@ export function AddClientButton({ kind }: { kind: Kind }) {
   );
 }
 
+// Dar ekranda panel ikiyə bölünür: məlumat kartı səhifənin üstündə, filial/mağaza alətləri üzən düymə ilə
+export function ClientInfo({ company, unitCount, admin }: { company: Tables<"companies">; unitCount: number; admin: boolean }) {
+  const kind: Kind = company.kind === "market" ? "market" : "company";
+  return <ClientInfoCard company={company} kind={kind} unitCount={unitCount} admin={admin} />;
+}
+export function ClientTools({ company, unitCount, admin }: { company: Tables<"companies">; unitCount: number; admin: boolean }) {
+  const kind: Kind = company.kind === "market" ? "market" : "company";
+  return admin && !(kind === "company" && unitCount === 0) ? <StoreTools companyId={company.id} kind={kind} /> : null;
+}
+
 // Sağ panel: şirkət/market məlumatı + filial/mağaza alətləri
 export function ClientAside({ company, unitCount, admin }: {
   company: Tables<"companies">;
@@ -147,7 +157,7 @@ function ClientInfoCard({ company, kind, unitCount, admin }: {
             {company.name.charAt(0)}
           </span>
           <div className="min-w-0">
-            <h2 className="truncate text-base font-bold">{company.name}</h2>
+            <h2 className="text-base font-bold leading-tight [overflow-wrap:anywhere] sm:truncate">{company.name}</h2>
             <p className="muted text-xs font-medium">
               {k.One} · {kind === "company" && unitCount === 0 ? "sabit məkan" : `${unitCount} ${k.unit}`}
             </p>
@@ -171,15 +181,15 @@ function ClientInfoCard({ company, kind, unitCount, admin }: {
           </div>
         )}
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+      <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] gap-2 text-sm max-sm:grid-cols-1">
         <div className="min-w-0 rounded-xl bg-bg px-3 py-2">
           <p className="muted flex items-center gap-1.5 text-xs font-medium"><User size={13} /> Əlaqəli şəxs</p>
-          <p className="truncate font-semibold">{company.contact_person ?? "—"}</p>
+          <p className="font-semibold leading-tight [overflow-wrap:anywhere] sm:truncate">{company.contact_person ?? "—"}</p>
         </div>
-        <div className="min-w-0 rounded-xl bg-bg px-3 py-2">
+        <div className="rounded-xl bg-bg px-3 py-2">
           <p className="muted flex items-center gap-1.5 text-xs font-medium"><Phone size={13} /> Telefon</p>
           {company.phone
-            ? <a href={`tel:${company.phone}`} className="link block truncate">{company.phone}</a>
+            ? <a href={`tel:${company.phone}`} className="link block whitespace-nowrap">{company.phone}</a>
             : <p className="font-semibold">—</p>}
         </div>
       </div>

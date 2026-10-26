@@ -132,7 +132,7 @@ export function AttendanceBoard({ meId = null, canMark = false }: { meId?: numbe
       </div>
 
       {isCurrent && (
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 max-xl:gap-2.5 sm:grid-cols-3 xl:grid-cols-6">
           {[
             { label: "Hazırda işdə", value: today.here, cls: "text-ok" },
             { label: "İşi bitirib", value: today.done, cls: "text-ink" },
@@ -141,9 +141,9 @@ export function AttendanceBoard({ meId = null, canMark = false }: { meId?: numbe
             { label: "Bu gün işdə olmayıb", value: today.absent, cls: today.absent ? "text-danger" : "text-ink" },
             { label: "Gözləyən icazə sorğusu", value: today.pending, cls: "text-primary" },
           ].map((x) => (
-            <div key={x.label} className="card !py-3">
-              <p className="muted text-xs font-semibold">{x.label}</p>
-              <p className={`text-2xl font-extrabold ${x.cls}`}>{att ? x.value : "…"}</p>
+            <div key={x.label} className="card !py-3 max-xl:!px-3 max-xl:!py-2">
+              <p className="muted truncate text-xs font-semibold max-xl:text-[11px]">{x.label}</p>
+              <p className={`text-2xl font-extrabold max-xl:text-xl max-xl:leading-tight ${x.cls}`}>{att ? x.value : "…"}</p>
             </div>
           ))}
         </div>
@@ -166,7 +166,7 @@ export function AttendanceBoard({ meId = null, canMark = false }: { meId?: numbe
           ];
           return (
             <div key={e.id} role="button" tabIndex={0} onClick={() => setOpen(e)} onKeyDown={(ev) => ev.key === "Enter" && setOpen(e)}
-              className={`card grow basis-[320px] cursor-pointer !p-4 transition-colors hover:bg-primary-soft/30 ${e.id === meId ? "ring-2 ring-primary/30" : ""}`}>
+              className={`card grow basis-[250px] cursor-pointer !p-3.5 transition-colors min-[1000px]:basis-[300px] hover:bg-primary-soft/30 ${e.id === meId ? "ring-2 ring-primary/30" : ""}`}>
               <div className="flex items-center gap-3">
                 {e.photo_url
                   // eslint-disable-next-line @next/next/no-img-element -- storage avatarı
@@ -180,15 +180,15 @@ export function AttendanceBoard({ meId = null, canMark = false }: { meId?: numbe
                   <span className="muted block truncate text-xs">{e.specialty ?? ""}{a ? `${e.specialty ? " · " : ""}${a.workdays} iş günü` : ""}</span>
                 </span>
               </div>
-              <div className="mt-3 grid grid-cols-4 gap-1.5">
+              <div className="mt-2.5 grid grid-cols-4 gap-1.5">
                 {cells.map(([l, v, c]) => (
-                  <span key={l} className="min-w-0 rounded-xl bg-bg px-2.5 py-2 text-center">
+                  <span key={l} className="min-w-0 rounded-xl bg-bg px-1.5 py-1.5 text-center">
                     <span className="muted block whitespace-nowrap text-[11px] font-semibold">{l}</span>
                     <b className={`block text-[15px] tabular-nums ${v === "—" ? "text-muted" : c}`}>{v}</b>
                   </span>
                 ))}
               </div>
-              {t && <div className="mt-3 flex flex-wrap items-center justify-end gap-2 border-t border-line pt-3">{todayCell(e, a, t)}</div>}
+              {t && <div className="mt-2.5 flex flex-wrap items-center justify-end gap-2 border-t border-line pt-2.5">{todayCell(e, a, t)}</div>}
             </div>
           );
         })}

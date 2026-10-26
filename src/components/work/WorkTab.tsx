@@ -96,10 +96,10 @@ export function WorkTab({ employeeId, employeeName, admin }: { employeeId: numbe
     createClient().rpc("my_employee_id").then(({ data }) => setMyEmployeeId(data ?? null));
   }, []);
 
-  // Yeni işi yalnız usta özü üçün açır; admin iş açmır, yalnız görür, dəyişir, silir
+  // Yeni işi yalnız usta özü üçün açır; admin iş açmır, yalnız görür və silir. İşi yalnız ustanın özü redaktə edir (bazada da: 0088)
   const canAdd = myEmployeeId === employeeId;
-  // Öz işini usta da dəyişə və silə bilər; admin hamısını
-  const canManage = (log: WorkLog) => admin || myEmployeeId === log.employee_id;
+  const isMine = (log: WorkLog) => myEmployeeId === log.employee_id;
+  const canDelete = (log: WorkLog) => admin || isMine(log);
 
   async function remove(log: WorkLog) {
     const supabase = createClient();
@@ -179,11 +179,13 @@ export function WorkTab({ employeeId, employeeName, admin }: { employeeId: numbe
                       </p>
                       <p className="muted mt-0.5 flex items-center gap-1 text-[11px]"><Clock size={11} /> Əlavə edilib: {timeOf(log.created_at)}</p>
                     </div>
-                    {canManage(log) && (
+                    {canDelete(log) && (
                       <div className="flex shrink-0 items-center gap-0.5">
-                      <button type="button" onClick={() => setEditing(log)} className="icon-btn !h-7 !w-7" title="Redaktə et" aria-label="İşi redaktə et">
-                        <Pencil size={14} />
-                      </button>
+                      {isMine(log) && (
+                        <button type="button" onClick={() => setEditing(log)} className="icon-btn !h-7 !w-7" title="Redaktə et" aria-label="İşi redaktə et">
+                          <Pencil size={14} />
+                        </button>
+                      )}
                       <ConfirmButton
                         onConfirm={() => remove(log)}
                         className="icon-btn icon-btn-danger !h-7 !w-7 shrink-0"

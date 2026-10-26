@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
-import { ChevronDown, ShoppingCart } from "lucide-react";
+import { ChevronDown, MoreHorizontal, ShoppingCart } from "lucide-react";
 import { Modal, useEscapeLayer } from "@/components/Modal";
 import { DHead } from "./DepotUi";
 import { isLowStock, TEXT, withUnit, type Kind, type Tool } from "./depotUtils";
@@ -15,7 +16,7 @@ export function ShoppingModal({ tools, onReceipt, onClose }: { tools: Tool[]; on
       {low.length === 0 ? (
         <p className="muted py-8 text-center text-sm">Heç nə azalmayıb. (Minimum qalıq alətin redaktəsində yazılır.)</p>
       ) : (
-        <ul className="nice-scroll max-h-[min(460px,calc(100dvh-240px))] divide-y divide-line overflow-y-auto">
+        <ul className="nice-scroll max-h-[min(460px,calc(100dvh/var(--zoom)-240px))] divide-y divide-line overflow-y-auto">
           {low.map((t) => {
             const have = t.available + t.pieces_total;
             const need = Math.max(1, (t.min_stock ?? 0) - have + 1);
@@ -63,15 +64,15 @@ export function MoreMenu({ items, dark = false }: { items: { label: string; icon
       <button ref={btn} type="button" aria-expanded={pos !== null} aria-haspopup="menu"
         onClick={(e) => {
           if (pos) return setPos(null);
-          const r = e.currentTarget.getBoundingClientRect();
-          setPos({ top: r.bottom + 8, right: window.innerWidth - r.right });
+          const r = rectOf(e.currentTarget);
+          setPos({ top: r.bottom + 8, right: Math.max(12, Math.min(viewport().w - r.right, viewport().w - 224 - 12)) });
         }}
-        className={`inline-flex h-10 items-center gap-1.5 rounded-xl px-3.5 text-sm font-semibold transition-colors ${dark ? "bg-white/10 text-white hover:bg-white/20" : "border border-line bg-surface hover:bg-bg"}`}>
-        Daha çox <ChevronDown size={15} className={pos ? "rotate-180" : ""} />
+        className={`inline-flex h-10 items-center gap-1.5 rounded-xl px-3.5 text-sm font-semibold transition-colors max-sm:w-10 max-sm:justify-center max-sm:px-0 ${dark ? "bg-white/10 text-white hover:bg-white/20" : "border border-line bg-surface hover:bg-bg"}`}>
+        <span className="max-sm:hidden">Daha çox</span><MoreHorizontal size={18} className="sm:hidden" aria-label="Daha çox" /><ChevronDown size={15} className={`max-sm:hidden ${pos ? "rotate-180" : ""}`} />
       </button>
       {pos && createPortal(
         <div data-more-menu role="menu" style={{ top: pos.top, right: pos.right }}
-          className="fixed z-[90] w-56 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-[0_16px_40px_rgba(16,24,40,0.18)]">
+          className="fixed z-[90] w-56 max-w-[calc(100vw-24px)] rounded-xl border border-line bg-surface p-1.5 text-ink shadow-[0_16px_40px_rgba(16,24,40,0.18)]">
           {items.map(({ label, icon: Icon, onClick, badge }) => (
             <button key={label} type="button" role="menuitem" onClick={() => { setPos(null); onClick(); }}
               className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-bg">

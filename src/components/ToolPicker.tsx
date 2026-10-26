@@ -106,7 +106,7 @@ export function ToolPicker({
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 right-0 z-20 mb-2 overflow-hidden rounded-xl border border-line bg-surface shadow-[0_16px_40px_rgba(16,24,40,0.18)]">
+        <div className="absolute bottom-full left-0 right-0 z-20 max-sm:right-auto max-sm:w-[min(18rem,calc(100vw-5rem))] mb-2 max-sm:mb-1.5 overflow-hidden rounded-xl border border-line bg-surface shadow-[0_16px_40px_rgba(16,24,40,0.18)]">
           <div className="flex items-center gap-2 border-b border-line px-3">
             <Search size={14} className="muted shrink-0" />
             <input
@@ -125,7 +125,7 @@ export function ToolPicker({
               <p className="muted text-xs">Bu adla heç nə tapılmadı</p>
             </div>
           ) : (
-            <ul role="listbox" className="nice-scroll max-h-56 overflow-y-auto p-1.5">
+            <ul role="listbox" className="nice-scroll max-h-56 max-sm:max-h-32 overflow-y-auto p-1.5">
               {filtered.map((item, i) => {
                 const isSelected = item.id === value;
                 return (
@@ -141,8 +141,11 @@ export function ToolPicker({
                       <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-md ${i === active ? "bg-surface" : "bg-bg"} text-primary`}>
                         <Icon size={13} />
                       </span>
-                      <span className="flex-1 truncate">{item.name}</span>
-                      {item.hint && <span className="muted shrink-0 text-[11px] font-semibold">{item.hint}</span>}
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate">{item.name}</span>
+                        {item.hint && <span className="muted hidden text-[10.5px] font-semibold leading-tight max-sm:block">{item.hint}</span>}
+                      </span>
+                      {item.hint && <span className="muted shrink-0 text-[11px] font-semibold max-sm:hidden">{item.hint}</span>}
                       {isSelected && <Check size={15} className="shrink-0 text-primary" />}
                     </button>
                   </li>

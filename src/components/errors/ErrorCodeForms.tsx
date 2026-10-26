@@ -320,12 +320,12 @@ export function ErrorCodeList({ codes, models }: { codes: ErrorCode[]; models: M
     <div className="flex h-full flex-col gap-4">
       {editing && <EditCodeModal item={editing} models={models} onClose={() => setEditing(null)} />}
 
-      <div className="flex shrink-0 gap-3">
+      <div className="flex shrink-0 gap-3 max-sm:flex-col">
         <div className="search min-w-0 flex-1">
           <Search size={20} />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Kod, açıqlama və ya edilecək işlə axtar..." aria-label="Xəta kodu axtarışı" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Kod və ya açıqlama..." aria-label="Xəta kodu axtarışı" className="max-sm:!text-[13px] max-sm:placeholder:text-[12px]" />
         </div>
-        <div className="w-64 shrink-0">
+        <div className="w-64 shrink-0 max-sm:w-full">
           <ModelDropdown all value={modelFilter} onChange={setModelFilter} className="!h-14 !rounded-[14px]"
             options={[{ value: "", label: "Bütün modellər", hint: `${codes.length} kod` }, ...models.map((m) => ({ value: String(m.id), label: m.name, hint: `${counts.get(m.id) ?? 0} kod` }))]} />
         </div>
@@ -342,22 +342,22 @@ export function ErrorCodeList({ codes, models }: { codes: ErrorCode[]; models: M
           <table className="w-full text-sm">
             <thead className="sticky top-0 z-[1] bg-[#f8f9fc] text-left text-xs font-semibold text-muted">
               <tr>
-                <th className="w-44 px-4 py-3">Model</th>
-                <th className="w-24 px-4 py-3">Kod</th>
+                <th className="w-44 px-4 max-2xl:w-32 py-3 max-sm:hidden">Model</th>
+                <th className="w-24 px-4 py-3 max-sm:w-16 max-sm:px-3">Kod</th>
                 <th className="px-4 py-3">Açıqlama</th>
-                <th className="px-4 py-3">Edilecək iş</th>
+                <th className="px-4 py-3 max-2xl:hidden">Edilecək iş</th>
                 <th className="w-20 px-4 py-3" />
               </tr>
             </thead>
             <tbody>
               {filtered.map((c) => (
                 <tr key={c.id} onClick={() => setEditing(c)} className="cursor-pointer border-t border-line align-top transition-colors hover:bg-primary-soft/40">
-                  <td className="px-4 py-3 text-[13px] font-semibold">{names.get(c.model_id) ?? "—"}</td>
-                  <td className="px-4 py-3"><span className="rounded-lg bg-danger-soft px-2 py-1 text-xs font-extrabold text-danger">{c.code}</span></td>
-                  <td className="px-4 py-3 text-[13px]"><span className="line-clamp-2">{c.title}</span></td>
-                  <td className="px-4 py-3 text-[13px]"><span className="muted line-clamp-2 whitespace-pre-line">{c.solution ?? "—"}</span></td>
-                  <td className="px-2 py-2" onClick={(e) => e.stopPropagation()}>
-                    <span className="flex justify-end gap-0.5">
+                  <td className="px-4 py-3 text-[13px] font-semibold max-sm:hidden">{names.get(c.model_id) ?? "—"}</td>
+                  <td className="px-4 py-3 max-sm:px-3"><span className="rounded-lg bg-danger-soft px-2 py-1 text-xs font-extrabold text-danger">{c.code}</span></td>
+                  <td className="px-4 py-3 text-[13px] max-sm:px-1"><span className="line-clamp-3">{c.title}</span><span className="muted mt-0.5 block text-[11px] font-semibold sm:hidden">{names.get(c.model_id) ?? "—"}</span></td>
+                  <td className="px-4 py-3 text-[13px] max-2xl:hidden"><span className="muted line-clamp-2 whitespace-pre-line">{c.solution ?? "—"}</span></td>
+                  <td className="px-2 py-2 max-sm:px-1" onClick={(e) => e.stopPropagation()}>
+                    <span className="flex justify-end gap-0 max-sm:[&_.icon-btn]:!h-8 max-sm:[&_.icon-btn]:!w-8">
                       <button type="button" onClick={() => setEditing(c)} className="icon-btn" title="Redaktə et" aria-label="Redaktə et"><Pencil size={15} /></button>
                       <ConfirmButton onConfirm={() => deleteErrorCode(c.id)} success={false} className="icon-btn icon-btn-danger" title="Sil"
                         question={`"${c.code}" xəta kodu silinəcək.`}>

@@ -22,7 +22,7 @@ export function Page({ title, subtitle, back, actions, children }: Props) {
             </Link>
           )}
           <div className="min-w-0">
-            <h1 className="truncate">{title}</h1>
+            <h1 className="truncate max-sm:line-clamp-2 max-sm:whitespace-normal max-sm:!text-[15px] max-sm:leading-tight">{title}</h1>
             {subtitle && <p className="truncate">{subtitle}</p>}
           </div>
         </div>

@@ -28,14 +28,14 @@ export function ProfileModal({ onClose }: { onClose: () => void }) {
   return (
     <Modal onClose={onClose} labelledBy="profile-title" className="!max-w-md">
       <div className="mb-5 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <span className="icon-tile !h-11 !w-11"><UserRound size={20} /></span>
-          <div>
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="icon-tile !h-11 !w-11 shrink-0 max-sm:hidden"><UserRound size={20} /></span>
+          <div className="min-w-0">
             <h2 id="profile-title" className="text-lg font-bold">Profil</h2>
-            <p className="muted text-sm">{email}</p>
+            <p className="muted break-all text-sm leading-tight max-sm:text-[12px]">{email}</p>
           </div>
         </div>
-        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+        <button type="button" onClick={onClose} className="icon-btn shrink-0" aria-label="Bağla"><X size={18} /></button>
       </div>
 
       {linked && employeeId && (

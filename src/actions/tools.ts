@@ -240,14 +240,6 @@ export async function createWriteoff(args: {
   return { ok: true };
 }
 
-// Sayım: depoda (boş, tam hissə) sayılan miqdar; yalnız fərqli olanlara sənəd yaranır. Qaytarır: neçə sənəd yarandı.
-export async function createCount(items: { tool_id: number; counted: number }[], note: string | null): Promise<{ error?: string; created?: number }> {
-  const { data, error } = await createClient().rpc("depot_count_create", { p_items: items, p_note: note ?? undefined });
-  if (error) return { error: error.message };
-  revalidate();
-  return { created: data ?? 0 };
-}
-
 // Təsdiq / rədd: qəbul edən faktiki miqdarı düzəldə bilər (qaytarmada az gəlib və s.)
 export async function decideRequest(id: number, approve: boolean, fix: { quantity?: number; used?: number; returned?: number; note?: string | null } = {}): Promise<FormState> {
   const { error } = await createClient().rpc("depot_decide", {

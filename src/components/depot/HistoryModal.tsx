@@ -43,7 +43,7 @@ const KINDS: Record<string, { label: string; verb: string; icon: LucideIcon; ton
   repair_in: { label: "Təmirdən", verb: "təmirdən qayıtdı", icon: Wrench, tone: "text-ok bg-ok-soft" },
 };
 const FILTERS = [
-  ["all", "Hamısı"], ["receipt", "Mədaxil"], ["give", "Verilən"], ["return", "Qaytarılan"], ["used", "Sərf"], ["writeoff", "Silinən"], ["count", "Sayım"], ["repair", "Təmir"],
+  ["all", "Hamısı"], ["receipt", "Mədaxil"], ["give", "Verilən"], ["return", "Qaytarılan"], ["used", "Sərf"], ["writeoff", "Silinən"], ["repair", "Təmir"],
 ] as const;
 
 async function fetchJournal(kind: Kind, toolId?: number) {
@@ -124,7 +124,6 @@ export function HistoryModal({ kind, toolId, toolName, onClose }: { kind: Kind; 
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number][0]>("all");
   const q = norm(query.trim());
-  const word = kind === "material" ? "material" : "alət";
 
   const groups = useMemo(() => {
     const list = (rows ?? []).filter((m) =>
@@ -149,7 +148,7 @@ export function HistoryModal({ kind, toolId, toolName, onClose }: { kind: Kind; 
       <div className="space-y-3 px-6 pt-4">
         <label className="relative block">
           <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} autoFocus placeholder={`Usta, ${word} adı və ya kim yazıb...`} className="field !pl-10" aria-label="Jurnalda axtar" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} autoFocus placeholder="Usta, ad və ya kim yazıb..." className="field !pl-10 max-sm:!text-[13px] max-sm:placeholder:text-[12px]" aria-label="Jurnalda axtar" />
         </label>
         <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Hərəkət növü">
           {FILTERS.map(([v, label]) => (

@@ -1,5 +1,6 @@
+import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { useState } from "react";
-import { CalendarDays, CircleCheck, Inbox, Mail, MessageCircle, MessageSquareText, Phone, RotateCcw, Search, Trash2 } from "lucide-react";
+import { CalendarDays, CircleCheck, Inbox, Mail, MessageSquareText, Phone, RotateCcw, Search, Trash2 } from "lucide-react";
 import { deleteRequest, setRequestHandled } from "@/actions/requests";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Page } from "@/components/Page";
@@ -68,10 +69,10 @@ export default function RequestsPage() {
       ) : (
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="inline-flex gap-1 rounded-xl bg-line/60 p-1" role="tablist">
+            <div className="inline-flex gap-1 rounded-xl bg-line/60 p-1 max-sm:flex max-sm:w-full" role="tablist">
               {([["new", "Yeni"], ["handled", "Baxılıb"], ["all", "Hamısı"]] as const).map(([f, label]) => (
                 <button key={f} type="button" role="tab" aria-selected={filter === f} onClick={() => setFilter(f)}
-                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors max-sm:flex-1 max-sm:justify-center max-sm:gap-1.5 max-sm:px-2 ${
                     filter === f ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"
                   }`}>
                   {label}
@@ -79,7 +80,7 @@ export default function RequestsPage() {
                 </button>
               ))}
             </div>
-            <label className="relative w-full max-w-sm">
+            <label className="relative w-full max-w-sm sm:w-auto sm:min-w-[12rem] sm:flex-1">
               <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
               <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Ad, telefon, e-poçt və ya mesaj..."
                 className="field !pl-10" aria-label="Müraciət axtar" />
@@ -97,7 +98,7 @@ export default function RequestsPage() {
           ) : (
             <div className="grid gap-5 lg:grid-cols-[minmax(340px,420px)_1fr]">
               {/* Siyahı */}
-              <ul className="card nice-scroll !p-2 lg:h-[calc(100dvh-300px)] lg:min-h-[380px] lg:overflow-y-auto">
+              <ul className="card nice-scroll !p-2 lg:h-[calc(100dvh/var(--zoom)-300px)] lg:min-h-[380px] lg:overflow-y-auto">
                 {list.map((r) => {
                   const active = selected?.id === r.id;
                   return (
@@ -145,7 +146,7 @@ function RequestDetail({ r }: { r: Request }) {
   }
 
   return (
-    <section className="card flex flex-col lg:h-[calc(100dvh-300px)] lg:min-h-[380px]">
+    <section className="card flex flex-col lg:h-[calc(100dvh/var(--zoom)-300px)] lg:min-h-[380px]">
       <div className="flex flex-wrap items-start gap-4">
         <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${toneOf(r.name)} text-lg font-bold text-white`}>
           {initials(r.name)}
@@ -162,15 +163,15 @@ function RequestDetail({ r }: { r: Request }) {
       </div>
 
       {/* Əlaqə düymələri */}
-      <div className="mt-5 flex flex-wrap gap-2">
-        <a href={`tel:${phoneDigits}`} className="btn btn-primary btn-sm"><Phone size={14} /> {r.phone}</a>
+      <div className="mt-5 flex flex-wrap gap-2 max-sm:grid max-sm:grid-cols-[auto_minmax(0,1fr)]">
+        <a href={`tel:${phoneDigits}`} className="btn btn-primary btn-sm max-sm:justify-center max-sm:px-2.5 max-sm:text-[13px]"><Phone size={14} className="shrink-0" /> <span className="whitespace-nowrap">{r.phone}</span></a>
         {phoneDigits.length >= 11 && (
           <a href={`https://wa.me/${phoneDigits}`} target="_blank" rel="noopener noreferrer"
-            className="btn btn-sm !bg-[#25D366] !text-white hover:!bg-[#1DA851]">
-            <MessageCircle size={14} /> WhatsApp
+            className="btn btn-sm !bg-[#25D366] !text-white hover:!bg-[#1DA851] max-sm:min-w-0 max-sm:justify-center max-sm:px-2 max-sm:text-[13px]">
+            <WhatsAppIcon size={15} className="shrink-0" /> WhatsApp
           </a>
         )}
-        {r.email && <a href={`mailto:${r.email}`} className="btn btn-secondary btn-sm"><Mail size={14} /> {r.email}</a>}
+        {r.email && <a href={`mailto:${r.email}`} className="btn btn-secondary btn-sm max-sm:col-span-2 max-sm:min-w-0 max-sm:justify-center max-sm:text-[13px]"><Mail size={14} className="shrink-0" /> <span className="truncate">{r.email}</span></a>}
       </div>
 
       {/* Mesaj */}

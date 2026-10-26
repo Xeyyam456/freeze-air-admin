@@ -30,10 +30,10 @@ export default function SitePage() {
     <Page title="Sayt" subtitle="Açıq saytın məzmunu: dəyişikliklər saytda ən gec 1 dəqiqəyə görünür">
       <div className="space-y-5">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="inline-flex gap-1 rounded-xl bg-line/60 p-1" role="tablist">
+          <div className="grid w-full grid-cols-2 gap-1 rounded-xl bg-line/60 p-1 sm:inline-flex sm:w-fit sm:max-w-full sm:flex-wrap" role="tablist">
             {TABS.map(({ id, label, icon: Icon }) => (
               <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
-                className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+                className={`flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors max-sm:last:odd:col-span-2 ${
                   tab === id ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"
                 }`}>
                 <Icon size={15} /> {label}

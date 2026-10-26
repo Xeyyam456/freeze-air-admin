@@ -242,7 +242,7 @@ export function PendingBlock({ requests, holdings, tools, myUid, owner }: {
               </ConfirmButton>
             )}
           </DHead>
-          <ul className="nice-scroll max-h-[min(560px,calc(100dvh-180px))] divide-y divide-line overflow-y-auto pr-1">
+          <ul className="nice-scroll max-h-[min(560px,calc(100dvh/var(--zoom)-180px))] divide-y divide-line overflow-y-auto pr-1">
             {disputes.map((h) => <DisputeRow key={`d${h.id}`} h={h} tool={toolOf.get(h.tool_id)} />)}
             {requests.map((r) => {
               const row = <RequestRow key={r.id} r={r} holding={r.assignment_id ? holdingOf.get(r.assignment_id) ?? null : null} tool={toolOf.get(r.tool_id ?? 0)} myUid={myUid} owner={owner} />;

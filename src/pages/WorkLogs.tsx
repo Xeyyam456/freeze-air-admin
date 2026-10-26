@@ -1,12 +1,15 @@
 import { useMemo, useState } from "react";
-import { CalendarDays, ClipboardList, Download, MapPin, Search, Users } from "lucide-react";
+import { Building2, CalendarDays, ChevronDown, ClipboardList, Download, MapPin, Search, SlidersHorizontal, Users } from "lucide-react";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
+import { EmployeeSelect } from "@/components/employees/EmployeeSelect";
+import { ModelDropdown } from "@/components/errors/ModelDropdown";
 import { WithSidePanel } from "@/components/SidePanel";
 import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { toast } from "@/lib/toast";
 import { createClient } from "@/lib/supabase/client";
+import { fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
 import { useData } from "@/lib/useData";
 
 const WEEKDAYS = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
@@ -45,7 +48,7 @@ async function fetchLogs(from: string, to: string) {
 async function fetchFilters() {
   const supabase = createClient();
   const [employees, companies] = await Promise.all([
-    supabase.from("employees").select("id, full_name").eq("is_management", false).order("full_name").then((r) => r.data ?? []),
+    supabase.from("employees").select("id, full_name, photo_url, specialty").eq("is_management", false).order("full_name").then((r) => r.data ?? []),
     supabase.from("companies").select("id, name, kind").order("name").then((r) => r.data ?? []),
   ]);
   return { employees, companies };
@@ -109,9 +112,9 @@ async function exportXlsx(logs: Log[], info: ExportInfo) {
 
 function Summary({ label, value, icon: Icon }: { label: string; value: number | string; icon: typeof Users }) {
   return (
-    <div className="card !p-4">
-      <p className="flex items-center gap-2 text-xs font-semibold text-muted"><Icon size={14} /> {label}</p>
-      <p className="mt-2 text-2xl font-extrabold leading-none">{value}</p>
+    <div className="card min-w-0 !p-4 max-sm:!px-3 max-sm:!py-2.5">
+      <p className="flex items-center gap-2 whitespace-nowrap text-xs font-semibold text-muted"><Icon size={14} className="shrink-0" /> <span className="truncate">{label}</span></p>
+      <p className="mt-2 text-2xl font-extrabold leading-none max-sm:mt-1 max-sm:text-xl">{value}</p>
     </div>
   );
 }
@@ -125,30 +128,43 @@ export default function WorkLogsPage() {
 
   const filters = useData(fetchFilters);
   const logs = useData(() => fetchLogs(from, to), [from, to]);
+  const groupMap = useData(() => fetchGroupMap(from, to), [from, to]);
 
-  const list = useMemo(() => {
+  // Qrup işi bir sətir (adlar birləşir); ustaların sayı isə hamısından
+  const filtered = useMemo(() => {
     const q = norm(query.trim());
     return (logs ?? []).filter((l) =>
       (!employeeId || l.employee_id === Number(employeeId)) &&
       (!companyId || companyOf(l) === Number(companyId)) &&
       (!q || [l.employees?.full_name, placeOf(l), l.description].some((v) => norm(v).includes(q))));
   }, [logs, employeeId, companyId, query]);
+  const list = useMemo(() => mergeGroupLogs(filtered, groupMap), [filtered, groupMap]);
 
+  // Gün → tək işlər sətir kimi, qrup işləri (Tapşırıqlardakı kimi) eyni üzvlü qrupa görə bir açılan sətirdə
+  type Entry = { type: "solo"; log: Log } | { type: "crew"; key: string; names: string; logs: Log[] };
   const groups = useMemo(() => {
-    const out: { day: string; items: Log[] }[] = [];
+    const out: { day: string; count: number; entries: Entry[] }[] = [];
     for (const l of list) {
-      const last = out.at(-1);
-      if (last?.day === l.work_date) last.items.push(l);
-      else out.push({ day: l.work_date, items: [l] });
+      let day = out.at(-1);
+      if (day?.day !== l.work_date) { day = { day: l.work_date, count: 0, entries: [] }; out.push(day); }
+      day.count += 1;
+      if (!groupMap?.has(l.id)) { day.entries.push({ type: "solo", log: l }); continue; }
+      const names = l.employees?.full_name ?? "—";
+      const key = `${l.work_date}|${names.split(" + ").sort().join("|")}`;
+      const crew = day.entries.find((e) => e.type === "crew" && e.key === key);
+      if (crew && crew.type === "crew") crew.logs.push(l);
+      else day.entries.push({ type: "crew", key, names, logs: [l] });
     }
     return out;
-  }, [list]);
+  }, [list, groupMap]);
+  const [openCrews, setOpenCrews] = useState<Set<string>>(new Set()); // qrup sətirləri bağlı başlayır
+  const toggleCrew = (key: string) => setOpenCrews((v) => { const n = new Set(v); if (!n.delete(key)) n.add(key); return n; });
 
   const stats = useMemo(() => ({
     days: new Set(list.map((l) => l.work_date)).size,
-    masters: new Set(list.map((l) => l.employee_id)).size,
+    masters: new Set(filtered.map((l) => l.employee_id)).size,
     places: new Set(list.map(placeOf)).size,
-  }), [list]);
+  }), [list, filtered]);
 
   const panel = (
     <div className="card space-y-4">
@@ -170,21 +186,17 @@ export default function WorkLogsPage() {
         </div>
       </div>
 
-      <label className="block">
+      <div>
         <span className="mb-1.5 block text-xs font-semibold text-muted">Usta</span>
-        <select value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} className="field cursor-pointer">
-          <option value="">Hamısı</option>
-          {(filters?.employees ?? []).map((e) => <option key={e.id} value={e.id}>{e.full_name}</option>)}
-        </select>
-      </label>
+        <EmployeeSelect value={employeeId ? Number(employeeId) : null} onChange={(id) => setEmployeeId(id ? String(id) : "")}
+          employees={filters?.employees ?? []} emptyLabel="Hamısı" placeholder="Hamısı" />
+      </div>
 
-      <label className="block">
+      <div>
         <span className="mb-1.5 block text-xs font-semibold text-muted">Şirkət / market</span>
-        <select value={companyId} onChange={(e) => setCompanyId(e.target.value)} className="field cursor-pointer">
-          <option value="">Hamısı</option>
-          {(filters?.companies ?? []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </select>
-      </label>
+        <ModelDropdown value={companyId} onChange={setCompanyId} all icon={Building2} placeholder="Hamısı"
+          options={[{ value: "", label: "Hamısı" }, ...(filters?.companies ?? []).map((c) => ({ value: String(c.id), label: c.name, hint: c.kind === "market" ? "market" : "şirkət" }))]} />
+      </div>
 
       <label className="block">
         <span className="mb-1.5 block text-xs font-semibold text-muted">Axtarış</span>
@@ -205,11 +217,11 @@ export default function WorkLogsPage() {
   return (
     <Page title="Görülən işlər" subtitle="Tarix, usta və yerə görə süz, Excel-ə yaz">
       {openLog && <WorkLogModal logId={openLog} onClose={() => setOpenLog(null)} />}
-      <WithSidePanel stack panel={panel}>
+      <WithSidePanel stack fabLabel="Süzgəc və Excel" fabIcon={SlidersHorizontal} panel={panel}>
         <div className="flex h-full flex-col gap-4">
-          <div className="grid shrink-0 grid-cols-4 gap-4">
+          <div className="grid shrink-0 grid-cols-4 gap-4 max-sm:grid-cols-2 max-sm:gap-2.5">
             <Summary label="İş sayı" value={logs ? list.length : "…"} icon={ClipboardList} />
-            <Summary label="İş görülən gün" value={logs ? stats.days : "…"} icon={CalendarDays} />
+            <Summary label="İş günü" value={logs ? stats.days : "…"} icon={CalendarDays} />
             <Summary label="Usta" value={logs ? stats.masters : "…"} icon={Users} />
             <Summary label="Fərqli yer" value={logs ? stats.places : "…"} icon={MapPin} />
           </div>
@@ -224,25 +236,60 @@ export default function WorkLogsPage() {
                 <section key={g.day}>
                   <h3 className="sticky top-0 z-[1] flex items-center justify-between border-b border-line bg-[#f8f9fc] px-5 py-2.5 text-xs font-bold text-muted">
                     <span>{formatDateAz(g.day)}, {WEEKDAYS[new Date(`${g.day}T00:00`).getDay()]}</span>
-                    <span className="rounded-full bg-surface px-2 py-0.5">{g.items.length} iş</span>
+                    <span className="rounded-full bg-surface px-2 py-0.5">{g.count} iş</span>
                   </h3>
                   <ul>
-                    {g.items.map((l) => (
-                      <li key={l.id} className="border-b border-line last:border-b-0">
-                        <button type="button" onClick={() => setOpenLog(l.id)}
-                          className="flex w-full items-start gap-3 px-5 py-3 text-left transition-colors hover:bg-primary-soft/40">
-                          <Avatar employee={{ full_name: l.employees?.full_name ?? "?", photo_url: l.employees?.photo_url ?? null }} className="!h-9 !w-9 shrink-0 !text-xs" />
-                          <span className="min-w-0 flex-1">
-                            <span className="flex flex-wrap items-center gap-x-2 text-sm">
-                              <span className="font-semibold">{l.employees?.full_name ?? "—"}</span>
-                              <span className="flex min-w-0 items-center gap-1 truncate text-xs font-semibold text-primary"><MapPin size={12} /> {placeOf(l)}</span>
+                    {g.entries.map((en) => {
+                      if (en.type === "solo") {
+                        const l = en.log;
+                        return (
+                          <li key={l.id} className="border-b border-line last:border-b-0">
+                            <button type="button" onClick={() => setOpenLog(l.id)}
+                              className="flex w-full items-start gap-3 px-5 py-3 text-left transition-colors hover:bg-primary-soft/40 max-sm:gap-2 max-sm:px-3 max-sm:py-2">
+                              <Avatar employee={{ full_name: l.employees?.full_name ?? "?", photo_url: l.employees?.photo_url ?? null }} className="!h-9 !w-9 shrink-0 !text-xs max-sm:!h-7 max-sm:!w-7 max-sm:!text-[9px]" />
+                              <span className="min-w-0 flex-1">
+                                <span className="flex flex-wrap items-center gap-x-2 text-sm">
+                                  <span className="font-semibold">{l.employees?.full_name ?? "—"}</span>
+                                  <span className="flex min-w-0 items-center gap-1 truncate text-xs font-semibold text-primary"><MapPin size={12} /> {placeOf(l)}</span>
+                                </span>
+                                <span className="muted mt-0.5 line-clamp-1 block text-sm max-sm:line-clamp-3 max-sm:text-xs">{l.description}</span>
+                              </span>
+                              <span className="shrink-0 text-sm font-semibold tabular-nums">{timeOf(l.created_at)}</span>
+                            </button>
+                          </li>
+                        );
+                      }
+                      const open = openCrews.has(en.key);
+                      return (
+                        <li key={en.key} className="border-b border-line last:border-b-0">
+                          <button type="button" onClick={() => toggleCrew(en.key)} aria-expanded={open}
+                            className={`flex w-full items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-primary-soft/40 max-sm:gap-2 max-sm:px-3 max-sm:py-2 ${open ? "bg-primary-soft/30" : ""}`}>
+                            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary-soft text-primary max-sm:h-7 max-sm:w-7"><Users size={16} className="max-sm:!h-3.5 max-sm:!w-3.5" /></span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-sm font-semibold max-sm:text-[13px] max-sm:leading-tight sm:truncate">{en.names.split(" + ").map((n, i, all) => <span key={n} className="max-sm:block">{n}{i < all.length - 1 && <span className="max-sm:hidden"> + </span>}</span>)}</span>
+                              <span className="muted block text-xs">Qrup işi · {en.logs.length} iş</span>
                             </span>
-                            <span className="muted mt-0.5 line-clamp-1 block text-sm">{l.description}</span>
-                          </span>
-                          <span className="shrink-0 text-sm font-semibold tabular-nums">{timeOf(l.created_at)}</span>
-                        </button>
-                      </li>
-                    ))}
+                            <ChevronDown size={18} className={`shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`} />
+                          </button>
+                          {open && (
+                            <ul className="border-t border-line bg-[#fbfcfe]">
+                              {en.logs.map((l) => (
+                                <li key={l.id} className="border-b border-line last:border-b-0">
+                                  <button type="button" onClick={() => setOpenLog(l.id)}
+                                    className="flex w-full items-start gap-3 py-3 pl-[76px] pr-5 text-left transition-colors hover:bg-primary-soft/40 max-sm:flex-wrap max-sm:gap-x-2 max-sm:gap-y-1 max-sm:px-3 max-sm:py-2">
+                                    <span className="min-w-0 flex-1 max-sm:contents">
+                                      <span className="flex min-w-0 items-center gap-1 truncate text-sm font-semibold text-primary max-sm:min-w-0 max-sm:flex-1 max-sm:text-[13px]"><MapPin size={13} className="shrink-0" /> <span className="truncate">{placeOf(l)}</span></span>
+                                      <span className="muted mt-0.5 line-clamp-1 block text-sm max-sm:order-last max-sm:mt-0 max-sm:line-clamp-5 max-sm:basis-full max-sm:text-xs max-sm:leading-snug">{l.description}</span>
+                                    </span>
+                                    <span className="shrink-0 text-sm font-semibold tabular-nums max-sm:text-xs">{timeOf(l.created_at)}</span>
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </section>
               ))

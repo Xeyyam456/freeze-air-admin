@@ -1,5 +1,6 @@
 import { useActionState, useState } from "react";
-import { Clock, Link2, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { WhatsAppIcon } from "@/components/WhatsAppIcon";
+import { Clock, Link2, Mail, MapPin, Phone } from "lucide-react";
 import { updateSiteSettings } from "@/actions/site";
 import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import type { Tables } from "@/lib/database.types";
@@ -69,12 +70,12 @@ function ContactEditor({ settings }: { settings: Tables<"site_settings"> }) {
     <div className="grid gap-5 xl:grid-cols-[1fr_1.15fr]">
       {/* Form */}
       <div className="card flex flex-col">
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="card-title">Əlaqə məlumatları</h2>
             <p className="muted mt-1 text-sm">Boş qalan sahənin yerində saytda yer tutucu görünür. Sağda yazdıqca dəyişən önizləmə var.</p>
           </div>
-          <span className="muted shrink-0 rounded-full bg-bg px-3 py-1 text-xs">Son dəyişiklik: {formatTime(settings.updated_at)}</span>
+          <span className="muted rounded-full max-sm:max-w-full max-sm:whitespace-normal sm:shrink-0 bg-bg px-3 py-1 text-xs">Son dəyişiklik: {formatTime(settings.updated_at)}</span>
         </div>
 
         <SaveConfirmForm action={action} className="mt-6 flex flex-1 flex-col">
@@ -124,7 +125,7 @@ function ContactEditor({ settings }: { settings: Tables<"site_settings"> }) {
             <div className="relative mt-4 flex flex-wrap gap-2">
               <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#00a3d9] px-3.5 text-xs font-bold text-white"><Phone size={13} /> Zəng et</span>
               {hasWhatsApp && (
-                <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#25D366] px-3.5 text-xs font-bold text-white"><MessageCircle size={13} /> WhatsApp</span>
+                <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#25D366] px-3.5 text-xs font-bold text-white"><WhatsAppIcon size={14} /> WhatsApp</span>
               )}
             </div>
             <ul className="relative mt-5 divide-y divide-white/10">

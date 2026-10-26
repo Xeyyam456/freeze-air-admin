@@ -45,6 +45,20 @@
   }
 }
 
+/* Çox böyük ekranda yazılar oxunaqlı olsun: səhifə ölçüsü böyüdülür (1920px-də 100%, 2400px+ → 115%).
+   Qeyd: zoom vh/dvh vahidlərini düzəltmir, hündürlük hesablarında 100vh əvəzinə calc(100vh / var(--zoom)) yazılır. */
+:root {
+  --zoom: 1;
+}
+@media (width >= 2400px) {
+  :root {
+    --zoom: 1.15;
+  }
+}
+html {
+  zoom: var(--zoom);
+}
+
 @layer base {
   /* Klik olunan hər şeydə əl kursoru (Tailwind v4 düymələrə özü qoymur); deaktiv olanda qadağan */
   button, [role="button"], [role="tab"], a[href], summary, select,
@@ -92,7 +106,7 @@
   .app-frame {
     --nav: var(--nav-w);
     padding-left: var(--nav);
-    min-height: 100vh;
+    min-height: calc(100vh / var(--zoom));
     transition: padding-left 200ms ease;
   }
   .app-frame[data-collapsed] {
@@ -448,8 +462,8 @@
     position: relative;
     background: var(--color-surface);
     border: 1px solid var(--color-line);
-    border-radius: 16px;
-    padding: 16px;
+    border-radius: 14px;
+    padding: 14px;
     box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
     transition: border-color 150ms ease, box-shadow 150ms ease;
   }
@@ -462,14 +476,16 @@
     display: grid;
     place-items: center;
     flex-shrink: 0;
-    width: 60px;
-    height: 60px;
-    border-radius: 14px;
+    min-width: 48px;
+    height: 48px;
+    padding: 0 8px;
+    white-space: nowrap;
+    border-radius: 12px;
     background:
       radial-gradient(40px 30px at 80% 10%, rgba(45, 212, 191, 0.45), transparent 70%),
       linear-gradient(140deg, #11243a, #0b1324);
     color: #fff;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: -0.01em;
     font-variant-numeric: tabular-nums;
@@ -738,7 +754,7 @@
     width: 100%;
     max-width: 440px;
     /* Ekrandan uzun pəncərə öz içində sürüşür (zolaq gizli) */
-    max-height: calc(100dvh - 32px);
+    max-height: calc(100dvh / var(--zoom) - 32px);
     overflow-y: auto;
     scrollbar-width: none;
     background: var(--color-surface);
@@ -987,7 +1003,7 @@
     border: 1px solid var(--color-line);
   }
   .cmdk-list {
-    max-height: min(420px, 55vh);
+    max-height: min(420px, 55vh / var(--zoom));
     overflow-y: auto;
     padding: 8px;
   }
@@ -1040,5 +1056,288 @@
   }
   .cmdk-foot kbd {
     margin-right: 3px;
+  }
+}
+
+/* ---------- Dar ekran (< 1024px): menyu sürüşən siyirtmədir ---------- */
+@layer components {
+  .nav-burger,
+  .sidebar-close {
+    display: none;
+  }
+  @media (width < 1024px) {
+    :root {
+      --gutter: 24px;
+      --header-h: 60px;
+    }
+    .app-frame,
+    .app-frame[data-collapsed] {
+      padding-left: 0;
+    }
+    .app-sidebar {
+      width: min(300px, 86vw);
+      transform: translateX(-100%);
+      transition: transform 220ms ease;
+      box-shadow: none;
+    }
+    .app-sidebar[data-open] {
+      transform: none;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+    }
+    .nav-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 55;
+      background: rgba(11, 19, 36, 0.55);
+      animation: modal-fade 160ms ease-out;
+    }
+    .nav-burger {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .sidebar-close {
+      position: absolute;
+      top: calc((var(--header-h) - 36px) / 2);
+      right: 12px;
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+  @media (width < 640px) {
+    :root {
+      --gutter: 16px;
+      --gap: 16px;
+    }
+  }
+}
+
+/* ---------- Dar ekranda yan panel: aşağıdan açılan pəncərə ---------- */
+@layer components {
+  .panel-fab,
+  .panel-close {
+    display: none;
+  }
+  @media (width < 1024px) {
+    .side-box {
+      margin-right: 0 !important;
+      height: auto !important;
+      min-height: calc(100dvh - var(--header-h) - 2 * var(--gap) - 64px);
+    }
+    .panel-fab {
+      position: fixed;
+      right: var(--gutter);
+      bottom: 20px;
+      z-index: 45;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 48px;
+      padding: 0 20px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      box-shadow: 0 10px 28px rgba(10, 126, 164, 0.4);
+    }
+    .panel-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 64;
+      background: rgba(11, 19, 36, 0.55);
+      animation: modal-fade 160ms ease-out;
+    }
+    .side-panel {
+      inset: auto 0 0 0;
+      top: auto;
+      right: 0;
+      z-index: 65;
+      width: auto;
+      max-height: 88dvh;
+      border-radius: 22px 22px 0 0;
+      border-bottom: 0;
+      transform: translateY(105%);
+      transition: transform 240ms ease;
+      box-shadow: none;
+    }
+    .side-panel[data-open] {
+      transform: none;
+      box-shadow: 0 -20px 60px rgba(11, 19, 36, 0.35);
+    }
+    .panel-close {
+      position: sticky;
+      top: 12px;
+      z-index: 3;
+      float: right;
+      margin: 12px 12px -48px 0;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      color: var(--color-muted);
+      background: var(--color-bg);
+    }
+  }
+}
+
+@layer components {
+  @media (width < 640px) {
+    .card {
+      padding: 16px;
+    }
+  }
+}
+
+/* ---------- Menyu sürüşmür: bəndlərin hündürlüyü ekranın hündürlüyünə görə yığcamlaşır ---------- */
+@layer components {
+  :root {
+    /* 15 bənd + 5 qrup başlığı + boşluqlar + loqo + "Menyunu yığ": qalan yer bəndlər arasında bölünür */
+    --nav-item: clamp(28px, calc((100vh / var(--zoom) - 360px) / 15), 40px);
+  }
+  .sidebar-nav {
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+  .sidebar-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .side-link {
+    height: var(--nav-item);
+  }
+  .side-link[aria-current="page"]::before {
+    top: 7px;
+    bottom: 7px;
+  }
+  /* Alçaq ekranda qrup başlıqları gizlənir, qruplar nazik xətlə ayrılır */
+  @media (max-height: 780px) {
+    :root {
+      --nav-item: clamp(28px, calc((100vh / var(--zoom) - 230px) / 15), 40px);
+    }
+    .sidebar-group-title {
+      display: none;
+    }
+    .sidebar-group + .sidebar-group {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  }
+  /* Telefonda siyirtmə toxunma ilə sürüşə bilər (zolaq görünmür) */
+  @media (width < 1024px) {
+    :root {
+      --nav-item: 40px;
+    }
+    .sidebar-nav {
+      overflow-y: auto;
+    }
+  }
+}
+
+@layer components {
+  .app-sidebar,
+  .sidebar-nav {
+    overscroll-behavior: contain;
+  }
+}
+
+@layer components {
+  /* Tabletdə cədvəl sıxlaşır: əlaqəli şəxs və nömrə bir sətirdə qalsın */
+  @media (width < 1280px) {
+    .data-table th,
+    .data-table td {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+  }
+}
+
+@layer components {
+  /* Dar ekranda xəritə kimi "doldur" məzmunu hündürlük almalıdır (yoxsa nazik zolağa çökür) */
+  @media (width < 1024px) {
+    .side-box[data-fill] {
+      height: max(420px, calc(100dvh - var(--header-h) - 2 * var(--gap) - 80px)) !important;
+    }
+  }
+}
+
+@layer components {
+  @media (width < 1024px) {
+    .side-box[data-fill][data-compact] {
+      height: 360px !important;
+      min-height: 0;
+    }
+  }
+}
+
+@layer components {
+  /* Maşın nömrəsi heç vaxt kəsilmir: flex sətirdə yer azalanda model adı kəsilir, nömrə yox */
+  .plate {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+@layer components {
+  /* Mobil başlıq: yalnız başlıq (uzun izah gizlənir), düymələr yığcam */
+  @media (width < 640px) {
+    .page-hero p {
+      display: none;
+    }
+    .page-hero h1 {
+      font-size: 18px;
+    }
+    .app-header .app-shell {
+      gap: 10px;
+    }
+    .hero-action {
+      height: 38px;
+      padding: 0 12px;
+      font-size: 13px;
+    }
+  }
+}
+
+@layer components {
+  /* Başlıqdakı izah mətni dar ekranda kəsilib "…" qalmasın */
+  @media (width < 720px) {
+    .page-hero p {
+      display: none;
+    }
+  }
+}
+
+@layer components {
+  @media (width < 768px) {
+    .data-table th,
+    .data-table td {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+}
+
+@layer components {
+  /* Çox dar ekranda başlıqdakı "+ Yeni ..." düyməsi yalnız ikondur: səhifə adına yer qalsın */
+  @media (width < 380px) {
+    .hero-action {
+      width: 38px;
+      padding: 0;
+      gap: 0;
+      justify-content: center;
+      font-size: 0;
+    }
   }
 }

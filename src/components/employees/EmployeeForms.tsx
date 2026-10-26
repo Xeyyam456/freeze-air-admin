@@ -246,7 +246,7 @@ function EmployeeDetailsModal({ employee, accounts, admin, onClose }: {
         </div>
 
         {/* Bütün tablar eyni hündürlükdədir ki, keçid zamanı pəncərə tullanmasın */}
-        <div className="mt-3 h-[min(340px,calc(100vh-330px))] text-left text-sm">
+        <div className="mt-3 h-[min(340px,calc(100vh/var(--zoom)-330px))] text-left text-sm">
         {tab === "about" ? (
         <div className="grid grid-cols-2 gap-2">
           <div className="rounded-xl bg-bg px-3 py-2">
@@ -257,17 +257,17 @@ function EmployeeDetailsModal({ employee, accounts, admin, onClose }: {
             <p className="muted flex items-center gap-1.5 text-xs font-medium"><CalendarDays size={13} /> İşə başlayıb</p>
             <p className="font-semibold">{formatDate(employee.start_date) ?? "—"}</p>
           </div>
-          <div className="rounded-xl bg-bg px-3 py-2">
+          <div className="rounded-xl bg-bg px-3 py-2 max-sm:col-span-2">
             <p className="muted flex items-center gap-1.5 text-xs font-medium"><Phone size={13} /> Telefon</p>
             {employee.phone
-              ? <a href={`tel:${employee.phone}`} className="link">{employee.phone}</a>
+              ? <a href={`tel:${employee.phone}`} className="link whitespace-nowrap max-sm:text-[13px]">{employee.phone}</a>
               : <p className="font-semibold">—</p>}
           </div>
-          <div className="rounded-xl bg-bg px-3 py-2">
+          <div className="rounded-xl bg-bg px-3 py-2 max-sm:col-span-2">
             <p className="muted flex items-center gap-1.5 text-xs font-medium"><Car size={13} /> Maşın</p>
             {employee.has_car
               ? <p className="font-semibold"><span className="plate">{employee.car_plate ?? "Nömrə yazılmayıb"}</span>{employee.car_model && <span className="muted ml-1.5 text-xs font-medium">{employee.car_model}</span>}
-                <span className="muted block text-xs font-medium">{employee.fuel_type === "diesel" ? "Dizel" : employee.fuel_type === "petrol" ? "Benzin" : "Yanacaq seçilməyib"}{employee.fuel_per_100 && ` · ${employee.fuel_per_100} l / 100 km`}</span></p>
+                <span className="muted block text-xs font-medium">{employee.fuel_type === "diesel" ? "Dizel" : employee.fuel_type === "petrol" ? "Benzin" : "Yanacaq seçilməyib"}{employee.fuel_per_100 && ` · ${employee.fuel_per_100} L / 100 km`}</span></p>
               : <p className="muted font-semibold">Yoxdur</p>}
           </div>
           {admin && (
@@ -356,7 +356,10 @@ export function AccountSection({ employeeId, email, hasAccount, enabled, note = 
   );
 }
 
-function EmployeeCard({ employee, todayCount, monthCount, status, accounts, admin }: {
+export type Partner = { key: string; names: string; today: number; month: number };
+
+function EmployeeCard({ employee, todayCount, monthCount, status, partners, accounts, admin }: {
+  partners: Partner[];
   accounts: Accounts;
   todayCount: number;
   monthCount: number;
@@ -392,6 +395,16 @@ function EmployeeCard({ employee, todayCount, monthCount, status, accounts, admi
           </>
         )}
         footer={
+          <>
+            {/* Qrup işi: kimlə birlikdə işləyib */}
+            {partners.map((p) => (
+              <span key={p.key} className="mb-1.5 flex w-full items-center gap-1.5 rounded-lg bg-primary-soft/70 px-2 py-1 text-[11px] font-semibold text-primary"
+                title={`${p.names} ilə birlikdə: bu ay ${p.month} iş`}>
+                <Users size={12} className="shrink-0" />
+                <span className="min-w-0 flex-1 truncate">{p.names} ilə birlikdə</span>
+                <span className="shrink-0 tabular-nums">{p.today > 0 && <>bu gün {p.today} · </>}bu ay {p.month}</span>
+              </span>
+            ))}
           <span className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
             {employee.has_car
               ? <span className="flex items-center gap-1.5" title={employee.car_model ?? "Maşın"}><Car size={13} className="text-primary" /><span className="plate">{employee.car_plate ?? "Nömrəsiz"}</span>
@@ -403,6 +416,7 @@ function EmployeeCard({ employee, todayCount, monthCount, status, accounts, admi
               ? <span className="flex items-center gap-1.5 text-ok"><KeyRound size={13} /> Giriş hesabı var</span>
               : <span className="muted flex items-center gap-1.5"><KeyRound size={13} /> Hesab açılmayıb</span>)}
           </span>
+          </>
         }
         onOpen={() => setViewing(true)}
       />
@@ -410,18 +424,9 @@ function EmployeeCard({ employee, todayCount, monthCount, status, accounts, admi
   );
 }
 
-// Tünd xülasədəki rəqəm
-function SummaryStat({ label, value, tone = "" }: { label: string; value: number; tone?: string }) {
-  return (
-    <div>
-      <dt className="text-xs text-white/55">{label}</dt>
-      <dd className={`text-2xl font-extrabold tabular-nums ${tone}`}>{value}</dd>
-    </div>
-  );
-}
-
-// Ustalar: tünd xülasə (növlər, bu gün işdə / icazəli, işlər), yapışan axtarış, profil kartları
-export function EmployeeList({ employees, todayWork, monthWork, status, accounts, admin }: {
+// Ustalar: yapışan axtarış və profil kartları
+export function EmployeeList({ employees, todayWork, monthWork, status, partners, accounts, admin }: {
+  partners: Record<number, Partner[]>; // usta id → kimlərlə birlikdə iş görüb
   accounts: Accounts;
   todayWork: Record<number, number>; // usta id → bu gün yazılan iş sayı
   monthWork: Record<number, number>; // usta id → bu ay yazılan iş sayı
@@ -449,33 +454,8 @@ export function EmployeeList({ employees, todayWork, monthWork, status, accounts
     );
   }
 
-  const count = (kind: TodayStatus["kind"]) => employees.filter((e) => status[e.id]?.kind === kind).length;
-  const sum = (r: Record<number, number>) => Object.values(r).reduce((n, v) => n + v, 0);
-  const types = (["master", "assistant", "driver"] as const)
-    .map((t) => ({ label: workerTypeLabel(t), n: employees.filter((e) => (e.worker_type ?? "master") === t).length }))
-    .filter((t) => t.n > 0);
-
   return (
     <div className="space-y-5">
-      <section className="flex flex-wrap items-center gap-x-10 gap-y-4 rounded-[18px] bg-[linear-gradient(120deg,#0b1324,#11243a_55%,#0f3d4c)] px-6 py-5 text-white">
-        <div className="flex items-center gap-4">
-          {/* Komandanın üzləri: ilk 4 usta üst-üstə */}
-          <div className="flex -space-x-3">
-            {employees.slice(0, 4).map((e) => <Avatar key={e.id} employee={e} className="!h-11 !w-11 !text-xs ring-2 ring-[#0b1324]" />)}
-          </div>
-          <div>
-            <p className="text-2xl font-extrabold leading-tight">{employees.length} əməkdaş</p>
-            <p className="text-xs text-white/55">{types.map((t) => `${t.n} ${t.label.toLocaleLowerCase("az")}`).join(" · ")}</p>
-          </div>
-        </div>
-        <dl className="flex flex-1 flex-wrap gap-x-10 gap-y-3">
-          <SummaryStat label="Bu gün işdə" value={count("in")} tone="text-[#4ade80]" />
-          <SummaryStat label="İşi bitirib" value={count("done")} />
-          <SummaryStat label="İcazəli" value={count("leave")} tone={count("leave") ? "text-amber-400" : ""} />
-          <SummaryStat label="Bu gün iş" value={sum(todayWork)} tone="text-frost" />
-          <SummaryStat label="Bu ay iş" value={sum(monthWork)} />
-        </dl>
-      </section>
 
       {/* Axtarış yuxarıda yapışıq qalır */}
       <div className="sticky top-[var(--header-h)] z-20 -mx-1 bg-bg/90 px-1 py-2 backdrop-blur">
@@ -499,10 +479,10 @@ export function EmployeeList({ employees, todayWork, monthWork, status, accounts
       {filtered.length === 0 ? (
         <div className="card muted py-10 text-center text-sm">Bu axtarışa uyğun usta tapılmadı.</div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]">
           {filtered.map((e) => (
             <EmployeeCard key={e.id} employee={e} todayCount={todayWork[e.id] ?? 0} monthCount={monthWork[e.id] ?? 0}
-              status={status[e.id]} accounts={accounts} admin={admin} />
+              status={status[e.id]} partners={partners[e.id] ?? []} accounts={accounts} admin={admin} />
           ))}
         </div>
       )}

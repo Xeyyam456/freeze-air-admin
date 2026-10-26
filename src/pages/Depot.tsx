@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { ClipboardCheck, FileSpreadsheet, History, PackagePlus, Settings2, ShoppingCart } from "lucide-react";
+import { FileSpreadsheet, History, PackagePlus, Settings2, ShoppingCart } from "lucide-react";
 import { Page } from "@/components/Page";
+import { useMedia } from "@/lib/navDrawer";
 import { PendingBlock } from "@/components/depot/Approvals";
 import { DepotBoard, type DepotView } from "@/components/depot/DepotBoard";
-import { CountModal, ReceiptModal } from "@/components/depot/DepotDocs";
+import { ReceiptModal } from "@/components/depot/DepotDocs";
 import { ExcelModal } from "@/components/depot/DepotExcel";
 import { MoreMenu, ShoppingModal } from "@/components/depot/DepotExtras";
 import { KeeperModal } from "@/components/depot/DepotForms";
@@ -51,7 +52,7 @@ export default function DepotPage() {
   const data = useData(() => fetchDepot(admin), [admin]);
   const [tab, setTab] = useState<DepotView>("home");
   const [openToolId, setOpenToolId] = useState<number | null>(null);
-  const [modal, setModal] = useState<"receipt" | "count" | "shopping" | "keeper" | "journal" | "excel" | null>(null);
+  const [modal, setModal] = useState<"receipt" | "shopping" | "keeper" | "journal" | "excel" | null>(null);
   const [receiptTool, setReceiptTool] = useState<Tool | null>(null);
   const kind: Kind = tab === "material" ? "material" : "tool";
 
@@ -64,24 +65,25 @@ export default function DepotPage() {
   const holdings = data?.holdings ?? [];
   const low = tools.filter(isLowStock).length;
 
+  const tiny = useMedia("(width < 380px)");
   return (
     <Page title="Depo"
       actions={
-        <span className="flex items-center gap-2">
-          {canManageTools && admin && (
+        <span className="flex items-center gap-2 max-sm:gap-1.5">
+          {canManageTools && admin && !tiny && (
             <button type="button" onClick={() => setModal("keeper")} className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-white transition-colors hover:bg-white/20" title="Depo məsulu" aria-label="Depo məsulu">
               <Settings2 size={18} />
             </button>
           )}
           {data && (
             <MoreMenu dark items={[
-              ...(canManageTools ? [{ label: "Sayım", icon: ClipboardCheck, onClick: () => setModal("count") }] : []),
+              ...(canManageTools && admin && tiny ? [{ label: "Depo məsulu", icon: Settings2, onClick: () => setModal("keeper") }] : []),
               { label: "Alınmalı", icon: ShoppingCart, onClick: () => setModal("shopping"), badge: low },
               { label: "Excel", icon: FileSpreadsheet, onClick: () => setModal("excel") },
               { label: "Jurnal", icon: History, onClick: () => setModal("journal") },
             ]} />
           )}
-          {canManageTools && <button type="button" onClick={() => openReceipt(null)} className="hero-action"><PackagePlus size={17} /> Mədaxil</button>}
+          {canManageTools && <button type="button" onClick={() => openReceipt(null)} className="hero-action max-sm:!w-10 max-sm:justify-center max-sm:!px-0" aria-label="Mədaxil"><PackagePlus size={17} /> <span className="max-sm:hidden">Mədaxil</span></button>}
         </span>
       }>
       {!data ? (
@@ -94,7 +96,6 @@ export default function DepotPage() {
           {modal === "receipt" && (
             <ReceiptModal tools={tools} initialKind={(receiptTool?.kind as Kind) ?? kind} initialToolId={receiptTool?.id ?? null} onClose={() => setModal(null)} />
           )}
-          {modal === "count" && <CountModal tools={tools} kind={kind} onClose={() => setModal(null)} />}
           {modal === "shopping" && <ShoppingModal tools={tools} onReceipt={(t) => openReceipt(t)} onClose={() => setModal(null)} />}
           {modal === "journal" && <HistoryModal kind={kind} onClose={() => setModal(null)} />}
           {modal === "excel" && <ExcelModal tools={tools} holdings={holdings} employees={data.employees} onClose={() => setModal(null)} />}

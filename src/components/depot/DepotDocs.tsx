@@ -1,12 +1,12 @@
-import { useActionState, useMemo, useState } from "react";
-import { Check, ClipboardCheck, Paperclip, PackagePlus, Search, Trash2, Wrench, X } from "lucide-react";
-import { addTool, createCount, createReceipt, createWriteoff, sendRepair, type WriteoffReason } from "@/actions/tools";
+import { useActionState, useState } from "react";
+import { Check, Paperclip, PackagePlus, Trash2, Wrench, X } from "lucide-react";
+import { addTool, createReceipt, createWriteoff, sendRepair, type WriteoffReason } from "@/actions/tools";
 import { ActionForm, Buttons, Field, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { DHead } from "./DepotUi";
-import { fmt, isPacked, norm, parseQty, pieceWord, REASONS, round2, TEXT, unitOf, withUnit, type Holding, type Kind, type Piece, type Tool } from "./depotUtils";
+import { fmt, isPacked, parseQty, pieceWord, REASONS, round2, TEXT, unitOf, withUnit, type Holding, type Kind, type Piece, type Tool } from "./depotUtils";
 
 // Depo sənədləri (0084): Mədaxil, Silinmə aktı, Sayım, Təmirə göndər. Hamısı yazılır və təsdiqdən sonra say dəyişir
 // (təmirdən başqa: təmir dərhal depodakı boş saydan çıxır, alət yenə depoya aiddir).
@@ -86,13 +86,13 @@ export function ToolFields({ t, kind, names = [] }: { t?: Tool; kind: Kind; name
         </Field>
       )}
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-3">
         {!editing && (
           <Field label={pack ? `Neçə ${pack}` : material ? `Miqdar (${unit})` : "Say"}>
             <input name="quantity" inputMode="decimal" value={countText} onChange={(e) => setCountText(e.target.value)} placeholder="0" autoComplete="off" className="field" />
           </Field>
         )}
-        <Field label={`Minimum qalıq (${unit})`}>
+        <Field label={`Min. qalıq (${unit})`}>
           <input name="min_stock" inputMode="decimal" defaultValue={t?.min_stock != null ? fmt(t.min_stock) : ""} placeholder="istəyə görə" autoComplete="off" className="field" />
         </Field>
       </div>
@@ -134,10 +134,10 @@ function NoteRow({ note, onNote, file, onFile, placeholder = "Qeyd (istəyə gö
 
 function Seg<T extends string>({ value, onChange, items, label }: { value: T; onChange: (v: T) => void; items: readonly (readonly [T, string])[]; label: string }) {
   return (
-    <div className="inline-flex shrink-0 gap-1 rounded-xl bg-line/60 p-1" role="tablist" aria-label={label}>
+    <div className="inline-flex shrink-0 gap-1 rounded-xl bg-line/60 p-1 max-sm:flex max-sm:w-full" role="tablist" aria-label={label}>
       {items.map(([v, l]) => (
         <button key={v} type="button" role="tab" aria-selected={value === v} onClick={() => onChange(v)}
-          className={`rounded-lg px-3.5 py-1.5 text-[13px] font-semibold transition-colors ${value === v ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
+          className={`rounded-lg px-3.5 py-1.5 text-[13px] font-semibold transition-colors max-sm:flex-1 ${value === v ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
           {l}
         </button>
       ))}
@@ -295,93 +295,6 @@ export function WriteoffModal({ tool, source, onClose }: { tool: Tool; source: W
           <Buttons pending={pending} label="Silinmə aktını yaz" onCancel={onClose} />
         </ActionForm>
       )}
-    </Modal>
-  );
-}
-
-// Sayım: depoda (boş, tam hissə) fiziki sayılan miqdar yazılır. Fərqi olanlara sənəd yaranır, təsdiqlənəndə say düzəlir.
-// Materialda parçalar (açıq balonlar) sayıma daxil deyil (onlar ayrıca siyahıdadır).
-// only: cədvəldə seçilənlər (yalnız onlar sayılır)
-export function CountModal({ tools, kind, only, onClose }: { tools: Tool[]; kind: Kind; only?: number[]; onClose: () => void }) {
-  const list = useMemo(() => tools.filter((t) => t.kind === kind && (!only || only.includes(t.id))), [tools, kind, only]);
-  const [counted, setCounted] = useState<Record<number, string>>({});
-  const [query, setQuery] = useState("");
-  const [note, setNote] = useState("");
-  const [pending, setPending] = useState(false);
-  const shown = useMemo(() => {
-    const words = norm(query).split(/\s+/).filter(Boolean);
-    return list.filter((t) => words.every((w) => norm(`${t.name} ${t.inventory_code}`).includes(w)));
-  }, [list, query]);
-
-  const valueOf = (t: Tool) => parseQty(counted[t.id] ?? "");
-  const filled = list.filter((t) => (counted[t.id] ?? "").trim() !== "");
-  const bad = filled.filter((t) => { const n = valueOf(t); return !(n >= 0) || (t.kind === "tool" && !Number.isInteger(n)); });
-  const diffs = filled.filter((t) => !bad.includes(t) && round2(valueOf(t)) !== t.available);
-
-  async function submit() {
-    if (bad.length) return toast.error(`Düzgün olmayan say: ${bad.map((t) => t.name).join(", ")}`);
-    if (filled.length === 0) return toast.error("Heç bir say yazılmayıb.");
-    if (diffs.length === 0) {
-      toast.success("Fərq yoxdur: hamısı sistemlə eynidir");
-      return onClose();
-    }
-    setPending(true);
-    const res = await createCount(diffs.map((t) => ({ tool_id: t.id, counted: round2(valueOf(t)) })), note.trim() || null);
-    setPending(false);
-    if (res?.error) return toast.error(res.error);
-    toast.success(`Sayım yazıldı: ${res.created} fərq təsdiq gözləyir`);
-    onClose();
-  }
-
-  return (
-    <Modal onClose={onClose} labelledBy="count-title" className="flex !max-w-2xl flex-col">
-      <DHead id="count-title" icon={ClipboardCheck} tone="violet" title={`Sayım: ${TEXT[kind].tab.toLocaleLowerCase("az")}`} sub="Depoda əlində olanı yaz. Boş sətir sayılmır." onClose={onClose} />
-      <div className="search">
-        <Search size={16} className="!left-4" />
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={`${TEXT[kind].col} axtar...`} aria-label="Axtarış" className="!h-10 !pl-10 !text-sm" />
-      </div>
-      <div className="nice-scroll mt-3 max-h-[min(420px,calc(100dvh-340px))] overflow-y-auto rounded-xl border border-line">
-        <table className="w-full text-sm">
-          <thead className="sticky top-0 z-[1] bg-[#f8f9fc] text-left text-xs font-semibold text-muted">
-            <tr>
-              <th className="px-3 py-2.5">{TEXT[kind].col}</th>
-              <th className="w-32 px-3 py-2.5 text-center">Sistemdə</th>
-              <th className="w-32 px-3 py-2.5 text-center">Sayılan</th>
-              <th className="w-24 px-3 py-2.5 text-center">Fərq</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shown.map((t) => {
-              const v = counted[t.id] ?? "";
-              const n = parseQty(v);
-              const diff = Number.isNaN(n) ? null : round2(n - t.available);
-              return (
-                <tr key={t.id} className="border-t border-line">
-                  <td className="px-3 py-2 font-semibold">{t.name}</td>
-                  <td className="px-3 py-2 text-center tabular-nums">{withUnit(t.available, t)}</td>
-                  <td className="px-3 py-2 text-center">
-                    <input inputMode="decimal" value={v} placeholder="—" aria-label={`${t.name}: sayılan`} autoComplete="off"
-                      onChange={(e) => setCounted((c) => ({ ...c, [t.id]: e.target.value }))}
-                      className="field !mx-auto !h-8 !w-24 !px-2 text-center !text-[13px]" />
-                  </td>
-                  <td className="px-3 py-2 text-center text-xs font-bold tabular-nums">
-                    {diff === null ? <span className="muted">—</span>
-                      : diff === 0 ? <span className="text-ok">eyni</span>
-                      : <span className={diff > 0 ? "text-ok" : "text-danger"}>{diff > 0 ? "+" : "−"}{fmt(Math.abs(diff))}</span>}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {shown.length === 0 && <p className="muted py-6 text-center text-sm">Heç nə tapılmadı.</p>}
-      </div>
-      <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Qeyd (istəyə görə)" aria-label="Qeyd" className="field mt-3" />
-      <div className="mt-4 flex items-center gap-3 border-t border-line pt-4">
-        <p className="muted min-w-0 flex-1 text-[13px]">{filled.length} sayıldı · <b className={diffs.length ? "text-danger" : "text-ok"}>{diffs.length} fərq</b></p>
-        <button type="button" onClick={onClose} className="btn btn-cancel">Ləğv et</button>
-        <button type="button" disabled={pending} onClick={submit} className="btn btn-primary">{pending ? "Gözləyin..." : "Sayımı yaz"}</button>
-      </div>
     </Modal>
   );
 }

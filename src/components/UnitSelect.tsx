@@ -1,5 +1,6 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { Boxes, Check, ChevronDown, Droplets, Hash, Package, Ruler, Scroll, Weight, type LucideIcon } from "lucide-react";
 import { useEscapeLayer } from "./Modal";
@@ -33,10 +34,10 @@ export function UnitSelect({ value, onChange, options, name = "unit" }: {
 
   useLayoutEffect(() => {
     if (!open || !btnRef.current) return;
-    const r = btnRef.current.getBoundingClientRect();
+    const r = rectOf(btnRef.current);
     const need = options.length * 32 + 12;
-    const below = window.innerHeight - r.bottom;
-    setPos({ left: r.left, width: Math.max(r.width, 170), ...(below >= need + 8 ? { top: r.bottom + 6 } : { bottom: window.innerHeight - r.top + 6 }) });
+    const below = viewport().h - r.bottom;
+    setPos({ ...fitX(r.left, Math.max(r.width, 170)), ...(below >= need + 8 ? { top: r.bottom + 6 } : { bottom: viewport().h - r.top + 6 }) });
   }, [open, options.length]);
 
   // Kənara klik, sürüşmə və ölçü dəyişməsi siyahını bağlayır

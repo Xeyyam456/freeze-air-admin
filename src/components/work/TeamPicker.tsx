@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Pencil, Plus, Save, Search, Settings2, Trash2, UsersRound, X } from "lucide-react";
 import { useEscapeLayer } from "@/components/Modal";
@@ -52,13 +53,13 @@ function CrewSelect({ crews, peopleOf, selectedId, onPick, onManage }: {
 
   useLayoutEffect(() => {
     if (!open || !btnRef.current) return;
-    const r = btnRef.current.getBoundingClientRect();
+    const r = rectOf(btnRef.current);
     const need = Math.min(crews.length, 5) * 52 + 56;
-    const below = window.innerHeight - r.bottom - 14;
+    const below = viewport().h - r.bottom - 14;
     const above = r.top - 14;
     const down = below >= need || below >= above;
     setPos({ left: r.left, width: r.width, maxHeight: Math.max(150, Math.min(need, down ? below : above)),
-      ...(down ? { top: r.bottom + 6 } : { bottom: window.innerHeight - r.top + 6 }) });
+      ...(down ? { top: r.bottom + 6 } : { bottom: viewport().h - r.top + 6 }) });
   }, [open, crews.length]);
 
   useEffect(() => {

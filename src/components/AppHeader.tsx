@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Menu } from "lucide-react";
+import { useNavDrawer } from "@/lib/navDrawer";
 import { useAuth } from "@/auth/AuthProvider";
 import { initials } from "@/lib/experience";
 import { LogoutButton } from "./LogoutButton";
@@ -32,9 +34,11 @@ function UserChip() {
 
 // Səhifənin yuxarı zolağı (bir sətir): solda başlıq, sağda səhifənin əməliyyatları və profil
 export function AppHeader({ children, actions }: { children: React.ReactNode; actions?: React.ReactNode }) {
+  const { setOpen } = useNavDrawer();
   return (
     <header className="app-header">
       <div className="app-shell relative flex w-full items-center gap-4">
+        <button type="button" onClick={() => setOpen(true)} className="nav-burger" aria-label="Menyunu aç"><Menu size={20} /></button>
         <div className="min-w-0 flex-1">{children}</div>
         {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         <UserChip />

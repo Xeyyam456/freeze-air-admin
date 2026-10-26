@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Clock, FileSpreadsheet, LogIn, LogOut, X } from "lucide-react";
 import { exportAttendanceEmployee } from "@/lib/export-attendance";
 import { Modal } from "@/components/Modal";
-import { fetchEmployeeMonth, MONTHS_AZ, presenceText, sessionNo, shiftMonth, timeBaku, todayBaku, useAttendanceLive, durationText, type DayStatus } from "@/lib/attendance";
+import { fetchEmployeeMonth, MONTHS_AZ, presenceText, sessionNo, shiftMonth, timeBaku, todayBaku, useAttendanceLive, type DayStatus } from "@/lib/attendance";
 
 const WEEK = ["B.e", "Ç.a", "Ç", "C.a", "C", "Ş", "B"];
 const WEEKDAY = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
@@ -45,8 +45,8 @@ export function AttendanceCalendar({ employeeId, name, onClose }: { employeeId: 
   const s = current?.summary;
 
   return (
-    <Modal onClose={onClose} labelledBy="att-cal-title" className="!max-w-4xl">
-      <div className="mb-4 flex items-start justify-between gap-3">
+    <Modal onClose={onClose} labelledBy="att-cal-title" className="!max-w-3xl">
+      <div className="mb-3 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 id="att-cal-title" className="text-lg font-bold">Davamiyyət təqvimi</h2>
           <p className="muted truncate text-sm">{name}</p>
@@ -60,36 +60,36 @@ export function AttendanceCalendar({ employeeId, name, onClose }: { employeeId: 
       </div>
 
       {/* Solda təqvim və xülasə, sağda gün-gün gəlmə/getmə saatları (dar ekranda alt-alta) */}
-      <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       <div>
-      <div className="mb-3 flex items-center gap-2">
+      <div className="mb-2 flex items-center gap-2">
         <button type="button" onClick={() => setMonth(shiftMonth(month, -1))} className="icon-btn" aria-label="Əvvəlki ay"><ChevronLeft size={18} /></button>
         <p className="flex-1 text-center font-bold">{MONTHS_AZ[m - 1]} {y}</p>
         <button type="button" onClick={() => setMonth(shiftMonth(month, 1))} disabled={month >= thisMonth} className="icon-btn disabled:opacity-30" aria-label="Sonrakı ay"><ChevronRight size={18} /></button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1.5 text-center">
+      <div className="grid grid-cols-7 gap-1 text-center">
         {WEEK.map((w) => <span key={w} className="muted pb-1 text-[11px] font-semibold">{w}</span>)}
         {Array.from({ length: lead }, (_, i) => <span key={`e${i}`} />)}
         {current
           ? current.days.map(({ day, status, presence }) => (
             <span key={day} title={presence ? `İşdə: ${presenceText(presence)}` : undefined}
-              className={`flex aspect-square flex-col items-center justify-center rounded-lg text-sm font-bold ${CELL[status]}`}>
+              className={`flex h-9 flex-col items-center justify-center rounded-lg text-sm font-bold ${CELL[status]}`}>
               {status === "present" ? <Check size={14} strokeWidth={3} /> : Number(day.slice(8))}
               {status === "present" && <span className="text-[10px] font-semibold leading-none opacity-90">{Number(day.slice(8))}</span>}
             </span>
           ))
-          : Array.from({ length: 30 }, (_, i) => <span key={i} className="aspect-square rounded-lg bg-bg" />)}
+          : Array.from({ length: 30 }, (_, i) => <span key={i} className="h-9 rounded-lg bg-bg" />)}
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+      <div className="mt-2.5 flex flex-nowrap items-center gap-x-4 gap-y-1 whitespace-nowrap max-sm:justify-between max-sm:gap-x-2 sm:flex-wrap">
         {LEGEND.map((l) => (
-          <span key={l.s} className="muted flex items-center gap-1.5 text-xs"><span className={`h-3 w-3 rounded ${CELL[l.s]}`} />{l.label}</span>
+          <span key={l.s} className="muted flex items-center gap-1.5 text-xs max-sm:gap-1 max-sm:text-[11px]"><span className={`h-3 w-3 shrink-0 rounded max-sm:h-2.5 max-sm:w-2.5 ${CELL[l.s]}`} />{l.label.replace(" (istirahət)", "")}<span className="max-sm:hidden">{l.label.includes("(istirahət)") ? " (istirahət)" : ""}</span></span>
         ))}
       </div>
 
       {s && (
-        <div className="mt-4 grid grid-cols-4 gap-1.5 text-center">
+        <div className="mt-3 grid grid-cols-4 gap-1.5 text-center">
           {[
             { label: "İş günü", value: s.workdays, cls: "text-ink" },
             { label: "İşdə", value: s.present, cls: "text-ok", sub: s.extra ? `+${s.extra} bazar` : undefined },
@@ -114,26 +114,25 @@ export function AttendanceCalendar({ employeeId, name, onClose }: { employeeId: 
         ) : !current.days.some((d) => d.presence && d.status === "present") ? (
           <p className="muted grid flex-1 place-items-center rounded-xl border border-dashed border-line p-6 text-center text-sm">Bu ayda gəlmə qeydi yoxdur.</p>
         ) : (
-          <ul className="max-h-[468px] flex-1 divide-y divide-line overflow-y-auto rounded-xl border border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <ul className="max-h-[340px] flex-1 divide-y divide-line overflow-y-auto rounded-xl border border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {current.days.filter((d) => d.presence && d.status === "present").reverse().map(({ day, presence }) => {
               const p = presence!;
-              const dur = durationText(p);
               return (
-                <li key={day} className="flex items-center gap-3 px-3 py-2">
+                <li key={day} className="flex items-center gap-3 px-3 py-2 max-sm:px-2.5 max-sm:py-1.5">
                   <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-bold tabular-nums">{fullDate(day)}</span>
-                    <span className="muted block text-[11px]">{weekday(day)}{dur && ` · ${dur}`}{p.sessions.length > 1 && ` · ${p.sessions.length} dəfə`}</span>
+                    <span className="block text-sm font-bold tabular-nums max-sm:text-xs">{fullDate(day)}</span>
+                    <span className="muted block text-[11px]">{weekday(day)}</span>
                   </span>
                   {/* Hər seans ayrıca sətir: işi bitirib yenidən işə çıxıbsa bir neçə gəlmə – getmə */}
-                  <span className="flex shrink-0 flex-col items-end gap-1" title={presenceText(p)}>
+                  <span className="flex shrink-0 flex-col items-end gap-1 max-sm:gap-0.5" title={presenceText(p)}>
                     {p.sessions.map((x, i) => (
                       <span key={x.in} className="flex items-center gap-1.5">
                         {p.sessions.length > 1 && <span className="muted w-5 text-right text-xs font-bold tabular-nums">{sessionNo(i, p.sessions.length).trim()}</span>}
-                        <span className="flex items-center gap-1 rounded-lg bg-ok-soft px-2 py-1 text-xs font-bold tabular-nums text-ok" title="Gəlmə saatı">
+                        <span className="flex items-center gap-1 rounded-lg bg-ok-soft px-2 py-1 text-xs font-bold tabular-nums text-ok max-sm:px-1 max-sm:py-0.5 max-sm:text-[11px] max-[360px]:text-[10.5px]" title="Gəlmə saatı">
                           <LogIn size={12} /> {timeBaku(x.in)}
                         </span>
                         {x.out ? (
-                          <span className="flex items-center gap-1 rounded-lg bg-bg px-2 py-1 text-xs font-bold tabular-nums" title="Getmə saatı">
+                          <span className="flex items-center gap-1 rounded-lg bg-bg px-2 py-1 text-xs font-bold tabular-nums max-sm:px-1 max-sm:py-0.5 max-sm:text-[11px] max-[360px]:text-[10.5px]" title="Getmə saatı">
                             <LogOut size={12} /> {timeBaku(x.out)}
                           </span>
                         ) : (

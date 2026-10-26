@@ -87,9 +87,9 @@ export function AvatarUpload({ employee, onChange }: { employee: Person; onChang
   }
 
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-line p-3">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5 rounded-xl border border-line p-3">
       <Avatar employee={{ ...employee, photo_url: photoUrl }} className={`!h-16 !w-16 !text-lg ${pending ? "opacity-50" : ""}`} />
-      <div className="min-w-0 flex-1">
+      <div className="min-w-[8rem] flex-1">
         <p className="text-sm font-semibold">Şəkil</p>
         <p className="muted text-xs">JPG, PNG və ya WebP. Kvadrat kəsilir.</p>
       </div>

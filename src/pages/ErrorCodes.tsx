@@ -25,7 +25,7 @@ export default function ErrorCodesPage() {
       {data === null ? (
         <div className="card muted">Yüklənir...</div>
       ) : (
-        <WithSidePanel stack panel={admin ? <ErrorCodePanel models={data.models} codes={data.codes} /> : null}>
+        <WithSidePanel stack fabLabel="Model / kod əlavə et" panel={admin ? <ErrorCodePanel models={data.models} codes={data.codes} /> : null}>
           <ErrorCodeList codes={data.codes} models={data.models} />
         </WithSidePanel>
       )}

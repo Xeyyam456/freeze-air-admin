@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
-import { Box, Boxes, Check, ChevronDown } from "lucide-react";
+import { Box, Boxes, Check, ChevronDown, type LucideIcon } from "lucide-react";
 import { useEscapeLayer } from "@/components/Modal";
 
 export type ModelOption = { value: string; label: string; hint?: string };
@@ -10,13 +11,14 @@ type Pos = { left: number; width: number; top?: number; bottom?: number };
 // Model seçimi: standart <select> əvəzinə ikonlu, izahlı açılan siyahı (UnitSelect ilə eyni üslub).
 // Seçim gizli sahə (name) ilə formaya gedir. Siyahı portal ilə body-yə çıxır, yer yoxdursa yuxarı açılır.
 // all: "Bütün modellər" kimi ümumi seçim (boş dəyər) üçün ikon fərqli olur.
-export function ModelDropdown({ value, onChange, options, name, placeholder = "Model seç...", all = false, className = "" }: {
+export function ModelDropdown({ value, onChange, options, name, placeholder = "Model seç...", all = false, icon: ItemIcon = Box, className = "" }: {
   value: string;
   onChange: (v: string) => void;
   options: ModelOption[];
   name?: string;
   placeholder?: string;
   all?: boolean;
+  icon?: LucideIcon; // siyahı elementlərinin ikonu (standart: model qutusu)
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -27,10 +29,10 @@ export function ModelDropdown({ value, onChange, options, name, placeholder = "M
 
   useLayoutEffect(() => {
     if (!open || !btnRef.current) return;
-    const r = btnRef.current.getBoundingClientRect();
+    const r = rectOf(btnRef.current);
     const need = Math.min(options.length * 40 + 12, 292);
-    const below = window.innerHeight - r.bottom;
-    setPos({ left: r.left, width: Math.max(r.width, 320), ...(below >= need + 8 ? { top: r.bottom + 6 } : { bottom: window.innerHeight - r.top + 6 }) });
+    const below = viewport().h - r.bottom;
+    setPos({ ...fitX(r.left, Math.max(r.width, 320)), ...(below >= need + 8 ? { top: r.bottom + 6 } : { bottom: viewport().h - r.top + 6 }) });
   }, [open, options.length]);
 
   // Kənara klik, sürüşmə və ölçü dəyişməsi siyahını bağlayır (siyahının öz sürüşməsi yox)
@@ -53,7 +55,7 @@ export function ModelDropdown({ value, onChange, options, name, placeholder = "M
   }, [open]);
 
   const current = options.find((o) => o.value === value);
-  const Icon = all && value === "" ? Boxes : Box;
+  const Icon = all && value === "" ? Boxes : ItemIcon;
 
   return (
     <>
@@ -77,7 +79,7 @@ export function ModelDropdown({ value, onChange, options, name, placeholder = "M
           className="nice-scroll z-[150] max-h-72 overflow-y-auto rounded-xl border border-line bg-surface p-1 shadow-[0_12px_32px_rgba(16,24,40,0.16)]">
           {options.map((o) => {
             const selected = o.value === value;
-            const OptIcon = all && o.value === "" ? Boxes : Box;
+            const OptIcon = all && o.value === "" ? Boxes : ItemIcon;
             return (
               <button key={o.value} type="button" role="option" aria-selected={selected} onClick={() => { onChange(o.value); setOpen(false); }}
                 className={`flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm transition-colors ${selected ? "bg-primary-soft text-primary" : "hover:bg-bg"}`}>

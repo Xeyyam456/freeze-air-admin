@@ -9,6 +9,10 @@ import { toast } from "@/lib/toast";
 // Tapşırıqlar Realtime ilə (migrasiya 0056): usta tapşırığı "görüldü" işarələyəndə tost + qısa səs;
 // hər dəyişiklikdə (yeni, geri alınan, işarələnən, təmir yazısı) siyahılar, ana səhifə və menyudakı nişan yenilənir.
 // "Görüldü" işarəsini yalnız usta qoyur (0057), ona görə bu keçid həmişə ustadan gəlir. Ekranda heç nə çəkmir.
+// Qrup tapşırığında bütün üzvlərin sətri eyni anda "görüldü" olur: hər üzv üçün ayrıca yox, qrup üçün bir bildiriş
+const GROUP_TOAST_MS = 60_000;
+const lastGroupToast = new Map<string, number>();
+
 export function TasksListener() {
   useEffect(() => {
     const supabase = createClient();
@@ -20,9 +24,20 @@ export function TasksListener() {
         const t = payload.new as Tables<"tasks">;
         const old = payload.old as Partial<Tables<"tasks">>;
         if (!t.done || old.done !== false) return; // yalnız görülməyib → görülüb keçidi (replica identity full)
-        const { data: e } = await supabase.from("employees").select("full_name").eq("id", t.employee_id).maybeSingle();
         const silent = !isSoundReady();
-        toast.success(`Tapşırıq görüldü: ${e?.full_name ?? "usta"}`, silent ? `${t.reason} · səs üçün səhifədə bir dəfə klik et` : t.reason);
+        const hint = silent ? " · səs üçün səhifədə bir dəfə klik et" : "";
+        if (t.group_id) {
+          const last = lastGroupToast.get(t.group_id) ?? 0;
+          if (Date.now() - last < GROUP_TOAST_MS) return; // bu qrup üçün artıq bildiriş verilib
+          lastGroupToast.set(t.group_id, Date.now());
+          const { data: rows } = await supabase.from("tasks").select("employees(full_name)").eq("group_id", t.group_id);
+          const names = (rows ?? []).map((x) => (x.employees as { full_name: string } | null)?.full_name.split(" ").slice(-1)[0]).filter(Boolean);
+          toast.success(`Qrup tapşırığı görüldü: ${names.join(" + ") || "qrup"}`, `Qrup işi · ${t.reason}${hint}`);
+          playNotify();
+          return;
+        }
+        const { data: e } = await supabase.from("employees").select("full_name").eq("id", t.employee_id).maybeSingle();
+        toast.success(`Tapşırıq görüldü: ${e?.full_name ?? "usta"}`, `${t.reason}${hint}`);
         playNotify();
       })
       // Davamiyyət (0059): usta icazə istəyəndə tost + səs; "İşə gəldim" və qərarlar siyahıları yeniləyir

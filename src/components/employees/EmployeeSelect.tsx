@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Search, UserRound } from "lucide-react";
 import { useEscapeLayer } from "@/components/Modal";
@@ -54,14 +55,14 @@ export function EmployeeSelect({ value, onChange, employees, placeholder = "Usta
 
   useLayoutEffect(() => {
     if (!open || !btnRef.current) return;
-    const r = btnRef.current.getBoundingClientRect();
-    const need = Math.min(employees.length + (emptyLabel ? 1 : 0), 7) * 52 + (showSearch ? 52 : 0) + 12;
-    const below = window.innerHeight - r.bottom - 14;
+    const r = rectOf(btnRef.current);
+    const need = Math.min(employees.length + (emptyLabel ? 1 : 0), 7) * (viewport().w < 640 ? 42 : 52) + (showSearch ? 52 : 0) + 12;
+    const below = viewport().h - r.bottom - 14;
     const above = r.top - 14;
     const down = below >= need || below >= above;
     setPos({
-      left: r.left, width: Math.max(r.width, 280), maxHeight: Math.max(160, Math.min(need, down ? below : above)),
-      ...(down ? { top: r.bottom + 6 } : { bottom: window.innerHeight - r.top + 6 }),
+      ...fitX(r.left, Math.max(r.width, viewport().w < 640 ? 230 : 280)), maxHeight: Math.max(160, Math.min(need, down ? below : above)),
+      ...(down ? { top: r.bottom + 6 } : { bottom: viewport().h - r.top + 6 }),
     });
   }, [open, employees.length, emptyLabel, showSearch]);
 
@@ -131,7 +132,7 @@ export function EmployeeSelect({ value, onChange, employees, placeholder = "Usta
                 className="min-w-0 flex-1 bg-transparent text-sm outline-none" />
             </div>
           )}
-          <div role="listbox" className="nice-scroll min-h-0 flex-1 overflow-y-auto p-1.5 [scrollbar-gutter:auto]">
+          <div role="listbox" className="nice-scroll min-h-0 flex-1 overflow-y-auto p-1.5 max-sm:p-1 [scrollbar-gutter:auto]">
             {options.length === 0 && <p className="muted px-3 py-4 text-center text-sm">Usta tapılmadı</p>}
             {options.map((o, i) => {
               const isSel = (o?.id ?? null) === value;
@@ -139,16 +140,16 @@ export function EmployeeSelect({ value, onChange, employees, placeholder = "Usta
               return (
                 <button key={o?.id ?? "none"} type="button" role="option" aria-selected={isSel} data-index={i}
                   onMouseEnter={() => setActive(i)} onClick={() => pick(o)}
-                  className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors ${
+                  className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors max-sm:gap-2 max-sm:rounded-lg max-sm:px-2 max-sm:py-1 ${
                     i === active ? "bg-bg" : ""} ${isSel ? "!bg-primary-soft" : ""}`}>
                   {o ? (
-                    <Avatar employee={o} className="!h-9 !w-9 !text-[11px] !shadow-none" />
+                    <Avatar employee={o} className="!h-9 !w-9 !text-[11px] !shadow-none max-sm:!h-7 max-sm:!w-7 max-sm:!text-[9px]" />
                   ) : (
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-bg text-muted"><UserRound size={16} /></span>
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-bg text-muted max-sm:h-7 max-sm:w-7"><UserRound size={14} /></span>
                   )}
                   <span className="min-w-0 flex-1">
-                    <span className={`block truncate text-sm font-semibold ${isSel ? "text-primary" : ""}`}>{o ? o.full_name : emptyLabel}</span>
-                    {o?.specialty && <span className="muted block truncate text-xs">{o.specialty}</span>}
+                    <span className={`block truncate text-sm font-semibold max-sm:text-[13px] max-sm:leading-tight ${isSel ? "text-primary" : ""}`}>{o ? o.full_name : emptyLabel}</span>
+                    {o?.specialty && <span className="muted block truncate text-xs max-sm:text-[11px] max-sm:leading-tight">{o.specialty}</span>}
                   </span>
                   {h && <span className="shrink-0 rounded-full bg-bg px-2 py-0.5 text-[11px] font-semibold text-muted">{h}</span>}
                   {isSel ? <Check size={15} className="shrink-0 text-primary" /> : <span className="w-[15px] shrink-0" />}

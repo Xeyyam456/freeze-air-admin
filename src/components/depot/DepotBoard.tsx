@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { AlertTriangle, ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, Clock, Hourglass, Package, PackagePlus, Search, Users, Warehouse, Wrench, X } from "lucide-react";
 import { Avatar } from "@/components/employees/EmployeeForms";
@@ -61,8 +62,8 @@ function HoldMenu({ items, tone, word, onOpen }: { items: { name: string; qty: s
         onClick={(e) => {
           e.stopPropagation();
           if (pos) return setPos(null);
-          const r = e.currentTarget.getBoundingClientRect();
-          setPos({ top: r.bottom + 6, left: Math.min(r.left, window.innerWidth - 300) });
+          const r = rectOf(e.currentTarget);
+          setPos({ top: r.bottom + 6, left: Math.min(r.left, viewport().w - 300) });
         }}
         className={`inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[13px] font-semibold transition ${SOFT[tone]} hover:brightness-95`}>
         {items.length} {word} <ChevronDown size={14} className={`transition-transform ${pos ? "rotate-180" : ""}`} />
@@ -108,22 +109,22 @@ function PersonRow({ emp, holds, toolInfo, onOpen }: {
   return (
     <tr tabIndex={0} onClick={() => onOpen(first)} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && e.target === e.currentTarget && onOpen(first)}
       className="group cursor-pointer border-t border-line transition-colors hover:bg-[#faf8ff] focus-visible:outline-2 focus-visible:outline-primary">
-      <td className="py-3 pl-5 pr-3">
-        <span className="flex items-center gap-3">
+      <td className="py-3 pl-5 pr-3 max-sm:pl-3 max-sm:pr-1">
+        <span className="flex items-center gap-3 max-sm:gap-2.5">
           <span className="relative shrink-0">
-            <Avatar employee={emp} className="!h-10 !w-10 !text-xs ring-2 ring-[#ede9fe]" />
+            <Avatar employee={emp} className="!h-10 !w-10 !text-xs ring-2 ring-[#ede9fe] max-sm:!h-9 max-sm:!w-9" />
             {holds.length > 0 && <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-[#8b5cf6] ring-2 ring-surface" />}
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-[14.5px] font-semibold group-hover:text-[#6d28d9]">{emp.full_name}</span>
-            <span className="muted block truncate text-xs">{toolsN ? `${toolsN} ədəd alət` : "alət yoxdur"} · {mats.length ? `${mats.length} növ material` : "material yoxdur"}</span>
+            <span className="block truncate text-[14.5px] font-semibold group-hover:text-[#6d28d9] max-sm:text-[13px]">{emp.full_name}</span>
+            <span className="muted block truncate text-xs max-sm:text-[11px]">{toolsN ? `${toolsN} ədəd alət` : "alət yoxdur"} · {mats.length ? `${mats.length} növ material` : "material yoxdur"}</span>
           </span>
         </span>
       </td>
-      <td className="px-3 py-3"><HoldMenu items={tools.map(item)} tone="blue" word="alət" onOpen={() => onOpen("tool")} /></td>
-      <td className="px-3 py-3"><HoldMenu items={mats.map(item)} tone="teal" word="material" onOpen={() => onOpen("material")} /></td>
+      <td className="px-3 py-3 max-sm:hidden"><HoldMenu items={tools.map(item)} tone="blue" word="alət" onOpen={() => onOpen("tool")} /></td>
+      <td className="px-3 py-3 max-sm:hidden"><HoldMenu items={mats.map(item)} tone="teal" word="material" onOpen={() => onOpen("material")} /></td>
       <td className="px-3 py-3 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>
-      <td className="py-3 pl-3 pr-5 text-right">
+      <td className="py-3 pl-3 pr-5 text-right max-sm:pr-3">
         <span className="inline-grid h-8 w-8 place-items-center rounded-full bg-bg text-muted transition group-hover:bg-[#7c3aed] group-hover:text-white"><ArrowRight size={15} /></span>
       </td>
     </tr>
@@ -407,15 +408,15 @@ export function DepotBoard({ tab, onTab, tools: allTools, holdings, pieces, empl
       ) : (
       <>
       <div className="rounded-3xl border border-line bg-surface">
-        <div className="flex flex-wrap items-center gap-3.5 p-4 sm:p-5">
-          <button type="button" onClick={() => onTab("home")} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line text-ink/70 transition-colors hover:bg-bg hover:text-ink" title="Ümumi baxış" aria-label="Ümumi baxış">
+        <div className="flex flex-wrap items-center gap-3.5 p-4 max-sm:gap-x-2 max-sm:gap-y-3 max-sm:p-3 sm:p-5">
+          <button type="button" onClick={() => onTab("home")} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line text-ink/70 transition-colors hover:bg-bg hover:text-ink max-sm:h-8 max-sm:w-8" title="Ümumi baxış" aria-label="Ümumi baxış">
             <ArrowLeft size={18} />
           </button>
-          <IconTile icon={TAB_ICON[tab]} tone={tab === "tool" ? "blue" : tab === "material" ? "teal" : "violet"} />
+          <span className="contents max-sm:[&>span]:!h-8 max-sm:[&>span]:!w-8 max-sm:[&>span]:!rounded-xl"><IconTile icon={TAB_ICON[tab]} tone={tab === "tool" ? "blue" : tab === "material" ? "teal" : "violet"} /></span>
           <div className="min-w-0 flex-1">
             <h2 className="text-lg font-bold leading-tight">{tab === "tool" ? "Alətlər" : tab === "material" ? "Materiallar" : "Ustalar"}</h2>
-            <p className="muted truncate text-[13px]">
-              {tab === "tool" ? `${counts.tool} növ · depoda ${fmt(tDepot)} · ustalarda ${fmt(tGiven)}${tRepair ? ` · təmirdə ${tRepair}` : ""}`
+            <p className="muted truncate text-[13px] max-sm:text-[11px]">
+              {tab === "tool" ? (<><span className="whitespace-nowrap">{counts.tool} növ · depoda {fmt(tDepot)}</span><span> · </span><span className="whitespace-nowrap">ustalarda {fmt(tGiven)}{tRepair ? ` · təmirdə ${tRepair}` : ""}</span></>)
                 : tab === "material" ? `${counts.material} növ · depoda var ${mats.filter((t) => inStock(t) > 0).length}`
                 : `${masters.length} usta · ${holdersCount} nəfərin üzərində əşya var`}
             </p>
@@ -429,13 +430,13 @@ export function DepotBoard({ tab, onTab, tools: allTools, holdings, pieces, empl
             )}
           </label>
         </div>
-        <div className="flex gap-1 border-t border-line px-3 sm:px-4" role="tablist" aria-label="Depo">
+        <div className="flex gap-1 border-t border-line px-3 max-sm:px-1 sm:px-4" role="tablist" aria-label="Depo">
           {(["tool", "material", "people"] as const).map((v) => {
             const Icon = TAB_ICON[v];
             return (
               <button key={v} type="button" role="tab" aria-selected={tab === v} onClick={() => onTab(v)}
-                className={`-mb-px inline-flex h-12 items-center gap-2 border-b-2 px-3 text-sm font-semibold transition-colors ${tab === v ? "border-primary text-primary" : "border-transparent text-muted hover:text-ink"}`}>
-                <Icon size={16} /> {v === "tool" ? "Alətlər" : v === "material" ? "Materiallar" : "Ustalar"}
+                className={`-mb-px inline-flex h-12 items-center gap-2 border-b-2 px-3 text-sm font-semibold transition-colors max-sm:min-w-0 max-sm:flex-1 max-sm:justify-center max-sm:gap-1 max-sm:px-1 max-sm:text-[12.5px] ${tab === v ? "border-primary text-primary" : "border-transparent text-muted hover:text-ink"}`}>
+                <Icon size={16} className="max-sm:hidden" /> {v === "tool" ? "Alətlər" : v === "material" ? "Materiallar" : "Ustalar"}
                 <span className={`rounded-full px-1.5 text-[11px] font-bold ${tab === v ? "bg-primary-soft text-primary" : "bg-bg text-muted"}`}>{counts[v]}</span>
               </button>
             );
@@ -447,11 +448,11 @@ export function DepotBoard({ tab, onTab, tools: allTools, holdings, pieces, empl
             <table className="w-full border-t border-line text-sm">
               <thead className="sticky top-[var(--header-h)] z-10 bg-[#f8fafc] text-left text-xs font-semibold text-muted">
                 <tr>
-                  <th className="py-3 pl-5 pr-3">Usta</th>
-                  <th className="w-44 px-3 py-3">Alətlər</th>
-                  <th className="w-44 px-3 py-3">Materiallar</th>
+                  <th className="py-3 pl-5 pr-3 max-sm:pl-3">Usta</th>
+                  <th className="w-44 px-3 py-3 max-sm:hidden">Alətlər</th>
+                  <th className="w-44 px-3 py-3 max-sm:hidden">Materiallar</th>
                   <th className="w-44 px-3 py-3 max-md:hidden">Vəziyyət</th>
-                  <th className="w-12 py-3 pl-3 pr-5" />
+                  <th className="w-12 py-3 pl-3 pr-5 max-sm:pr-3" />
                 </tr>
               </thead>
               <tbody>

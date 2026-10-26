@@ -32,7 +32,7 @@ export default function LoginPage() {
   if (!loading && session) return <Navigate to="/" replace />;
 
   return (
-    <main className="grid min-h-screen bg-[#f4f7fc] lg:grid-cols-[1.1fr_1fr]">
+    <main className="grid min-h-[calc(100vh/var(--zoom))] bg-[#f4f7fc] lg:grid-cols-[1.1fr_1fr]">
       {/* Sol: tünd marka hissəsi */}
       <section className="relative hidden overflow-hidden bg-[linear-gradient(145deg,#091428,#10233a_55%,#134152)] p-14 text-white lg:flex lg:flex-col lg:justify-between xl:px-20">
         <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-frost/25 blur-3xl" aria-hidden="true" />

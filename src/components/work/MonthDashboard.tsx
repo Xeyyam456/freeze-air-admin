@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Activity, CalendarCheck, ChevronLeft, ChevronRight, ClipboardList, MapPin, Table2, TrendingDown, TrendingUp, Trophy, Users } from "lucide-react";
 import { Avatar } from "@/components/employees/EmployeeForms";
+import { countJobs, fetchGroupMap, jobKey } from "@/lib/jobs";
 import { createClient } from "@/lib/supabase/client";
 
 const MONTHS = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
@@ -19,7 +20,7 @@ type LogRow = {
   employees: { full_name: string; photo_url: string | null } | null;
 };
 type Master = { id: number; full_name: string; photo_url: string | null };
-type MonthData = { key: string; logs: LogRow[]; prevCount: number; masters: Master[] };
+type MonthData = { key: string; logs: LogRow[]; groups: Map<number, string>; prevCount: number; masters: Master[] };
 
 // Ayın bütün işləri (hamı ustalar) + əvvəlki ayın tam sayı (müqayisə üçün: 1-dən sonuna qədər)
 async function fetchMonth(y: number, m: number): Promise<MonthData> {
@@ -28,15 +29,17 @@ async function fetchMonth(y: number, m: number): Promise<MonthData> {
   const py = m === 0 ? y - 1 : y;
   const pm = m === 0 ? 11 : m - 1;
   const pdays = new Date(py, pm + 1, 0).getDate();
-  const [cur, prev, masters] = await Promise.all([
+  const [cur, prev, masters, groups, prevGroups] = await Promise.all([
     supabase.from("work_logs")
       .select("id, work_date, employee_id, place_text, store_id, company_id, employees(full_name, photo_url)")
       .gte("work_date", iso(y, m, 1)).lte("work_date", iso(y, m, days)).limit(5000),
-    supabase.from("work_logs").select("id", { count: "exact", head: true })
-      .gte("work_date", iso(py, pm, 1)).lte("work_date", iso(py, pm, pdays)),
+    supabase.from("work_logs").select("id")
+      .gte("work_date", iso(py, pm, 1)).lte("work_date", iso(py, pm, pdays)).limit(5000),
     supabase.from("employees").select("id, full_name, photo_url").eq("is_management", false).eq("is_active", true),
+    fetchGroupMap(iso(y, m, 1), iso(y, m, days)),
+    fetchGroupMap(iso(py, pm, 1), iso(py, pm, pdays)),
   ]);
-  return { key: `${y}-${m}`, logs: (cur.data ?? []) as LogRow[], prevCount: prev.count ?? 0, masters: masters.data ?? [] };
+  return { key: `${y}-${m}`, logs: (cur.data ?? []) as LogRow[], groups, prevCount: countJobs(prev.data ?? [], prevGroups), masters: masters.data ?? [] };
 }
 
 // Y oxu: yuvarlaq, az xətt
@@ -67,13 +70,13 @@ function smoothPath(pts: [number, number][]) {
 // Şüşə effektli xana (tünd fonda)
 function Tile({ icon: Icon, label, value, children }: { icon: typeof Activity; label: string; value: string; children?: React.ReactNode }) {
   return (
-    <div className="rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10 backdrop-blur">
+    <div className="rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10 backdrop-blur max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_auto] max-sm:items-center max-sm:gap-x-3 max-sm:px-3.5 max-sm:py-3">
       <div className="flex items-center gap-2 text-white/60">
         <span className="grid h-6 w-6 place-items-center rounded-lg bg-white/10 text-frost"><Icon size={13} /></span>
         <span className="text-xs font-semibold">{label}</span>
       </div>
-      <p className="mt-3 text-4xl font-extrabold leading-none tracking-tight text-white">{value}</p>
-      {children && <div className="mt-2 text-xs font-semibold">{children}</div>}
+      <p className="mt-3 text-4xl font-extrabold leading-none tracking-tight text-white max-sm:col-start-2 max-sm:row-span-2 max-sm:row-start-1 max-sm:mt-0 max-sm:text-3xl">{value}</p>
+      {children && <div className="mt-2 text-xs font-semibold max-sm:mt-1">{children}</div>}
     </div>
   );
 }
@@ -194,18 +197,40 @@ export function MonthDashboard({ onUsta }: { onUsta: (name: string) => void }) {
 
   const s = useMemo(() => {
     const counts = Array<number>(days).fill(0);
-    const byEmp = new Map<number, number>();
+    const byEmp = new Map<number, number>(); // yalnız təkbaşına işlər
+    const crewJobs = new Map<string, { members: Set<number>; n: number }>(); // qrup işi: bir iş, bir dəfə
     const places = new Set<string>();
+    const seen = new Set<string>(); // qrup işi gündəlik sayda bir dəfə
     for (const l of data?.logs ?? []) {
       const d = Number(l.work_date.slice(8, 10));
-      if (d >= 1 && d <= days) counts[d - 1] += 1;
-      byEmp.set(l.employee_id, (byEmp.get(l.employee_id) ?? 0) + 1);
+      const k = jobKey(l.id, data?.groups);
+      if (d >= 1 && d <= days && !seen.has(k)) { seen.add(k); counts[d - 1] += 1; }
+      if (!data?.groups.has(l.id)) byEmp.set(l.employee_id, (byEmp.get(l.employee_id) ?? 0) + 1);
+      else {
+        const c = crewJobs.get(k) ?? { members: new Set<number>(), n: 1 };
+        c.members.add(l.employee_id);
+        crewJobs.set(k, c);
+      }
       places.add(l.store_id ? `s${l.store_id}` : l.company_id ? `c${l.company_id}` : `t:${l.place_text ?? ""}`);
     }
     const masters = data?.masters ?? [];
-    const ranking = masters.map((e) => ({ ...e, n: byEmp.get(e.id) ?? 0 })).sort((a, b) => b.n - a.n || a.full_name.localeCompare(b.full_name, "az"));
+    // Eyni heyətlə görülən qrup işləri bir sətirdə: "A + B  6"
+    const crews = new Map<string, { id: string; members: Master[]; n: number }>();
+    const inCrew = new Set<number>();
+    for (const c of crewJobs.values()) {
+      const ids = [...c.members].sort((a, b) => a - b);
+      ids.forEach((i) => inCrew.add(i));
+      const ck = ids.join("+");
+      const row = crews.get(ck) ?? { id: `g${ck}`, members: ids.map((i) => masters.find((m) => m.id === i)).filter((m): m is Master => !!m), n: 0 };
+      row.n += 1;
+      crews.set(ck, row);
+    }
+    const ranking = [
+      ...masters.filter((e) => (byEmp.get(e.id) ?? 0) > 0 || !inCrew.has(e.id)).map((e) => ({ id: String(e.id), members: [e], n: byEmp.get(e.id) ?? 0 })),
+      ...crews.values(),
+    ].sort((a, b) => b.n - a.n || a.members[0].full_name.localeCompare(b.members[0].full_name, "az"));
     const total = counts.reduce((a, b) => a + b, 0);
-    return { counts, total, places: places.size, ranking, active: ranking.filter((r) => r.n > 0).length, masters: masters.length };
+    return { counts, total, places: places.size, ranking, active: new Set(masters.filter((e) => (byEmp.get(e.id) ?? 0) > 0 || inCrew.has(e.id)).map((e) => e.id)).size, masters: masters.length };
   }, [data, days]);
 
   const loading = !data || data.key !== key;
@@ -217,14 +242,14 @@ export function MonthDashboard({ onUsta }: { onUsta: (name: string) => void }) {
   const navBtn = "grid h-9 w-9 place-items-center rounded-lg text-white/70 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent";
 
   return (
-    <section className="relative overflow-hidden rounded-[18px] bg-[linear-gradient(135deg,#0b1324,#11243a_55%,#0f3d4c)] text-white shadow-[0_18px_48px_rgba(10,26,51,0.35)] ring-1 ring-white/10">
+    <section className="relative overflow-clip rounded-[18px] bg-[linear-gradient(135deg,#0b1324,#11243a_55%,#0f3d4c)] text-white shadow-[0_18px_48px_rgba(10,26,51,0.35)] ring-1 ring-white/10">
       {/* Yumşaq işıq ləkələri (dekor) */}
       <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#2dd4bf]/20 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute -bottom-32 -left-16 h-72 w-72 rounded-full bg-[#0a7ea4]/25 blur-3xl" aria-hidden="true" />
 
       <div className="relative">
         {/* Başlıq zolağı: ay seçimi və rejim keçidləri */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-6 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-6 py-4 max-sm:px-3.5 max-sm:py-3">
           <div className="flex items-center gap-3">
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-frost ring-1 ring-white/10"><Activity size={19} /></span>
             <div>
@@ -246,13 +271,13 @@ export function MonthDashboard({ onUsta }: { onUsta: (name: string) => void }) {
         </div>
 
         {/* Yenilənəndə çərçivə qalır, məzmun solğunlaşır (skelet və tullanma yox) */}
-        <div className={`grid gap-6 p-6 transition-opacity xl:grid-cols-[1.7fr_1fr] ${loading && data ? "opacity-60" : ""}`}>
+        <div className={`grid gap-6 p-6 transition-opacity max-sm:gap-4 max-sm:p-3 xl:grid-cols-[1.7fr_1fr] ${loading && data ? "opacity-60" : ""}`}>
           {!data ? (
             <p className="text-sm text-white/60 xl:col-span-2">Yüklənir...</p>
           ) : (
             <>
               <div className="min-w-0 space-y-5">
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-4 max-sm:grid-cols-1 max-sm:gap-2.5">
                   <Tile icon={ClipboardList} label="İş sayı" value={String(s.total)}>
                     <span className={`flex items-center gap-1 ${diff > 0 ? "text-emerald-300" : diff < 0 ? "text-rose-300" : "text-white/60"}`}>
                       {diff > 0 ? <TrendingUp size={13} /> : diff < 0 ? <TrendingDown size={13} /> : null}
@@ -300,7 +325,7 @@ export function MonthDashboard({ onUsta }: { onUsta: (name: string) => void }) {
               </div>
 
               {/* Ustalar üzrə reyting: nazik parlayan zolaqlar, klik → ustanın işləri */}
-              <div className="min-w-0 rounded-2xl bg-white/[0.06] p-5 ring-1 ring-white/10 backdrop-blur">
+              <div className="min-w-0 rounded-2xl bg-white/[0.06] p-5 ring-1 ring-white/10 backdrop-blur max-sm:p-3">
                 <h3 className="mb-4 flex items-center gap-2 text-sm font-bold"><Trophy size={16} className="text-frost" /> Ustalar üzrə</h3>
                 {s.ranking.length === 0 ? (
                   <p className="py-6 text-center text-sm text-white/60">Aktiv usta yoxdur.</p>
@@ -310,15 +335,17 @@ export function MonthDashboard({ onUsta }: { onUsta: (name: string) => void }) {
                     s.ranking.length > 6 ? "[mask-image:linear-gradient(to_bottom,black_calc(100%-28px),transparent)]" : ""}`}>
                     {s.ranking.map((r, i) => (
                       <li key={r.id}>
-                        <button type="button" onClick={() => onUsta(r.full_name)} disabled={r.n === 0} title={r.n ? `${r.full_name}: işlərinə bax` : "Bu ay iş yazmayıb"}
+                        <button type="button" onClick={() => onUsta(r.members[0].full_name)} disabled={r.n === 0} title={r.n ? `${r.members.map((m) => m.full_name).join(" + ")}: işlərinə bax` : "Bu ay iş yazmayıb"}
                           className="group w-full text-left disabled:cursor-default">
                           <span className="flex items-center gap-2.5">
                             <span className="w-4 shrink-0 text-center text-xs font-bold tabular-nums text-white/40">{i + 1}</span>
-                            <Avatar employee={r} className="!h-8 !w-8 !text-[11px] ring-2 ring-white/20" />
-                            <span className={`min-w-0 flex-1 truncate text-sm font-semibold ${r.n ? "text-white group-hover:text-frost" : "text-white/40"}`}>{r.full_name}</span>
+                            <span className="flex shrink-0 -space-x-3">
+                              {r.members.slice(0, 2).map((m) => <Avatar key={m.id} employee={m} className="!h-8 !w-8 !text-[11px] ring-2 ring-[#0f2a44] max-sm:!h-7 max-sm:!w-7 max-sm:!text-[10px]" />)}
+                            </span>
+                            <span className={`min-w-0 flex-1 truncate text-sm font-semibold max-sm:text-[12.5px] ${r.n ? "text-white group-hover:text-frost" : "text-white/40"}`}>{r.members.length > 1 ? r.members.map((m) => m.full_name.split(" ").slice(-1)[0]).join(" + ") : r.members[0].full_name}</span>
                             <span className={`shrink-0 text-sm font-bold tabular-nums ${r.n ? "text-white" : "text-white/40"}`}>{r.n}</span>
                           </span>
-                          <span className="ml-[26px] mt-1.5 block h-1.5 overflow-hidden rounded-full bg-white/10">
+                          <span className="ml-[26px] mt-1.5 block h-1.5 max-sm:ml-[22px] overflow-hidden rounded-full bg-white/10">
                             <span className="block h-full rounded-full bg-gradient-to-r from-[#2dd4bf] to-[#6da7ec] shadow-[0_0_10px_rgba(45,212,191,0.7)] transition-[width] duration-500"
                               style={{ width: `${r.n ? Math.max(6, (r.n / maxN) * 100) : 0}%` }} />
                           </span>

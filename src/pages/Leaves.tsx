@@ -60,23 +60,25 @@ function HistoryRow({ l }: { l: Row }) {
   return (
     <li className="flex items-stretch overflow-hidden">
       <span className={`w-1 shrink-0 ${st.bar}`} />
-      <div className="flex min-w-0 flex-1 items-center gap-3 px-4 py-2.5">
-        <Avatar employee={person(l)} className="!h-9 !w-9 shrink-0 !text-[11px] !shadow-none" />
+      <div className="flex min-w-0 flex-1 items-center gap-3 px-4 py-2.5 max-sm:gap-2 max-sm:px-2.5">
+        <Avatar employee={person(l)} className="!h-9 !w-9 shrink-0 !text-[11px] !shadow-none max-sm:!h-7 max-sm:!w-7 max-sm:!text-[9px]" />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm">
-            <span className="font-bold">{l.employees?.full_name ?? "—"}</span>
-            <span className="ml-2 font-semibold text-primary">{leaveRange(l)}</span>
+          <p className="truncate text-sm max-sm:whitespace-normal max-sm:text-[13px] max-sm:leading-tight">
+            <span className="font-bold max-sm:block">{l.employees?.full_name ?? "—"}</span>
+            <span className="ml-2 font-semibold text-primary max-sm:ml-0">{leaveRange(l)}</span>
             <span className="muted"> · {leaveWorkdays(l)} iş günü</span>
           </p>
-          <p className="muted truncate text-xs">{l.reason || "Səbəb yazılmayıb"} · {stamp(l.created_at)}{l.decided_at && ` → ${stamp(l.decided_at)}`}</p>
+          <p className="muted truncate text-xs max-sm:whitespace-normal max-sm:text-[11px] max-sm:leading-snug">{l.reason || "Səbəb yazılmayıb"} · {stamp(l.created_at)}{l.decided_at && ` → ${stamp(l.decided_at)}`}</p>
         </div>
-        <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${st.cls}`}>{st.text}</span>
+        <div className="flex shrink-0 items-center gap-3 max-sm:flex-col max-sm:items-end max-sm:gap-1">
+        <span className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold max-sm:px-2 max-sm:py-0.5 max-sm:text-[11px] ${st.cls}`}>{st.text}</span>
         <ConfirmButton onConfirm={() => removeLeaves([l.id])} success={false} className="icon-btn icon-btn-danger !h-8 !w-8 shrink-0" title="Sorğunu sil"
           question={l.status === "approved"
             ? `${l.employees?.full_name ?? "Usta"}: ${leaveRange(l)} təsdiqlənmiş icazəsi silinəcək. Bu günlər davamiyyətdə "gəlmədi" sayılacaq.`
             : "Sorğu silinəcək. Davamiyyətə təsir etmir."}>
           <Trash2 size={15} />
         </ConfirmButton>
+        </div>
       </div>
     </li>
   );
@@ -126,7 +128,7 @@ export default function LeavesPage() {
     const n = v.history.filter((l) => (value === "all" || l.status === value) && (who === null || l.employee_id === who)).length;
     return (
       <button key={value} type="button" onClick={() => setFilter(value)} aria-pressed={filter === value}
-        className={`flex h-9 items-center gap-2 rounded-xl px-3.5 text-sm font-semibold transition-colors ${
+        className={`flex h-9 items-center gap-2 rounded-xl px-3.5 max-sm:justify-between max-sm:px-3 max-sm:text-[13px] text-sm font-semibold transition-colors ${
           filter === value ? "bg-[#0b1324] text-white" : "bg-surface text-muted ring-1 ring-line hover:text-ink"}`}>
         {label}<span className={`rounded-full px-1.5 text-xs tabular-nums ${filter === value ? "bg-white/15" : "bg-bg"}`}>{n}</span>
       </button>
@@ -139,18 +141,18 @@ export default function LeavesPage() {
         <div className="card muted py-12 text-center text-sm">Yüklənir...</div>
       ) : (
         <div className="space-y-6">
-          <section className="flex flex-wrap items-center gap-x-10 gap-y-4 rounded-[18px] bg-[linear-gradient(120deg,#0b1324,#11243a_55%,#0f3d4c)] px-6 py-5 text-white">
-            <div className="flex items-center gap-4">
-              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-white/10 text-frost"><Hourglass size={26} /></span>
+          <section className="flex flex-wrap items-center gap-x-10 gap-y-4 rounded-[18px] bg-[linear-gradient(120deg,#0b1324,#11243a_55%,#0f3d4c)] px-6 py-5 text-white max-sm:grid max-sm:grid-cols-2 max-sm:gap-x-3 max-sm:gap-y-3 max-sm:px-4 max-sm:py-3.5">
+            <div className="flex items-center gap-4 max-sm:order-1 max-sm:gap-3">
+              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-white/10 text-frost max-sm:hidden"><Hourglass size={26} className="max-sm:!h-5 max-sm:!w-5" /></span>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-white/50">Gözləyən sorğu</p>
+                <p className="whitespace-nowrap text-xs font-semibold uppercase tracking-wider text-white/50 max-sm:text-[10.5px]">Gözləyən sorğu</p>
                 <p className="text-2xl font-extrabold leading-tight">{v.pending.length}</p>
               </div>
             </div>
-            <dl className="flex flex-1 flex-wrap items-center gap-x-10 gap-y-3">
-              <div>
-                <dt className="text-xs text-white/55">Bu gün icazəli</dt>
-                <dd className="flex items-center gap-2 text-2xl font-extrabold tabular-nums">
+            <dl className="flex flex-1 flex-wrap items-center gap-x-10 gap-y-3 max-sm:contents">
+              <div className="max-sm:order-3">
+                <dt className="text-xs text-white/55 max-sm:text-[10.5px]">Bu gün icazəli</dt>
+                <dd className="flex items-center gap-2 text-2xl font-extrabold tabular-nums max-sm:text-xl">
                   {v.now.length}
                   {v.now.length > 0 && (
                     <span className="flex -space-x-2">
@@ -159,8 +161,8 @@ export default function LeavesPage() {
                   )}
                 </dd>
               </div>
-              <div><dt className="text-xs text-white/55">Qarşıdakı icazə</dt><dd className="text-2xl font-extrabold tabular-nums">{v.upcoming.length}</dd></div>
-              <div><dt className="text-xs text-white/55">Tarixçədə</dt><dd className="text-2xl font-extrabold tabular-nums">{v.history.length}</dd></div>
+              <div className="max-sm:order-4 max-sm:text-right"><dt className="text-xs text-white/55 max-sm:text-[10.5px]">Qarşıdakı icazə</dt><dd className="text-2xl font-extrabold tabular-nums max-sm:text-xl">{v.upcoming.length}</dd></div>
+              <div className="max-sm:order-2 max-sm:self-center max-sm:text-right"><dt className="text-xs text-white/55 max-sm:text-[10.5px]">Tarixçədə</dt><dd className="text-2xl font-extrabold tabular-nums max-sm:text-xl">{v.history.length}</dd></div>
             </dl>
           </section>
 
@@ -168,10 +170,10 @@ export default function LeavesPage() {
           <section>
             <h2 className="mb-3 flex items-center gap-2 text-base font-bold"><Hourglass size={18} className="text-primary" /> Gözləyən sorğular</h2>
             {v.pending.length === 0 ? (
-              <div className="card py-10 text-center">
+              <div className="card py-10 text-center max-sm:py-5">
                 <span className="icon-tile mx-auto"><CalendarOff size={20} /></span>
-                <p className="mt-3 font-semibold">Gözləyən sorğu yoxdur</p>
-                <p className="muted text-sm">Ustalar icazəni usta panelində «İcazələrim» → «İcazə istə» ilə göndərir.</p>
+                <p className="mt-2 text-sm font-semibold">Gözləyən sorğu yoxdur</p>
+                <p className="muted text-xs">Ustalar icazəni usta panelində «İcazələrim» → «İcazə istə» ilə göndərir.</p>
               </div>
             ) : (
               <ul className="flex flex-wrap gap-3">
@@ -236,13 +238,15 @@ export default function LeavesPage() {
           <section>
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <h2 className="mr-auto flex items-center gap-2 text-base font-bold"><History size={18} className="text-primary" /> Tarixçə</h2>
-              <div className="w-60"><EmployeeSelect value={who} onChange={setWho} employees={v.people} emptyLabel="Bütün ustalar" /></div>
+              <div className="w-60 max-sm:w-full"><EmployeeSelect value={who} onChange={setWho} employees={v.people} emptyLabel="Bütün ustalar" /></div>
+              <div className="contents max-sm:grid max-sm:w-full max-sm:grid-cols-2 max-sm:gap-2">
               {chip("all", "Hamısı")}
               {chip("approved", "Təsdiqlənən")}
               {chip("rejected", "Rədd edilən")}
               {chip("cancelled", "Ləğv edilən")}
+              </div>
               {closed.length > 0 && (
-                <ConfirmButton onConfirm={() => removeLeaves(closed.map((l) => l.id))} success={false} className="btn btn-soft btn-sm text-danger"
+                <ConfirmButton onConfirm={() => removeLeaves(closed.map((l) => l.id))} success={false} className="btn btn-soft btn-sm text-danger max-sm:w-full max-sm:justify-center"
                   title="Rədd və ləğv edilən sorğuları sil" confirmLabel="Bəli, sil"
                   question={`${closed.length} rədd və ya ləğv edilmiş sorğu silinəcək. Davamiyyətə təsir etmir.`}>
                   <Trash2 size={14} /> Rədd və ləğv edilənləri sil ({closed.length})
