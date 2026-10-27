@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { leaveRange } from "@/lib/attendance";
-import { revalidate } from "@/lib/revalidate";
+import { LIVE, revalidate } from "@/lib/revalidate";
 import { isSoundReady, playNotify } from "@/lib/sound";
 import { createClient } from "@/lib/supabase/client";
 import type { Tables } from "@/lib/database.types";
@@ -19,7 +19,7 @@ export function TasksListener() {
     const channel = supabase
       .channel("tasks")
       .on("postgres_changes", { event: "*", schema: "public", table: "tasks" }, async (payload) => {
-        revalidate();
+        revalidate(...LIVE.tasks);
         if (payload.eventType !== "UPDATE") return;
         const t = payload.new as Tables<"tasks">;
         const old = payload.old as Partial<Tables<"tasks">>;
@@ -42,7 +42,7 @@ export function TasksListener() {
       })
       // Davamiyyət (0059): usta icazə istəyəndə tost + səs; "İşə gəldim" və qərarlar siyahıları yeniləyir
       .on("postgres_changes", { event: "*", schema: "public", table: "leave_requests" }, async (payload) => {
-        revalidate();
+        revalidate(...LIVE.leaves);
         const l = payload.new as Tables<"leave_requests">;
         // Usta icazədən imtina etdi (0063): ləğv və ya qısaldılma
         if (payload.eventType === "UPDATE") {
@@ -58,11 +58,11 @@ export function TasksListener() {
         toast.success(`İcazə sorğusu: ${e?.full_name ?? "usta"}`, `${leaveRange(l)} · ${l.reason ?? "səbəb yazılmayıb"}`);
         playNotify();
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "attendance" }, () => revalidate())
+      .on("postgres_changes", { event: "*", schema: "public", table: "attendance" }, () => revalidate(...LIVE.attendance))
       // Yanacaq (0080-0082): usta ödənişi təsdiqləyəndə tost + səs; yürüş və ödəniş dəyişəndə Yanacaq səhifəsi yenilənir
-      .on("postgres_changes", { event: "*", schema: "public", table: "mileage_logs" }, () => revalidate())
+      .on("postgres_changes", { event: "*", schema: "public", table: "mileage_logs" }, () => revalidate(...LIVE.fuel))
       .on("postgres_changes", { event: "*", schema: "public", table: "fuel_payments" }, async (payload) => {
-        revalidate();
+        revalidate(...LIVE.fuel);
         if (payload.eventType !== "UPDATE") return;
         const p = payload.new as Tables<"fuel_payments">;
         const o = payload.old as Partial<Tables<"fuel_payments">>;

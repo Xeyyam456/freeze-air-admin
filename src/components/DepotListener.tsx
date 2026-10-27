@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { revalidate } from "@/lib/revalidate";
+import { LIVE, revalidate } from "@/lib/revalidate";
 import { isSoundReady, playNotify } from "@/lib/sound";
 import { createClient } from "@/lib/supabase/client";
 import type { Tables } from "@/lib/database.types";
@@ -14,7 +14,7 @@ export function DepotListener() {
     const channel = supabase
       .channel("depot")
       .on("postgres_changes", { event: "*", schema: "public", table: "depot_requests" }, (payload) => {
-        revalidate();
+        revalidate(...LIVE.depot);
         if (payload.eventType !== "INSERT") return;
         const r = payload.new as Tables<"depot_requests">;
         const u = r.tool_kind === "material" ? r.unit : "ədəd";
@@ -23,7 +23,7 @@ export function DepotListener() {
         playNotify();
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "tool_assignments" }, async (payload) => {
-        revalidate();
+        revalidate(...LIVE.depot);
         if (payload.eventType !== "UPDATE") return;
         const a = payload.new as Tables<"tool_assignments">;
         const o = payload.old as Partial<Tables<"tool_assignments">>;

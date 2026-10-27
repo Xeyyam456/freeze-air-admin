@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { revalidate } from "@/lib/revalidate";
+import { LIVE, revalidate } from "@/lib/revalidate";
 import { isSoundReady, playNotify } from "@/lib/sound";
 import { createClient } from "@/lib/supabase/client";
 import type { Tables } from "@/lib/database.types";
@@ -37,7 +37,7 @@ export function ContactRequestsListener() {
         toast.success(`Yeni müraciət: ${r.name}`, silent ? `${r.phone} · səs üçün səhifədə bir dəfə klik et` : r.phone);
         playNotify();
         markTitle();
-        revalidate();
+        revalidate(...LIVE.requests);
       })
       .subscribe();
     return () => {
