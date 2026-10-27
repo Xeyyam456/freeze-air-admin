@@ -42,7 +42,9 @@ function placeOf(l: Log) {
 // initialQuery: məs. usta adı ilə süzülmüş açmaq
 export function AllLogsModal({ onClose, initialQuery = "" }: { onClose: () => void; initialQuery?: string }) {
   const logs = useData("all-logs", fetchLogs);
-  const groupMap = useData("group-map-all", () => fetchGroupMap());
+  // Qrup xəritəsi yalnız yüklənmiş işlərin dövrü üçün (əvvəl bütün tarixçə yüklənirdi)
+  const oldest = logs?.at(-1)?.work_date ?? null;
+  const groupMap = useData("group-map-all", () => (oldest ? fetchGroupMap(oldest) : Promise.resolve(new Map<number, string>())), [oldest]);
   const logIds = (logs ?? []).map((l) => l.id);
   const files = useData("file-counts-all", () => fetchFileCounts(logIds), [logIds.join()]); // ▶ Video / şəkil / akt (qrup üzrə)
   const [query, setQuery] = useState(initialQuery);

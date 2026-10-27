@@ -4,6 +4,7 @@ import { listAccountEmails } from "@/actions/accounts";
 import { useAuth } from "@/auth/AuthProvider";
 import { timeBaku, todayBaku } from "@/lib/attendance";
 import { fetchGroupMap } from "@/lib/jobs";
+import { fetchAll } from "@/lib/fetchAll";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 
@@ -13,7 +14,8 @@ async function fetchEmployees(admin: boolean) {
   const [{ data: employees }, { data: monthLogs }, { data: attendance }, { data: leaves }, emails, groups] = await Promise.all([
     supabase.from("employees").select("*").eq("is_management", false).eq("is_active", true).order("full_name"),
     // Bu ayın işləri: kartda "bu gün" və "bu ay" sayı
-    supabase.from("work_logs").select("id, employee_id, work_date").gte("work_date", `${today.slice(0, 8)}01`),
+    // ayda 1000-dən çox iş ola bilər: hissələrlə (fetchAll)
+    fetchAll((a, b) => supabase.from("work_logs").select("id, employee_id, work_date").gte("work_date", `${today.slice(0, 8)}01`).order("id").range(a, b)).then((data) => ({ data })),
     // Bu günün davamiyyəti (gündə bir neçə seans ola bilər) və təsdiqlənmiş icazələr
     supabase.from("attendance").select("employee_id, checked_in_at, checked_out_at").eq("day", today),
     supabase.from("leave_requests").select("employee_id").eq("status", "approved").lte("date_from", today).gte("date_to", today),

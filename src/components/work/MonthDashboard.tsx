@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Activity, CalendarCheck, ChevronLeft, ChevronRight, ClipboardList, MapPin, Table2, TrendingDown, TrendingUp, Trophy, Users } from "lucide-react";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { countJobs, fetchGroupMap, jobKey } from "@/lib/jobs";
+import { fetchAll } from "@/lib/fetchAll";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 
@@ -31,16 +32,17 @@ async function fetchMonth(y: number, m: number): Promise<MonthData> {
   const pm = m === 0 ? 11 : m - 1;
   const pdays = new Date(py, pm + 1, 0).getDate();
   const [cur, prev, masters, groups, prevGroups] = await Promise.all([
-    supabase.from("work_logs")
+    // Ayda 1000-dən çox iş ola bilər: 1000-lik hissələrlə (fetchAll)
+    fetchAll((a, b) => supabase.from("work_logs")
       .select("id, work_date, employee_id, place_text, store_id, company_id, employees(full_name, photo_url)")
-      .gte("work_date", iso(y, m, 1)).lte("work_date", iso(y, m, days)).limit(5000),
-    supabase.from("work_logs").select("id")
-      .gte("work_date", iso(py, pm, 1)).lte("work_date", iso(py, pm, pdays)).limit(5000),
+      .gte("work_date", iso(y, m, 1)).lte("work_date", iso(y, m, days)).order("id").range(a, b)),
+    fetchAll((a, b) => supabase.from("work_logs").select("id")
+      .gte("work_date", iso(py, pm, 1)).lte("work_date", iso(py, pm, pdays)).order("id").range(a, b)),
     supabase.from("employees").select("id, full_name, photo_url").eq("is_management", false).eq("is_active", true),
     fetchGroupMap(iso(y, m, 1), iso(y, m, days)),
     fetchGroupMap(iso(py, pm, 1), iso(py, pm, pdays)),
   ]);
-  return { key: `${y}-${m}`, logs: (cur.data ?? []) as LogRow[], groups, prevCount: countJobs(prev.data ?? [], prevGroups), masters: masters.data ?? [] };
+  return { key: `${y}-${m}`, logs: cur as LogRow[], groups, prevCount: countJobs(prev, prevGroups), masters: masters.data ?? [] };
 }
 
 // Y oxu: yuvarlaq, az xətt

@@ -8,13 +8,14 @@ import { ModelDropdown } from "@/components/errors/ModelDropdown";
 import { WithSidePanel } from "@/components/SidePanel";
 import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { toast } from "@/lib/toast";
+import { fetchAll } from "@/lib/fetchAll";
 import { createClient } from "@/lib/supabase/client";
 import { fetchGroupMap, jobKey, mergeGroupLogs, type FileCount } from "@/lib/jobs";
 import { FileBadges } from "@/components/work/FileBadges";
 import { useData } from "@/lib/useData";
 
 const WEEKDAYS = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
-const LIMIT = 2000;
+const LIMIT = 10_000; // 1000-lik hissələrlə yüklənir (fetchAll); bundan çoxunda xəbərdarlıq
 
 const pad = (n: number) => String(n).padStart(2, "0");
 const iso = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -36,14 +37,14 @@ function range(kind: "month" | "prev" | "week") {
 }
 
 async function fetchLogs(from: string, to: string) {
-  const { data } = await createClient()
+  return fetchAll((a, b) => createClient()
     .from("work_logs")
     .select("id, work_date, created_at, description, place_text, employee_id, company_id, employees(full_name, photo_url), stores(name, code, company_id, companies(name)), companies(name), work_files(kind)")
     .gte("work_date", from).lte("work_date", to)
     .order("work_date", { ascending: false })
     .order("created_at", { ascending: false })
-    .limit(LIMIT);
-  return data ?? [];
+    .order("id", { ascending: false })
+    .range(a, b), LIMIT);
 }
 
 async function fetchFilters() {
