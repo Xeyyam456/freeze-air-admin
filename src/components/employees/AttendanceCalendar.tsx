@@ -1,8 +1,9 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Clock, FileSpreadsheet, LogIn, LogOut, X } from "lucide-react";
 import { exportAttendanceEmployee } from "@/lib/export-attendance";
 import { Modal } from "@/components/Modal";
 import { fetchEmployeeMonth, MONTHS_AZ, presenceText, sessionNo, shiftMonth, timeBaku, todayBaku, useAttendanceLive, type DayStatus } from "@/lib/attendance";
+import { useData } from "@/lib/useData";
 
 const WEEK = ["B.e", "Ç.a", "Ç", "C.a", "C", "Ş", "B"];
 const WEEKDAY = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
@@ -34,9 +35,9 @@ type Data = Awaited<ReturnType<typeof fetchEmployeeMonth>>;
 // Realtime ilə yenilənir (attendance, leave_requests). Web-də eyni fayl.
 export function AttendanceCalendar({ employeeId, name, onClose }: { employeeId: number; name: string; onClose: () => void }) {
   const [month, setMonth] = useState(() => todayBaku().slice(0, 7));
-  const [data, setData] = useState<{ month: string; d: Data } | null>(null);
-  const load = useCallback(() => fetchEmployeeMonth(employeeId, month).then((d) => setData({ month, d })), [employeeId, month]);
-  useAttendanceLive(load);
+  // Keşdə + canlı (lib/attendance.ts): təqvimi təkrar açanda dərhal görünür
+  useAttendanceLive();
+  const data: { month: string; d: Data } | null = useData("employee-month", async () => ({ month, d: await fetchEmployeeMonth(employeeId, month) }), [employeeId, month]);
 
   const current = data?.month === month ? data.d : null;
   const [y, m] = month.split("-").map(Number);

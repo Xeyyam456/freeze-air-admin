@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { revalidate } from "@/lib/revalidate";
+import { useData } from "@/lib/useData";
 
 // Davamiyyət (migrasiya 0059, 0061): iş həftəsi 6 gündür, bazar günü iş günü deyil.
 // Usta səhər "İşə gəldim" (check_in), axşam "İşi bitirdim" (check_out) basır; bazar günü çağırılıbsa da basa bilər (0062, əlavə gün); icazəni usta istəyir, admin təsdiqləyir.
@@ -146,38 +148,45 @@ export async function fetchEmployeeMonth(employeeId: number, month: string) {
   };
 }
 
-// attendance və leave_requests dəyişəndə load() çağırılır (Realtime; sessiya ilə qoşulur, yoxsa RLS hadisə göndərmir)
-export function useAttendanceLive(load: () => Promise<void>) {
+// Davamiyyət keşi (useData açarları): attendance, leave_requests, attendance_absences dəyişəndə yenilənir
+export const ATTENDANCE_KEYS = ["month-attendance", "employee-month", "my-leaves"];
+
+// Bir ortaq Realtime kanalı: neçə komponent işlətsə də bir kanal açılır (sonuncu çıxanda bağlanır), hadisədə keş yenilənir.
+// Sessiya ilə qoşulur (yoxsa RLS hadisə göndərmir). Açılışda yenidən yükləmir: məlumat keşdən gəlir.
+let liveChannel: ReturnType<ReturnType<typeof createClient>["channel"]> | null = null;
+let liveUsers = 0;
+async function startLive() {
+  const supabase = createClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) await supabase.realtime.setAuth(session.access_token);
+  if (liveUsers === 0 || liveChannel) return; // gözləyərkən hamı çıxıb və ya başqası artıq açıb
+  const refresh = () => revalidate(...ATTENDANCE_KEYS);
+  liveChannel = supabase
+    .channel(`attendance-${Math.random().toString(36).slice(2)}`)
+    .on("postgres_changes", { event: "*", schema: "public", table: "attendance" }, refresh)
+    .on("postgres_changes", { event: "*", schema: "public", table: "leave_requests" }, refresh)
+    .on("postgres_changes", { event: "*", schema: "public", table: "attendance_absences" }, refresh)
+    .subscribe();
+}
+export function useAttendanceLive() {
   useEffect(() => {
-    const supabase = createClient();
-    let cancelled = false;
-    let channel: ReturnType<typeof supabase.channel> | null = null;
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) return;
-      if (session) await supabase.realtime.setAuth(session.access_token);
-      await load();
-      if (cancelled) return;
-      channel = supabase
-        .channel(`attendance-${Math.random().toString(36).slice(2)}`)
-        .on("postgres_changes", { event: "*", schema: "public", table: "attendance" }, () => void load())
-        .on("postgres_changes", { event: "*", schema: "public", table: "leave_requests" }, () => void load())
-        .on("postgres_changes", { event: "*", schema: "public", table: "attendance_absences" }, () => void load())
-        .subscribe();
-    })();
+    liveUsers += 1;
+    if (liveUsers === 1) void startLive();
     return () => {
-      cancelled = true;
-      if (channel) void supabase.removeChannel(channel);
+      liveUsers -= 1;
+      if (liveUsers === 0 && liveChannel) {
+        void createClient().removeChannel(liveChannel);
+        liveChannel = null;
+      }
     };
-  }, [load]);
+  }, []);
 }
 
-// Ayın davamiyyəti (bütün ustalar; standart bu ay), Realtime ilə. Ay dəyişəndə köhnə ayın cavabı göstərilmir.
+// Ayın davamiyyəti (bütün ustalar; standart bu ay), keşdə + canlı. Ay dəyişəndə köhnə ayın cavabı göstərilmir.
 export function useMonthAttendance(month?: string) {
   const m = month ?? todayBaku().slice(0, 7);
-  const [data, setData] = useState<{ month: string; d: Awaited<ReturnType<typeof fetchMonthAttendance>> } | null>(null);
-  const load = useCallback(() => fetchMonthAttendance(m).then((d) => setData({ month: m, d })), [m]);
-  useAttendanceLive(load);
+  useAttendanceLive();
+  const data = useData("month-attendance", async () => ({ month: m, d: await fetchMonthAttendance(m) }), [m]);
   return data?.month === m ? data.d : null;
 }
 
