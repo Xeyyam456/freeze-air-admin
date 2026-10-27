@@ -75,6 +75,7 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
   // Akt və şəkillər yeni səhifədə yox, pəncərədə açılır
   const [viewing, setViewing] = useState<{ url: string; title: string; pdf: boolean } | null>(null);
   const photos = log?.files.filter((f) => f.kind === "photo") ?? [];
+  const videos = log?.files.filter((f) => f.kind === "video") ?? [];
 
   return (
     <Modal onClose={onClose} labelledBy="work-log-title" className="!max-w-2xl">
@@ -184,6 +185,18 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
                   <button key={p.id} type="button" onClick={() => setViewing({ url: p.url!, title: "İşin şəkli", pdf: false })} title="Şəkli böyüt">
                     <img src={p.url} alt="İşin şəkli" className="h-24 w-24 rounded-xl border border-line object-cover hover:border-primary" />
                   </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Video (0089): pəncərənin içində oynayır, yalnız oynadanda yüklənir */}
+          {videos.length > 0 && (
+            <div>
+              <span className="label">Video</span>
+              <div className="grid gap-2">
+                {videos.map((v) => v.url && (
+                  <video key={v.id} src={v.url} controls playsInline preload="metadata" className="max-h-[60vh] w-full rounded-xl bg-black ring-1 ring-line" />
                 ))}
               </div>
             </div>
