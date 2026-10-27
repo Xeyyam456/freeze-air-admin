@@ -4,7 +4,8 @@ import { formatDateAz } from "@/components/DatePicker";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Modal } from "@/components/Modal";
 import { createClient } from "@/lib/supabase/client";
-import { fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
+import { fetchFileCounts, fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
+import { FileBadges } from "./FileBadges";
 import { useData } from "@/lib/useData";
 import { timeOf, WorkLogModal } from "./WorkLogModal";
 
@@ -42,6 +43,7 @@ function placeOf(l: Log) {
 export function AllLogsModal({ onClose, initialQuery = "" }: { onClose: () => void; initialQuery?: string }) {
   const logs = useData(fetchLogs);
   const groupMap = useData(() => fetchGroupMap());
+  const files = useData(() => fetchFileCounts((logs ?? []).map((l) => l.id)), [logs]); // ▶ Video / şəkil / akt (qrup üzrə)
   const [query, setQuery] = useState(initialQuery);
   const [openLog, setOpenLog] = useState<number | null>(null);
 
@@ -98,6 +100,7 @@ export function AllLogsModal({ onClose, initialQuery = "" }: { onClose: () => vo
                           </span>
                           <span className="muted mt-0.5 line-clamp-1 block text-sm max-sm:hidden">{l.description}</span>
                         </span>
+                        <FileBadges files={files?.get(l.id)} />
                         <span className="shrink-0 text-sm font-semibold tabular-nums max-sm:text-xs">{timeOf(l.created_at)}</span>
                       </button>
                     </li>

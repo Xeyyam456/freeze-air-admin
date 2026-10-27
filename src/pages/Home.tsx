@@ -13,7 +13,8 @@ import { AllLogsModal } from "@/components/work/AllLogsModal";
 import { MonthDashboard } from "@/components/work/MonthDashboard";
 import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { createClient } from "@/lib/supabase/client";
-import { countJobs, fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
+import { countJobs, fetchFileCounts, fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
+import { FileBadges } from "@/components/work/FileBadges";
 import { useData } from "@/lib/useData";
 
 const MONTHS = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avqust", "sentyabr", "oktyabr", "noyabr", "dekabr"];
@@ -70,6 +71,7 @@ async function fetchDashboard() {
 
   const recentGroups = await fetchGroupMap(logs.at(-1)?.work_date);
   const shownLogs = mergeGroupLogs(logs, recentGroups).slice(0, 4);
+  const logFiles = await fetchFileCounts(shownLogs.map((l) => l.id)); // ▶ Video / şəkil / akt nişanları (qrup üzrə)
   const masters = employees.filter((e) => !e.is_management);
   const todayCount: Record<number, number> = {};
   for (const l of todayLogs) todayCount[l.employee_id] = (todayCount[l.employee_id] ?? 0) + 1;
@@ -98,7 +100,7 @@ async function fetchDashboard() {
   return {
     companies, branches, markets, shops, tools, cards,
     masters, managers: employees.length - masters.length,
-    logs: shownLogs, todayTotal: countJobs(todayLogs, todayGroups), todayCount, lowStock, tasks,
+    logs: shownLogs, logFiles, todayTotal: countJobs(todayLogs, todayGroups), todayCount, lowStock, tasks,
   };
 }
 
@@ -192,6 +194,7 @@ export default function Home() {
                       </span>
                       <span className="muted mt-0.5 block truncate text-sm max-sm:line-clamp-1 max-sm:text-[12px] max-sm:leading-snug">{l.description}</span>
                     </span>
+                    <FileBadges files={d.logFiles.get(l.id)} />
                     <span className="shrink-0 text-right">
                       <span className="block text-sm font-semibold tabular-nums max-sm:text-xs">{timeOf(l.created_at)}</span>
                       <span className="muted block text-[11px] max-sm:hidden">{l.work_date === localDate() ? ago(l.created_at) : l.work_date.split("-").reverse().join(".")}</span>

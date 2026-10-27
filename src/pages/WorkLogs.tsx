@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Building2, CalendarDays, ChevronDown, ClipboardList, Download, FileText, Image, MapPin, Play, Search, SlidersHorizontal, Users } from "lucide-react";
+import { Building2, CalendarDays, ChevronDown, ClipboardList, Download, MapPin, Play, Search, SlidersHorizontal, Users } from "lucide-react";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
@@ -9,7 +9,8 @@ import { WithSidePanel } from "@/components/SidePanel";
 import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { toast } from "@/lib/toast";
 import { createClient } from "@/lib/supabase/client";
-import { fetchGroupMap, jobKey, mergeGroupLogs } from "@/lib/jobs";
+import { fetchGroupMap, jobKey, mergeGroupLogs, type FileCount } from "@/lib/jobs";
+import { FileBadges } from "@/components/work/FileBadges";
 import { useData } from "@/lib/useData";
 
 const WEEKDAYS = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
@@ -55,31 +56,6 @@ async function fetchFilters() {
 }
 
 type Log = Awaited<ReturnType<typeof fetchLogs>>[number];
-type FileCount = { act: number; photo: number; video: number };
-
-// İşin faylları siyahıda nişan kimi: ▶ video, şəkil sayı, akt (admin işi açmadan görsün)
-function FileBadges({ files }: { files?: FileCount }) {
-  if (!files || files.act + files.photo + files.video === 0) return null;
-  return (
-    <span className="flex shrink-0 items-center gap-1">
-      {files.video > 0 && (
-        <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-bold text-violet-700" title="İşdə video var">
-          <Play size={10} fill="currentColor" /> Video{files.video > 1 && ` ${files.video}`}
-        </span>
-      )}
-      {files.photo > 0 && (
-        <span className="inline-flex items-center gap-1 rounded-full bg-bg px-2 py-0.5 text-[11px] font-semibold text-muted" title={`${files.photo} şəkil`}>
-          <Image size={11} /> {files.photo}
-        </span>
-      )}
-      {files.act > 0 && (
-        <span className="inline-flex items-center gap-1 rounded-full bg-bg px-2 py-0.5 text-[11px] font-semibold text-muted" title="Akt var">
-          <FileText size={11} /> Akt
-        </span>
-      )}
-    </span>
-  );
-}
 
 function placeOf(l: Log) {
   if (l.stores) return `${l.stores.companies?.name ?? ""} · ${l.stores.name}`;
