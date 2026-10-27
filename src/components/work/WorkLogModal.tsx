@@ -132,7 +132,8 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
               {place?.address && <p className="muted mt-0.5 text-sm">{place.address}</p>}
               {log.place_text && <p className="muted mt-0.5 text-xs">Siyahıda olmayan yer</p>}
             </div>
-            {place && <MapButton place={place} />}
+            {/* Mobildə xəritə düyməsi yoxdur (adı sıxışdırırdı; istifadəçi qərarı) */}
+            {place && <span className="max-sm:hidden"><MapButton place={place} /></span>}
           </div>
 
           {/* Nə edib: tapşırıqdan yaranan işdə müdirin verdiyi iş (tapşırıq) və ustanın yazdığı görülən iş ayrı göstərilir */}
