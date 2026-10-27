@@ -254,7 +254,7 @@ export default function FuelPage() {
   const [anchor, setAnchor] = useState(today);
   const range = rangeOf(period, anchor);
   const monthR = rangeOf("month", anchor); // balansın ayı
-  const data = useData(() => fetchFuel(range.from, range.to, today, monthR.from, monthR.to), [range.from, range.to, today, monthR.from, monthR.to]);
+  const data = useData("fuel", () => fetchFuel(range.from, range.to, today, monthR.from, monthR.to), [range.from, range.to, today, monthR.from, monthR.to]);
   const [open, setOpen] = useState<number | null>(null);
   const [paysOpen, setPaysOpen] = useState<number | null>(null); // "Verilən pullar" siyahısı ayrıca açılan bölmədir (bağlı başlayır)
   const [picked, setPicked] = useState<number | null>(null); // başlıqda göstərilən usta (kartına klik)

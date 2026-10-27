@@ -23,7 +23,7 @@ export function ClientList({ kind, emptyHint }: { kind: Kind; emptyHint: string 
   // Mobildə (< 640px) yalnız siyahı: kart/cədvəl keçidi yoxdur
   const phone = useMedia("(width < 640px)");
   const view = phone ? "table" : savedView;
-  const clients = useData(async () => {
+  const clients = useData("clients", async () => {
     const { data } = await createClient()
       .from("companies")
       .select("id, name, phone, address, contact_person, stores(count)")

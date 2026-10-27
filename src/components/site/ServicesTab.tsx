@@ -23,7 +23,7 @@ const PARTS: { label: string; done: (s: Service) => boolean }[] = [
 // Xidmətlər: saytdakı siyahı, footer və hər xidmətin öz səhifəsi (/xidmet/<slug>)
 export function ServicesTab() {
   const [editing, setEditing] = useState<Service | "new" | null>(null);
-  const services = useData(async () => {
+  const services = useData("site-services", async () => {
     const { data } = await createClient().from("site_services").select("*").order("sort").order("id");
     return data ?? [];
   });

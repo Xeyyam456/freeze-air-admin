@@ -88,7 +88,7 @@ function HistoryRow({ l }: { l: Row }) {
 // Düzülüş (2026-10-23): tünd xülasə → gözləyən sorğular (iri kartlar, ustanın bu ilki icazə günü ilə) → bu gün və qarşıdakı icazələr →
 // süzgəcli tarixçə (vəziyyət + usta, aylara görə). Təsdiqlənən günlər davamiyyətdə "İcazəli" sayılır. Yeni sorğu Realtime ilə gəlir.
 export default function LeavesPage() {
-  const data = useData(fetchLeaves);
+  const data = useData("leaves", fetchLeaves);
   const today = todayBaku();
   const [filter, setFilter] = useState<Filter>("all");
   const [who, setWho] = useState<number | null>(null);

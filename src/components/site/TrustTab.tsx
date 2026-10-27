@@ -77,7 +77,7 @@ function StatEditor({ item, sort, onClose }: { item: Stat | null; sort: number; 
 
 function StatsSection() {
   const [editing, setEditing] = useState<Stat | "new" | null>(null);
-  const rows = useData(async () => (await createClient().from("site_stats").select("*").order("sort").order("id")).data ?? []);
+  const rows = useData("site-stats", async () => (await createClient().from("site_stats").select("*").order("sort").order("id")).data ?? []);
   if (!rows) return <div className="card muted">Yüklənir...</div>;
   return (
     <section className="card space-y-4">
@@ -138,7 +138,7 @@ function FaqEditor({ item, sort, onClose }: { item: Faq | null; sort: number; on
 
 function FaqSection() {
   const [editing, setEditing] = useState<Faq | "new" | null>(null);
-  const rows = useData(async () => (await createClient().from("site_faq").select("*").order("sort").order("id")).data ?? []);
+  const rows = useData("site-faq", async () => (await createClient().from("site_faq").select("*").order("sort").order("id")).data ?? []);
   if (!rows) return <div className="card muted">Yüklənir...</div>;
   return (
     <section className="card space-y-4">

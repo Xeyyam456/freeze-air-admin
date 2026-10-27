@@ -16,7 +16,7 @@ async function fetchManagers(admin: boolean) {
 
 export default function ManagementPage() {
   const { admin, owner, session } = useAuth();
-  const data = useData(() => fetchManagers(admin), [admin]);
+  const data = useData("management", () => fetchManagers(admin), [admin]);
 
   return (
     <Page title="Rəhbərlik" actions={owner ? <AddManagerButton /> : undefined} subtitle={owner ? "Müdir, servis müdirləri və maliyyəçi: hesabları admin yetkisi alır" : "Rəhbərlərin telefonunu və şəklini dəyişə bilərsən; qalan məlumatları müdir dəyişir"}>

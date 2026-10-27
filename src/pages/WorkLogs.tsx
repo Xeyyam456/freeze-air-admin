@@ -127,9 +127,9 @@ export default function WorkLogsPage() {
   const [query, setQuery] = useState("");
   const [openLog, setOpenLog] = useState<number | null>(null);
 
-  const filters = useData(fetchFilters);
-  const logs = useData(() => fetchLogs(from, to), [from, to]);
-  const groupMap = useData(() => fetchGroupMap(from, to), [from, to]);
+  const filters = useData("worklog-filters", fetchFilters);
+  const logs = useData("worklogs", () => fetchLogs(from, to), [from, to]);
+  const groupMap = useData("group-map-range", () => fetchGroupMap(from, to), [from, to]);
 
   // Qrup işi bir sətir (adlar birləşir); ustaların sayı isə hamısından
   const filtered = useMemo(() => {

@@ -1,21 +1,7 @@
-import { useSyncExternalStore } from "react";
+import { getQueryClient } from "./queryClient";
 
-// Next-dəki refresh() əvəzi: məlumat dəyişəndə səhifədəki bütün siyahılar yenidən yüklənir.
-let version = 0;
-const listeners = new Set<() => void>();
-
+// Next-dəki refresh() əvəzi: məlumat dəyişəndə keş etibarsız olur, açıq səhifədəki bütün siyahılar yenidən yüklənir
+// (bağlı səhifələr açılanda təzələnir). TanStack Query keşi (lib/queryClient.ts).
 export function revalidate() {
-  version += 1;
-  listeners.forEach((l) => l());
-}
-
-export function useRevalidateVersion() {
-  return useSyncExternalStore(
-    (cb) => {
-      listeners.add(cb);
-      return () => listeners.delete(cb);
-    },
-    () => version,
-    () => 0, // server render (web usta paneli, Next): hələ heç nə dəyişməyib
-  );
+  void getQueryClient().invalidateQueries();
 }

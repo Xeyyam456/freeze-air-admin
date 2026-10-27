@@ -135,7 +135,7 @@ function placeOf(l: Log) {
 
 export default function Home() {
   const { name } = useAuth();
-  const d = useData(fetchDashboard);
+  const d = useData("dashboard", fetchDashboard);
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [allLogs, setAllLogs] = useState<string | null>(null); // null = bağlı; "" = hamısı; ad = ustanın işləri
   const now = new Date();

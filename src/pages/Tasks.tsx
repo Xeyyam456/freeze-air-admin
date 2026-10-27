@@ -202,7 +202,7 @@ function VideoBadge({ className = "mt-1" }: { className?: string }) {
 export default function TasksPage() {
   const today = iso(new Date());
   const [day, setDay] = useState(today);
-  const data = useData(() => fetchTasks(day), [day]);
+  const data = useData("tasks-day", () => fetchTasks(day), [day]);
   // Keçmiş gün bağlıdır (bazada da: 0070): geri almaq olmur, yalnız baxış
   const past = day < today;
 

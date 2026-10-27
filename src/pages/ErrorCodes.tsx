@@ -18,7 +18,7 @@ async function fetchAll() {
 // Excel-dən toplu yükləmək olar. Ustalar usta panelində modeli dropdown-dan seçib baxır.
 export default function ErrorCodesPage() {
   const { admin } = useAuth();
-  const data = useData(fetchAll);
+  const data = useData("error-codes", fetchAll);
 
   return (
     <Page title="Xəta kodları" subtitle="Əvvəl model əlavə et, sonra modeli seçib xəta kodu yaz">

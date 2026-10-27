@@ -8,7 +8,7 @@ import { toast } from "@/lib/toast";
 
 // Saytın bütün sabit mətnləri, səhifələrə görə. Dəyişikliklər bütün qruplar üzrə yığılır, bir düymə ilə saxlanır.
 export function TextsTab() {
-  const saved = useData(async () => {
+  const saved = useData("site-texts", async () => {
     const { data } = await createClient().from("site_texts").select("key, value");
     return Object.fromEntries((data ?? []).map((r) => [r.key, r.value])) as Record<string, string>;
   });

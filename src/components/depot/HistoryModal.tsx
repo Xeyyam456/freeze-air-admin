@@ -66,7 +66,7 @@ function amount(m: Movement) {
 
 // Son hərəkətlər (Depo səhifəsinin sağ sütunu): hər iki növ, son 12; Realtime ilə yenilənir (revalidate)
 export function RecentMovements({ onOpenAll, limit = 12 }: { onOpenAll: () => void; limit?: number }) {
-  const rows = useData(async () => {
+  const rows = useData("depot-tool-history", async () => {
     const { data } = await createClient().from("stock_movements").select("*, employees(full_name)").order("at", { ascending: false }).limit(limit);
     return (data ?? []) as Movement[];
   }, [limit]);
@@ -120,7 +120,7 @@ export function RecentMovements({ onOpenAll, limit = 12 }: { onOpenAll: () => vo
 // Depo jurnalı: hər say dəyişikliyi (mədaxil, vermə, qaytarma, sərf, silinmə, sayım, təmir), kim edib, kim təsdiqləyib.
 // toolId verilsə yalnız həmin alətin hərəkətləri.
 export function HistoryModal({ kind, toolId, toolName, onClose }: { kind: Kind; toolId?: number; toolName?: string; onClose: () => void }) {
-  const rows = useData(() => fetchJournal(kind, toolId), [kind, toolId]);
+  const rows = useData("depot-journal", () => fetchJournal(kind, toolId), [kind, toolId]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number][0]>("all");
   const q = norm(query.trim());

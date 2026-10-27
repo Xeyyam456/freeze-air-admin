@@ -61,7 +61,7 @@ async function fetchLog(id: number) {
 
 // İş qeydinin ətraflı pəncərəsi: kim, harada, nə vaxt (iş günü + əlavə olunma saatı), nə edib, akt və şəkillər
 export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () => void }) {
-  const log = useData(() => fetchLog(logId), [logId]);
+  const log = useData("work-log", () => fetchLog(logId), [logId]);
 
   const owner = log?.stores?.companies?.name ?? log?.companies?.name ?? null;
   const placeName = log?.stores ? log.stores.name : log?.companies ? log.companies.name : log?.place_text ?? "Yer silinib";

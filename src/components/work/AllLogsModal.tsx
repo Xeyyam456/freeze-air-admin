@@ -41,9 +41,10 @@ function placeOf(l: Log) {
 // Bütün iş qeydləri: günlərə görə qruplu, axtarışlı; klik → ətraflı pəncərə
 // initialQuery: məs. usta adı ilə süzülmüş açmaq
 export function AllLogsModal({ onClose, initialQuery = "" }: { onClose: () => void; initialQuery?: string }) {
-  const logs = useData(fetchLogs);
-  const groupMap = useData(() => fetchGroupMap());
-  const files = useData(() => fetchFileCounts((logs ?? []).map((l) => l.id)), [logs]); // ▶ Video / şəkil / akt (qrup üzrə)
+  const logs = useData("all-logs", fetchLogs);
+  const groupMap = useData("group-map-all", () => fetchGroupMap());
+  const logIds = (logs ?? []).map((l) => l.id);
+  const files = useData("file-counts-all", () => fetchFileCounts(logIds), [logIds.join()]); // ▶ Video / şəkil / akt (qrup üzrə)
   const [query, setQuery] = useState(initialQuery);
   const [openLog, setOpenLog] = useState<number | null>(null);
 

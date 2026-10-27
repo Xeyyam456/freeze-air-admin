@@ -71,7 +71,7 @@ async function fetchEmployees(admin: boolean) {
 
 export default function EmployeesPage() {
   const { admin } = useAuth();
-  const data = useData(() => fetchEmployees(admin), [admin]);
+  const data = useData("employees-page", () => fetchEmployees(admin), [admin]);
 
   return (
     <Page title="Ustalar" subtitle="Ustaların ixtisası, təcrübəsi və əlaqə məlumatı" actions={admin ? <AddEmployeeButton /> : undefined}>

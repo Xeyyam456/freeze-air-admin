@@ -45,7 +45,7 @@ export default function RequestsPage() {
   const [filter, setFilter] = useState<Filter>("new");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const requests = useData(async () => {
+  const requests = useData("contact-requests", async () => {
     const { data } = await createClient().from("contact_requests").select("*").order("created_at", { ascending: false });
     return data ?? [];
   });

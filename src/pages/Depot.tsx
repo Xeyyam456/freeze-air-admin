@@ -49,7 +49,7 @@ async function fetchDepot(admin: boolean) {
 // başlıqda Mədaxil + "Daha çox" (Sayım, Alınmalı, Excel, Jurnal), varsa "Təsdiq gözləyir", altında üç tab və sadə kartlar.
 export default function DepotPage() {
   const { admin, owner, canManageTools, employeeId, session } = useAuth();
-  const data = useData(() => fetchDepot(admin), [admin]);
+  const data = useData("depot", () => fetchDepot(admin), [admin]);
   const [tab, setTab] = useState<DepotView>("home");
   const [openToolId, setOpenToolId] = useState<number | null>(null);
   const [modal, setModal] = useState<"receipt" | "shopping" | "keeper" | "journal" | "excel" | null>(null);

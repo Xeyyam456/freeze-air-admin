@@ -1,22 +1,10 @@
-import { useEffect, useState } from "react";
-import { useRevalidateVersion } from "./revalidate";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-// Səhifə məlumatını yükləyir; revalidate() çağırılanda və ya deps dəyişəndə yenidən yükləyir.
-// İlk yükləmədə data=null (“Yüklənir...”), sonrakı yeniləmələrdə köhnə məlumat ekranda qalır.
-export function useData<T>(fetcher: () => Promise<T>, deps: unknown[] = []) {
-  const version = useRevalidateVersion();
-  const [data, setData] = useState<T | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetcher().then((d) => {
-      if (!cancelled) setData(d);
-    });
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetcher hər renderdə yeni olur, deps ilə idarə olunur
-  }, [version, ...deps]);
-
-  return data;
+// Səhifə məlumatını yükləyir (TanStack Query): açar + deps keşin açarıdır. Eyni açarlı sorğu bir dəfə gedir,
+// səhifəyə qayıdanda keşdən dərhal görünür, revalidate() çağırılanda yenidən yüklənir.
+// İlk yükləmədə data=null (“Yüklənir...”); deps dəyişəndə və yeniləmələrdə köhnə məlumat ekranda qalır.
+// Açar fayl daxilində unikal olmalıdır, eyni açar = eyni məlumat (fərqli fetcher-ə eyni açar vermə).
+export function useData<T>(key: string, fetcher: () => Promise<T>, deps: unknown[] = []) {
+  const { data } = useQuery({ queryKey: [key, ...deps], queryFn: fetcher, placeholderData: keepPreviousData });
+  return data ?? null;
 }

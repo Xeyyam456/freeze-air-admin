@@ -38,7 +38,7 @@ type Values = Record<(typeof FIELDS)[number]["name"], string>;
 
 // Əlaqə məlumatları: header, footer, ana səhifə, Əlaqə və xidmət səhifələrində göstərilir
 export function ContactTab() {
-  const settings = useData(async () => {
+  const settings = useData("site-settings-contact", async () => {
     const { data } = await createClient().from("site_settings").select("*").eq("id", 1).maybeSingle();
     return data;
   });

@@ -41,7 +41,7 @@ function LocationView({ company }: { company: Tables<"companies"> }) {
 // Şirkətin filialları və ya marketin mağazaları
 export function ClientDetail({ id, kind }: { id: number; kind: Kind }) {
   const { admin } = useAuth();
-  const data = useData(async () => {
+  const data = useData("client-detail", async () => {
     const supabase = createClient();
     const [{ data: client }, { data: units }] = await Promise.all([
       supabase.from("companies").select("*").eq("id", id).maybeSingle(),

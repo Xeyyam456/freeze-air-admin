@@ -68,7 +68,7 @@ function localDate(d = new Date()) {
 
 // Nişanlar (hamısı qırmızı): baxılmamış müraciət, bugünkü gözləyən tapşırıq, depo (təsdiq gözləyən sənəd + "Almadım" + azalan), gözləyən icazə
 function useBadges() {
-  return useData(async () => {
+  return useData("nav-badges", async () => {
     const supabase = createClient();
     const [requests, tasks, low, docs, disputed, leave] = await Promise.all([
       supabase.from("contact_requests").select("*", { count: "exact", head: true }).eq("handled", false).then((r) => r.count ?? 0),

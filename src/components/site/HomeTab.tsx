@@ -39,7 +39,7 @@ const QUICK_FIELDS: { key: QuickKey; label: string; max: number }[] = [
 // Ana səhifənin və saytın idarə olunan hissələri: loqo, hero şəkli və "Haqqımızda" bölməsi.
 // Hər bölmənin yanında saytdakı görünüşünün kiçik önizləməsi var.
 export function HomeTab() {
-  const data = useData(async () => {
+  const data = useData("site-home", async () => {
     const supabase = createClient();
     const [{ data: settings }, { data: texts }] = await Promise.all([
       supabase.from("site_settings").select("*").eq("id", 1).maybeSingle(),

@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Activity, CalendarCheck, ChevronLeft, ChevronRight, ClipboardList, MapPin, Table2, TrendingDown, TrendingUp, Trophy, Users } from "lucide-react";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { countJobs, fetchGroupMap, jobKey } from "@/lib/jobs";
 import { createClient } from "@/lib/supabase/client";
+import { useData } from "@/lib/useData";
 
 const MONTHS = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
 const WEEKDAYS = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
@@ -178,22 +179,13 @@ export function MonthDashboard({ onUsta }: { onUsta: (name: string) => void }) {
     return { y: t.getFullYear(), m: t.getMonth(), d: t.getDate() };
   });
   const [ym, setYm] = useState({ y: today.y, m: today.m });
-  const [data, setData] = useState<MonthData | null>(null);
+  // Keşdə (useData): Panelə qayıdanda dərhal görünür; ay dəyişəndə köhnə ay yeni gələnə qədər qalır (data.key ilə ayırd edilir)
+  const data: MonthData | null = useData("month-dashboard", () => fetchMonth(ym.y, ym.m), [ym.y, ym.m]);
   const [cumulative, setCumulative] = useState(false);
   const [table, setTable] = useState(false);
   const key = `${ym.y}-${ym.m}`;
   const isCurrent = ym.y === today.y && ym.m === today.m;
   const days = new Date(ym.y, ym.m + 1, 0).getDate();
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchMonth(ym.y, ym.m).then((d) => {
-      if (!cancelled) setData(d);
-    });
-    return () => {
-      cancelled = true; // ay tez-tez dəyişəndə köhnə cavab yenisinin üstünə yazılmasın
-    };
-  }, [ym]);
 
   const s = useMemo(() => {
     const counts = Array<number>(days).fill(0);

@@ -9,7 +9,7 @@ import { EquipmentEditor } from "./EquipmentEditor";
 import { SegmentEditor } from "./SegmentEditor";
 
 function useEquipmentList() {
-  return useData(async () => {
+  return useData("site-equipment", async () => {
     const { data } = await createClient().from("site_equipment").select("*").order("sort").order("id");
     return data ?? [];
   });
@@ -20,7 +20,7 @@ const nextSort = (rows: { sort: number }[]) => Math.max(0, ...rows.map((r) => r.
 // Obyekt növləri: Ev və mənzil, Market və mağaza, ... (saytda /xidmetler/<slug>)
 export function SegmentsTab() {
   const [editing, setEditing] = useState<Tables<"site_segments"> | "new" | null>(null);
-  const segments = useData(async () => {
+  const segments = useData("site-segments", async () => {
     const { data } = await createClient().from("site_segments").select("*").order("sort").order("id");
     return data ?? [];
   });
