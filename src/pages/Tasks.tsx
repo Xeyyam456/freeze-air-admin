@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, Building2, Check, ChevronDown, ChevronLeft, ChevronRight, ListChecks, Lock, MapPin, Paperclip, Plus, Store, Undo2, UserPlus, Users, X } from "lucide-react";
+import { ArrowRight, Building2, Check, ChevronDown, ChevronLeft, ChevronRight, ListChecks, Lock, MapPin, Paperclip, Play, Plus, Store, Undo2, UserPlus, Users, X } from "lucide-react";
 import { addTask, addTaskMember, withdrawTask } from "@/actions/tasks";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
 import { Modal } from "@/components/Modal";
@@ -30,7 +30,7 @@ async function fetchTasks(day: string) {
   const supabase = createClient();
   const [tasks, employees, crews] = await Promise.all([
     supabase.from("tasks")
-      .select("id, employee_id, group_id, work_log_id, reason, done, done_at, note, place_text, store_id, company_id, cancelled_at, reassigned_to, stores(name, code, companies(name)), companies(name), work_logs(work_files(id))")
+      .select("id, employee_id, group_id, work_log_id, reason, done, done_at, note, place_text, store_id, company_id, cancelled_at, reassigned_to, stores(name, code, companies(name)), companies(name), work_logs(work_files(id, kind))")
       .eq("task_date", day).order("created_at").then((r) => r.data ?? []),
     supabase.from("employees").select("id, full_name, photo_url, specialty, worker_type").eq("is_management", false).eq("is_active", true).order("full_name")
       // Seçimdə ixtisasın önündə növ: "Köməkçi · Kondisioner ustası"
@@ -188,6 +188,15 @@ function AddMemberModal({ task, members, employees, onClose }: { task: Task; mem
   );
 }
 
+// İşdə video var (0089): admin tapşırığı açmadan görsün
+function VideoBadge({ className = "mt-1" }: { className?: string }) {
+  return (
+    <span className={`inline-flex shrink-0 items-center gap-1 rounded-full bg-violet-50 px-1.5 py-px text-[11px] font-bold text-violet-700 ${className}`} title="Usta video əlavə edib">
+      <Play size={9} fill="currentColor" /> Video
+    </span>
+  );
+}
+
 // Admin və rəhbərlik ustaya gün üçün iş təyin edir (usta, yer, səbəb), lazım olsa geri alır (başqa ustaya verir).
 // "Görüldü" işarəsini yalnız usta qoyur (usta panelində): burada qutu yalnız vəziyyəti göstərir. Silmək yoxdur (0057).
 export default function TasksPage() {
@@ -336,6 +345,7 @@ export default function TasksPage() {
                       const crewOpen = openCrew === crew.key;
                       const liveItems = crew.items.filter((g) => g.live.length > 0);
                       const doneItems = liveItems.filter((g) => g.live.every((x) => x.done)).length;
+                      const crewVideo = crew.items.some((g) => g.rows.some((x) => x.work_logs?.work_files.some((f) => f.kind === "video")));
                       return (
                         <li key={crew.key}>
                           <button type="button" onClick={() => { setOpenCrew(crewOpen ? null : crew.key); }} aria-expanded={crewOpen}
@@ -347,7 +357,7 @@ export default function TasksPage() {
                             </span>
                             <span className="min-w-0 flex-1">
                               <span className="block text-sm font-bold sm:truncate max-sm:leading-tight">{crewLabel(crew.ids).split(" + ").map((n, i, all) => <span key={n} className="max-sm:block">{n}{i < all.length - 1 && <span className="max-sm:hidden"> + </span>}</span>)}</span>
-                              <span className="muted block text-xs">{liveItems.length} tapşırıq</span>
+                              <span className="muted flex items-center gap-1.5 text-xs">{liveItems.length} tapşırıq{crewVideo && <VideoBadge className="" />}</span>
                             </span>
                             {liveItems.length > 0 && (doneItems === liveItems.length
                               ? <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-ok px-2.5 py-0.5 text-[11px] font-bold text-white"><Check size={12} strokeWidth={3} /> Hazır</span>
@@ -361,6 +371,7 @@ export default function TasksPage() {
                                 const cancelled = g.live.length === 0;
                                 const done = !cancelled && g.live.every((x) => x.done);
                                 const files = g.rows.reduce((n, x) => n + (x.work_logs?.work_files.length ?? 0), 0);
+                                const hasVideo = g.rows.some((x) => x.work_logs?.work_files.some((f) => f.kind === "video"));
                                 const PlaceIcon = t.stores ? Store : t.companies ? Building2 : MapPin;
                                 const logId = g.rows.find((x) => x.work_log_id)?.work_log_id ?? null;
                                 return (
@@ -379,7 +390,7 @@ export default function TasksPage() {
                                         <span className={`muted block text-[13px] max-sm:text-xs ${cancelled ? "line-through" : ""}`}>{t.reason}</span>
                                         {t.note && <span className="mt-1.5 block rounded-lg bg-[#eef2ff] px-2.5 py-1 text-xs text-[#4338ca] max-sm:hidden"><b>Təmir:</b> {t.note}</span>}
                                       </span>
-                                      {files > 0 && <span className="muted mt-1 inline-flex shrink-0 items-center gap-0.5 text-xs" title="Usta fayl əlavə edib (iş qeydində)"><Paperclip size={13} />{files}</span>}
+                                      {files > 0 && <>{hasVideo && <VideoBadge />}<span className="muted mt-1 inline-flex shrink-0 items-center gap-0.5 text-xs" title="Usta fayl əlavə edib (iş qeydində)"><Paperclip size={13} />{files}</span></>}
                                       {!done && !cancelled && !past && (
                                         <span className="flex shrink-0 items-center gap-0.5">
                                           <button type="button" onClick={() => setAdding({ task: t, members: g.live.map((x) => x.employee_id) })} className="icon-btn !h-8 !w-8"
@@ -439,6 +450,7 @@ export default function TasksPage() {
                             {items.map((t) => {
                               const cancelled = !!t.cancelled_at;
                               const files = t.work_logs?.work_files.length ?? 0;
+                              const hasVideo = !!t.work_logs?.work_files.some((f) => f.kind === "video");
                               const PlaceIcon = t.stores ? Store : t.companies ? Building2 : MapPin;
                               return (
                                 <li key={t.id} className={`flex flex-wrap items-start gap-3 px-4 py-3 max-sm:gap-2 max-sm:px-3 max-sm:py-2 ${cancelled ? "opacity-60" : t.done ? "bg-[#f6fcf8]" : ""}`}>
@@ -462,7 +474,7 @@ export default function TasksPage() {
                                     )}
                                   </span>
                                   {files > 0 && (
-                                    <span className="muted mt-1 inline-flex shrink-0 items-center gap-0.5 text-xs" title="Usta fayl əlavə edib (iş qeydində)"><Paperclip size={13} />{files}</span>
+                                    <>{hasVideo && <VideoBadge />}<span className="muted mt-1 inline-flex shrink-0 items-center gap-0.5 text-xs" title="Usta fayl əlavə edib (iş qeydində)"><Paperclip size={13} />{files}</span></>
                                   )}
                                   {!cancelled && !t.done && !past && (
                                     <span className="flex shrink-0 items-center gap-0.5">

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Building2, CalendarDays, ChevronDown, ClipboardList, Download, MapPin, Search, SlidersHorizontal, Users } from "lucide-react";
+import { Building2, CalendarDays, ChevronDown, ClipboardList, Download, FileText, Image, MapPin, Play, Search, SlidersHorizontal, Users } from "lucide-react";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
@@ -9,7 +9,7 @@ import { WithSidePanel } from "@/components/SidePanel";
 import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { toast } from "@/lib/toast";
 import { createClient } from "@/lib/supabase/client";
-import { fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
+import { fetchGroupMap, jobKey, mergeGroupLogs } from "@/lib/jobs";
 import { useData } from "@/lib/useData";
 
 const WEEKDAYS = ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"];
@@ -37,7 +37,7 @@ function range(kind: "month" | "prev" | "week") {
 async function fetchLogs(from: string, to: string) {
   const { data } = await createClient()
     .from("work_logs")
-    .select("id, work_date, created_at, description, place_text, employee_id, company_id, employees(full_name, photo_url), stores(name, code, company_id, companies(name)), companies(name)")
+    .select("id, work_date, created_at, description, place_text, employee_id, company_id, employees(full_name, photo_url), stores(name, code, company_id, companies(name)), companies(name), work_files(kind)")
     .gte("work_date", from).lte("work_date", to)
     .order("work_date", { ascending: false })
     .order("created_at", { ascending: false })
@@ -55,6 +55,31 @@ async function fetchFilters() {
 }
 
 type Log = Awaited<ReturnType<typeof fetchLogs>>[number];
+type FileCount = { act: number; photo: number; video: number };
+
+// İşin faylları siyahıda nişan kimi: ▶ video, şəkil sayı, akt (admin işi açmadan görsün)
+function FileBadges({ files }: { files?: FileCount }) {
+  if (!files || files.act + files.photo + files.video === 0) return null;
+  return (
+    <span className="flex shrink-0 items-center gap-1">
+      {files.video > 0 && (
+        <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-bold text-violet-700" title="İşdə video var">
+          <Play size={10} fill="currentColor" /> Video{files.video > 1 && ` ${files.video}`}
+        </span>
+      )}
+      {files.photo > 0 && (
+        <span className="inline-flex items-center gap-1 rounded-full bg-bg px-2 py-0.5 text-[11px] font-semibold text-muted" title={`${files.photo} şəkil`}>
+          <Image size={11} /> {files.photo}
+        </span>
+      )}
+      {files.act > 0 && (
+        <span className="inline-flex items-center gap-1 rounded-full bg-bg px-2 py-0.5 text-[11px] font-semibold text-muted" title="Akt var">
+          <FileText size={11} /> Akt
+        </span>
+      )}
+    </span>
+  );
+}
 
 function placeOf(l: Log) {
   if (l.stores) return `${l.stores.companies?.name ?? ""} · ${l.stores.name}`;
@@ -139,6 +164,19 @@ export default function WorkLogsPage() {
       (!q || [l.employees?.full_name, placeOf(l), l.description].some((v) => norm(v).includes(q))));
   }, [logs, employeeId, companyId, query]);
   const list = useMemo(() => mergeGroupLogs(filtered, groupMap), [filtered, groupMap]);
+
+  // Faylların sayı işə görə: qrup işində fayl istənilən üzvün qeydinə yüklənə bilər, ona görə qrup üzrə toplanır
+  const filesByJob = useMemo(() => {
+    const m = new Map<string, FileCount>();
+    for (const l of logs ?? []) {
+      const k = jobKey(l.id, groupMap);
+      const c = m.get(k) ?? { act: 0, photo: 0, video: 0 };
+      for (const f of l.work_files) if (f.kind === "act" || f.kind === "photo" || f.kind === "video") c[f.kind] += 1;
+      m.set(k, c);
+    }
+    return m;
+  }, [logs, groupMap]);
+  const filesOf = (l: Log) => filesByJob.get(jobKey(l.id, groupMap));
 
   // Gün → tək işlər sətir kimi, qrup işləri (Tapşırıqlardakı kimi) eyni üzvlü qrupa görə bir açılan sətirdə
   type Entry = { type: "solo"; log: Log } | { type: "crew"; key: string; names: string; logs: Log[] };
@@ -254,6 +292,7 @@ export default function WorkLogsPage() {
                                 </span>
                                 <span className="muted mt-0.5 line-clamp-1 block text-sm max-sm:line-clamp-3 max-sm:text-xs">{l.description}</span>
                               </span>
+                              <FileBadges files={filesOf(l)} />
                               <span className="shrink-0 text-sm font-semibold tabular-nums">{timeOf(l.created_at)}</span>
                             </button>
                           </li>
@@ -267,7 +306,12 @@ export default function WorkLogsPage() {
                             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary-soft text-primary max-sm:h-7 max-sm:w-7"><Users size={16} className="max-sm:!h-3.5 max-sm:!w-3.5" /></span>
                             <span className="min-w-0 flex-1">
                               <span className="block text-sm font-semibold max-sm:text-[13px] max-sm:leading-tight sm:truncate">{en.names.split(" + ").map((n, i, all) => <span key={n} className="max-sm:block">{n}{i < all.length - 1 && <span className="max-sm:hidden"> + </span>}</span>)}</span>
-                              <span className="muted block text-xs">Qrup işi · {en.logs.length} iş</span>
+                              <span className="muted flex items-center gap-1.5 text-xs">Qrup işi · {en.logs.length} iş
+                                {/* Bağlı qrupda da videolu iş görünsün */}
+                                {en.logs.some((l) => (filesOf(l)?.video ?? 0) > 0) && (
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-1.5 py-px text-[10px] font-bold text-violet-700"><Play size={9} fill="currentColor" /> Video</span>
+                                )}
+                              </span>
                             </span>
                             <ChevronDown size={18} className={`shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`} />
                           </button>
@@ -281,6 +325,7 @@ export default function WorkLogsPage() {
                                       <span className="flex min-w-0 items-center gap-1 truncate text-sm font-semibold text-primary max-sm:min-w-0 max-sm:flex-1 max-sm:text-[13px]"><MapPin size={13} className="shrink-0" /> <span className="truncate">{placeOf(l)}</span></span>
                                       <span className="muted mt-0.5 line-clamp-1 block text-sm max-sm:order-last max-sm:mt-0 max-sm:line-clamp-5 max-sm:basis-full max-sm:text-xs max-sm:leading-snug">{l.description}</span>
                                     </span>
+                                    <FileBadges files={filesOf(l)} />
                                     <span className="shrink-0 text-sm font-semibold tabular-nums max-sm:text-xs">{timeOf(l.created_at)}</span>
                                   </button>
                                 </li>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarDays, Clock, FileText, Home, MapPin, X } from "lucide-react";
+import { CalendarDays, Clock, FileText, Home, MapPin, Play, X } from "lucide-react";
 import { formatDateAz } from "@/components/DatePicker";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { MapButton } from "@/components/MapButton";
@@ -72,8 +72,8 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
       : null;
   const task = log?.tasks?.[0] ?? null; // bu iş tapşırıqdan yaranıbsa
   const act = log?.files.find((f) => f.kind === "act");
-  // Akt və şəkillər yeni səhifədə yox, pəncərədə açılır
-  const [viewing, setViewing] = useState<{ url: string; title: string; pdf: boolean } | null>(null);
+  // Akt, şəkillər və video yeni səhifədə yox, pəncərədə açılır
+  const [viewing, setViewing] = useState<{ url: string; title: string; pdf: boolean; video?: boolean } | null>(null);
   const photos = log?.files.filter((f) => f.kind === "photo") ?? [];
   const videos = log?.files.filter((f) => f.kind === "video") ?? [];
 
@@ -170,10 +170,10 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
             </div>
           )}
 
-          {/* Akt və şəkillər */}
-          {(act || photos.length > 0) && (
+          {/* Akt, şəkillər və video (0089): hamısı kiçik plitədir, klik → pəncərədə açılır */}
+          {(act || photos.length > 0 || videos.length > 0) && (
             <div>
-              <span className="label">Akt və şəkillər</span>
+              <span className="label">{videos.length ? "Akt, şəkillər və video" : "Akt və şəkillər"}</span>
               <div className="flex flex-wrap gap-2">
                 {act?.url && (
                   <button type="button" onClick={() => setViewing({ url: act.url!, title: "Akt", pdf: /\.pdf($|\?)/i.test(act.path) })}
@@ -186,17 +186,15 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
                     <img src={p.url} alt="İşin şəkli" className="h-24 w-24 rounded-xl border border-line object-cover hover:border-primary" />
                   </button>
                 ))}
-              </div>
-            </div>
-          )}
-
-          {/* Video (0089): pəncərənin içində oynayır, yalnız oynadanda yüklənir */}
-          {videos.length > 0 && (
-            <div>
-              <span className="label">Video</span>
-              <div className="grid gap-2">
                 {videos.map((v) => v.url && (
-                  <video key={v.id} src={v.url} controls playsInline preload="metadata" className="max-h-[60vh] w-full rounded-xl bg-black ring-1 ring-line" />
+                  <button key={v.id} type="button" onClick={() => setViewing({ url: v.url!, title: "İşin videosu", pdf: false, video: true })} title="Videonu aç"
+                    className="relative h-24 w-24 overflow-hidden rounded-xl border border-line bg-black hover:border-primary">
+                    {/* İlk kadr önizləmə kimi (yalnız metadata yüklənir) */}
+                    <video src={`${v.url}#t=0.1`} muted playsInline preload="metadata" className="pointer-events-none h-full w-full object-cover" />
+                    <span className="absolute inset-0 grid place-items-center bg-black/25">
+                      <span className="grid h-9 w-9 place-items-center rounded-full bg-white/90 text-primary shadow"><Play size={16} className="translate-x-px" fill="currentColor" /></span>
+                    </span>
+                  </button>
                 ))}
               </div>
             </div>
@@ -209,7 +207,9 @@ export function WorkLogModal({ logId, onClose }: { logId: number; onClose: () =>
             <h2 id="work-file-title" className="text-lg font-bold">{viewing.title}</h2>
             <button type="button" onClick={() => setViewing(null)} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
           </div>
-          {viewing.pdf
+          {viewing.video
+            ? <video src={viewing.url} controls autoPlay playsInline className="max-h-[75vh] w-full rounded-xl bg-black ring-1 ring-line" />
+            : viewing.pdf
             ? <iframe src={viewing.url} title={viewing.title} className="h-[70vh] w-full rounded-xl border border-line" />
             : <img src={viewing.url} alt={viewing.title} className="max-h-[75vh] w-full rounded-xl object-contain ring-1 ring-line" />}
         </Modal>

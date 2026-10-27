@@ -1,8 +1,9 @@
 
 import { useCallback, useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Clock, FileText, Home, MapPin, Pencil, Plus, Trash2, Video } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, FileText, Home, MapPin, Pencil, Plus, Trash2, Video, X } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
+import { Modal } from "@/components/Modal";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { WorkLogForm } from "./WorkLogForm";
@@ -63,6 +64,7 @@ export function WorkTab({ employeeId, employeeName, admin }: { employeeId: numbe
   const [myEmployeeId, setMyEmployeeId] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<WorkLog | null>(null);
+  const [playing, setPlaying] = useState<string | null>(null); // açılmış videonun linki (pəncərədə oynayır)
 
   // İş dəyişəndə həm bu siyahı, həm də kartdakı "bu gün" sayı yenilənir
   const load = useCallback(async () => {
@@ -114,6 +116,15 @@ export function WorkTab({ employeeId, employeeName, admin }: { employeeId: numbe
 
   return (
     <div className="flex h-full flex-col gap-2">
+      {playing && (
+        <Modal onClose={() => setPlaying(null)} labelledBy="work-video-title" className="!max-w-3xl">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 id="work-video-title" className="text-lg font-bold">İşin videosu</h2>
+            <button type="button" onClick={() => setPlaying(null)} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+          </div>
+          <video src={playing} controls autoPlay playsInline className="max-h-[75vh] w-full rounded-xl bg-black ring-1 ring-line" />
+        </Modal>
+      )}
       {adding && (
         <WorkLogForm employeeId={employeeId} employeeName={employeeName} onClose={() => setAdding(false)} onSaved={load} />
       )}
@@ -214,10 +225,10 @@ export function WorkTab({ employeeId, employeeName, admin }: { employeeId: numbe
                         </a>
                       ))}
                       {videos.map((v) => v.url && (
-                        <a key={v.id} href={v.url} target="_blank" rel="noopener noreferrer"
+                        <button key={v.id} type="button" onClick={() => setPlaying(v.url!)}
                           className="flex h-14 items-center gap-1.5 rounded-lg border border-line bg-bg px-3 text-xs font-semibold hover:border-primary">
                           <Video size={16} className="text-primary" /> Video
-                        </a>
+                        </button>
                       ))}
                     </div>
                   )}
