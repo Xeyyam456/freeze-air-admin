@@ -9,6 +9,7 @@ import { useData } from "@/lib/useData";
 import { asKind, KIND, type Kind } from "@/lib/kinds";
 import { mapEmbedUrl } from "@/lib/navigation";
 import { ClientAside, ClientInfo, ClientTools } from "./ClientForms";
+import { LocationLogButton } from "./LocationLog";
 import { UnitList } from "./UnitList";
 
 // Filialı olmayan (sabit məkanlı) şirkət: siyahı əvəzinə yeri böyük xəritədə
@@ -73,6 +74,7 @@ export function ClientDetail({ id, kind }: { id: number; kind: Kind }) {
       title={client.name}
       subtitle={fixedPlace ? (client.address ?? "Sabit məkan") : `${list.length} ${k.unit}`}
       back={{ href: k.route, label: k.section }}
+      actions={<LocationLogButton companyId={client.id} units={list} />}
     >
       <WithSidePanel fill={fixedPlace} stack={!fixedPlace} inline={fixedPlace}
         narrowTop={fixedPlace ? undefined : <ClientInfo key={client.id} company={client} unitCount={list.length} admin={admin} />}
