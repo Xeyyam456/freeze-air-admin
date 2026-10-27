@@ -69,9 +69,12 @@ async function fetchDashboard() {
       .then((r) => mergeGroups(r.data ?? [])),
   ]);
 
-  const recentGroups = await fetchGroupMap(logs.at(-1)?.work_date);
+  // Qrup xəritəsi və fayl nişanları (▶ Video / şəkil / akt) paralel: ardıcıl gözləmə olmasın
+  const [recentGroups, logFiles] = await Promise.all([
+    fetchGroupMap(logs.at(-1)?.work_date),
+    fetchFileCounts(logs.map((l) => l.id)),
+  ]);
   const shownLogs = mergeGroupLogs(logs, recentGroups).slice(0, 4);
-  const logFiles = await fetchFileCounts(shownLogs.map((l) => l.id)); // ▶ Video / şəkil / akt nişanları (qrup üzrə)
   const masters = employees.filter((e) => !e.is_management);
   const todayCount: Record<number, number> = {};
   for (const l of todayLogs) todayCount[l.employee_id] = (todayCount[l.employee_id] ?? 0) + 1;

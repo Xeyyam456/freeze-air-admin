@@ -46,21 +46,30 @@ async function loadState(session: Session | null): Promise<AuthState> {
   };
 }
 
+// Eyni istifadəçi üçün yoxlama bir dəfə: açılışda (INITIAL_SESSION), hər saat token yenilənəndə (TOKEN_REFRESHED) və
+// dev-də StrictMode-un ikinci effektində 4 sorğu təkrar getməsin. Yalnız istifadəçi dəyişəndə və reload()-da yenidən yüklənir.
+let cached: { uid: string | null; state: Promise<AuthState> } | null = null;
+function loadOnce(session: Session | null, force = false): Promise<AuthState> {
+  const uid = session?.user.id ?? null;
+  if (force || !cached || cached.uid !== uid) cached = { uid, state: loadState(session) };
+  return cached.state.then((s) => (s.session ? { ...s, session } : s)); // token yenilənibsə təzə sessiya
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AuthState>({ ...EMPTY, loading: true });
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data }) => loadState(data.session).then(setState));
+    // onAuthStateChange qoşulan kimi INITIAL_SESSION verir: ayrıca getSession() lazım deyil
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       // Supabase tövsiyəsi: callback içində başqa Supabase sorğusunu növbəti tikə keçir
-      setTimeout(() => loadState(session).then(setState), 0);
+      setTimeout(() => loadOnce(session).then(setState), 0);
     });
     return () => sub.subscription.unsubscribe();
   }, []);
 
   // Profil adı dəyişəndən sonra çağırılır
-  const reload = useCallback(async () => setState(await loadState(state.session)), [state.session]);
+  const reload = useCallback(async () => setState(await loadOnce(state.session, true)), [state.session]);
 
   return <AuthContext.Provider value={{ ...state, reload }}>{children}</AuthContext.Provider>;
 }

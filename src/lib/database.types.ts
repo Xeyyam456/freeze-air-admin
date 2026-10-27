@@ -1728,6 +1728,15 @@ export type Database = {
         }
         Returns: undefined
       }
+      work_file_counts: {
+        Args: { p_log_ids: number[] }
+        Returns: {
+          act: number
+          photo: number
+          video: number
+          work_log_id: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
