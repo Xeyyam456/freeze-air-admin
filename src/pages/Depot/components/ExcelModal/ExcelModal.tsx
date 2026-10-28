@@ -5,8 +5,8 @@ import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { DHead } from "../DHead";
 import { SOFT } from "../../constants/tones";
-import type { ExcelModalProps } from "@/types/depot";
-import { type ReportKind, exportDepot } from "../../utils/excel/exportDepot";
+import type { ExcelModalProps, ReportKind } from "@/types/depot";
+import { exportDepot } from "../../utils/excel/exportDepot";
 import { OPTIONS } from "../../constants/excelOptions";
 import { Button } from "@/shared/components/Button";
 
