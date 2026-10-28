@@ -5,7 +5,8 @@ import { createPortal } from "react-dom";
 import {
   ChevronDown, Clock, History, KeyRound, Package, PackageOpen, PackagePlus, Pencil, Plus, Search, Send, ShieldCheck, Trash2, Undo2, UserPlus, Users, Warehouse, Wrench, X,
 } from "lucide-react";
-import { addStorekeeper, deleteTool, finishRepair, givePiece, giveTool, giveTools, returnAllTools, returnTool, setStorekeeper, settleMaterial, updateTool } from "@/actions/tools";
+import { deleteTool, finishRepair, givePiece, giveTool, giveTools, returnAllTools, returnTool, settleMaterial, updateTool } from "@/services/depot";
+import { addStorekeeper, setStorekeeper } from "@/services/storekeeper/storekeeper";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { useLoggedUse } from "@/components/depot/Approvals";
 import { RepairModal, ToolFields, WriteoffModal, type WriteoffSource } from "@/components/depot/DepotDocs";
@@ -19,11 +20,9 @@ import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { DAction, DHead, DSection, DStat } from "./DepotUi";
 import {
-  dateAz, daysSince, fmt, isLowStock, isPacked, REASONS, norm, parseQty, PIECE_MAX, pieceWord, round2, showQty, STALE_DAYS, TEXT, withUnit,
+  dateAz, daysSince, fmt, isPacked, REASONS, norm, parseQty, PIECE_MAX, pieceWord, round2, showQty, STALE_DAYS, TEXT, withUnit,
   type DepotEmployee, type DepotRequest, type Holding, type Kind, type Loss, type PackInfo, type Piece, type Repair, type Tool,
 } from "@/pages/Depot/utils";
-
-export { isLowStock, type DepotEmployee, type Holding, type Kind, type Piece, type Tool };
 
 export function HeldBadge({ takenAt, always = false }: { takenAt: string; always?: boolean }) {
   const d = daysSince(takenAt);

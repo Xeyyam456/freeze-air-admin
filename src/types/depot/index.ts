@@ -8,3 +8,4 @@ export type { PackInfo } from "./PackInfo";
 export type { Piece } from "./Piece";
 export type { Repair } from "./Repair";
 export type { Tool } from "./Tool";
+export type { WriteoffReason } from "./WriteoffReason";

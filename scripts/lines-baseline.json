@@ -1,7 +1,6 @@
 {
   "actions/errorCodes.ts": 141,
   "actions/siteContent.ts": 136,
-  "actions/tools.ts": 295,
   "components/clients/ClientForms.tsx": 205,
   "components/clients/ClientList.tsx": 125,
   "components/clients/LocationLog.tsx": 121,
@@ -11,7 +10,7 @@
   "components/depot/DepotBoard.tsx": 510,
   "components/depot/DepotDocs.tsx": 342,
   "components/depot/DepotExcel.tsx": 361,
-  "components/depot/DepotForms.tsx": 824,
+  "components/depot/DepotForms.tsx": 823,
   "components/depot/HistoryModal.tsx": 207,
   "components/employees/AttendanceBoard.tsx": 303,
   "components/employees/AttendanceCalendar.tsx": 154,
