@@ -5,52 +5,20 @@ import { DatePicker } from "@/components/DatePicker";
 import { Modal } from "@/shared/components/Modal";
 import { Page } from "@/components/Page";
 import { Avatar } from "@/components/employees/EmployeeForms";
-import { MONTHS_AZ, todayBaku } from "@/lib/attendance";
-import type { Tables } from "@/types/database";
+import { todayBaku } from "@/lib/attendance";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
 import { useData } from "@/lib/useData";
+import type { FuelPayment as Payment, FuelType, MileageRow as Row, Period } from "@/types/fuel";
+import { addDays, addMonths, dayName, numDate, timeBaku } from "@/pages/Fuel/shared/dates";
+import { FUEL_TYPES, fuelLabel } from "@/pages/Fuel/shared/fuelTypes";
+import { azn, BAL_CLS, sum } from "@/pages/Fuel/shared/money";
+import { PERIOD_LABEL, PERIOD_TOTAL } from "@/pages/Fuel/shared/period";
+import { rangeOf } from "@/pages/Fuel/shared/rangeOf";
 
-type Row = Tables<"mileage_logs">;
-type Payment = Tables<"fuel_payments">;
-type Period = "day" | "week" | "month";
 
-const azn = (n: number) => `${n.toFixed(2)} ₼`;
-// Yanacaq növü (0079)
-export const FUEL_TYPES = { petrol: "Benzin", diesel: "Dizel" } as const;
-type FuelType = keyof typeof FUEL_TYPES;
-const fuelLabel = (t: string | null) => (t && t in FUEL_TYPES ? FUEL_TYPES[t as FuelType] : null);
-const timeBaku = (iso: string) =>
-  new Intl.DateTimeFormat("az", { timeZone: "Asia/Baku", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(iso));
 
-// Tarix köməkçiləri ("YYYY-MM-DD", UTC günorta ilə: saat qurşağı sürüşməsin)
-const d12 = (iso: string) => new Date(`${iso}T12:00:00Z`);
-const isoOf = (d: Date) => d.toISOString().slice(0, 10);
-function addDays(iso: string, n: number) { const d = d12(iso); d.setUTCDate(d.getUTCDate() + n); return isoOf(d); }
-function addMonths(iso: string, n: number) { const d = d12(`${iso.slice(0, 7)}-01`); d.setUTCMonth(d.getUTCMonth() + n); return isoOf(d); }
-// 2026-10-25 → 25.10.2026 (cədvəllərdə kiçik yazılır)
-const numDate = (iso: string) => `${iso.slice(8, 10)}.${iso.slice(5, 7)}.${iso.slice(0, 4)}`;
-const dayName = (iso: string) => `${Number(iso.slice(8))} ${MONTHS_AZ[Number(iso.slice(5, 7)) - 1]}`;
-
-// Dövrün aralığı və adı: gün; həftə = şirkətin iş həftəsi, 6 gün (bazar ertəsi – şənbə, bazar istirahət); ay.
-// workdays: dövrdəki iş günlərinin sayı (bazarsız), "5 / 6 iş günü" yazmaq üçün
-function rangeOf(period: Period, anchor: string) {
-  if (period === "day") return { from: anchor, to: anchor, label: dayName(anchor), short: numDate(anchor), full: numDate(anchor), workdays: 1 };
-  if (period === "week") {
-    const from = addDays(anchor, -((d12(anchor).getUTCDay() + 6) % 7));
-    const to = addDays(from, 5);
-    const same = from.slice(5, 7) === to.slice(5, 7);
-    return { from, to, label: same ? `${Number(from.slice(8))}–${dayName(to)}` : `${dayName(from)} – ${dayName(to)}`, short: `${numDate(from).slice(0, 5)} – ${numDate(to)}`, full: `${numDate(from)} – ${numDate(to)}`, workdays: 6 };
-  }
-  const from = `${anchor.slice(0, 7)}-01`;
-  const to = addDays(addMonths(from, 1), -1);
-  let workdays = 0;
-  for (let d = from; d <= to; d = addDays(d, 1)) if (d12(d).getUTCDay() !== 0) workdays++;
-  return { from, to, label: `${MONTHS_AZ[Number(anchor.slice(5, 7)) - 1]} ${anchor.slice(0, 4)}`, short: `${MONTHS_AZ[Number(anchor.slice(5, 7)) - 1]} ${anchor.slice(0, 4)}`, full: `${MONTHS_AZ[Number(anchor.slice(5, 7)) - 1]} ${anchor.slice(0, 4)}`, workdays };
-}
-const PERIOD_LABEL: Record<Period, string> = { day: "Gün", week: "Həftə", month: "Ay" };
-const PERIOD_TOTAL: Record<Period, string> = { day: "Günün yanacaq pulu", week: "Həftənin yanacaq pulu", month: "Ayın yanacaq pulu" };
 
 // mFrom..mTo: seçilmiş dövrün ayı — balans aylıq hesablanır (istifadəçi: "hər ayın öz hesabı olacaq")
 async function fetchFuel(from: string, to: string, today: string, mFrom: string, mTo: string) {
@@ -159,7 +127,6 @@ export function balanceText(b: number) {
   if (v > 0) return { tone: "over", text: `${azn(v)} artıq verilib` } as const;
   return { tone: "even", text: "Hesab bağlıdır" } as const;
 }
-const BAL_CLS = { debt: "text-[#fb7185]", over: "text-amber-300", even: "text-[#4ade80]" } as const;
 
 // Ustanın cavabı (0080): gözləyir / aldı / almadığını deyir
 function PayStatus({ p }: { p: Payment }) {
@@ -228,15 +195,6 @@ function PayModal({ name, employeeId, today, suggest, onClose }: { name: string;
   );
 }
 
-const sum = (rows: Row[]) => {
-  const closed = rows.filter((r) => r.km !== null);
-  return {
-    km: closed.reduce((n, r) => n + (r.km ?? 0), 0),
-    liters: closed.reduce((n, r) => n + Number(r.liters ?? 0), 0),
-    cost: closed.reduce((n, r) => n + Number(r.cost ?? 0), 0),
-    days: closed.length,
-  };
-};
 
 // Bu günün hesabatının qısa vəziyyəti: yazılmayıb / açıq (yalnız səhər) / bağlı
 function todayState(r: Row | undefined) {
