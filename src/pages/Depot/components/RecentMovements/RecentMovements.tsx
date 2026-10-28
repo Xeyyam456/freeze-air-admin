@@ -1,11 +1,11 @@
 import { History } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
-import type { Movement } from "@/types/depot";
-import { localDate, dayOf, timeOf, dayLabel, KINDS, amount } from "@/pages/Depot/utils/journal";
+import type { Movement, RecentMovementsProps } from "@/types/depot";
+import { localDate, dayOf, timeOf, dayLabel, KINDS, amount } from "../../utils/journal";
 
 // Son hərəkətlər (Depo səhifəsinin sağ sütunu): hər iki növ, son 12; Realtime ilə yenilənir (revalidate)
-export function RecentMovements({ onOpenAll, limit = 12 }: { onOpenAll: () => void; limit?: number }) {
+export function RecentMovements({ onOpenAll, limit = 12 }: RecentMovementsProps) {
   const rows = useData("depot-tool-history", async () => {
     const { data } = await createClient().from("stock_movements").select("*, employees(full_name)").order("at", { ascending: false }).limit(limit);
     return (data ?? []) as Movement[];

@@ -1,8 +1,9 @@
-import { ArrowRight, CheckCircle2, Wrench } from "lucide-react";
-import { SOFT, type Tone } from "@/pages/Depot/components/ui";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { SOFT } from "../../constants/tones";
+import type { AttentionCardProps } from "@/types/depot";
 
 // Diqqət: dörd sətir həmişə görünür (yanındakı "Son hərəkətlər" ilə eyni hündürlükdə, simmetrik); 0 olanlar sakit, yaşıl ✓ ilə
-export function AttentionCard({ items }: { items: { icon: typeof Wrench; tone: Tone; label: string; hint: string; n: number; onClick: () => void }[] }) {
+export function AttentionCard({ items }: AttentionCardProps) {
   const clear = items.every((i) => i.n === 0);
   return (
     <section className="flex h-full flex-col rounded-3xl border border-line bg-surface p-5">

@@ -2,15 +2,15 @@ import { useMemo, useState } from "react";
 import { History, Search } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
 import { useData } from "@/lib/useData";
-import { DHead } from "@/pages/Depot/components/ui";
-import type { Kind, Movement } from "@/types/depot";
+import { DHead } from "../DHead";
+import type { Movement, HistoryModalProps } from "@/types/depot";
 import { norm } from "@/shared/utils/norm";
-import { dayOf, timeOf, dayLabel, KINDS, FILTERS, amount } from "@/pages/Depot/utils/journal";
+import { dayOf, timeOf, dayLabel, KINDS, FILTERS, amount } from "../../utils/journal";
 import { fetchJournal } from "@/services/depot/fetchJournal";
 
 // Depo jurnalı: hər say dəyişikliyi (mədaxil, vermə, qaytarma, sərf, silinmə, sayım, təmir), kim edib, kim təsdiqləyib.
 // toolId verilsə yalnız həmin alətin hərəkətləri.
-export function HistoryModal({ kind, toolId, toolName, onClose }: { kind: Kind; toolId?: number; toolName?: string; onClose: () => void }) {
+export function HistoryModal({ kind, toolId, toolName, onClose }: HistoryModalProps) {
   const rows = useData("depot-journal", () => fetchJournal(kind, toolId), [kind, toolId]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number][0]>("all");

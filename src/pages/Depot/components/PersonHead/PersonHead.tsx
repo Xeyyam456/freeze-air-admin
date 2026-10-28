@@ -1,9 +1,9 @@
 import { X } from "lucide-react";
 import { Avatar } from "@/components/employees/EmployeeForms";
-import type { DepotEmployee } from "@/types/depot";
+import type { PersonHeadProps } from "@/types/depot";
 
 // Ustanın pəncərəsinin bənövşəyi başlığı: şəkil, ad, vəzifə, bağla + 3 göstərici
-export function PersonHead({ emp, toolsN, matsN, waiting, onClose }: { emp: DepotEmployee; toolsN: number; matsN: number; waiting: number; onClose: () => void }) {
+export function PersonHead({ emp, toolsN, matsN, waiting, onClose }: PersonHeadProps) {
   return (
     <div className="-mx-6 -mt-6 max-sm:-mx-4 max-sm:-mt-5 mb-5 overflow-hidden rounded-t-[18px] bg-[linear-gradient(135deg,#7c3aed,#4f46e5_60%,#2563eb)] px-6 max-sm:px-4 pb-5 pt-5 text-white">
       <div className="flex items-start gap-4">

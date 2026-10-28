@@ -1,23 +1,26 @@
 import { useActionState, useState } from "react";
 import { PackagePlus } from "lucide-react";
-import { addTool, createReceipt } from "@/services/depot";
+import { addTool } from "@/services/depot/tools";
+import { createReceipt } from "@/services/depot/documents";
 import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
-import { DHead } from "@/pages/Depot/components/ui";
-import { isPacked, parseQty, round2, TEXT, withUnit, type Kind, type Tool } from "@/pages/Depot/utils";
-import { ToolFields } from "@/pages/Depot/components/ToolFields";
-import { NoteRow } from "@/pages/Depot/components/NoteRow";
-import { Seg } from "@/pages/Depot/components/Seg";
-import { AmountInput } from "@/pages/Depot/components/AmountInput";
+import { DHead } from "../DHead";
+import { isPacked, parseQty, round2, withUnit } from "../../utils/quantity";
+import { TEXT } from "../../constants/text";
+import type { Kind, ReceiptModalProps } from "@/types/depot";
+import { ToolFields } from "../ToolFields";
+import { NoteRow } from "../NoteRow";
+import { Seg } from "../Seg";
+import { AmountInput } from "../AmountInput";
 
 // Depo sənədləri (0084): Mədaxil, Silinmə aktı, Sayım, Təmirə göndər. Hamısı yazılır və təsdiqdən sonra say dəyişir
 // (təmirdən başqa: təmir dərhal depodakı boş saydan çıxır, alət yenə depoya aiddir).
 // Pəncərələr sadədir (istifadəçi: "gərəksiz şey istəmirəm"): başlıq, lazım olan sahələr, qeyd + 📎, düymə.
 
 // Mədaxil: siyahıdan seçilən alətə/materiala miqdar və ya yeni ad. Təsdiqlənəndə depoya düşür.
-export function ReceiptModal({ tools, initialKind, initialToolId = null, onClose }: { tools: Tool[]; initialKind: Kind; initialToolId?: number | null; onClose: () => void }) {
+export function ReceiptModal({ tools, initialKind, initialToolId = null, onClose }: ReceiptModalProps) {
   const [kind, setKind] = useState<Kind>(initialKind);
   const [mode, setMode] = useState<"existing" | "new">(tools.some((t) => t.kind === initialKind) ? "existing" : "new");
   const [picked, setPicked] = useState<number | null>(initialToolId);

@@ -2,14 +2,15 @@ import { useState } from "react";
 import { KeyRound, UserPlus, Users, X } from "lucide-react";
 import { setStorekeeper } from "@/services/storekeeper/storekeeper";
 import { ConfirmButton } from "@/components/ConfirmButton";
-import { AccountSection, Avatar, type Accounts } from "@/components/employees/EmployeeForms";
+import { AccountSection, Avatar } from "@/components/employees/EmployeeForms";
 import { ToolPicker } from "@/components/ToolPicker";
-import type { DepotEmployee } from "@/pages/Depot/utils";
-import { NewKeeperForm } from "@/pages/Depot/keeper/NewKeeperForm";
+import { NewKeeperForm } from "../NewKeeperForm";
+import type { StorekeepersCardProps } from "@/types/storekeeper";
+import { Button } from "@/shared/components/Button";
 
 // Depo məsulları (yalnız admin görür, başlıqdakı ⚙ pəncərəsində): yeni depo məsulu yarat + giriş hesabı aç, mövcud əməkdaşı təyin et, hesabı idarə et.
 // Depo məsulu usta paneli ilə daxil olur: orada yalnız ona görünən "Depo" bölməsini idarə edir.
-export function StorekeepersCard({ employees, accounts, selfId }: { employees: DepotEmployee[]; accounts: Accounts; selfId: number | null }) {
+export function StorekeepersCard({ employees, accounts, selfId }: StorekeepersCardProps) {
   const keepers = employees.filter((e) => e.is_storekeeper);
   const [picked, setPicked] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
@@ -72,10 +73,10 @@ export function StorekeepersCard({ employees, accounts, selfId }: { employees: D
       <div className="flex gap-2">
         <ToolPicker items={candidates} value={picked} onChange={setPicked} name="employee_id" icon={Users}
           placeholder="Əməkdaş seç..." emptyLabel="Seçiləcək əməkdaş yoxdur" searchLabel="Əməkdaş axtar..." />
-        <button type="button" disabled={!picked} className="btn btn-primary btn-sm !h-9"
+        <Button size="sm" disabled={!picked} className="!h-9"
           onClick={async () => { if (picked) { await setStorekeeper(picked, true); setPicked(null); } }}>
           Təyin et
-        </button>
+        </Button>
       </div>
     </div>
   );

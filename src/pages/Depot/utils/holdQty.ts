@@ -1,4 +1,5 @@
-import { fmt, type Holding, type Tool } from "@/pages/Depot/utils";
+import { fmt } from "./quantity";
+import type { Holding, Tool } from "@/types/depot";
 
 // Bir ustadakı say: "×2" (alət) | "5 metr" (material)
 export function holdQty(h: Holding, t: Tool) {

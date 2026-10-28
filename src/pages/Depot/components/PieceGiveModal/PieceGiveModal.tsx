@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { PackageOpen, Users } from "lucide-react";
-import { givePiece } from "@/services/depot";
+import { givePiece } from "@/services/depot/assignments";
 import { Modal } from "@/shared/components/Modal";
 import { QuantityInput } from "@/components/QuantityInput";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
-import { DHead } from "@/pages/Depot/components/ui";
-import { fmt, isPacked, pieceWord, round2, type DepotEmployee, type Piece, type Tool } from "@/pages/Depot/utils";
+import { DHead } from "../DHead";
+import { fmt, isPacked, pieceWord, round2 } from "../../utils/quantity";
+import type { PieceGiveModalProps } from "@/types/depot";
+import { Button } from "@/shared/components/Button";
 
 // Parçanı kimə və nə qədər verəsən: hamısı və ya bir hissəsi (qalan hissə depoda parça kimi qalır).
 // Açıq balon bölünmür: bütöv verilir.
-export function PieceGiveModal({ piece, tool, employees, onClose }: { piece: Piece; tool: Tool; employees: DepotEmployee[]; onClose: () => void }) {
+export function PieceGiveModal({ piece, tool, employees, onClose }: PieceGiveModalProps) {
   const unit = tool.unit;
   const whole = isPacked(tool);
   const [picked, setPicked] = useState<number | null>(null);
@@ -46,7 +48,7 @@ export function PieceGiveModal({ piece, tool, employees, onClose }: { piece: Pie
           <ToolPicker items={items} value={picked} onChange={setPicked} name="employee_id" icon={Users}
             placeholder="Kimə verilir?" emptyLabel="Aktiv əməkdaş yoxdur" searchLabel="Usta axtar..." />
         </div>
-        <button type="button" disabled={pending || !valid} onClick={give} className="btn btn-primary btn-sm !h-9">{pending ? "..." : "Ver"}</button>
+        <Button size="sm" disabled={pending || !valid} onClick={give} className="!h-9">{pending ? "..." : "Ver"}</Button>
       </div>
     </Modal>
   );

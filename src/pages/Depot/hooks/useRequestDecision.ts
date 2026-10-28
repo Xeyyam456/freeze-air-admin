@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { decideRequest, depotFileUrl } from "@/services/depot";
+import { decideRequest } from "@/services/depot/documents";
+import { depotFileUrl } from "@/services/depot/files";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";

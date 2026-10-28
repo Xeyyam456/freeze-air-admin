@@ -1,6 +1,8 @@
-import { dateAz, daysSince, STALE_DAYS } from "@/pages/Depot/utils";
+import { dateAz, daysSince } from "../../utils/dates";
+import { STALE_DAYS } from "../../constants/limits";
+import type { HeldBadgeProps } from "@/types/depot";
 
-export function HeldBadge({ takenAt, always = false }: { takenAt: string; always?: boolean }) {
+export function HeldBadge({ takenAt, always = false }: HeldBadgeProps) {
   const d = daysSince(takenAt);
   const stale = d >= STALE_DAYS;
   if (!stale && !always) return null;

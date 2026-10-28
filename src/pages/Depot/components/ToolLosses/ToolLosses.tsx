@@ -1,11 +1,11 @@
 import { Trash2 } from "lucide-react";
-import type { Loss } from "@/types/depot";
+import type { ToolLossesProps } from "@/types/depot";
 import { REASONS } from "../../constants/requests";
 import { dateAz } from "../../utils/dates";
 import { fmt } from "../../utils/quantity";
 
 // Silinənlər: neçə ədəd, hansı səbəblə, nə vaxt (təsdiqlənmiş silinmə aktları)
-export function ToolLosses({ losses, unit }: { losses: Loss[]; unit: string }) {
+export function ToolLosses({ losses, unit }: ToolLossesProps) {
   return (
     <div className="mt-3 rounded-2xl border border-[#fecaca] bg-[#fff5f5] px-4 py-3">
       <p className="mb-1.5 flex items-center gap-2 text-sm font-bold text-[#b91c1c]"><Trash2 size={15} /> Silinib</p>

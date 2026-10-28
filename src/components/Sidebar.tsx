@@ -8,7 +8,7 @@ import { useAuth } from "@/auth/AuthProvider";
 import { LogoutButton } from "@/components/LogoutButton";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
-import { isLowStock } from "@/pages/Depot/utils";
+import { isLowStock } from "@/pages/Depot/utils/stock";
 
 type Badge = "requests" | "tasks" | "stock" | "leave";
 

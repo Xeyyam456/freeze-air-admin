@@ -1,11 +1,14 @@
 import { Package, Wrench } from "lucide-react";
-import { SOFT, type Tone } from "@/pages/Depot/components/ui";
-import { fmt, isLowStock, lossText, REASONS, unitOf, type Loss, type Tool } from "@/pages/Depot/utils";
-import { inStock } from "@/pages/Depot/utils/inStock";
-import { StatusDot } from "@/pages/Depot/components/StatusDot";
+import { SOFT } from "../../constants/tones";
+import type { Tone, ToolRowProps } from "@/types/depot";
+import { fmt, unitOf } from "../../utils/quantity";
+import { isLowStock, lossText } from "../../utils/stock";
+import { REASONS } from "../../constants/requests";
+import { inStock } from "../../utils/inStock";
+import { StatusDot } from "../StatusDot";
 
 // Cədvəl sətri: ad (ikon), depoda, ustalarda, vəziyyət, "Ver". Sətrə basanda alətin pəncərəsi açılır.
-export function ToolRow({ t, losses, canManage, onOpen, onGive }: { t: Tool; losses: Loss[]; canManage: boolean; onOpen: () => void; onGive: () => void }) {
+export function ToolRow({ t, losses, canManage, onOpen, onGive }: ToolRowProps) {
   const material = t.kind === "material";
   const n = inStock(t);
   const low = n > 0 && isLowStock(t);

@@ -1,11 +1,13 @@
 import { Undo2 } from "lucide-react";
-import { returnTool } from "@/services/depot";
+import { returnTool } from "@/services/depot/assignments";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { toast } from "@/lib/toast";
-import { dateAz, fmt, type Holding, type Tool } from "@/pages/Depot/utils";
+import { dateAz } from "../../utils/dates";
+import { fmt } from "../../utils/quantity";
+import type { DisputeRowProps } from "@/types/depot";
 
 // Usta "Almadım" deyib: depo məsulu yoxlayır; doğrudursa depoya qaytarır (təhvil bağlanır)
-export function DisputeRow({ h, tool }: { h: Holding; tool: Tool | undefined }) {
+export function DisputeRow({ h, tool }: DisputeRowProps) {
   const u = tool?.kind === "material" ? tool.unit : "ədəd";
   return (
     <li className="flex items-center gap-3 py-2.5">

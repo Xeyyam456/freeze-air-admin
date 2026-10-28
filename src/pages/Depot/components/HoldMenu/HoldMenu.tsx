@@ -3,11 +3,12 @@ import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
-import { SOFT, type Tone } from "@/pages/Depot/components/ui";
+import { SOFT } from "../../constants/tones";
+import type { HoldMenuProps } from "@/types/depot";
 
 // Ustanın üzərindəkilər: "3 alət ▾" düyməsi, basanda siyahı açılır (10 alət olsa da sətir səliqəli qalır).
 // Siyahı body-yə çıxır (portal): cədvəlin içində kəsilməsin. Altda "Pəncərədə aç" → ustanın pəncərəsi.
-export function HoldMenu({ items, tone, word, onOpen }: { items: { name: string; qty: string }[]; tone: Tone; word: string; onOpen: () => void }) {
+export function HoldMenu({ items, tone, word, onOpen }: HoldMenuProps) {
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const btn = useRef<HTMLButtonElement>(null);
   useEscapeLayer(() => setPos(null), pos !== null);

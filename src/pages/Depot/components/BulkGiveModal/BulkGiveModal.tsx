@@ -1,13 +1,17 @@
 import { useMemo, useState } from "react";
 import { Search, Send } from "lucide-react";
-import { giveTools } from "@/services/depot";
+import { giveTools } from "@/services/depot/assignments";
 import { Modal } from "@/shared/components/Modal";
 import { toast } from "@/lib/toast";
-import { DHead } from "@/pages/Depot/components/ui";
-import { norm, parseQty, round2, TEXT, withUnit, type DepotEmployee, type Kind, type Tool } from "@/pages/Depot/utils";
+import { DHead } from "../DHead";
+import { norm } from "@/shared/utils/norm";
+import { parseQty, round2, withUnit } from "../../utils/quantity";
+import { TEXT } from "../../constants/text";
+import type { Tool, BulkGiveModalProps } from "@/types/depot";
+import { Button } from "@/shared/components/Button";
 
 // Bir ustaya bir neçə alət/material birdən: siyahıdan seç, hər birinin sayını yaz, bir düymə ilə ver
-export function BulkGiveModal({ emp, kind, tools, onClose }: { emp: DepotEmployee; kind: Kind; tools: Tool[]; onClose: () => void }) {
+export function BulkGiveModal({ emp, kind, tools, onClose }: BulkGiveModalProps) {
   const [query, setQuery] = useState("");
   const [qty, setQty] = useState<Record<number, string>>({}); // seçilənlər: id → yazılan say (mətn: sahəni tam silib yenidən yazmaq olsun)
   const num = (id: number) => parseQty(qty[id] ?? "");
@@ -78,10 +82,10 @@ export function BulkGiveModal({ emp, kind, tools, onClose }: { emp: DepotEmploye
       )}
 
       <div className="mt-4 flex gap-2 border-t border-line pt-4">
-        <button type="button" disabled={pending || !valid} onClick={give} className="btn btn-primary flex-1">
+        <Button disabled={pending || !valid} onClick={give} className="flex-1">
           {pending ? "Gözləyin..." : chosen.length ? `Seçilənləri ver (${chosen.length})` : `Yuxarıdan ${TEXT[kind].word} seç`}
-        </button>
-        <button type="button" onClick={onClose} className="btn btn-cancel">Ləğv et</button>
+        </Button>
+        <Button variant="cancel" onClick={onClose}>Ləğv et</Button>
       </div>
     </Modal>
   );

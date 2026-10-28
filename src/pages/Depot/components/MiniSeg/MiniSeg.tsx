@@ -1,7 +1,8 @@
 
+import type { MiniSegProps } from "@/types/depot";
 
 // Kiçik keçid (kq | balon, işlədib | ustada qalır)
-export function MiniSeg<T extends string | boolean>({ value, onChange, items, label }: { value: T; onChange: (v: T) => void; items: [T, string][]; label: string }) {
+export function MiniSeg<T extends string | boolean>({ value, onChange, items, label }: MiniSegProps<T>) {
   return (
     <span className="inline-flex shrink-0 gap-0.5 rounded-lg bg-line/60 p-0.5" role="tablist" aria-label={label}>
       {items.map(([v, l]) => (

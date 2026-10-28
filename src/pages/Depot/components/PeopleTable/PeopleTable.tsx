@@ -1,8 +1,8 @@
-import type { DepotBoardState } from "@/types/depot";
+import type { PeopleTableProps } from "@/types/depot";
 import { PersonRow } from "../PersonRow";
 
 // Ustalar cədvəli (sütun başlıqları sürüşmədə yapışıq); sətrə basanda ustanın pəncərəsi
-export function PeopleTable({ b }: { b: DepotBoardState }) {
+export function PeopleTable({ b }: PeopleTableProps) {
   if (b.people.length === 0) return <p className="muted border-t border-line py-10 text-center text-sm">Heç kim tapılmadı.</p>;
   return (
     <table className="w-full border-t border-line text-sm">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Package, Plus, Undo2, Wrench } from "lucide-react";
-import { returnAllTools } from "@/services/depot";
+import { returnAllTools } from "@/services/depot/assignments";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Modal } from "@/shared/components/Modal";
 import { toast } from "@/lib/toast";

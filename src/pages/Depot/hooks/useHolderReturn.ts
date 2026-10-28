@@ -1,6 +1,6 @@
 import { useActionState, useState } from "react";
-import { returnTool, settleMaterial } from "@/services/depot";
-import { useLoggedUse } from "@/pages/Depot/hooks/useLoggedUse";
+import { returnTool, settleMaterial } from "@/services/depot/assignments";
+import { useLoggedUse } from "./useLoggedUse";
 import { useOnSuccess } from "@/components/forms";
 import type { Holding, PackInfo, Tool } from "@/types/depot";
 import { PIECE_MAX } from "../constants/limits";

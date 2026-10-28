@@ -1,8 +1,8 @@
 import { Input } from "@/shared/components/Input";
-import type { RequestDecision } from "@/types/depot";
+import type { RequestEditProps } from "@/types/depot";
 
 // Sənədin miqdarını düzəlt (✎): material qaytarmasında işlədib + qaytarır, qalanında faktiki miqdar
-export function RequestEdit({ d }: { d: RequestDecision }) {
+export function RequestEdit({ d }: RequestEditProps) {
   return (
     <div className="mt-2 flex flex-wrap items-center gap-2 rounded-xl bg-bg p-2.5 sm:ml-[6.25rem]">
       {d.materialReturn ? (

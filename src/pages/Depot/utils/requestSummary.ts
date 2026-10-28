@@ -1,4 +1,6 @@
-import { fmt, REASONS, type DepotRequest } from "@/pages/Depot/utils";
+import { fmt } from "./quantity";
+import { REASONS } from "../constants/requests";
+import type { DepotRequest } from "@/types/depot";
 
 // Sənədin əsas sətri: nə, nə qədər
 export function summary(r: DepotRequest) {

@@ -3,13 +3,15 @@ import { FileSpreadsheet, Users } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
-import { DHead, SOFT } from "@/pages/Depot/components/ui";
-import type { DepotEmployee, Holding, Tool } from "@/pages/Depot/utils";
-import { type ReportKind, exportDepot } from "@/pages/Depot/utils/excel/exportDepot";
-import { OPTIONS } from "@/pages/Depot/constants/excelOptions";
+import { DHead } from "../DHead";
+import { SOFT } from "../../constants/tones";
+import type { ExcelModalProps } from "@/types/depot";
+import { type ReportKind, exportDepot } from "../../utils/excel/exportDepot";
+import { OPTIONS } from "../../constants/excelOptions";
+import { Button } from "@/shared/components/Button";
 
 // "Daha çox → Excel": hansı hesabat (və Ustalarda hansı usta) seçilir, bir düymə ilə yüklənir
-export function ExcelModal({ tools, holdings, employees, onClose }: { tools: Tool[]; holdings: Holding[]; employees: DepotEmployee[]; onClose: () => void }) {
+export function ExcelModal({ tools, holdings, employees, onClose }: ExcelModalProps) {
   const [kind, setKind] = useState<ReportKind>("all");
   const [emp, setEmp] = useState<number | null>(null);
   const [pending, setPending] = useState(false);
@@ -56,8 +58,8 @@ export function ExcelModal({ tools, holdings, employees, onClose }: { tools: Too
         </div>
       )}
       <div className="mt-5 flex gap-2 max-sm:mt-4">
-        <button type="button" disabled={pending} onClick={run} className="btn btn-primary min-w-0 flex-1"><FileSpreadsheet size={16} /> {pending ? "Hazırlanır..." : "Yüklə"}</button>
-        <button type="button" onClick={onClose} className="btn btn-cancel max-sm:min-w-0 max-sm:flex-1">Ləğv et</button>
+        <Button disabled={pending} onClick={run} className="min-w-0 flex-1"><FileSpreadsheet size={16} /> {pending ? "Hazırlanır..." : "Yüklə"}</Button>
+        <Button variant="cancel" onClick={onClose} className="max-sm:min-w-0 max-sm:flex-1">Ləğv et</Button>
       </div>
     </Modal>
   );

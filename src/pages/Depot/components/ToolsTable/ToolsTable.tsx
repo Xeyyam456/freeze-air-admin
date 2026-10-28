@@ -1,9 +1,9 @@
-import type { DepotBoardState, Loss } from "@/types/depot";
+import type { ToolsTableProps } from "@/types/depot";
 import { MaterialRow } from "../MaterialRow";
 import { ToolRow } from "../ToolRow";
 
 // Alətlər / Materiallar cədvəli (materialın öz sütunları var); sətrə basanda alətin pəncərəsi, "Ver" → sürətli vermə
-export function ToolsTable({ b, losses, canManage, onOpenTool }: { b: DepotBoardState; losses: Loss[]; canManage: boolean; onOpenTool: (id: number) => void }) {
+export function ToolsTable({ b, losses, canManage, onOpenTool }: ToolsTableProps) {
   const material = b.kind === "material";
   return (
     <table className="w-full border-t border-line text-sm">

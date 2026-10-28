@@ -1,13 +1,14 @@
 import { useActionState } from "react";
 import { Pencil } from "lucide-react";
-import { updateTool } from "@/services/depot";
-import { ToolFields } from "@/pages/Depot/components/ToolFields";
+import { updateTool } from "@/services/depot/tools";
+import { ToolFields } from "../ToolFields";
 import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
-import { DHead } from "@/pages/Depot/components/ui";
-import { TEXT, type Kind, type Tool } from "@/pages/Depot/utils";
+import { DHead } from "../DHead";
+import { TEXT } from "../../constants/text";
+import type { Kind, EditToolModalProps } from "@/types/depot";
 
-export function EditToolModal({ tool, onClose }: { tool: Tool; onClose: () => void }) {
+export function EditToolModal({ tool, onClose }: EditToolModalProps) {
   const [state, action, pending] = useActionState(updateTool.bind(null, tool.id), null);
   useOnSuccess(state, onClose);
   const kind = tool.kind as Kind;

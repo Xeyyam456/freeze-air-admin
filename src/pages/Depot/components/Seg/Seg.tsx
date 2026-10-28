@@ -1,4 +1,6 @@
-export function Seg<T extends string>({ value, onChange, items, label }: { value: T; onChange: (v: T) => void; items: readonly (readonly [T, string])[]; label: string }) {
+import type { SegProps } from "@/types/depot";
+
+export function Seg<T extends string>({ value, onChange, items, label }: SegProps<T>) {
   return (
     <div className="inline-flex shrink-0 gap-1 rounded-xl bg-line/60 p-1 max-sm:flex max-sm:w-full" role="tablist" aria-label={label}>
       {items.map(([v, l]) => (

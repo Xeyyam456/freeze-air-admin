@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
-import { createWriteoff, type WriteoffReason } from "@/services/depot";
+import { createWriteoff } from "@/services/depot/documents";
+import type { WriteoffReason, WriteoffModalProps } from "@/types/depot";
 import { ActionForm, Buttons } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { toast } from "@/lib/toast";
-import { DHead } from "@/pages/Depot/components/ui";
-import { fmt, parseQty, pieceWord, REASONS, round2, unitOf, withUnit, type Tool } from "@/pages/Depot/utils";
-import { NoteRow } from "@/pages/Depot/components/NoteRow";
-import type { WriteoffSource } from "@/types/depot/WriteoffSource";
+import { DHead } from "../DHead";
+import { fmt, parseQty, pieceWord, round2, unitOf, withUnit } from "../../utils/quantity";
+import { REASONS } from "../../constants/requests";
+import { NoteRow } from "../NoteRow";
+
 
 // Silinmə aktı: xarab, itib, oğurlanıb, sərf olunub. Mənbə: depo (boş tam hissə), parça (açıq balon) və ya ustadakı.
-export function WriteoffModal({ tool, source, onClose }: { tool: Tool; source: WriteoffSource; onClose: () => void }) {
+export function WriteoffModal({ tool, source, onClose }: WriteoffModalProps) {
   const unit = unitOf(tool);
   const limit = source.kind === "piece" ? source.piece.length : source.kind === "holding" ? source.holding.quantity : tool.available;
   const [reason, setReason] = useState<WriteoffReason>(source.kind === "piece" ? "used" : source.kind === "holding" ? "lost" : "broken");

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Page } from "@/components/Page";
-import { PendingBlock } from "@/pages/Depot/components/PendingBlock";
-import { DepotBoard } from "@/pages/Depot/components/DepotBoard";
-import { type DepotView } from "@/types/depot/DepotView";
+import { PendingBlock } from "../PendingBlock";
+import { DepotBoard } from "../DepotBoard";
+import type { DepotView } from "@/types/depot/DepotView";
 import type { DepotModal, DepotScreenProps, Kind, Tool } from "@/types/depot";
 import { isLowStock } from "../../utils/stock";
 import { DepotActions } from "./DepotActions";

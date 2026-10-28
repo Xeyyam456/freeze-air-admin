@@ -3,14 +3,14 @@ import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { ChevronDown, Clock } from "lucide-react";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
-import type { Holding, Tool } from "@/pages/Depot/utils";
-import { HeldBadge } from "@/pages/Depot/components/HeldBadge";
-import { ReceivedBadge } from "@/pages/Depot/components/ReceivedBadge";
-import { holdQty } from "@/pages/Depot/utils/holdQty";
+import type { Holding, HoldersCellProps } from "@/types/depot";
+import { HeldBadge } from "../HeldBadge";
+import { ReceivedBadge } from "../ReceivedBadge";
+import { holdQty } from "../../utils/holdQty";
 
 // Siyahıda "Kimdədir": həmişə "N usta" düyməsi (1 usta olsa da), basanda ad siyahısı açılır
 // (10 adı sətirə sığdırmaq olmur). Siyahı cədvəlin sürüşməsindən kəsilməsin deyə body-də açılır.
-export function HoldersCell({ holders, tool }: { holders: Holding[]; tool: Tool }) {
+export function HoldersCell({ holders, tool }: HoldersCellProps) {
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const btn = useRef<HTMLButtonElement>(null);
   useEscapeLayer(() => setPos(null), pos !== null);

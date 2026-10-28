@@ -1,10 +1,13 @@
 import { ShoppingCart } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
-import { DHead } from "@/pages/Depot/components/ui";
-import { isLowStock, TEXT, withUnit, type Kind, type Tool } from "@/pages/Depot/utils";
+import { DHead } from "../DHead";
+import { isLowStock } from "../../utils/stock";
+import { TEXT } from "../../constants/text";
+import { withUnit } from "../../utils/quantity";
+import type { Kind, ShoppingModalProps } from "@/types/depot";
 
 // Alınmalı: minimum qalıq həddinə çatan alət və materiallar (həddi olmayan siyahıya düşmür). Sətirdən "Mədaxil".
-export function ShoppingModal({ tools, onReceipt, onClose }: { tools: Tool[]; onReceipt: (t: Tool) => void; onClose: () => void }) {
+export function ShoppingModal({ tools, onReceipt, onClose }: ShoppingModalProps) {
   const low = tools.filter(isLowStock).sort((a, b) => a.kind.localeCompare(b.kind) || a.name.localeCompare(b.name, "az"));
   return (
     <Modal onClose={onClose} labelledBy="shopping-title" className="!max-w-xl">

@@ -1,14 +1,14 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { deleteTool } from "@/services/depot";
+import { deleteTool } from "@/services/depot/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { toast } from "@/lib/toast";
-import type { Holding, Kind, Tool } from "@/types/depot";
+import type { ToolHeadActionsProps } from "@/types/depot";
 import { TEXT } from "../../constants/text";
 import { withUnit } from "../../utils/quantity";
 
 // Alət pəncərəsinin başlığında: redaktə və sil.
 // Silmək yalnız boş olanda: qalıq Silinmə aktı ilə sıfırlanır, ustadakı geri alınır.
-export function ToolHeadActions({ tool, kind, holders, empty, onEdit }: { tool: Tool; kind: Kind; holders: Holding[]; empty: boolean; onEdit: () => void }) {
+export function ToolHeadActions({ tool, kind, holders, empty, onEdit }: ToolHeadActionsProps) {
   return (
     <>
       <button type="button" onClick={onEdit} className="icon-btn" title="Redaktə et" aria-label="Redaktə et"><Pencil size={16} /></button>

@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Wrench } from "lucide-react";
-import { sendRepair } from "@/services/depot";
+import { sendRepair } from "@/services/depot/repairs";
 import { ActionForm, Buttons, Field } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { toast } from "@/lib/toast";
-import { DHead } from "@/pages/Depot/components/ui";
-import { parseQty, withUnit, type Tool } from "@/pages/Depot/utils";
+import { DHead } from "../DHead";
+import { parseQty, withUnit } from "../../utils/quantity";
+import type { RepairModalProps } from "@/types/depot";
 
 // Təmirə göndər: göndərilən say depoda boş sayılmır; qayıdanda "Düzəldi" və ya "Bərpa olunmadı" (silinmə aktı)
-export function RepairModal({ tool, onClose }: { tool: Tool; onClose: () => void }) {
+export function RepairModal({ tool, onClose }: RepairModalProps) {
   const [qtyText, setQtyText] = useState("1");
   const [place, setPlace] = useState("");
   const [note, setNote] = useState("");

@@ -1,12 +1,12 @@
 import { ActionForm } from "@/components/forms";
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
-import type { HolderReturn } from "@/types/depot";
+import type { SettleFormProps } from "@/types/depot";
 import { isPacked, round2, fmt } from "../../utils/quantity";
 import { MiniSeg } from "../MiniSeg";
 
 // Materialın təhvili: usta nə qədər qaytarır (kq | balon) və qalanı işlədib, ya da ustada qalır
-export function SettleForm({ r }: { r: HolderReturn }) {
+export function SettleForm({ r }: SettleFormProps) {
   const { unit, pack, invalid, empty, pending, logged, usedBase, hint } = r;
   return (
     <ActionForm action={r.action} className="mt-2 rounded-xl bg-bg p-3">

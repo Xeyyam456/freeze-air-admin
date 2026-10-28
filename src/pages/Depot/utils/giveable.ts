@@ -1,4 +1,4 @@
-import type { DepotRequest, Tool } from "@/pages/Depot/utils";
+import type { DepotRequest, Tool } from "@/types/depot";
 
 // Ustanın istəyi depodan verilə bilərmi (0086): depodakı boş say istənəndən az deyilsə bəli. Başqa sənədlərdə null.
 export function giveable(r: DepotRequest, tool: Tool | undefined) {

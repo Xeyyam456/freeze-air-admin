@@ -1,15 +1,17 @@
 import { useActionState, useState } from "react";
 import { Users } from "lucide-react";
-import { giveTool } from "@/services/depot";
+import { giveTool } from "@/services/depot/assignments";
 import { ActionForm, useOnSuccess } from "@/components/forms";
 import { giveLimitText, QuantityInput } from "@/components/QuantityInput";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
-import { isPacked, round2, type DepotEmployee, type Tool } from "@/pages/Depot/utils";
-import { MiniSeg } from "@/pages/Depot/components/MiniSeg";
+import { isPacked, round2 } from "../../utils/quantity";
+import type { GiveFormProps } from "@/types/depot";
+import { MiniSeg } from "../MiniSeg";
+import { Button } from "@/shared/components/Button";
 
 // Ustaya ver. Qablı materialda say balonla (standart) və ya kq ilə yazılır; baza həmişə ölçü vahidi ilə işləyir (1 balon → 11,3 kq).
-export function GiveForm({ tool, employees, onDone }: { tool: Tool; employees: DepotEmployee[]; onDone?: () => void }) {
+export function GiveForm({ tool, employees, onDone }: GiveFormProps) {
   const [state, action, pending] = useActionState(giveTool, null);
   const [picked, setPicked] = useState<number | null>(null);
   const [formKey, setFormKey] = useState(0);
@@ -48,7 +50,7 @@ export function GiveForm({ tool, employees, onDone }: { tool: Tool; employees: D
       {packed
         ? <span className="self-center"><MiniSeg value={byPack} onChange={setByPack} items={[[true, tool.pack_name], [false, tool.unit]]} label="Vahid" /></span>
         : <span className="muted self-center text-sm">{unitLabel}</span>}
-      <button type="submit" disabled={pending || !picked} className="btn btn-primary btn-sm !h-9">{pending ? "..." : "Ver"}</button>
+      <Button size="sm" type="submit" disabled={pending || !picked} className="!h-9">{pending ? "..." : "Ver"}</Button>
     </ActionForm>
   );
 }

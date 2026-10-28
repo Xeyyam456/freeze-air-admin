@@ -1,13 +1,13 @@
 import { ArrowLeft, Search, X } from "lucide-react";
 import { Input } from "@/shared/components/Input";
-import type { DepotBoardState, DepotTab, DepotView } from "@/types/depot";
+import type { BoardHeaderProps } from "@/types/depot";
 import { TAB_ICON } from "../../constants/tabIcons";
 import { inStock } from "../../utils/inStock";
 import { fmt } from "../../utils/quantity";
 import { IconTile } from "../IconTile";
 
 // Siyahının başlığı: ← ümumi baxış, rəngli ikon, başlıq + xülasə, axtarış; altında xətli tablar (Alətlər / Materiallar / Ustalar)
-export function BoardHeader({ b, tab, onTab }: { b: DepotBoardState; tab: DepotTab; onTab: (t: DepotView) => void }) {
+export function BoardHeader({ b, tab, onTab }: BoardHeaderProps) {
   const { counts, tDepot, tGiven, tRepair, query, setQuery } = b;
   return (
     <>

@@ -4,7 +4,7 @@ import { isSoundReady, playNotify } from "@/lib/sound";
 import { createClient } from "@/lib/supabase/client";
 import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
-import { requestLabel } from "@/pages/Depot/utils";
+import { requestLabel } from "@/pages/Depot/utils/requests";
 
 // Depo Realtime ilə (0084), yalnız depo məsulu və adminlərdə: yeni sənəd (ustanın qaytarması, istəyi, mədaxil...) → tost + səs;
 // usta verilən aləti "Aldım" / "Almadım" deyəndə tost. Hər dəyişiklikdə Depo səhifəsi və menyu nişanı yenilənir. Ekranda heç nə çəkmir.

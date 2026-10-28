@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { finishRepair } from "@/services/depot";
+import { finishRepair } from "@/services/depot/repairs";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { toast } from "@/lib/toast";
-import { dateAz, daysSince, type Repair } from "@/pages/Depot/utils";
+import { dateAz, daysSince } from "../../utils/dates";
+import type { RepairRowProps } from "@/types/depot";
 
 // Təmirdə olan: harada, nə vaxtdan; qayıdanda "Düzəldi" (depoya) və ya "Bərpa olunmadı" (silinmə aktı gözləməyə düşür)
-export function RepairRow({ r, unit, canManage }: { r: Repair; unit: string; canManage: boolean }) {
+export function RepairRow({ r, unit, canManage }: RepairRowProps) {
   const [pending, setPending] = useState(false);
   async function finish(fixed: boolean) {
     setPending(true);

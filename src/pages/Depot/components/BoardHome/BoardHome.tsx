@@ -1,5 +1,5 @@
 import { AlertTriangle, Clock, Hourglass, Package, Users, Warehouse, Wrench } from "lucide-react";
-import type { DepotBoardState, DepotView } from "@/types/depot";
+import type { BoardHomeProps } from "@/types/depot";
 import { STALE_DAYS } from "../../constants/limits";
 import { inStock } from "../../utils/inStock";
 import { fmt } from "../../utils/quantity";
@@ -8,7 +8,7 @@ import { HubTile } from "../HubTile";
 import { RecentMovements } from "../RecentMovements";
 
 // Ümumi baxış (depo açılanda): 3 kafel (Alətlər, Materiallar, Ustalar), altında Diqqət və Son hərəkətlər yan-yana
-export function BoardHome({ b, onTab, onShopping, onJournal }: { b: DepotBoardState; onTab: (t: DepotView) => void; onShopping: () => void; onJournal: () => void }) {
+export function BoardHome({ b, onTab, onShopping, onJournal }: BoardHomeProps) {
   const { tDepot, tGiven, tRepair, mats, outN, unconfirmedN, staleN } = b;
   return (
     <>

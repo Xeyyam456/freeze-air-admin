@@ -1,7 +1,7 @@
-import { ReceiptModal } from "@/pages/Depot/components/ReceiptModal";
-import { ExcelModal } from "@/pages/Depot/components/ExcelModal";
-import { ShoppingModal } from "@/pages/Depot/components/ShoppingModal";
-import { HistoryModal } from "@/pages/Depot/components/HistoryModal";
+import { ReceiptModal } from "../ReceiptModal";
+import { ExcelModal } from "../ExcelModal";
+import { ShoppingModal } from "../ShoppingModal";
+import { HistoryModal } from "../HistoryModal";
 import type { DepotModalsProps, Kind } from "@/types/depot";
 
 // Başlıqdan açılan pəncərələr: Mədaxil, Alınmalı, Jurnal, Excel

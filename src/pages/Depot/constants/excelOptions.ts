@@ -1,6 +1,6 @@
 import { AlertTriangle, Boxes, Package, Users, Wrench } from "lucide-react";
-import type { Tone } from "@/pages/Depot/components/ui";
-import type { ReportKind } from "@/pages/Depot/utils/excel/exportDepot";
+import type { Tone } from "@/types/depot";
+import type { ReportKind } from "../utils/excel/exportDepot";
 
 export const OPTIONS: { id: ReportKind; icon: typeof Wrench; tone: Tone; title: string; sub: string }[] = [
   { id: "all", icon: Boxes, tone: "green", title: "Tam depo", sub: "Xülasə, alətlər, materiallar, ustalar, silinənlər, təmir — hamısı bir faylda" },

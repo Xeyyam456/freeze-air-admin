@@ -1,8 +1,8 @@
 import { Input } from "@/shared/components/Input";
-import type { RequestDecision } from "@/types/depot";
+import type { RequestRejectProps } from "@/types/depot";
 
 // Rədd səbəbi (istəyə görə) + "Rədd et"
-export function RequestReject({ d }: { d: RequestDecision }) {
+export function RequestReject({ d }: RequestRejectProps) {
   return (
     <div className="mt-2 flex gap-2 sm:ml-[6.25rem]">
       <Input value={d.note} onChange={(e) => d.setNote(e.target.value)} autoFocus placeholder="Rədd səbəbi (istəyə görə)" className="!h-9 flex-1 !text-[13px]" />

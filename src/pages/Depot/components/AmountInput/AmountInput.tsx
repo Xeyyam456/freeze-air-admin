@@ -1,10 +1,9 @@
-import { fmt, isPacked, parseQty, round2, unitOf, type Tool } from "@/pages/Depot/utils";
-import { Seg } from "@/pages/Depot/components/Seg";
+import { fmt, isPacked, parseQty, round2, unitOf } from "../../utils/quantity";
+import type { AmountInputProps } from "@/types/depot";
+import { Seg } from "../Seg";
 
 // Miqdar + vahid: qablı materialda "balon | kq" keçidi (standart balon). Qaytarır: ölçü vahidi ilə miqdar.
-export function AmountInput({ tool, text, onText, byPack, onByPack, label = "Miqdar" }: {
-  tool: Tool | null; text: string; onText: (v: string) => void; byPack: boolean; onByPack: (v: boolean) => void; label?: string;
-}) {
+export function AmountInput({ tool, text, onText, byPack, onByPack, label = "Miqdar" }: AmountInputProps) {
   const packed = isPacked(tool);
   const n = parseQty(text);
   return (

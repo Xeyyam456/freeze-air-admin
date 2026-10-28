@@ -1,12 +1,15 @@
 import { Package } from "lucide-react";
-import { IconTile, type Tone } from "@/pages/Depot/components/ui";
-import { fmt, isLowStock, isPacked, lossText, pieceWord, REASONS, round2, type Loss, type Tool } from "@/pages/Depot/utils";
-import { inStock } from "@/pages/Depot/utils/inStock";
-import { StatusDot } from "@/pages/Depot/components/StatusDot";
+import { IconTile } from "../IconTile";
+import type { Tone, MaterialRowProps } from "@/types/depot";
+import { fmt, isPacked, pieceWord, round2 } from "../../utils/quantity";
+import { isLowStock, lossText } from "../../utils/stock";
+import { REASONS } from "../../constants/requests";
+import { inStock } from "../../utils/inStock";
+import { StatusDot } from "../StatusDot";
 
 // Material sətri (alətdən fərqli sütunlar): ad + ölçü çipi ("metr", "1 balon = 11,3 kq"), depoda (tam; qablıda balon sayı),
 // parçalar / açıq balonlar, ustalarda, doluluq zolağı (depoda / ustalarda; minimum qalıq xətti), vəziyyət, "Ver"
-export function MaterialRow({ t, losses, canManage, onOpen, onGive }: { t: Tool; losses: Loss[]; canManage: boolean; onOpen: () => void; onGive: () => void }) {
+export function MaterialRow({ t, losses, canManage, onOpen, onGive }: MaterialRowProps) {
   const n = inStock(t);
   const low = n > 0 && isLowStock(t);
   const out = n === 0 && t.given_out === 0;

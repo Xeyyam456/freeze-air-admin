@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
-import { ChevronDown, MoreHorizontal, ShoppingCart } from "lucide-react";
+import { ChevronDown, MoreHorizontal } from "lucide-react";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
+import type { MoreMenuProps } from "@/types/depot";
 
 // "Daha çox" menyusu (başlıqda): klik ilə açılan öz siyahımız (hover yox). Az işlənən əməliyyatlar burada gizlənir.
 // Siyahı body-yə çıxır (portal, fixed): başlığın içində qalanda səhifənin arxasında görünürdü.
-export function MoreMenu({ items, dark = false }: { items: { label: string; icon: typeof ShoppingCart; onClick: () => void; badge?: number }[]; dark?: boolean }) {
+export function MoreMenu({ items, dark = false }: MoreMenuProps) {
   const [pos, setPos] = useState<{ top: number; right: number } | null>(null);
   const btn = useRef<HTMLButtonElement>(null);
   useEscapeLayer(() => setPos(null), pos !== null);

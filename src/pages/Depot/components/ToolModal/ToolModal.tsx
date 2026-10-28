@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { History, Package, PackagePlus, Send, Trash2, Wrench } from "lucide-react";
-import { RepairModal } from "@/pages/Depot/components/RepairModal";
-import { WriteoffModal } from "@/pages/Depot/components/WriteoffModal";
-import { HistoryModal } from "@/pages/Depot/components/HistoryModal";
+import { RepairModal } from "../RepairModal";
+import { WriteoffModal } from "../WriteoffModal";
+import { HistoryModal } from "../HistoryModal";
 import { Modal } from "@/shared/components/Modal";
 import type { Kind, ToolModalProps } from "@/types/depot";
 import { fmt, isPacked } from "../../utils/quantity";

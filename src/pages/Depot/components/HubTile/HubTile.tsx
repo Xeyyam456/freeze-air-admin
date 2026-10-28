@@ -1,13 +1,11 @@
-import { ArrowRight, Wrench } from "lucide-react";
-import { IconTile, type Tone } from "@/pages/Depot/components/ui";
-import { fmt } from "@/pages/Depot/utils";
+import { ArrowRight } from "lucide-react";
+import { IconTile } from "../IconTile";
+import type { HubTileProps } from "@/types/depot";
+import { fmt } from "../../utils/quantity";
 
 
 // Ümumi baxış kafeli: rəngli ikon, başlıq, iri rəqəm, kiçik göstəricilər, (alətdə) paylanma zolağı; basanda siyahı açılır
-export function HubTile({ icon, tone, title, big, unit, rows, bar, onClick }: {
-  icon: typeof Wrench; tone: Tone; title: string; big: number; unit: string;
-  rows: { label: string; value: string; dot: string }[]; bar?: { n: number; c: string }[]; onClick: () => void;
-}) {
+export function HubTile({ icon, tone, title, big, unit, rows, bar, onClick }: HubTileProps) {
   const total = (bar ?? []).reduce((s, p) => s + p.n, 0);
   return (
     <button type="button" onClick={onClick}
