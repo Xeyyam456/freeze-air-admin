@@ -1,5 +1,5 @@
 import { createClient as createSupabaseClient, type SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/lib/database.types";
+import type { Database } from "@/types/database";
 
 // Bütün tətbiq üçün tək Supabase klienti (brauzerdə sessiya localStorage-da saxlanır).
 // Təhlükəsizlik bazanın RLS qaydalarındadır: istifadəçi yalnız icazəsi olanı görür və dəyişir.

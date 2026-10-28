@@ -1,4 +1,4 @@
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 
 // Depo bölməsinin ortaq tipləri və köməkçiləri (DepotForms, DepotDocs, Approvals, DepotExtras işlədir)
 

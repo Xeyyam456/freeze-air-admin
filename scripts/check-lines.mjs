@@ -10,7 +10,7 @@ const LIMIT = 100;
 const ROOT = "src";
 const BASELINE = "scripts/lines-baseline.json";
 const CODE = /\.(ts|tsx|mjs|js)$/;
-const SKIP = ["types/database/", "lib/database.types.ts", "vite-env.d.ts", "next-env.d.ts"];
+const SKIP = ["vite-env.d.ts", "next-env.d.ts"];
 const args = process.argv.slice(2);
 
 function walk(dir, out = []) {

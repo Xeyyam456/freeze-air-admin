@@ -53,7 +53,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
   - `zoom.ts`, `queryClient.ts`, `revalidate.ts`, `useData.ts` web-ə də köçürülür (sync skripti); web-də `--zoom: 1` (`globals.css`);
   - `toast.ts`: bildirişlər;
   - `sound.ts`: qısa bildiriş səsi (Web Audio, faylsız, iki not ~0.3 san.). Səs mexanizmi ilk klik/düymə/toxunuşda "açılır" (unlock), çünki brauzer istifadəçi hərəkəti olmadan səsə icazə vermir;
-  - `database.types.ts`: baza tipləri;
+  - baza tipləri `types/database/` (avtomatik, `scripts/split-db-types.mjs`);
   - `kinds.ts`: şirkət/market mətnləri (`KIND`);
   - `navigation.ts`: koordinat parse, xəritə linkləri;
   - `form-state.ts`, `experience.ts`.
@@ -314,7 +314,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
   - 0037: depo məsulunu istənilən admin təyin edir (əvvəl yalnız müdir): `employees_guard_storekeeper` `is_admin()` yoxlayır;
   - 0035: `material_pieces.original_length` (usta ilkin nə qədər qaytarıb; hissə veriləndə `length` azalır, ilkin qalır: sətir "1 metr · qalıb, ilkin 2 metr — Kərimov Orxan 2 metr qaytarıb" kimi oxunur).
 - RLS dəyişikliyini simulyasiya olunmuş JWT ilə DO-blokunda yoxla: `set_config('request.jwt.claims', json_build_object('sub', <uuid>, 'role', 'authenticated')::text, true)`, `set local role authenticated`. Nəticəni `raise exception 'NƏTİCƏ ...'` ilə çıxar, bu da hər şeyi geri qaytarır.
-- `database.types.ts` əl ilə yenilənib; dəyişiklikdən sonra Supabase MCP `generate_typescript_types` ilə yenidən yarat və **web reposundakı eyni fayla da** köçür.
+- **Baza tipləri (2026-10-28)**: mənbə kökdə `supabase/database.types.ts` (Supabase MCP `generate_typescript_types` nəticəsi bura yazılır), sonra kökdə `node scripts/split-db-types.mjs` → admin və web `src/types/database/` (cədvəl/funksiya başına fayl, ≤ 100 sətir; əl ilə dəyişmə). Import: `import type { Tables, Database } from "@/types/database"`.
 
 ### Hesablar və məlumat
 - **2026-10-24: iş məlumatı sıfırlandı** (istifadəçi: "sistemi təhvil veriləcək dərəcədə boş saxla"): tapşırıqlar, davamiyyət, icazələr, görülən işlər (+ fayl qeydləri, işlədilən material), yanacaq yürüşləri və ödənişləri, briqadalar, depoda bütün alət/materiallar və hərəkətlər (təhvil, sənəd, jurnal, təmir, parça) `truncate ... restart identity` ilə silindi. Qalır: əməkdaşlar (9) və hesablar, şirkətlər (7), mağazalar (410), sayt məzmunu, xəta kodları, maşın və yanacaq qiymətləri (istifadəçi saxlamağı seçdi), 1 sınaq müraciəti. Storage-də yetim fayllar qalıb (`work` 2, `mileage` 2): SQL ilə silinmir, Supabase → Storage-dən əl ilə.
@@ -327,7 +327,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 
 ## Web reposu ilə sinxron saxlanmalı olanlar
 Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
-- `src/lib/database.types.ts` ↔ web `src/lib/database.types.ts`.
+- Baza tipləri: `src/types/database/` — hər ikisinə `scripts/split-db-types.mjs` yazır (kökdə).
 - `components/site/textFields.ts` (admin sahələri) ↔ web `src/lib/site-texts.ts` (`TEXT_DEFAULTS`). Yeni mətn: hər ikisinə açar + bazaya sətir (miqrasiya).
 - `components/site/EquipmentEditor.tsx` `ILLUSTRATED_KEYS` ↔ web `src/lib/site-content.ts` (illüstrasiyası olan avadanlıqlar: split, cassette, floor, ducted, outdoor).
 - Dizayn: `src/index.css` ↔ web `src/app/globals.css` (tokenlər eynidir). Kopya komponentlər: Modal, ConfirmModal, ConfirmButton, forms, Toaster + `lib/toast.ts`, DatePicker, StoreCard, MapButton, SidePanel, Page, LogoutButton, `work/WorkLogForm`, `work/PlacePicker`, `lib/{experience,kinds,navigation,form-state}.ts`. Fərq: admin-də `"use client"` və Next importları yoxdur, `refresh()` əvəzinə `revalidate()`.

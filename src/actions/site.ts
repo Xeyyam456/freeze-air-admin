@@ -1,4 +1,4 @@
-import type { Database } from "@/lib/database.types";
+import type { Database } from "@/types/database";
 import { text, type FormState } from "@/lib/form-state";
 import { revalidateSite } from "@/lib/site";
 import { createClient } from "@/lib/supabase/client";

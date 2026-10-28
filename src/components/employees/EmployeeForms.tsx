@@ -11,7 +11,7 @@ import { DatePicker } from "@/components/DatePicker";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
 import { WorkTab } from "@/components/work/WorkTab";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { experience, initials } from "@/lib/experience";
 
 type Employee = Tables<"employees">;

@@ -3,7 +3,7 @@ import { leaveRange } from "@/lib/attendance";
 import { LIVE, revalidate } from "@/lib/revalidate";
 import { isSoundReady, playNotify } from "@/lib/sound";
 import { createClient } from "@/lib/supabase/client";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 
 // Tapşırıqlar Realtime ilə (migrasiya 0056): usta tapşırığı "görüldü" işarələyəndə tost + qısa səs;

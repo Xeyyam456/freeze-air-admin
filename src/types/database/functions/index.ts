@@ -1,0 +1,47 @@
+// Avtomatik yaradılıb: scripts/split-db-types.mjs (əl ilə dəyişmə)
+export type PublicFunctions = {
+  assignment_confirm: import("./assignment_confirm").Fn
+  baku_today: import("./baku_today").Fn
+  can_manage_tools: import("./can_manage_tools").Fn
+  check_in: import("./check_in").Fn
+  check_out: import("./check_out").Fn
+  depot_actor_name: import("./depot_actor_name").Fn
+  depot_cancel_returns: import("./depot_cancel_returns").Fn
+  depot_check: import("./depot_check").Fn
+  depot_count_create: import("./depot_count_create").Fn
+  depot_decide: import("./depot_decide").Fn
+  depot_internal: import("./depot_internal").Fn
+  depot_log: import("./depot_log").Fn
+  depot_new_request: import("./depot_new_request").Fn
+  depot_receipt_create: import("./depot_receipt_create").Fn
+  depot_request_cancel: import("./depot_request_cancel").Fn
+  depot_request_create: import("./depot_request_create").Fn
+  depot_return_create: import("./depot_return_create").Fn
+  depot_writeoff_create: import("./depot_writeoff_create").Fn
+  fuel_payment_confirm: import("./fuel_payment_confirm").Fn
+  fuel_price_for: import("./fuel_price_for").Fn
+  give_piece: import("./give_piece").Fn
+  give_tool: import("./give_tool").Fn
+  is_admin: import("./is_admin").Fn
+  is_owner: import("./is_owner").Fn
+  is_storekeeper: import("./is_storekeeper").Fn
+  leave_cancel: import("./leave_cancel").Fn
+  place_set_location: import("./place_set_location").Fn
+  leave_decide: import("./leave_decide").Fn
+  material_small_to_pieces: import("./material_small_to_pieces").Fn
+  mileage_fill_missing: import("./mileage_fill_missing").Fn
+  my_employee_id: import("./my_employee_id").Fn
+  public_employees: import("./public_employees").Fn
+  public_management: import("./public_management").Fn
+  return_tool: import("./return_tool").Fn
+  set_employee_photo: import("./set_employee_photo").Fn
+  settle_material: import("./settle_material").Fn
+  task_add_member: import("./task_add_member").Fn
+  task_ensure_log: import("./task_ensure_log").Fn
+  task_set_done: import("./task_set_done").Fn
+  task_set_note: import("./task_set_note").Fn
+  task_withdraw: import("./task_withdraw").Fn
+  tool_repair_finish: import("./tool_repair_finish").Fn
+  tool_repair_send: import("./tool_repair_send").Fn
+  work_file_counts: import("./work_file_counts").Fn
+}

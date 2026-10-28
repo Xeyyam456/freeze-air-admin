@@ -6,7 +6,7 @@ import {
 import { removeSiteImage, saveService, slugify, uploadSiteImage } from "@/actions/siteContent";
 import { Field } from "@/components/forms";
 import { Modal } from "@/components/Modal";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 
 type Service = Tables<"site_services">;

@@ -3,7 +3,7 @@ import { ImagePlus, Trash2, X } from "lucide-react";
 import { removeSiteImage, saveEquipment, slugify, uploadSiteImage } from "@/actions/siteContent";
 import { Field } from "@/components/forms";
 import { Modal } from "@/components/Modal";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 
 type Equipment = Tables<"site_equipment">;

@@ -4,7 +4,7 @@ import { CalendarDays, CircleCheck, Inbox, Mail, MessageSquareText, Phone, Rotat
 import { deleteRequest, setRequestHandled } from "@/actions/requests";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Page } from "@/components/Page";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { initials } from "@/lib/experience";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";

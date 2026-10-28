@@ -1,4 +1,4 @@
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { revalidateSite } from "@/lib/site";
 import { createClient } from "@/lib/supabase/client";
 

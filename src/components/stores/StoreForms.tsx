@@ -6,7 +6,7 @@ import { ConfirmButton } from "@/components/ConfirmButton";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
 import { StoreCard } from "@/components/StoreCard";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { KIND, type Kind } from "@/lib/kinds";
 import { StoreImport } from "./StoreImport";
 

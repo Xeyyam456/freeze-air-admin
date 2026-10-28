@@ -6,7 +6,7 @@ import { Modal } from "@/components/Modal";
 import { Page } from "@/components/Page";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { MONTHS_AZ, todayBaku } from "@/lib/attendance";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";

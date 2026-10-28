@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { LIVE, revalidate } from "@/lib/revalidate";
 import { isSoundReady, playNotify } from "@/lib/sound";
 import { createClient } from "@/lib/supabase/client";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 
 // Tab arxa planda olanda başlıqda "(N)" göstərilir, tab açılanda silinir (səs olmasa da tab-da görünsün)

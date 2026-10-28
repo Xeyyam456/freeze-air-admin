@@ -2,7 +2,7 @@ import { useState } from "react";
 import { EyeOff, ListChecks, Pencil, Plus, Route, Trash2 } from "lucide-react";
 import { deleteService } from "@/actions/siteContent";
 import { ConfirmButton } from "@/components/ConfirmButton";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 import { ServiceEditor, serviceIcon } from "./ServiceEditor";

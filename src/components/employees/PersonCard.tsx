@@ -1,5 +1,5 @@
 import { Briefcase, Phone } from "lucide-react";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { experience } from "@/lib/experience";
 import { Avatar } from "./EmployeeForms";
 

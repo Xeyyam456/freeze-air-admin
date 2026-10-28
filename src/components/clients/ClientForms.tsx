@@ -7,7 +7,7 @@ import { ConfirmButton } from "@/components/ConfirmButton";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
 import { StoreTools } from "@/components/stores/StoreForms";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { KIND, type Kind } from "@/lib/kinds";
 
 function ClientFields({ c, kind }: { c?: Tables<"companies">; kind: Kind }) {

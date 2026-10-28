@@ -4,7 +4,7 @@ import { saveHeroForm, updateAbout, updateHomeImage, type HomeImageField } from 
 import { removeSiteImage, uploadSiteImage } from "@/actions/siteContent";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 import { toast } from "@/lib/toast";

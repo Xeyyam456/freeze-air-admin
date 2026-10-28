@@ -3,7 +3,7 @@ import { ImagePlus, Trash2, X } from "lucide-react";
 import { removeSiteImage, saveSegment, slugify, uploadSiteImage, type SegmentInput } from "@/actions/siteContent";
 import { Field } from "@/components/forms";
 import { Modal } from "@/components/Modal";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 
 type Segment = Tables<"site_segments">;

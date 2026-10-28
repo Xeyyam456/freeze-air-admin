@@ -3,7 +3,7 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { Clock, Link2, Mail, MapPin, Phone } from "lucide-react";
 import { updateSiteSettings } from "@/actions/site";
 import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 

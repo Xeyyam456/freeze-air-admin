@@ -2,7 +2,7 @@ import { Navigate } from "react-router";
 import { MapPin } from "lucide-react";
 import { Page } from "@/components/Page";
 import { WithSidePanel } from "@/components/SidePanel";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";

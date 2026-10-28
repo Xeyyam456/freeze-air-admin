@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Building2, Search, Store } from "lucide-react";
 import { StoreCard } from "@/components/StoreCard";
 import { StoreAdminCard } from "@/components/stores/StoreForms";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { KIND, type Kind } from "@/lib/kinds";
 
 // Axtarış üçün sadələşdirmə: "Nərimanov" və "nerimanov" eyni tapılsın.

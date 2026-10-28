@@ -2,7 +2,7 @@ import { useState } from "react";
 import { EyeOff, ImageOff, Pencil, Plus, Trash2 } from "lucide-react";
 import { deleteEquipment, deleteSegment } from "@/actions/siteContent";
 import { ConfirmButton } from "@/components/ConfirmButton";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 import { EquipmentEditor } from "./EquipmentEditor";

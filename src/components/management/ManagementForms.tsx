@@ -12,7 +12,7 @@ import { AccountSection, Avatar, formatDate, type Accounts } from "@/components/
 import { PersonCard } from "@/components/employees/PersonCard";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/components/Modal";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { experience } from "@/lib/experience";
 
 type Manager = Tables<"employees">;

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { ImagePlus, Trash2 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { Avatar } from "@/components/employees/EmployeeForms";
-import type { Tables } from "@/lib/database.types";
+import type { Tables } from "@/types/database";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
