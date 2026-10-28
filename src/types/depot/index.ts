@@ -1,5 +1,12 @@
+export type { DepotActionsProps } from "./DepotActionsProps";
+export type { DepotData } from "./DepotData";
 export type { DepotEmployee } from "./DepotEmployee";
+export type { DepotMenuItem } from "./DepotMenuItem";
+export type { DepotModal } from "./DepotModal";
+export type { DepotModalsProps } from "./DepotModalsProps";
+export type { DepotPageProps } from "./DepotPageProps";
 export type { DepotRequest } from "./DepotRequest";
+export type { DepotScreenProps } from "./DepotScreenProps";
 export type { Holding } from "./Holding";
 export type { Kind } from "./Kind";
 export type { KindText } from "./KindText";
