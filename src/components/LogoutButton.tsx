@@ -2,7 +2,7 @@ import { useState, useTransition } from "react";
 import { useNavigate } from "react-router";
 import { LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { ConfirmModal } from "./ConfirmModal";
+import { ConfirmModal } from "@/shared/components/ConfirmModal";
 
 // Çıxış: təsadüfi klikdən qorunmaq üçün əvvəlcə təsdiq soruşulur
 // menu: telefon siyirtməsindəki "Çıxış" bəndi (başlıqda mobildə gizlədilir ki, səhifə adına yer qalsın)

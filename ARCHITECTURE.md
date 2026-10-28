@@ -51,3 +51,11 @@ src/
 ## Data
 - Oxu: `useData(açar, fetcher, deps)` (TanStack Query); açarlar domenin `queries/keys.ts`-indədir.
 - Yazdıqdan sonra `revalidate(...açarlar)`. Supabase 1000 sətir həddi: ay/il sorğuları `fetchAll` ilə.
+
+## Admin ↔ web kopyaları
+- `src/shared/**` və `src/types/shared/**` admin-dən web-ə **skriptlə** köçür: kökdə `node scripts/sync-shared-to-web.mjs` (`--check`: fərqləri göstər). Web-də bu qovluqları əl ilə dəyişmə; dəyişiklik admin-də edilir, sonra skript.
+- Skript hook/portal/hadisə işlədən `.tsx`-ə `"use client"` əlavə edir; qalanı (Button, Input) server komponentində də işləyir.
+
+## Keçid dövrü (CSS)
+- `Button`, `Input`, `Textarea`, `FormField`, `Modal` hələlik qlobal class-ları (`.btn`, `.field`, `.label`, `.modal`) işlədir. Xam `<button className="btn ...">` yazma — `<Button variant="primary" size="sm">` işlət.
+- `.module.css`-ə köçəndə qaydaları `@layer components { ... }` içində yaz: qatsız CSS Tailwind utility-lərini (`className="w-full"`) üstələyir.

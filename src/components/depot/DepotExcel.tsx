@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AlertTriangle, Boxes, FileSpreadsheet, Package, Users, Wrench } from "lucide-react";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { ToolPicker } from "@/components/ToolPicker";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";

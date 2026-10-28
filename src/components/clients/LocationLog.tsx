@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowRight, Crosshair, ExternalLink, MapPinned, PenLine, X } from "lucide-react";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { createClient } from "@/lib/supabase/client";
 import { mapSearchUrl } from "@/lib/navigation";
 import { useData } from "@/lib/useData";

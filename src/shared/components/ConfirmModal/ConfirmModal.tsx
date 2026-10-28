@@ -1,21 +1,10 @@
 
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { CircleCheck, TriangleAlert, type LucideIcon } from "lucide-react";
+import { CircleCheck, TriangleAlert } from "lucide-react";
+import type { ConfirmModalProps } from "@/types/shared";
 
-type Props = {
-  open: boolean;
-  title: string;
-  message: React.ReactNode;
-  confirmLabel: string;
-  tone?: "danger" | "primary";
-  pending?: boolean;
-  icon?: LucideIcon;
-  onConfirm: () => void;
-  onCancel: () => void;
-};
-
-export function ConfirmModal({ open, title, message, confirmLabel, tone = "primary", pending, icon, onConfirm, onCancel }: Props) {
+export function ConfirmModal({ open, title, message, confirmLabel, tone = "primary", pending, icon, onConfirm, onCancel }: ConfirmModalProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ClipboardList, MapPin, Search, X } from "lucide-react";
 import { formatDateAz } from "@/components/DatePicker";
 import { Avatar } from "@/components/employees/EmployeeForms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { createClient } from "@/lib/supabase/client";
 import { fetchFileCounts, fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
 import { FileBadges } from "./FileBadges";

@@ -3,7 +3,7 @@ import { CalendarDays, Clock, FileText, Home, MapPin, Play, X } from "lucide-rea
 import { formatDateAz } from "@/components/DatePicker";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { MapButton } from "@/components/MapButton";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";
 

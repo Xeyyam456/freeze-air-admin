@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Clock, FileText, Home, MapPin, Pencil, Plus, Trash2, Video, X } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { fetchFileCounts, type FileCount } from "@/lib/jobs";

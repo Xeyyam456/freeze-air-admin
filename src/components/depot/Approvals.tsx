@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Check, Clock, FileText, Hand, Pencil, ShieldAlert, Undo2, X } from "lucide-react";
 import { decideRequest, depotFileUrl, returnTool } from "@/actions/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";

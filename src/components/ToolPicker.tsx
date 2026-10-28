@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronUp, PackageOpen, Search, Wrench, type LucideIcon } from "lucide-react";
-import { useEscapeLayer } from "./Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 
 type Item = { id: number; name: string; hint?: string };
 

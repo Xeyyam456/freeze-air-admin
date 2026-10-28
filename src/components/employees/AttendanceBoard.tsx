@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CalendarCheck, CalendarX, ChevronLeft, ChevronRight, FileSpreadsheet, Search, Undo2, X } from "lucide-react";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { exportAttendanceAll, exportAttendanceEmployee } from "@/lib/export-attendance";
 import { MONTHS_AZ, presenceText, shiftMonth, todayBaku, useMonthAttendance, type MonthAttendance } from "@/lib/attendance";
 import { initials } from "@/lib/experience";

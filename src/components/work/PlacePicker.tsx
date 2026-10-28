@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Building2, ChevronDown, Home, MapPin, PenLine, Search, Store, X } from "lucide-react";
-import { useEscapeLayer } from "@/components/Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 
 // İşin görüldüyü yer: mağaza/filial, filialı olmayan sabit məkanlı şirkət və ya siyahıda olmayan yer (mətn)
 export type Place = {

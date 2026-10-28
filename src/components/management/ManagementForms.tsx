@@ -11,7 +11,7 @@ import { AvatarUpload } from "@/components/employees/AvatarUpload";
 import { AccountSection, Avatar, formatDate, type Accounts } from "@/components/employees/EmployeeForms";
 import { PersonCard } from "@/components/employees/PersonCard";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import type { Tables } from "@/types/database";
 import { experience } from "@/lib/experience";
 

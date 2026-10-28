@@ -3,7 +3,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
-import { useEscapeLayer } from "./Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 
 const MONTHS = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
 const WEEKDAYS = ["B.e", "Ç.a", "Ç", "C.a", "C", "Ş", "B"]; // həftə bazar ertəsindən

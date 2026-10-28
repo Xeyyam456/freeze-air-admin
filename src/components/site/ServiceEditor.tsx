@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { removeSiteImage, saveService, slugify, uploadSiteImage } from "@/actions/siteContent";
 import { Field } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 

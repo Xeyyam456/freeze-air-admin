@@ -3,7 +3,7 @@ import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { AlertTriangle, ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, Clock, Hourglass, Package, PackagePlus, Search, Users, Warehouse, Wrench, X } from "lucide-react";
 import { Avatar } from "@/components/employees/EmployeeForms";
-import { useEscapeLayer } from "@/components/Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { urlQuery } from "@/lib/urlQuery";
 import { PersonModal, QuickGiveModal, ToolModal } from "./DepotForms";
 import { IconTile, SOFT, type Tone } from "./DepotUi";

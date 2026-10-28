@@ -3,7 +3,7 @@ import { EyeOff, HelpCircle, Hash, Pencil, Plus, Trash2, X } from "lucide-react"
 import { deleteFaq, deleteStat, saveFaq, saveStat } from "@/actions/siteContent";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Field } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import type { Tables } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";

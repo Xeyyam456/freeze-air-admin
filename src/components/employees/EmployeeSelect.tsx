@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Search, UserRound } from "lucide-react";
-import { useEscapeLayer } from "@/components/Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { Avatar } from "./EmployeeForms";
 
 export type SelectableEmployee = { id: number; full_name: string; photo_url: string | null; specialty?: string | null };

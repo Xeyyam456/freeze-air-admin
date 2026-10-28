@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { Box, Boxes, Check, ChevronDown, type LucideIcon } from "lucide-react";
-import { useEscapeLayer } from "@/components/Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 
 export type ModelOption = { value: string; label: string; hint?: string };
 

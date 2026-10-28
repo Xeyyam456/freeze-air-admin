@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { Boxes, Check, ChevronDown, Droplets, Hash, Package, Ruler, Scroll, Weight, type LucideIcon } from "lucide-react";
-import { useEscapeLayer } from "./Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 
 // Hər vahidin ikonu və qısa izahı (siyahıda olmayan vahid üçün ümumi qutu ikonu)
 const META: Record<string, { icon: LucideIcon; hint: string }> = {

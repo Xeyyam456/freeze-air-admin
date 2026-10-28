@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { ImagePlus, Trash2, X } from "lucide-react";
 import { removeSiteImage, saveSegment, slugify, uploadSiteImage, type SegmentInput } from "@/actions/siteContent";
 import { Field } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 

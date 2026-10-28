@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import type { FormState } from "@/lib/form-state";
 import { toast } from "@/lib/toast";
-import { ConfirmModal } from "./ConfirmModal";
+import { ConfirmModal } from "@/shared/components/ConfirmModal";
 
 // Form nəticəsi: uğurda tost + fn (formu təmizlə və ya bağla), xətada xəta tostu.
 export function useOnSuccess(state: FormState, fn: () => void = () => {}, success = "Yadda saxlanıldı") {

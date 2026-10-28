@@ -5,7 +5,7 @@ import { MapPin, Pencil, Phone, Plus, Trash2, User, X } from "lucide-react";
 import { addCompany, deleteCompany, updateCompany } from "@/actions/companies";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { StoreTools } from "@/components/stores/StoreForms";
 import type { Tables } from "@/types/database";
 import { KIND, type Kind } from "@/lib/kinds";

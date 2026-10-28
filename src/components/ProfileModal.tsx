@@ -3,7 +3,7 @@ import { UserRound, X } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { AvatarUpload } from "@/components/employees/AvatarUpload";
 import { Buttons, Field } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
 

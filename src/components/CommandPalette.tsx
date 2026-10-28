@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { Building2, CornerDownLeft, Search, Store, User, UserCog, Wrench } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { useEscapeLayer } from "@/components/Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { norm } from "@/components/work/PlacePicker";
 import { NAV_ITEMS } from "./Sidebar";
 

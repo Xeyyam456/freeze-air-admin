@@ -4,7 +4,7 @@ import { ExternalLink, Map as MapIcon, MapPin, X } from "lucide-react";
 import { mapEmbedUrl, mapSearchUrl } from "@/lib/navigation";
 // Xəritədə göstərilən yer: filial/mağaza və ya sabit məkanlı şirkət
 export type Place = { code?: string | null; name: string; address: string | null; lat: number | null; lng: number | null };
-import { Modal } from "./Modal";
+import { Modal } from "@/shared/components/Modal";
 
 export function MapButton({ place }: { place: Place }) {
   const [open, setOpen] = useState(false);

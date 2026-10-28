@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Building2, Check, ChevronDown, ChevronLeft, ChevronRight, ListChecks, Lock, MapPin, Paperclip, Play, Plus, Store, Undo2, UserPlus, Users, X } from "lucide-react";
 import { addTask, addTaskMember, withdrawTask } from "@/actions/tasks";
 import { DatePicker, formatDateAz } from "@/components/DatePicker";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { EmployeeSelect } from "@/components/employees/EmployeeSelect";
 import { workerTypeLabel } from "@/components/employees/EmployeeForms";

@@ -2,11 +2,11 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Pencil, Plus, Save, Search, Settings2, Trash2, UsersRound, X } from "lucide-react";
-import { useEscapeLayer } from "@/components/Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { toast } from "@/lib/toast";
 import { deleteCrew, saveCrew, type Crew } from "@/actions/crews";
 import { ConfirmButton } from "@/components/ConfirmButton";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { EmployeeSelect, type SelectableEmployee } from "@/components/employees/EmployeeSelect";
 

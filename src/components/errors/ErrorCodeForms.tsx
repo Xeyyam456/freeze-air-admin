@@ -4,7 +4,7 @@ import { Box, Download, Pencil, Plus, Search, TriangleAlert, Trash2, Upload, X }
 import { addErrorCode, addModel, deleteErrorCode, deleteModel, importErrorCodes, renameModel, updateErrorCode } from "@/actions/errorCodes";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { ModelDropdown } from "@/components/errors/ModelDropdown";
 import { toast } from "@/lib/toast";
 

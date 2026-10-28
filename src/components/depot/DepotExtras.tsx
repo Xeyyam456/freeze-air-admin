@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { ChevronDown, MoreHorizontal, ShoppingCart } from "lucide-react";
-import { Modal, useEscapeLayer } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { DHead } from "./DepotUi";
 import { isLowStock, TEXT, withUnit, type Kind, type Tool } from "./depotUtils";
 

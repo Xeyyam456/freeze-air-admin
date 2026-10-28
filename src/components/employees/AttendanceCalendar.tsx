@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Clock, FileSpreadsheet, LogIn, LogOut, X } from "lucide-react";
 import { exportAttendanceEmployee } from "@/lib/export-attendance";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { fetchEmployeeMonth, MONTHS_AZ, presenceText, sessionNo, shiftMonth, timeBaku, todayBaku, useAttendanceLive, type DayStatus } from "@/lib/attendance";
 import { useData } from "@/lib/useData";
 

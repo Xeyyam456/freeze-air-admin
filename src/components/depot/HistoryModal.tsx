@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ArrowDownToLine, ArrowUpFromLine, ClipboardCheck, Flame, History, PackagePlus, Search, Trash2, Wrench, type LucideIcon } from "lucide-react";
 import { formatDateAz } from "@/components/DatePicker";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import type { Tables } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
 import { useData } from "@/lib/useData";

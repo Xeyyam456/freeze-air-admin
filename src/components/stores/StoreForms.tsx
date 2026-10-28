@@ -4,7 +4,7 @@ import { FileSpreadsheet, Pencil, Plus, Trash2, X } from "lucide-react";
 import { addStore, deleteStore, updateStore } from "@/actions/stores";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { StoreCard } from "@/components/StoreCard";
 import type { Tables } from "@/types/database";
 import { KIND, type Kind } from "@/lib/kinds";

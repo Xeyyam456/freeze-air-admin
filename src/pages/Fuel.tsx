@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Fuel, HandCoins, ImageIcon, MoonStar, Save, SunMedium, Trash2, X } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { DatePicker } from "@/components/DatePicker";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { Page } from "@/components/Page";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { MONTHS_AZ, todayBaku } from "@/lib/attendance";

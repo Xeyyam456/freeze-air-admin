@@ -12,7 +12,8 @@ import { RepairModal, ToolFields, WriteoffModal, type WriteoffSource } from "@/c
 import { HistoryModal } from "@/components/depot/HistoryModal";
 import { AccountSection, Avatar, type Accounts } from "@/components/employees/EmployeeForms";
 import { ActionForm, Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
-import { Modal, useEscapeLayer } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
+import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { giveLimitText, QuantityInput } from "@/components/QuantityInput";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";

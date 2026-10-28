@@ -2,7 +2,7 @@ import { useActionState, useState } from "react";
 import { Check, Paperclip, PackagePlus, Trash2, Wrench, X } from "lucide-react";
 import { addTool, createReceipt, createWriteoff, sendRepair, type WriteoffReason } from "@/actions/tools";
 import { ActionForm, Buttons, Field, useOnSuccess } from "@/components/forms";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/shared/components/Modal";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { DHead } from "./DepotUi";
