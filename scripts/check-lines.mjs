@@ -1,12 +1,17 @@
-// 100 sətirdən uzun kod fayllarını göstərir (CSS və avtomatik tiplər xaric).
-// İstifadə: npm run check:lines  (--all: hamısını göstər, yoxsa ilk 40)
-import { readdirSync, readFileSync, statSync } from "node:fs";
+// 100 sətir qaydası (CSS və avtomatik tiplər xaric). Köhnə uzun fayllar lines-baseline.json-dadır:
+// onlar bölünənə qədər icazəlidir, amma böyüyə bilməz. Yeni fayl 100-ü keçə bilməz.
+// npm run check:lines            → pozuntu varsa xəta (pre-commit bunu işlədir)
+// npm run check:lines -- --list  → bütün uzun faylları göstər
+// npm run check:lines -- --update-baseline → fayl bölünəndən sonra siyahını kiçilt
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const LIMIT = 100;
 const ROOT = "src";
+const BASELINE = "scripts/lines-baseline.json";
 const CODE = /\.(ts|tsx|mjs|js)$/;
 const SKIP = ["types/database/", "lib/database.types.ts", "vite-env.d.ts", "next-env.d.ts"];
+const args = process.argv.slice(2);
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
@@ -18,14 +23,32 @@ function walk(dir, out = []) {
 }
 
 const rel = (p) => relative(ROOT, p).replaceAll("\\", "/");
-const files = walk(ROOT).filter((p) => !SKIP.some((s) => rel(p).startsWith(s) || rel(p) === s));
-const long = files
-  .map((p) => ({ path: rel(p), lines: readFileSync(p, "utf8").trimEnd().split("\n").length }))
-  .filter((f) => f.lines > LIMIT)
-  .sort((a, b) => b.lines - a.lines);
+const files = walk(ROOT).map(rel).filter((p) => !SKIP.some((s) => p.startsWith(s)));
+const count = (p) => readFileSync(join(ROOT, p), "utf8").trimEnd().split("\n").length;
+const long = Object.fromEntries(files.map((p) => [p, count(p)]).filter(([, n]) => n > LIMIT));
 
-const shown = process.argv.includes("--all") ? long : long.slice(0, 40);
-for (const f of shown) console.log(`${String(f.lines).padStart(5)}  ${f.path}`);
-if (long.length > shown.length) console.log(`  ... daha ${long.length - shown.length} fayl (--all)`);
-console.log(`\n${files.length} kod faylı, ${long.length} fayl ${LIMIT} sətirdən uzundur.`);
-process.exitCode = long.length ? 1 : 0;
+if (args.includes("--update-baseline")) {
+  const old = existsSync(BASELINE) ? JSON.parse(readFileSync(BASELINE, "utf8")) : null;
+  const next = {};
+  for (const [p, n] of Object.entries(long)) if (!old || (old[p] && n <= old[p])) next[p] = n;
+  const sorted = Object.fromEntries(Object.entries(next).sort(([a], [b]) => a.localeCompare(b)));
+  writeFileSync(BASELINE, JSON.stringify(sorted, null, 2) + "\n");
+  console.log(`Baseline: ${Object.keys(sorted).length} fayl.`);
+  process.exit(0);
+}
+
+const baseline = existsSync(BASELINE) ? JSON.parse(readFileSync(BASELINE, "utf8")) : {};
+if (args.includes("--list")) {
+  for (const [p, n] of Object.entries(long).sort((a, b) => b[1] - a[1])) console.log(`${String(n).padStart(5)}  ${p}`);
+}
+
+const errors = [];
+for (const [p, n] of Object.entries(long)) {
+  if (!(p in baseline)) errors.push(`YENİ ${n} sətir (max ${LIMIT}): ${p}`);
+  else if (n > baseline[p]) errors.push(`BÖYÜYÜB ${baseline[p]} → ${n} sətir (böl, böyütmə): ${p}`);
+}
+const done = Object.keys(baseline).filter((p) => !(p in long));
+console.log(`${files.length} kod faylı · köhnə uzun fayl: ${Object.keys(long).length - errors.length}`);
+if (done.length) console.log(`Bölünüb (baseline-dan sil: --update-baseline): ${done.join(", ")}`);
+for (const e of errors) console.error("  ✗ " + e);
+process.exitCode = errors.length ? 1 : 0;

@@ -7,6 +7,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Qısa, birbaşa. İstifadəçi ilə məcburi razılaşma yoxdur: səhvi açıq de, səbəbini qısa izah et, daha yaxşı variant təklif et.
 - İstifadəçi "etmə, hələlik cavab ver" deyəndə yalnız cavab ver, kod yazma.
 
+## Arxitektura qaydaları (DAİMİ — hər yeni xüsusiyyət və düzəliş üçün; 2026-10-28)
+- **Kod yazmazdan əvvəl `ARCHITECTURE.md`-ni oxu.** Qovluq quruluşu, qatlar, tiplər, stil, importlar oradadır. Layihə daim yeni xüsusiyyətlərlə böyüyəcək: yeni kod həmişə bu qaydalarla yazılır, köhnə qəlibə (böyük fayl, komponentdə `supabase.from`, inline tip, qlobal CSS) qayıtma.
+- **Hər kod faylı max 100 sətir** (CSS xaric). `npm run check:lines`: yeni fayl 100-ü keçə bilməz, köhnə uzun fayl (`scripts/lines-baseline.json`) böyüyə bilməz — ona toxunursansa, böl. Bölüb bitirəndə `npm run check:lines -- --update-baseline`. Kök repoda pre-commit hook (`.githooks/pre-commit`) bunu yoxlayır; yeni kompüterdə bir dəfə `git config core.hooksPath .githooks`.
+- Refaktorun irəliləyişi: kökdə `REFACTOR-PLAN.md` (yeni sessiyada oradan davam et).
+
 ## Sistem haqqında (iki repo, bir baza)
 Kondisioner servis şirkəti **Freeze Air Service** üçün sistem: ustalar, müqavilə bağlanan şirkətlər (filialları) və marketlər (mağazaları), alətlər (depo), ustaların gündəlik iş qeydləri, rəhbərlik, açıq sayt.
 
