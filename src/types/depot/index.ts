@@ -1,0 +1,10 @@
+export type { DepotEmployee } from "./DepotEmployee";
+export type { DepotRequest } from "./DepotRequest";
+export type { Holding } from "./Holding";
+export type { Kind } from "./Kind";
+export type { KindText } from "./KindText";
+export type { Loss } from "./Loss";
+export type { PackInfo } from "./PackInfo";
+export type { Piece } from "./Piece";
+export type { Repair } from "./Repair";
+export type { Tool } from "./Tool";

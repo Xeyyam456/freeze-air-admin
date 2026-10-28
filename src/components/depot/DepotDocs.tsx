@@ -6,7 +6,7 @@ import { Modal } from "@/shared/components/Modal";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { DHead } from "./DepotUi";
-import { fmt, isPacked, parseQty, pieceWord, REASONS, round2, TEXT, unitOf, withUnit, type Holding, type Kind, type Piece, type Tool } from "./depotUtils";
+import { fmt, isPacked, parseQty, pieceWord, REASONS, round2, TEXT, unitOf, withUnit, type Holding, type Kind, type Piece, type Tool } from "@/pages/Depot/utils";
 
 // Depo sənədləri (0084): Mədaxil, Silinmə aktı, Sayım, Təmirə göndər. Hamısı yazılır və təsdiqdən sonra say dəyişir
 // (təmirdən başqa: təmir dərhal depodakı boş saydan çıxır, alət yenə depoya aiddir).

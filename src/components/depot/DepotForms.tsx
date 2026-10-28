@@ -21,7 +21,7 @@ import { DAction, DHead, DSection, DStat } from "./DepotUi";
 import {
   dateAz, daysSince, fmt, isLowStock, isPacked, REASONS, norm, parseQty, PIECE_MAX, pieceWord, round2, showQty, STALE_DAYS, TEXT, withUnit,
   type DepotEmployee, type DepotRequest, type Holding, type Kind, type Loss, type PackInfo, type Piece, type Repair, type Tool,
-} from "./depotUtils";
+} from "@/pages/Depot/utils";
 
 export { isLowStock, type DepotEmployee, type Holding, type Kind, type Piece, type Tool };
 

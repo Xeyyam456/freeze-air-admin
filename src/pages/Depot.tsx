@@ -9,7 +9,7 @@ import { ExcelModal } from "@/components/depot/DepotExcel";
 import { MoreMenu, ShoppingModal } from "@/components/depot/DepotExtras";
 import { KeeperModal } from "@/components/depot/DepotForms";
 import { HistoryModal } from "@/components/depot/HistoryModal";
-import { isLowStock, type DepotRequest, type Holding, type Kind, type Piece, type Loss, type Repair, type Tool } from "@/components/depot/depotUtils";
+import { isLowStock, type DepotRequest, type Holding, type Kind, type Piece, type Loss, type Repair, type Tool } from "@/pages/Depot/utils";
 import { listAccountEmails } from "@/actions/accounts";
 import { useAuth } from "@/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";

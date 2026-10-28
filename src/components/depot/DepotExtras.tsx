@@ -5,7 +5,7 @@ import { ChevronDown, MoreHorizontal, ShoppingCart } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { DHead } from "./DepotUi";
-import { isLowStock, TEXT, withUnit, type Kind, type Tool } from "./depotUtils";
+import { isLowStock, TEXT, withUnit, type Kind, type Tool } from "@/pages/Depot/utils";
 
 
 // Alınmalı: minimum qalıq həddinə çatan alət və materiallar (həddi olmayan siyahıya düşmür). Sətirdən "Mədaxil".

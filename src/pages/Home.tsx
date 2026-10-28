@@ -5,7 +5,7 @@ import {
   TriangleAlert, UserPlus, Users, Wrench,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
-import { fmt, isLowStock } from "@/components/depot/depotUtils";
+import { fmt, isLowStock } from "@/pages/Depot/utils";
 import { CountUp } from "@/components/CountUp";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
