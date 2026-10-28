@@ -1,7 +1,7 @@
 import { useActionState } from "react";
 import { Pencil } from "lucide-react";
 import { updateTool } from "@/services/depot";
-import { ToolFields } from "@/components/depot/DepotDocs";
+import { ToolFields } from "@/pages/Depot/components/ToolFields";
 import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { DHead } from "@/pages/Depot/components/ui";

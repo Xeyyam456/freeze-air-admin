@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Page } from "@/components/Page";
-import { PendingBlock } from "@/components/depot/Approvals";
+import { PendingBlock } from "@/pages/Depot/components/PendingBlock";
 import { DepotBoard, type DepotView } from "@/components/depot/DepotBoard";
 import type { DepotModal, DepotScreenProps, Kind, Tool } from "@/types/depot";
 import { isLowStock } from "../../utils/stock";

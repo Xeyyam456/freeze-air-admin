@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
-import { WriteoffModal } from "@/components/depot/DepotDocs";
+import { WriteoffModal } from "@/pages/Depot/components/WriteoffModal";
 import { dateAz, fmt, type DepotEmployee, type Piece, type Tool } from "@/pages/Depot/utils";
 import { PieceGiveModal } from "@/pages/Depot/components/PieceGiveModal";
 

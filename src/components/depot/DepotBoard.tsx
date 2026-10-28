@@ -6,7 +6,7 @@ import { Avatar } from "@/components/employees/EmployeeForms";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { urlQuery } from "@/lib/urlQuery";
 import { IconTile, PersonModal, QuickGiveModal, SOFT, ToolModal, type Tone } from "@/pages/Depot/components/ui";
-import { RecentMovements } from "./HistoryModal";
+import { RecentMovements } from "@/pages/Depot/components/RecentMovements";
 import {
   daysSince, fmt, isLowStock, isPacked, lossText, norm, pieceWord, REASONS, round2, STALE_DAYS, unitOf,
   type DepotEmployee, type DepotRequest, type Holding, type Kind, type Piece, type Loss, type Repair, type Tool,
