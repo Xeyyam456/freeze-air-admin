@@ -1,0 +1,1 @@
+export { MiniSeg } from "./MiniSeg";

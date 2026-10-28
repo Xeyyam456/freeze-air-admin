@@ -1,0 +1,1 @@
+export { QuickGiveModal } from "./QuickGiveModal";

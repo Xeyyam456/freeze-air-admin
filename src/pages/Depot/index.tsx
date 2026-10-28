@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Settings2 } from "lucide-react";
 import { listAccountEmails } from "@/actions/accounts";
 import { useAuth } from "@/auth/AuthProvider";
-import { KeeperModal } from "@/components/depot/DepotForms";
+import { KeeperModal } from "./keeper/KeeperModal";
 import { useMedia } from "@/lib/navDrawer";
 import { useData } from "@/lib/useData";
 import { DepotScreen } from "./components/DepotScreen";

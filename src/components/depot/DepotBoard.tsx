@@ -5,8 +5,7 @@ import { AlertTriangle, ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, Clock,
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { urlQuery } from "@/lib/urlQuery";
-import { PersonModal, QuickGiveModal, ToolModal } from "./DepotForms";
-import { IconTile, SOFT, type Tone } from "@/pages/Depot/components/ui";
+import { IconTile, PersonModal, QuickGiveModal, SOFT, ToolModal, type Tone } from "@/pages/Depot/components/ui";
 import { RecentMovements } from "./HistoryModal";
 import {
   daysSince, fmt, isLowStock, isPacked, lossText, norm, pieceWord, REASONS, round2, STALE_DAYS, unitOf,
