@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { ChevronDown, MoreHorizontal, ShoppingCart } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
-import { DHead } from "./DepotUi";
+import { DHead } from "@/pages/Depot/components/ui";
 import { isLowStock, TEXT, withUnit, type Kind, type Tool } from "@/pages/Depot/utils";
 
 

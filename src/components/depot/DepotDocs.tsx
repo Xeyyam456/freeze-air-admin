@@ -5,7 +5,7 @@ import { ActionForm, Buttons, Field, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
-import { DHead } from "./DepotUi";
+import { DHead } from "@/pages/Depot/components/ui";
 import { fmt, isPacked, parseQty, pieceWord, REASONS, round2, TEXT, unitOf, withUnit, type Holding, type Kind, type Piece, type Tool } from "@/pages/Depot/utils";
 
 // Depo sənədləri (0084): Mədaxil, Silinmə aktı, Sayım, Təmirə göndər. Hamısı yazılır və təsdiqdən sonra say dəyişir

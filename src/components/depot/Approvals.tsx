@@ -6,7 +6,7 @@ import { Modal } from "@/shared/components/Modal";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
-import { DHead } from "./DepotUi";
+import { DHead } from "@/pages/Depot/components/ui";
 import { dateAz, fmt, needsOtherApprover, requestLabel, parseQty, REASONS, REQUEST_TYPES, timeAz, type DepotRequest, type Holding, type Tool } from "@/pages/Depot/utils";
 
 // Sənədin əsas sətri: nə, nə qədər

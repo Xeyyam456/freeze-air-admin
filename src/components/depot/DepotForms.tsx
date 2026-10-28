@@ -18,7 +18,7 @@ import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { giveLimitText, QuantityInput } from "@/components/QuantityInput";
 import { ToolPicker } from "@/components/ToolPicker";
 import { toast } from "@/lib/toast";
-import { DAction, DHead, DSection, DStat } from "./DepotUi";
+import { DAction, DHead, DSection, DStat } from "@/pages/Depot/components/ui";
 import {
   dateAz, daysSince, fmt, isPacked, REASONS, norm, parseQty, PIECE_MAX, pieceWord, round2, showQty, STALE_DAYS, TEXT, withUnit,
   type DepotEmployee, type DepotRequest, type Holding, type Kind, type Loss, type PackInfo, type Piece, type Repair, type Tool,
