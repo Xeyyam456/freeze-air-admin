@@ -1,0 +1,62 @@
+import { Package } from "lucide-react";
+import { IconTile, type Tone } from "@/pages/Depot/components/ui";
+import { fmt, isLowStock, isPacked, lossText, pieceWord, REASONS, round2, type Loss, type Tool } from "@/pages/Depot/utils";
+import { inStock } from "@/pages/Depot/utils/inStock";
+import { StatusDot } from "@/pages/Depot/components/StatusDot";
+
+// Material sətri (alətdən fərqli sütunlar): ad + ölçü çipi ("metr", "1 balon = 11,3 kq"), depoda (tam; qablıda balon sayı),
+// parçalar / açıq balonlar, ustalarda, doluluq zolağı (depoda / ustalarda; minimum qalıq xətti), vəziyyət, "Ver"
+export function MaterialRow({ t, losses, canManage, onOpen, onGive }: { t: Tool; losses: Loss[]; canManage: boolean; onOpen: () => void; onGive: () => void }) {
+  const n = inStock(t);
+  const low = n > 0 && isLowStock(t);
+  const out = n === 0 && t.given_out === 0;
+  const st: { tone: Tone; label: string } = out ? { tone: "red", label: losses.length ? REASONS[losses[0].reason ?? "other"] ?? "Silinib" : "Qalmayıb" }
+    : n === 0 ? { tone: "blue", label: "Hamısı ustada" } : low ? { tone: "amber", label: "Azalıb" } : { tone: "green", label: "Depoda var" };
+  const packed = isPacked(t);
+  const measure = packed ? `1 ${t.pack_name} = ${fmt(t.pack_size)} ${t.unit}` : t.unit;
+  const full = packed ? Math.floor(round2(t.available / t.pack_size)) : null;
+  const total = n + t.given_out;
+  const pct = (v: number) => `${total ? (v / total) * 100 : 0}%`;
+  return (
+    <tr tabIndex={0} onClick={onOpen} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && e.target === e.currentTarget && onOpen()}
+      className="group cursor-pointer border-t border-line transition-colors hover:bg-[#f5fbfa] focus-visible:outline-2 focus-visible:outline-primary">
+      <td className="py-3 pl-5 pr-3">
+        <span className="flex items-center gap-3">
+          <IconTile icon={Package} tone="teal" size={36} />
+          <span className="min-w-0">
+            <span className="block truncate text-[14.5px] font-semibold group-hover:text-[#0f766e]">{t.name}</span>
+            <span className="mt-0.5 flex flex-wrap items-center gap-1.5">
+              <span className="rounded-md bg-[#e7f8f5] px-1.5 py-px text-[11px] font-semibold text-[#0f766e]">{measure}</span>
+              {losses.length > 0 && <span className="truncate text-xs font-medium text-[#dc2626]">{lossText(losses, t.unit)}</span>}
+            </span>
+          </span>
+        </span>
+      </td>
+      <td className="px-3 py-3 text-right tabular-nums">
+        <b className={`text-[16px] ${t.available > 0 ? "" : "text-muted"}`}>{fmt(t.available)}</b> <span className="text-xs text-muted">{t.unit}</span>
+        {full !== null && full > 0 && <span className="muted block text-[11px]">{full} {t.pack_name}</span>}
+      </td>
+      <td className="px-3 py-3 text-right tabular-nums max-lg:hidden">
+        {t.pieces_count > 0
+          ? <><b>{fmt(t.pieces_total)}</b> <span className="text-xs text-muted">{t.unit}</span><span className="muted block text-[11px]">{t.pieces_count} {pieceWord(t)}</span></>
+          : <span className="text-muted">—</span>}
+      </td>
+      <td className="px-3 py-3 text-right tabular-nums">
+        {t.given_out > 0 ? <><b>{fmt(t.given_out)}</b> <span className="text-xs text-muted">{t.unit}</span></> : <span className="text-muted">—</span>}
+      </td>
+      <td className="px-3 py-3 max-xl:hidden">
+        <span className="relative flex h-2 w-full overflow-hidden rounded-full bg-line" title={`depoda ${fmt(n)} · ustalarda ${fmt(t.given_out)} ${t.unit}`}>
+          <span className="h-full bg-[#14b8a6]" style={{ width: pct(n) }} />
+          <span className="h-full bg-[#3b82f6]" style={{ width: pct(t.given_out) }} />
+        </span>
+        <span className="muted mt-1 block text-[11px]">{t.min_stock != null ? `min. ${fmt(t.min_stock)} ${t.unit}` : "minimum yoxdur"}</span>
+      </td>
+      <td className="px-3 py-3 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>
+      <td className="py-3 pl-3 pr-5 text-right">
+        {canManage && t.available > 0 && (
+          <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-sm !h-8 !px-4 bg-[#0d9488] text-white hover:bg-[#0f766e]">Ver</button>
+        )}
+      </td>
+    </tr>
+  );
+}

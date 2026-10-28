@@ -1,5 +1,5 @@
 import { ReceiptModal } from "@/pages/Depot/components/ReceiptModal";
-import { ExcelModal } from "@/components/depot/DepotExcel";
+import { ExcelModal } from "@/pages/Depot/components/ExcelModal";
 import { ShoppingModal } from "@/pages/Depot/components/ShoppingModal";
 import { HistoryModal } from "@/pages/Depot/components/HistoryModal";
 import type { DepotModalsProps, Kind } from "@/types/depot";

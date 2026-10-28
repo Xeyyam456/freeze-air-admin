@@ -1,5 +1,7 @@
 export type { DActionProps } from "./DActionProps";
 export type { DepotActionsProps } from "./DepotActionsProps";
+export type { DepotBoardProps } from "./DepotBoardProps";
+export type { DepotBoardState } from "./DepotBoardState";
 export type { DepotData } from "./DepotData";
 export type { DepotEmployee } from "./DepotEmployee";
 export type { DepotMenuItem } from "./DepotMenuItem";
@@ -8,6 +10,8 @@ export type { DepotModalsProps } from "./DepotModalsProps";
 export type { DepotPageProps } from "./DepotPageProps";
 export type { DepotRequest } from "./DepotRequest";
 export type { DepotScreenProps } from "./DepotScreenProps";
+export type { DepotTab } from "./DepotTab";
+export type { DepotView } from "./DepotView";
 export type { DHeadProps } from "./DHeadProps";
 export type { DSectionProps } from "./DSectionProps";
 export type { DStatProps } from "./DStatProps";

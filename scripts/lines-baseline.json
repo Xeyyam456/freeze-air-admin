@@ -6,8 +6,6 @@
   "components/clients/LocationLog.tsx": 121,
   "components/CommandPalette.tsx": 135,
   "components/DatePicker.tsx": 193,
-  "components/depot/DepotBoard.tsx": 509,
-  "components/depot/DepotExcel.tsx": 361,
   "components/employees/AttendanceBoard.tsx": 303,
   "components/employees/AttendanceCalendar.tsx": 154,
   "components/employees/AvatarUpload.tsx": 108,
