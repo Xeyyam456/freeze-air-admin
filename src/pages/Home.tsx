@@ -56,9 +56,9 @@ async function fetchDashboard() {
       (s, t) => ({ total: s.total + t.quantity, out: s.out + t.given_out }), { total: 0, out: 0 })),
     supabase.from("employees").select("id, full_name, photo_url, specialty, is_management, is_active").eq("is_active", true).order("full_name")
       .then((r) => r.data ?? []),
-    supabase.from("work_logs")
+    supabase.from("work_logs") // yalnız bugünkü işlər (istifadəçi, 2026-10-29: "bu gün yoxdursa heç nə göstərməsin")
       .select("id, work_date, created_at, description, place_text, employee_id, employees(full_name, photo_url), stores(name, code, companies(name)), companies(name)")
-      .order("created_at", { ascending: false }).limit(16)
+      .eq("work_date", today).order("created_at", { ascending: false }).limit(16)
       .then((r) => r.data ?? []),
     supabase.from("work_logs").select("id, employee_id").eq("work_date", today).then((r) => r.data ?? []),
     fetchGroupMap(today, today),
@@ -182,7 +182,7 @@ export default function Home() {
           {!d ? (
             <p className="muted mt-6 text-sm">Yüklənir...</p>
           ) : d.logs.length === 0 ? (
-            <Empty icon={ClipboardList} title="Hələ iş qeydi yoxdur" text="Ustalar usta panelindən iş əlavə edəndə burada son işlər görünəcək." />
+            <Empty icon={ClipboardList} title="Bu gün iş qeydi yoxdur" text="Ustalar bu gün iş əlavə edəndə burada görünəcək." />
           ) : (
             <ul className="mt-3 min-h-0 flex-1 space-y-1 overflow-hidden">
               {d.logs.map((l) => (
