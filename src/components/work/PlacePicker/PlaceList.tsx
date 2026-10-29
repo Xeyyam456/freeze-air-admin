@@ -4,21 +4,21 @@ import { FIXED_GROUP } from "./place";
 
 // Açılan siyahı: qruplar (sabit məkanlar, şəbəkələr), yerlər; sonda yazılan mətni "siyahıda olmayan yer" kimi yazmaq
 export function PlaceList({ loading, groups, trimmed, empty, customIndex, active, onActive, onChoose }: PlaceListProps) {
-  let index = -1; // qruplar boyu ümumi sıra nömrəsi
+  // Qruplar boyu ümumi sıra nömrəsi: hər qrupun başlanğıcı (klaviatura ilə gəzmək üçün)
+  const starts = groups.map((_, gi) => groups.slice(0, gi).reduce((n, [, it]) => n + it.length, 0));
   return (
     <div className="absolute left-0 right-0 z-20 mt-1.5 overflow-hidden rounded-xl border border-line bg-surface shadow-[0_16px_40px_rgba(16,24,40,0.18)]">
       <div id="place-list" role="listbox" className="max-h-64 overflow-y-auto px-1.5 pb-1">
         {loading && <p className="muted px-3 py-4 text-center text-sm">Yüklənir...</p>}
 
-        {groups.map(([group, items]) => (
+        {groups.map(([group, items], gi) => (
           <div key={group} className="pb-1">
             <p className="sticky top-0 z-10 -mx-1.5 flex items-center gap-1.5 border-b border-line bg-[#f8f9fc] px-4 py-1.5 text-[11px] font-bold text-muted">
               {group === FIXED_GROUP ? <Building2 size={13} /> : <Store size={13} />} {group}
               <span className="ml-auto font-medium">{items.length}</span>
             </p>
-            {items.map((p) => {
-              index += 1;
-              const i = index;
+            {items.map((p, pi) => {
+              const i = starts[gi] + pi;
               return (
                 <button key={p.key} type="button" role="option" aria-selected={i === active} data-index={i}
                   onMouseEnter={() => onActive(i)} onClick={() => onChoose(i, p)}
