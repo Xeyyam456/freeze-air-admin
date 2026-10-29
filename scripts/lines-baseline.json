@@ -29,7 +29,6 @@
   "components/ToolPicker.tsx": 160,
   "components/work/PlacePicker.tsx": 208,
   "components/work/WorkLogForm.tsx": 254,
-  "components/work/WorkLogModal.tsx": 220,
   "components/work/WorkTab.tsx": 263,
   "lib/attendance.ts": 220,
   "lib/export-attendance.ts": 176,
