@@ -27,7 +27,6 @@
   "components/stores/StoreForms.tsx": 123,
   "components/stores/StoreImport.tsx": 157,
   "components/ToolPicker.tsx": 160,
-  "components/work/AllLogsModal.tsx": 120,
   "components/work/PlacePicker.tsx": 208,
   "components/work/WorkLogForm.tsx": 254,
   "components/work/WorkLogModal.tsx": 220,

@@ -1,3 +1,6 @@
+export type { AllLog } from "./AllLog";
+export type { AllLogRowProps } from "./AllLogRowProps";
+export type { AllLogsModalProps } from "./AllLogsModalProps";
 export type { ChartHoverProps } from "./ChartHoverProps";
 export type { DashHeaderProps } from "./DashHeaderProps";
 export type { DashTileProps } from "./DashTileProps";

@@ -10,7 +10,7 @@ import { isLowStock } from "@/pages/Depot/utils/stock";
 import { CountUp } from "@/components/CountUp";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
-import { AllLogsModal } from "@/components/work/AllLogsModal";
+import { AllLogsModal } from "@/pages/Home/components/AllLogsModal";
 import { MonthDashboard } from "@/pages/Home/components/MonthDashboard";
 import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { createClient } from "@/lib/supabase/client";
