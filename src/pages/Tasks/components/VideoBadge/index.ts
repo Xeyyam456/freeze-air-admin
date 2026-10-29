@@ -1,0 +1,1 @@
+export { VideoBadge } from "./VideoBadge";

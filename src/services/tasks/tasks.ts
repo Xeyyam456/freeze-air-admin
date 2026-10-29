@@ -1,18 +1,10 @@
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
+import type { TaskInput } from "@/types/tasks";
 
 // Tapşırıqlar: admin və rəhbərlik yalnız VERİR və GERİ ALIR (migrasiya 0057). "Görüldü" işarəsini yalnız usta qoyur,
 // silmək yoxdur: geri alınan tapşırıq tarixçədə qalır, istəsən başqa ustaya verilir. Xəta mətnləri bazadan gəlir.
-
-export type TaskInput = {
-  employee_ids: number[]; // bir neçə usta = qrup tapşırığı (hər üzvə ayrı sətir, eyni group_id; 0071)
-  task_date: string;
-  store_id: number | null;
-  company_id: number | null;
-  place_text: string | null;
-  reason: string;
-};
 
 export async function addTask({ employee_ids, ...input }: TaskInput): Promise<boolean> {
   const group_id = employee_ids.length > 1 ? crypto.randomUUID() : null;

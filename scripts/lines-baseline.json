@@ -30,7 +30,6 @@
   "components/work/AllLogsModal.tsx": 120,
   "components/work/MonthDashboard.tsx": 358,
   "components/work/PlacePicker.tsx": 208,
-  "components/work/TeamPicker.tsx": 383,
   "components/work/WorkLogForm.tsx": 254,
   "components/work/WorkLogModal.tsx": 220,
   "components/work/WorkTab.tsx": 263,
@@ -40,6 +39,5 @@
   "pages/Leaves.tsx": 273,
   "pages/Login.tsx": 117,
   "pages/Requests.tsx": 197,
-  "pages/Tasks.tsx": 507,
   "pages/WorkLogs.tsx": 324
 }

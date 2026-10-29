@@ -1,10 +1,9 @@
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
+import type { Crew, CrewDraft } from "@/types/tasks";
 
 // Briqadalar (0071): hazır usta qrupları; tapşırıq formasında bir kliklə seçilir. Yazmaq yalnız admin (RLS).
-
-export type Crew = { id: number; name: string | null; members: number[] }; // name: istəyə görə (0075)
 
 export async function listCrews(): Promise<Crew[]> {
   const { data } = await createClient().from("crews").select("id, name, crew_members(employee_id)").order("name");
@@ -12,7 +11,7 @@ export async function listCrews(): Promise<Crew[]> {
 }
 
 // Yeni və ya mövcud briqadanı saxla: ad + üzvlər (üzvlər tamamilə əvəz olunur)
-export async function saveCrew(crew: { id?: number; name: string; members: number[] }): Promise<boolean> {
+export async function saveCrew(crew: CrewDraft): Promise<boolean> {
   const supabase = createClient();
   // Ad istəyə görədir (0075): boşdursa null, siyahıda üzvlərin adları göstərilir
   const name = crew.name.trim() || null;
