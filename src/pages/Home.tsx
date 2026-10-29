@@ -11,7 +11,7 @@ import { CountUp } from "@/components/CountUp";
 import { Avatar } from "@/components/employees/EmployeeForms";
 import { Page } from "@/components/Page";
 import { AllLogsModal } from "@/components/work/AllLogsModal";
-import { MonthDashboard } from "@/components/work/MonthDashboard";
+import { MonthDashboard } from "@/pages/Home/components/MonthDashboard";
 import { timeOf, WorkLogModal } from "@/components/work/WorkLogModal";
 import { createClient } from "@/lib/supabase/client";
 import { countJobs, fetchFileCounts, fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
