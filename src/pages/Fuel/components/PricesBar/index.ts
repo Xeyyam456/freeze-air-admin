@@ -1,0 +1,1 @@
+export { PricesBar } from "./PricesBar";

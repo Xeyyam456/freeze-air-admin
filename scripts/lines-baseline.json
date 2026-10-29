@@ -36,7 +36,6 @@
   "components/work/WorkTab.tsx": 263,
   "lib/attendance.ts": 220,
   "lib/export-attendance.ts": 176,
-  "pages/Fuel.tsx": 490,
   "pages/Home.tsx": 324,
   "pages/Leaves.tsx": 273,
   "pages/Login.tsx": 117,
