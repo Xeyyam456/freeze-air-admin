@@ -58,7 +58,7 @@ export function ToolModal({ tool, holders, pieces, repairs, losses = [], request
         </div>
       )}
 
-      <div className={`mt-3 grid gap-2 ${actions.length === 4 ? "grid-cols-4" : actions.length === 3 ? "grid-cols-3" : "grid-cols-1"}`}>
+      <div className={`mt-3 grid gap-2 ${actions.length === 4 ? "grid-cols-4 max-sm:grid-cols-2" : actions.length === 3 ? "grid-cols-3" : "grid-cols-1"}`}>
         {actions.map((a) => <DAction key={a.label} icon={a.icon} tone={a.tone} label={a.label} onClick={a.onClick} />)}
       </div>
 

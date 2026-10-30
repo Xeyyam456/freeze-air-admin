@@ -12,7 +12,7 @@ function norm(s: string) {
 }
 
 // Axtarışlı seçim siyahısı (əsasən depodan alət, həm də usta seçimi): brauzerin standart siyahısı əvəzinə.
-// Pəncərənin aşağısında durduğu üçün yuxarı açılır. Seçim gizli sahə (`name`, standart "tool_id") ilə formaya gedir.
+// Yuxarı açılır (mobildə ekranın ortasında); 5 sətir görünür (~212px), qalanı sürüşür. Seçim gizli sahə (`name`, standart "tool_id") ilə formaya gedir.
 // hint: sağda kiçik yazı (məs. "depoda 3").
 export function ToolPicker({
   items, value, onChange, name = "tool_id", icon: Icon = Wrench,
@@ -106,7 +106,7 @@ export function ToolPicker({
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 right-0 z-20 max-sm:right-auto max-sm:w-[min(18rem,calc(100vw-5rem))] mb-2 max-sm:mb-1.5 overflow-hidden rounded-xl border border-line bg-surface shadow-[0_16px_40px_rgba(16,24,40,0.18)]">
+        <div className="absolute bottom-full left-0 right-0 z-20 mb-2 overflow-hidden rounded-xl border border-line bg-surface shadow-[0_16px_40px_rgba(16,24,40,0.18)] max-sm:fixed max-sm:inset-auto max-sm:left-1/2 max-sm:top-1/2 max-sm:mb-0 max-sm:w-[min(20rem,calc(100vw-3rem))] max-sm:-translate-x-1/2 max-sm:-translate-y-1/2">
           <div className="flex items-center gap-2 border-b border-line px-3">
             <Search size={14} className="muted shrink-0" />
             <input
@@ -125,7 +125,7 @@ export function ToolPicker({
               <p className="muted text-xs">Bu adla heç nə tapılmadı</p>
             </div>
           ) : (
-            <ul role="listbox" className="nice-scroll max-h-56 max-sm:max-h-32 overflow-y-auto p-1.5">
+            <ul role="listbox" className="nice-scroll max-h-[212px] overflow-y-auto p-1.5">
               {filtered.map((item, i) => {
                 const isSelected = item.id === value;
                 return (
