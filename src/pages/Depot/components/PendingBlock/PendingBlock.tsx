@@ -9,6 +9,7 @@ import { needsOtherApprover } from "../../utils/requests";
 import { REQUEST_TYPES } from "../../constants/requests";
 import type { PendingBlockProps } from "@/types/depot";
 import { giveable } from "../../utils/giveable";
+import { PendingBanner } from "../PendingBanner";
 import { RequestRow } from "../RequestRow";
 import { DisputeRow } from "../DisputeRow";
 
@@ -42,14 +43,7 @@ export function PendingBlock({ requests, holdings, tools, myUid, owner }: Pendin
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)}
-        className="flex w-full items-center gap-3 rounded-2xl border border-[#fde3b4] bg-[#fffaf0] px-4 py-3 text-left transition-colors hover:bg-[#fff4e0]">
-        <Clock size={18} className="shrink-0 text-[#b45309]" />
-        <b className="text-sm">Təsdiq gözləyir</b>
-        <span className="rounded-full bg-danger px-2 py-0.5 text-[11px] font-bold text-white">{total}</span>
-        <span className="muted min-w-0 flex-1 truncate text-[13px]">{parts.join(" · ")}</span>
-        <span className="shrink-0 text-sm font-semibold text-primary">Bax →</span>
-      </button>
+      <PendingBanner total={total} parts={parts} onOpen={() => setOpen(true)} />
       {open && (
         <Modal onClose={() => setOpen(false)} labelledBy="pending-title" className="flex !max-w-3xl flex-col">
           <DHead id="pending-title" icon={Clock} tone="amber" title={`Təsdiq gözləyir (${total})`} sub="Təsdiqlənməyən heç nə depoya düşmür və depodan çıxmır" onClose={() => setOpen(false)}>
@@ -60,7 +54,7 @@ export function PendingBlock({ requests, holdings, tools, myUid, owner }: Pendin
               </ConfirmButton>
             )}
           </DHead>
-          <ul className="nice-scroll max-h-[min(560px,calc(100dvh/var(--zoom)-180px))] divide-y divide-line overflow-y-auto pr-1">
+          <ul className="nice-scroll max-h-[min(560px,calc(100dvh/var(--zoom)-180px))] space-y-2.5 overflow-y-auto pr-1 max-sm:pr-0">
             {disputes.map((h) => <DisputeRow key={`d${h.id}`} h={h} tool={toolOf.get(h.tool_id)} />)}
             {requests.map((r) => {
               const row = <RequestRow key={r.id} r={r} holding={r.assignment_id ? holdingOf.get(r.assignment_id) ?? null : null} tool={toolOf.get(r.tool_id ?? 0)} myUid={myUid} owner={owner} />;
