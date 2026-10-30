@@ -4,7 +4,7 @@ import { fmt, isPacked, withUnit } from "../../utils/quantity";
 import { DStat } from "../DStat";
 
 // Alət pəncərəsinin 3 göstəricisi: Depoda, Ustalarda, Təmirdə (alət) | Açıq balonlar / Parçalar (material)
-export function ToolStats({ tool, holders, material, piecesTitle }: ToolStatsProps) {
+export function ToolStats({ tool, material, piecesTitle }: ToolStatsProps) {
   return (
     <div className="grid grid-cols-3 gap-2.5">
       <DStat icon={Warehouse} tone={tool.available > 0 ? "green" : "red"} label="Depoda" value={withUnit(tool.available, tool)} />
