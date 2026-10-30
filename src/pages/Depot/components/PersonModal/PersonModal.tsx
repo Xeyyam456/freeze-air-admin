@@ -28,20 +28,20 @@ export function PersonModal({ emp, kind: initialKind, holds: allHolds, toolInfo,
       <PersonHead emp={emp} toolsN={toolsN} matsN={matsN} waiting={waiting} onClose={onClose} />
 
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex gap-1 rounded-xl bg-line/60 p-1" role="tablist" aria-label="Növ">
+        <div className="flex gap-1 rounded-xl bg-line/60 p-1 max-sm:w-full" role="tablist" aria-label="Növ">
           {tabs.map(([k, l, n]) => (
             <button key={k} type="button" role="tab" aria-selected={kind === k} onClick={() => setKind(k)}
-              className={`inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-[13px] font-semibold transition-colors ${kind === k ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
+              className={`inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-[13px] font-semibold transition-colors max-sm:h-8 max-sm:flex-1 max-sm:justify-center max-sm:gap-1.5 max-sm:px-2 max-sm:text-xs ${kind === k ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
               {k === "tool" ? <Wrench size={14} /> : <Package size={14} />} {l}
               <span className="rounded-full bg-bg px-1.5 text-[11px] font-bold text-muted">{n}</span>
             </button>
           ))}
         </div>
         {canManage && (
-          <span className="ml-auto flex gap-2">
+          <span className="ml-auto flex gap-2 max-sm:w-full max-sm:justify-end">
             {/* Yalnız alətdə: materialda "nə qədər işlədi" deyilməlidir, ona görə tək-tək təhvil alınır */}
             {kind === "tool" && holds.length > 1 && (
-              <ConfirmButton className="btn btn-secondary btn-sm !h-9" title="Hamısını geri al" confirmLabel="Bəli, geri al" success={false}
+              <ConfirmButton className="btn btn-secondary btn-sm !h-9 max-sm:!h-7 max-sm:!px-2.5 max-sm:!text-xs" title="Hamısını geri al" confirmLabel="Bəli, geri al" success={false}
                 question={`${emp.full_name} üzərindəki ${toolsN} ədəd alət depoya qaytarılacaq.`}
                 onConfirm={async () => {
                   const r = await returnAllTools(holds.map((h) => ({ id: h.id, quantity: h.quantity })));
@@ -50,7 +50,7 @@ export function PersonModal({ emp, kind: initialKind, holds: allHolds, toolInfo,
                 <Undo2 size={14} /> Hamısını geri al
               </ConfirmButton>
             )}
-            <Button size="sm" onClick={() => setGiving(true)} className="!h-9">
+            <Button size="sm" onClick={() => setGiving(true)} className="!h-9 max-sm:!h-7 max-sm:!px-2.5 max-sm:!text-xs">
               <Plus size={14} /> {kind === "tool" ? "Alət ver" : "Material ver"}
             </Button>
           </span>
