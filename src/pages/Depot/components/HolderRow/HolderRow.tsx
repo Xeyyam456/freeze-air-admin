@@ -45,11 +45,13 @@ export function HolderRow({ holding, canManage, tool, toolName, pendingReturn }:
         </span>
         <span className="text-sm font-bold tabular-nums text-primary max-sm:order-1 max-sm:text-[11px]">{showQty(holding.quantity, unit, pack)}</span>
         <span className="hidden h-0 basis-full max-sm:order-1 max-sm:block" aria-hidden />
+        {/* Düymələr bir qrupdadır: mobildə həmişə sağda (Təhvil al gizlənəndə də sil sağda qalır) */}
+        <span className="contents max-sm:order-2 max-sm:ml-auto max-sm:flex max-sm:items-center max-sm:gap-1.5">
         {canManage && material && !asking && (
-          <Button variant="secondary" size="sm" onClick={() => r.setAsking(true)} className="!h-8 max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px] max-sm:order-2 max-sm:ml-auto">Təhvil al</Button>
+          <Button variant="secondary" size="sm" onClick={() => r.setAsking(true)} className="!h-8 max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">Təhvil al</Button>
         )}
         {canManage && !material && (
-          <ActionForm action={r.action} className="flex items-center gap-1.5 max-sm:order-2 max-sm:ml-auto">
+          <ActionForm action={r.action} className="flex items-center gap-1.5">
             {asking && (
               <QuantityInput limit={holding.quantity} defaultValue={holding.quantity} className="!h-8 !w-16"
                 limitText={(limit) => `Ustada cəmi ${limit} ${unit} var.`} />
@@ -62,10 +64,11 @@ export function HolderRow({ holding, canManage, tool, toolName, pendingReturn }:
           </ActionForm>
         )}
         {canManage && tool && (
-          <button type="button" onClick={() => setWriteoff(true)} className="icon-btn icon-btn-danger !h-8 !w-8 max-sm:!h-6 max-sm:!w-6 max-sm:order-2" title="Silinmə aktı (itib, xarab)" aria-label="Silinmə aktı">
+          <button type="button" onClick={() => setWriteoff(true)} className="icon-btn icon-btn-danger !h-8 !w-8 max-sm:!h-6 max-sm:!w-6" title="Silinmə aktı (itib, xarab)" aria-label="Silinmə aktı">
             <Trash2 size={14} />
           </button>
         )}
+        </span>
       </div>
       {canManage && material && asking && <SettleForm r={r} />}
     </li>
