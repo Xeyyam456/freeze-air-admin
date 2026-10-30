@@ -43,12 +43,12 @@ export function PieceGiveModal({ piece, tool, employees, onClose }: PieceGiveMod
           <span className="muted text-sm">{unit}{valid && rest > 0 ? ` · ${fmt(rest)} ${unit} depoda qalır` : ""}</span>
         </div>
       )}
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <div className="min-w-0 flex-1">
           <ToolPicker items={items} value={picked} onChange={setPicked} name="employee_id" icon={Users}
             placeholder="Kimə verilir?" emptyLabel="Aktiv əməkdaş yoxdur" searchLabel="Usta axtar..." />
         </div>
-        <Button size="sm" disabled={pending || !valid} onClick={give} className="!h-9">{pending ? "..." : "Ver"}</Button>
+        <Button size="sm" disabled={pending || !valid} onClick={give} className="!h-9 max-sm:!h-7 max-sm:!px-3 max-sm:!text-[11px]">{pending ? "..." : "Ver"}</Button>
       </div>
     </Modal>
   );

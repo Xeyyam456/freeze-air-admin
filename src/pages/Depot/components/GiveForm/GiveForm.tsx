@@ -50,7 +50,7 @@ export function GiveForm({ tool, employees, onDone }: GiveFormProps) {
       {packed
         ? <span className="self-center"><MiniSeg value={byPack} onChange={setByPack} items={[[true, tool.pack_name], [false, tool.unit]]} label="Vahid" /></span>
         : <span className="muted self-center text-sm">{unitLabel}</span>}
-      <Button size="sm" type="submit" disabled={pending || !picked} className="!h-9 max-sm:!h-7 max-sm:!px-4 max-sm:!text-[11px]">{pending ? "..." : "Ver"}</Button>
+      <Button size="sm" type="submit" disabled={pending || !picked} className="!h-9 max-sm:!h-7 max-sm:!px-3 max-sm:!text-[10px]">{pending ? "..." : "Ver"}</Button>
     </ActionForm>
   );
 }
