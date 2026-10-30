@@ -42,13 +42,13 @@ export function ToolFields({ t, kind, names = [] }: ToolFieldsProps) {
       {material && (
         <div>
           <span className="label">Necə sayılır <span className="muted font-normal">(bir neçəsini seç)</span></span>
-          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Necə sayılır">
+          <div className="flex flex-wrap gap-1.5 max-sm:gap-1" role="group" aria-label="Necə sayılır">
             {measures.map(([v, l]) => {
               const on = sel.includes(v);
               return (
                 <button key={v} type="button" aria-pressed={on} onClick={() => toggle(v)}
-                  className={`inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold transition-colors ${on ? "bg-navy text-white" : "bg-bg text-muted hover:text-ink"}`}>
-                  {on && <Check size={13} />}{l}
+                  className={`inline-flex h-9 max-sm:h-6 items-center gap-1.5 max-sm:gap-1 rounded-full px-4 max-sm:px-2 text-[13px] max-sm:text-[11px] font-semibold transition-colors ${on ? "bg-navy text-white" : "bg-bg text-muted hover:text-ink"}`}>
+                  {on && <Check size={13} className="max-sm:!h-3 max-sm:!w-3" />}{l}
                 </button>
               );
             })}
