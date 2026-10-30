@@ -29,7 +29,7 @@ export function ToolModal({ tool, holders, pieces, repairs, losses = [], request
   const empty = tool.quantity === 0 && tool.pieces_total === 0 && holders.length === 0;
   const pendingPieces = new Set(requests.filter((r) => r.type === "writeoff" && r.piece_id).map((r) => r.piece_id!));
   const pendingReturns = new Set(requests.filter((r) => r.type === "return" && r.assignment_id).map((r) => r.assignment_id!));
-  const measure = !material ? "Alət · ədəd" : isPacked(tool) ? `Material · 1 ${tool.pack_name} = ${fmt(tool.pack_size)} ${tool.unit}` : `Material · ${tool.unit}`;
+  const measure = !material ? "Alət · ədəd" : isPacked(tool) ? `Material · 1 ${tool.pack_name} = ${fmt(tool.pack_size)} ${tool.unit}` : `Material · ${tool.unit}`;
   const piecesTitle = !isPacked(tool) ? "Parçalar" : tool.pack_name === "balon" ? "Açıq balonlar" : "Açıq qablar";
   const actions = [
     canManage && { icon: PackagePlus, tone: "green" as const, label: "Mədaxil", onClick: onReceipt },
@@ -58,7 +58,7 @@ export function ToolModal({ tool, holders, pieces, repairs, losses = [], request
         </div>
       )}
 
-      <div className={`mt-3 grid gap-2 ${actions.length === 4 ? "grid-cols-4 max-sm:grid-cols-2" : actions.length === 3 ? "grid-cols-3" : "grid-cols-1"}`}>
+      <div className={`mt-3 grid gap-2 ${actions.length === 4 ? "grid-cols-4" : actions.length === 3 ? "grid-cols-3" : "grid-cols-1"} max-sm:grid-cols-2 max-sm:[&>*:last-child:nth-child(odd)]:col-span-2`}>
         {actions.map((a) => <DAction key={a.label} icon={a.icon} tone={a.tone} label={a.label} onClick={a.onClick} />)}
       </div>
 
