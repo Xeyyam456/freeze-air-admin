@@ -89,7 +89,7 @@ export function ToolPicker({
         disabled={empty}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className={`flex h-9 w-full items-center gap-2 rounded-[10px] border bg-surface px-3 text-left text-[13px] transition-colors disabled:opacity-60 ${
+        className={`flex h-9 max-sm:h-7 w-full items-center gap-2 rounded-[10px] border bg-surface px-3 text-left text-[13px] transition-colors disabled:opacity-60 ${
           open ? "border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : "border-line hover:border-[#cfd5e1]"
         }`}
       >
@@ -114,7 +114,7 @@ export function ToolPicker({
               value={query}
               onChange={(e) => { setQuery(e.target.value); setActive(0); }}
               placeholder={searchLabel}
-              className="h-10 w-full bg-transparent text-[13px] outline-none"
+              className="h-10 w-full bg-transparent text-[13px] outline-none max-sm:h-8 max-sm:text-xs"
               aria-label={searchLabel}
             />
             <span className="muted shrink-0 text-xs">{filtered.length}</span>

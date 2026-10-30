@@ -1322,6 +1322,20 @@ html {
       height: 26px;
       font-size: 11px;
     }
+    .field {
+      height: 32px;
+      padding: 0 10px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    textarea.field {
+      height: auto;
+      padding: 8px 10px;
+    }
+    .label {
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
   }
 }
 
