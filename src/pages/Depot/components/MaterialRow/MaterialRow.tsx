@@ -57,7 +57,7 @@ export function MaterialRow({ t, losses, canManage, onOpen, onGive }: MaterialRo
       <td className="px-3 py-3 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>
       <td className="py-3 pl-3 pr-5 text-right max-sm:pl-1 max-sm:pr-3">
         {canManage && t.available > 0 && (
-          <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-sm !h-8 !px-4 bg-[#0d9488] text-white hover:bg-[#0f766e] max-sm:!h-7 max-sm:!px-2.5 max-sm:!text-xs">Ver</button>
+          <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-sm !h-8 !px-4 bg-[#0d9488] text-white hover:bg-[#0f766e] max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">Ver</button>
         )}
       </td>
     </tr>

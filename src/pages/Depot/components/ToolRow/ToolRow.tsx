@@ -40,7 +40,7 @@ export function ToolRow({ t, losses, canManage, onOpen, onGive }: ToolRowProps) 
       <td className="px-3 py-2.5 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>
       <td className="py-2.5 pl-3 pr-5 text-right max-sm:pl-1 max-sm:pr-2">
         {canManage && t.available > 0 && (
-          <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-primary btn-sm !h-8 !px-4 max-sm:!h-7 max-sm:!px-2.5 max-sm:!text-xs">Ver</button>
+          <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-primary btn-sm !h-8 !px-4 max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">Ver</button>
         )}
       </td>
     </tr>
