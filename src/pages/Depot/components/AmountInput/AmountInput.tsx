@@ -1,6 +1,6 @@
 import { fmt, isPacked, parseQty, round2, unitOf } from "../../utils/quantity";
 import type { AmountInputProps } from "@/types/depot";
-import { Seg } from "../Seg";
+import { MiniSeg } from "../MiniSeg";
 
 // Miqdar + vahid: qablı materialda "balon | kq" keçidi (standart balon). Qaytarır: ölçü vahidi ilə miqdar.
 export function AmountInput({ tool, text, onText, byPack, onByPack, label = "Miqdar" }: AmountInputProps) {
@@ -12,7 +12,7 @@ export function AmountInput({ tool, text, onText, byPack, onByPack, label = "Miq
       <div className="flex items-center gap-2">
         <input value={text} onChange={(e) => onText(e.target.value)} inputMode="decimal" required autoComplete="off" aria-label={label} className="field !w-32" />
         {packed ? (
-          <Seg label="Vahid" value={byPack ? "p" : "u"} onChange={(v) => onByPack(v === "p")} items={[["p", tool.pack_name], ["u", tool.unit]] as const} />
+          <MiniSeg label="Vahid" value={byPack} onChange={onByPack} items={[[true, tool.pack_name], [false, tool.unit]]} />
         ) : (
           <span className="muted text-sm">{tool ? unitOf(tool) : ""}</span>
         )}
