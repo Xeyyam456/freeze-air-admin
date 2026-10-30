@@ -97,7 +97,7 @@ export function ToolPicker({
           <>
             <span className="grid h-5 w-5 shrink-0 place-items-center rounded-md bg-primary-soft text-primary"><Icon size={12} /></span>
             <span className="truncate font-semibold">{selected.name}</span>
-            {selected.hint && <span className="muted shrink-0 text-[11px] font-semibold">{selected.hint}</span>}
+            {selected.hint && <span className="muted shrink-0 text-[11px] font-semibold max-sm:hidden">{selected.hint}</span>}
           </>
         ) : (
           <span className="muted truncate">{empty ? emptyLabel : placeholder}</span>
