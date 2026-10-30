@@ -15,7 +15,7 @@ export function BoardHeader({ b, tab, onTab }: BoardHeaderProps) {
         <button type="button" onClick={() => onTab("home")} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line text-ink/70 transition-colors hover:bg-bg hover:text-ink max-sm:h-8 max-sm:w-8" title="Ümumi baxış" aria-label="Ümumi baxış">
           <ArrowLeft size={18} />
         </button>
-        <span className="contents max-sm:[&>span]:!h-7 max-sm:[&>span]:!w-7 max-sm:[&>span]:!rounded-lg max-sm:[&_svg]:!h-3.5 max-sm:[&_svg]:!w-3.5"><IconTile icon={TAB_ICON[tab]} tone={tab === "tool" ? "blue" : tab === "material" ? "teal" : "violet"} /></span>
+        <span className="contents max-sm:[&>span]:!hidden"><IconTile icon={TAB_ICON[tab]} tone={tab === "tool" ? "blue" : tab === "material" ? "teal" : "violet"} /></span>
         <div className="min-w-0 flex-1">
           <h2 className="text-lg font-bold leading-tight max-sm:text-[15px]">{tab === "tool" ? "Alətlər" : tab === "material" ? "Materiallar" : "Ustalar"}</h2>
           <p className="muted truncate text-[13px] max-sm:text-[11px]">
