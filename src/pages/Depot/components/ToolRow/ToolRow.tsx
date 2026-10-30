@@ -26,19 +26,19 @@ export function ToolRow({ t, losses, canManage, onOpen, onGive }: ToolRowProps) 
         <span className="flex items-center gap-3">
           <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg max-sm:hidden ${material ? SOFT.teal : SOFT.blue}`}><Icon size={15} /></span>
           <span className="min-w-0">
-            <span className="block truncate text-[14.5px] font-semibold group-hover:text-primary max-sm:whitespace-normal max-sm:text-[12px]">{t.name}</span>
+            <span className="block truncate text-[14.5px] font-semibold group-hover:text-primary max-sm:text-[12px]">{t.name}</span>
             {losses.length > 0 && <span className="block truncate text-xs font-medium text-[#dc2626]">{lossText(losses, unitOf(t))}</span>}
           </span>
         </span>
       </td>
       <td className="px-3 py-2.5 text-right tabular-nums max-sm:px-1">
-        <b className={`text-[15px] max-sm:text-[13px] ${n > 0 ? "" : "text-muted"}`}>{fmt(n)}</b> <span className="text-xs text-muted max-sm:text-[11px]">{u}</span>
+        <b className={`text-[15px] max-sm:text-[13px] ${n > 0 ? "" : "text-muted"}`}>{fmt(n)}</b> <span className="text-xs text-muted max-sm:hidden">{u}</span>
       </td>
       <td className="px-3 py-2.5 text-right tabular-nums max-sm:px-1">
-        {t.given_out > 0 ? <><b className="text-[15px] max-sm:text-[13px]">{fmt(t.given_out)}</b> <span className="text-xs text-muted max-sm:text-[11px]">{u}</span></> : <span className="text-muted">—</span>}
+        {t.given_out > 0 ? <><b className="text-[15px] max-sm:text-[13px]">{fmt(t.given_out)}</b> <span className="text-xs text-muted max-sm:hidden">{u}</span></> : <span className="text-muted">—</span>}
       </td>
       <td className="px-3 py-2.5 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>
-      <td className="py-2.5 pl-3 pr-5 text-right max-sm:pl-1 max-sm:pr-3">
+      <td className="py-2.5 pl-3 pr-5 text-right max-sm:pl-1 max-sm:pr-2">
         {canManage && t.available > 0 && (
           <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-primary btn-sm !h-8 !px-4 max-sm:!h-7 max-sm:!px-2.5 max-sm:!text-xs">Ver</button>
         )}
