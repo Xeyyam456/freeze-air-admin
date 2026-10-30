@@ -41,7 +41,7 @@ export function GiveForm({ tool, employees, onDone }: GiveFormProps) {
   return (
     <ActionForm key={formKey} action={submit} className="flex flex-wrap gap-2">
       <input type="hidden" name="tool_id" value={tool.id} />
-      <div className="min-w-[12rem] flex-1 max-sm:basis-full">
+      <div className="min-w-[8rem] flex-1 max-sm:basis-full">
         <ToolPicker items={items} value={picked} onChange={setPicked} name="employee_id" icon={Users}
           placeholder="Kimə verilir?" emptyLabel="Aktiv əməkdaş yoxdur" searchLabel="Usta axtar..." />
       </div>
