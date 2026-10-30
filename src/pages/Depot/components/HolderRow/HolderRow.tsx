@@ -28,7 +28,7 @@ export function HolderRow({ holding, canManage, tool, toolName, pendingReturn }:
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 max-sm:gap-x-1.5">
         {toolName !== undefined ? (
           <>
-            <Wrench size={15} className="shrink-0 text-primary max-sm:order-1" />
+            <Wrench size={15} className="shrink-0 text-primary max-sm:hidden" />
             <span className="min-w-0 flex-1 basis-32 max-sm:basis-0 truncate text-sm font-semibold max-sm:whitespace-normal max-sm:break-words max-sm:text-xs max-sm:leading-tight max-sm:[text-overflow:clip] max-sm:order-1">{toolName}</span>
           </>
         ) : (
@@ -43,7 +43,7 @@ export function HolderRow({ holding, canManage, tool, toolName, pendingReturn }:
           {pendingReturn && <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-bold text-primary" title="Usta qaytarmaq istəyir: Təsdiq gözləyir blokunda">qaytarır</span>}
           <HeldBadge takenAt={holding.taken_at} always />
         </span>
-        <span className="text-sm font-bold tabular-nums text-primary max-sm:order-1">{showQty(holding.quantity, unit, pack)}</span>
+        <span className="text-sm font-bold tabular-nums text-primary max-sm:order-1 max-sm:text-[11px]">{showQty(holding.quantity, unit, pack)}</span>
         <span className="hidden h-0 basis-full max-sm:order-1 max-sm:block" aria-hidden />
         {canManage && material && !asking && (
           <Button variant="secondary" size="sm" onClick={() => r.setAsking(true)} className="!h-8 max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px] max-sm:order-2 max-sm:ml-auto">Təhvil al</Button>
