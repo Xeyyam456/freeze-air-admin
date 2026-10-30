@@ -32,7 +32,7 @@ export function DepotScreen({ data, canManage, myUid, owner, variant, extraActio
   return (
     <Page title="Depo" actions={actions}>
       {!data ? <DepotSkeleton /> : (
-        <div className="space-y-5">
+        <div className="space-y-5 max-sm:-mx-2.5">
           <DepotModals modal={modal} data={data} kind={kind} receiptTool={receiptTool} onReceipt={openReceipt} onClose={() => setModal(null)} />
           {children}
           {/* Yalnız gözləyən varsa görünür */}
