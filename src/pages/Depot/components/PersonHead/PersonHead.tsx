@@ -17,7 +17,7 @@ export function PersonHead({ emp, toolsN, matsN, waiting, onClose }: PersonHeadP
       <div className="mt-4 grid grid-cols-3 gap-2.5 max-sm:mt-2.5 max-sm:gap-1.5">
         {([["Alət", `${toolsN} ədəd`], ["Material", `${matsN} növ`], ["«Aldım» gözləyir", String(waiting)]] as const).map(([l, v]) => (
           <div key={l} className="rounded-2xl bg-white/12 px-3.5 py-2.5 backdrop-blur-sm max-sm:rounded-xl max-sm:px-2 max-sm:py-1.5">
-            <p className="text-[11px] max-sm:text-[10px] font-semibold text-white/65">{l}</p>
+            <p className="text-[11px] max-sm:text-[10px] font-semibold text-white/65">{l.startsWith("«") ? <><span className="max-sm:hidden">{l}</span><span className="sm:hidden">Gözləyir</span></> : l}</p>
             <p className="text-lg max-sm:text-sm font-extrabold tabular-nums max-sm:whitespace-nowrap">{v}</p>
           </div>
         ))}
