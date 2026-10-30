@@ -12,7 +12,7 @@ export function PieceRow({ piece, tool, employees, canManage, writeoffPending }:
   const [giving, setGiving] = useState(false);
   const [writeoff, setWriteoff] = useState(false);
   const original = piece.original_length ?? piece.length;
-  const who = piece.employees ? `${piece.employees.full_name} qaytarıb` : "Depoda qalan hissə";
+  const who = piece.employees ? `${piece.employees.full_name} qaytarıb` : "";
   return (
     <li className="flex flex-wrap items-center gap-3 py-2 max-sm:gap-x-2 max-sm:gap-y-0.5 max-sm:py-1.5">
       {giving && <PieceGiveModal piece={piece} tool={tool} employees={employees} onClose={() => setGiving(false)} />}
@@ -22,7 +22,7 @@ export function PieceRow({ piece, tool, employees, canManage, writeoffPending }:
         <span className="block text-sm max-sm:text-[13px] font-bold tabular-nums">{fmt(piece.length)} {unit}</span>
         {original > piece.length && <span className="muted block text-[11px]">ilkin {fmt(original)}</span>}
       </span>
-      <span className="muted min-w-0 flex-1 truncate text-[13px] max-sm:order-last max-sm:basis-full max-sm:text-[11px]" title={who}>{who} · {dateAz(piece.created_at)}</span>
+      <span className="muted min-w-0 flex-1 truncate text-[13px] max-sm:order-last max-sm:basis-full max-sm:text-[11px]" title={who}>{who ? `${who} · ` : ""}{dateAz(piece.created_at)}</span>
       {writeoffPending && <span className="shrink-0 rounded-full bg-danger-soft px-2 py-0.5 text-[11px] font-bold text-danger">silinmə gözləyir</span>}
       {canManage && (
         <>
