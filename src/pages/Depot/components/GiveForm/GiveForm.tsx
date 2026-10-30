@@ -45,12 +45,12 @@ export function GiveForm({ tool, employees, onDone }: GiveFormProps) {
         <ToolPicker items={items} value={picked} onChange={setPicked} name="employee_id" icon={Users}
           placeholder="Kimə verilir?" emptyLabel="Aktiv əməkdaş yoxdur" searchLabel="Usta axtar..." />
       </div>
-      <QuantityInput key={String(byPack)} limit={limit} limitText={(l, w) => giveLimitText(l, w, unitLabel)} className="max-sm:!h-8" />
+      <QuantityInput key={String(byPack)} limit={limit} limitText={(l, w) => giveLimitText(l, w, unitLabel)} className="max-sm:!h-7 max-sm:!w-16 max-sm:!text-xs" />
       {/* Vahid sahənin yanında: balonda keçid, qalanında materialın öz vahidi (metr, kq...) və ya "ədəd" */}
       {packed
         ? <span className="self-center"><MiniSeg value={byPack} onChange={setByPack} items={[[true, tool.pack_name], [false, tool.unit]]} label="Vahid" /></span>
         : <span className="muted self-center text-sm">{unitLabel}</span>}
-      <Button size="sm" type="submit" disabled={pending || !picked} className="!h-9 max-sm:!h-8 max-sm:min-w-0 max-sm:flex-1 max-sm:!text-xs">{pending ? "..." : "Ver"}</Button>
+      <Button size="sm" type="submit" disabled={pending || !picked} className="!h-9 max-sm:!h-7 max-sm:min-w-0 max-sm:flex-1 max-sm:!px-2 max-sm:!text-[11px]">{pending ? "..." : "Ver"}</Button>
     </ActionForm>
   );
 }
