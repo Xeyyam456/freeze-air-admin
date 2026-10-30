@@ -6,8 +6,6 @@
   "components/clients/LocationLog.tsx": 121,
   "components/CommandPalette.tsx": 135,
   "components/DatePicker.tsx": 193,
-  "components/employees/AttendanceBoard.tsx": 303,
-  "components/employees/AttendanceCalendar.tsx": 154,
   "components/employees/AvatarUpload.tsx": 108,
   "components/employees/EmployeeForms.tsx": 491,
   "components/employees/EmployeeSelect.tsx": 165,
@@ -26,11 +24,8 @@
   "components/site/TrustTab.tsx": 187,
   "components/stores/StoreForms.tsx": 123,
   "components/stores/StoreImport.tsx": 157,
-  "components/ToolPicker.tsx": 160,
-  "lib/attendance.ts": 220,
-  "lib/export-attendance.ts": 176,
+  "components/ToolPicker.tsx": 119,
   "pages/Home.tsx": 324,
-  "pages/Leaves.tsx": 273,
   "pages/Login.tsx": 117,
   "pages/Requests.tsx": 197
 }

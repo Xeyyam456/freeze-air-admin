@@ -1,4 +1,4 @@
-import { MONTHS_AZ } from "@/lib/attendance";
+import { MONTHS_AZ } from "@/shared/utils/monthsAz";
 
 // Tarix köməkçiləri ("YYYY-MM-DD", UTC günorta ilə: saat qurşağı sürüşməsin); admin və web Yanacaq səhifələri
 export const d12 = (iso: string) => new Date(`${iso}T12:00:00Z`);

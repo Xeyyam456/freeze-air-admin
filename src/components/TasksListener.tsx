@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { leaveRange } from "@/lib/attendance";
+import { leaveRange } from "@/shared/utils/attendance/leaveRange";
 import { LIVE, revalidate } from "@/lib/revalidate";
 import { isSoundReady, playNotify } from "@/lib/sound";
 import { createClient } from "@/lib/supabase/client";

@@ -13,7 +13,7 @@ export const LIVE = {
   // tapşırıq "görüldü" → iş qeydi yaranır: işlər, Panel, ustaların iş sayı da dəyişir
   tasks: ["tasks-day", "dashboard", "nav-badges", "month-dashboard", "worklogs", "group-map-range", "all-logs", "group-map-all", "file-counts-all", "work-log", "employees-page", "clients", "client-detail"],
   leaves: ["leaves", "nav-badges", "employees-page"],
-  attendance: ["employees-page"], // Davamiyyət səhifəsinin öz canlı dinləyicisi var (lib/attendance.ts)
+  attendance: ["employees-page"], // Davamiyyət səhifəsinin öz canlı dinləyicisi var (services/attendance/liveChannel.ts)
   fuel: ["fuel"],
   depot: ["depot", "nav-badges", "dashboard", "depot-journal", "depot-tool-history"],
   requests: ["contact-requests", "nav-badges"],

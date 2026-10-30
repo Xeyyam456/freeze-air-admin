@@ -1,4 +1,4 @@
-import { MONTHS_AZ } from "@/lib/attendance";
+import { MONTHS_AZ } from "@/shared/utils/monthsAz";
 import type { Period } from "@/types/fuel";
 import { addDays, addMonths, d12, dayName, numDate } from "./dates";
 

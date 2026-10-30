@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { todayBaku } from "@/lib/attendance";
+import { todayBaku } from "@/shared/utils/todayBaku";
 import type { CarSummary, PayTarget, Period } from "@/types/fuel";
 import { useFuelData } from "../queries/useFuelData";
 import { addDays, addMonths } from "../shared/dates";
