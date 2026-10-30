@@ -1314,6 +1314,10 @@ html {
       height: 32px;
       border-radius: 8px;
     }
+    /* Sürüşmə zolağı üçün sağda yer saxlanmasın: siyahı kartlarının məzmunu mərkəzdə qalsın */
+    .nice-scroll {
+      scrollbar-gutter: auto;
+    }
     .user-chip {
       padding: 3px;
     }
