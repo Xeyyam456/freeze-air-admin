@@ -743,6 +743,8 @@ html {
     inset: 0;
     z-index: 100;
     display: grid;
+    /* Sütun məzmuna görə genişlənməsin: geniş məzmun pəncərəni ekrandan çıxarırdı */
+    grid-template-columns: minmax(0, 1fr);
     place-items: center;
     /* Kənarlarda boşluq: mobildə pəncərə ekranın kənarına yapışmasın */
     padding: 16px;

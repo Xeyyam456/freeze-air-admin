@@ -22,25 +22,25 @@ export function ToolRow({ t, losses, canManage, onOpen, onGive }: ToolRowProps) 
   return (
     <tr tabIndex={0} onClick={onOpen} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && e.target === e.currentTarget && onOpen()}
       className="group cursor-pointer border-t border-line transition-colors hover:bg-[#f7f9fd] focus-visible:outline-2 focus-visible:outline-primary">
-      <td className="py-2.5 pl-5 pr-3">
+      <td className="py-2.5 pl-5 pr-3 max-sm:pl-3 max-sm:pr-1">
         <span className="flex items-center gap-3">
-          <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${material ? SOFT.teal : SOFT.blue}`}><Icon size={15} /></span>
+          <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg max-sm:hidden ${material ? SOFT.teal : SOFT.blue}`}><Icon size={15} /></span>
           <span className="min-w-0">
-            <span className="block truncate text-[14.5px] font-semibold group-hover:text-primary">{t.name}</span>
+            <span className="block truncate text-[14.5px] font-semibold group-hover:text-primary max-sm:whitespace-normal max-sm:text-[13px]">{t.name}</span>
             {losses.length > 0 && <span className="block truncate text-xs font-medium text-[#dc2626]">{lossText(losses, unitOf(t))}</span>}
           </span>
         </span>
       </td>
-      <td className="px-3 py-2.5 text-right tabular-nums">
-        <b className={`text-[15px] ${n > 0 ? "" : "text-muted"}`}>{fmt(n)}</b> <span className="text-xs text-muted">{u}</span>
+      <td className="px-3 py-2.5 text-right tabular-nums max-sm:px-1">
+        <b className={`text-[15px] max-sm:text-[13px] ${n > 0 ? "" : "text-muted"}`}>{fmt(n)}</b> <span className="text-xs text-muted max-sm:text-[11px]">{u}</span>
       </td>
-      <td className="px-3 py-2.5 text-right tabular-nums">
-        {t.given_out > 0 ? <><b className="text-[15px]">{fmt(t.given_out)}</b> <span className="text-xs text-muted">{u}</span></> : <span className="text-muted">—</span>}
+      <td className="px-3 py-2.5 text-right tabular-nums max-sm:px-1">
+        {t.given_out > 0 ? <><b className="text-[15px] max-sm:text-[13px]">{fmt(t.given_out)}</b> <span className="text-xs text-muted max-sm:text-[11px]">{u}</span></> : <span className="text-muted">—</span>}
       </td>
       <td className="px-3 py-2.5 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>
-      <td className="py-2.5 pl-3 pr-5 text-right">
+      <td className="py-2.5 pl-3 pr-5 text-right max-sm:pl-1 max-sm:pr-3">
         {canManage && t.available > 0 && (
-          <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-primary btn-sm !h-8 !px-4">Ver</button>
+          <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-primary btn-sm !h-8 !px-4 max-sm:!px-3">Ver</button>
         )}
       </td>
     </tr>

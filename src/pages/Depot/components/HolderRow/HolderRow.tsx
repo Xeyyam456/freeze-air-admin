@@ -24,16 +24,17 @@ export function HolderRow({ holding, canManage, tool, toolName, pendingReturn }:
   return (
     <li className="py-2.5">
       {writeoff && tool && <WriteoffModal tool={tool} source={{ kind: "holding", holding } satisfies WriteoffSource} onClose={() => setWriteoff(false)} />}
-      <div className="flex items-center gap-3">
+      {/* Dar ekranda nişanlar, say və düymələr ikinci sətrə keçir (pəncərədən çıxmasın) */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         {toolName !== undefined ? (
           <>
             <Wrench size={15} className="shrink-0 text-primary" />
-            <span className="min-w-0 flex-1 truncate text-sm font-semibold">{toolName}</span>
+            <span className="min-w-0 flex-1 basis-32 truncate text-sm font-semibold">{toolName}</span>
           </>
         ) : (
           <>
             <Avatar employee={{ full_name: who?.full_name ?? "?", photo_url: who?.photo_url ?? null }} className="!h-8 !w-8 !text-[11px]" />
-            <span className="min-w-0 flex-1 truncate text-sm font-semibold">{who?.full_name ?? "—"}</span>
+            <span className="min-w-0 flex-1 basis-32 truncate text-sm font-semibold">{who?.full_name ?? "—"}</span>
           </>
         )}
         <ReceivedBadge h={holding} />
