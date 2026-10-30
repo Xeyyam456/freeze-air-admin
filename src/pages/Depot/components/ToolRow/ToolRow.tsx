@@ -31,10 +31,10 @@ export function ToolRow({ t, losses, canManage, onOpen, onGive }: ToolRowProps) 
           </span>
         </span>
       </td>
-      <td className="px-3 py-2.5 text-right tabular-nums max-sm:px-1">
+      <td className="px-3 py-2.5 text-right tabular-nums max-sm:px-1 max-sm:text-center">
         <b className={`text-[15px] max-sm:text-[13px] ${n > 0 ? "" : "text-muted"}`}>{fmt(n)}</b> <span className="text-xs text-muted max-sm:hidden">{u}</span>
       </td>
-      <td className="px-3 py-2.5 text-right tabular-nums max-sm:px-1">
+      <td className="px-3 py-2.5 text-right tabular-nums max-sm:px-1 max-sm:text-center">
         {t.given_out > 0 ? <><b className="text-[15px] max-sm:text-[13px]">{fmt(t.given_out)}</b> <span className="text-xs text-muted max-sm:hidden">{u}</span></> : <span className="text-muted">—</span>}
       </td>
       <td className="px-3 py-2.5 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>

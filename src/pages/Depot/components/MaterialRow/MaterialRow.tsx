@@ -35,7 +35,7 @@ export function MaterialRow({ t, losses, canManage, onOpen, onGive }: MaterialRo
           </span>
         </span>
       </td>
-      <td className="px-3 py-3 text-right tabular-nums max-sm:px-1">
+      <td className="px-3 py-3 text-right tabular-nums max-sm:px-1 max-sm:text-center">
         <b className={`text-[16px] max-sm:text-[13px] ${t.available > 0 ? "" : "text-muted"}`}>{fmt(t.available)}</b> <span className="text-xs text-muted max-sm:text-[11px]">{t.unit}</span>
         {full !== null && full > 0 && <span className="muted block text-[11px]">{full} {t.pack_name}</span>}
       </td>
@@ -44,7 +44,7 @@ export function MaterialRow({ t, losses, canManage, onOpen, onGive }: MaterialRo
           ? <><b>{fmt(t.pieces_total)}</b> <span className="text-xs text-muted">{t.unit}</span><span className="muted block text-[11px]">{t.pieces_count} {pieceWord(t)}</span></>
           : <span className="text-muted">—</span>}
       </td>
-      <td className="px-3 py-3 text-right tabular-nums max-sm:px-1">
+      <td className="px-3 py-3 text-right tabular-nums max-sm:px-1 max-sm:text-center">
         {t.given_out > 0 ? <><b className="max-sm:text-[13px]">{fmt(t.given_out)}</b> <span className="text-xs text-muted max-sm:text-[11px]">{t.unit}</span></> : <span className="text-muted">—</span>}
       </td>
       <td className="px-3 py-3 max-xl:hidden">

@@ -12,9 +12,9 @@ export function ToolsTable({ b, losses, canManage, onOpenTool }: ToolsTableProps
         {material ? (
           <tr>
             <th className="py-3 pl-5 pr-3 max-sm:pl-3 max-sm:pr-1">Material</th>
-            <th className="w-32 px-3 py-3 text-right max-sm:w-[76px] max-sm:px-1">Depoda (tam)</th>
+            <th className="w-32 px-3 py-3 text-right max-sm:text-center max-sm:w-[76px] max-sm:px-1">Depoda (tam)</th>
             <th className="w-32 px-3 py-3 text-right max-lg:hidden">Parça / açıq</th>
-            <th className="w-28 px-3 py-3 text-right max-sm:w-[68px] max-sm:px-1">Ustalarda</th>
+            <th className="w-28 px-3 py-3 text-right max-sm:text-center max-sm:w-[68px] max-sm:px-1">Ustalarda</th>
             <th className="w-40 px-3 py-3 max-xl:hidden">Doluluq</th>
             <th className="w-36 px-3 py-3 max-md:hidden">Vəziyyət</th>
             <th className="w-24 py-3 pl-3 pr-5 max-sm:w-[56px] max-sm:pl-1 max-sm:pr-3" />
@@ -22,8 +22,8 @@ export function ToolsTable({ b, losses, canManage, onOpenTool }: ToolsTableProps
         ) : (
           <tr>
             <th className="py-3 pl-5 pr-3 max-sm:pl-3 max-sm:pr-1">Ad</th>
-            <th className="w-32 px-3 py-3 text-right max-sm:w-[54px] max-sm:px-1 max-sm:text-[11px]">Depoda</th>
-            <th className="w-32 px-3 py-3 text-right max-sm:w-[54px] max-sm:px-1 max-sm:text-[11px]">Ustalarda</th>
+            <th className="w-32 px-3 py-3 text-right max-sm:text-center max-sm:w-[54px] max-sm:px-1 max-sm:text-[11px]">Depoda</th>
+            <th className="w-32 px-3 py-3 text-right max-sm:text-center max-sm:w-[54px] max-sm:px-1 max-sm:text-[11px]">Ustalarda</th>
             <th className="w-40 px-3 py-3 max-md:hidden">Vəziyyət</th>
             <th className="w-24 py-3 pl-3 pr-5 max-sm:w-[52px] max-sm:pl-1 max-sm:pr-2" />
           </tr>
