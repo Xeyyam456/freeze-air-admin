@@ -17,7 +17,7 @@ export function BoardHeader({ b, tab, onTab }: BoardHeaderProps) {
         </button>
         <span className="contents max-sm:[&>span]:!h-7 max-sm:[&>span]:!w-7 max-sm:[&>span]:!rounded-lg max-sm:[&_svg]:!h-3.5 max-sm:[&_svg]:!w-3.5"><IconTile icon={TAB_ICON[tab]} tone={tab === "tool" ? "blue" : tab === "material" ? "teal" : "violet"} /></span>
         <div className="min-w-0 flex-1">
-          <h2 className="text-lg font-bold leading-tight">{tab === "tool" ? "Alətlər" : tab === "material" ? "Materiallar" : "Ustalar"}</h2>
+          <h2 className="text-lg font-bold leading-tight max-sm:text-[15px]">{tab === "tool" ? "Alətlər" : tab === "material" ? "Materiallar" : "Ustalar"}</h2>
           <p className="muted truncate text-[13px] max-sm:text-[11px]">
             {tab === "tool" ? (<><span className="whitespace-nowrap">{counts.tool} növ · depoda {fmt(tDepot)}</span><span> · </span><span className="whitespace-nowrap">ustalarda {fmt(tGiven)}{tRepair ? ` · təmirdə ${tRepair}` : ""}</span></>)
               : tab === "material" ? `${counts.material} növ · depoda var ${b.mats.filter((t) => inStock(t) > 0).length}`
