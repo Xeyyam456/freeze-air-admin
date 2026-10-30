@@ -46,7 +46,7 @@ export function HolderRow({ holding, canManage, tool, toolName, pendingReturn }:
         <span className="text-sm font-bold tabular-nums text-primary max-sm:order-1">{showQty(holding.quantity, unit, pack)}</span>
         <span className="hidden h-0 basis-full max-sm:order-1 max-sm:block" aria-hidden />
         {canManage && material && !asking && (
-          <Button variant="secondary" size="sm" onClick={() => r.setAsking(true)} className="!h-8 max-sm:!h-7 max-sm:!px-2 max-sm:!text-xs max-sm:order-2 max-sm:ml-auto">Təhvil al</Button>
+          <Button variant="secondary" size="sm" onClick={() => r.setAsking(true)} className="!h-8 max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px] max-sm:order-2 max-sm:ml-auto">Təhvil al</Button>
         )}
         {canManage && !material && (
           <ActionForm action={r.action} className="flex items-center gap-1.5 max-sm:order-2 max-sm:ml-auto">
@@ -55,14 +55,14 @@ export function HolderRow({ holding, canManage, tool, toolName, pendingReturn }:
                 limitText={(limit) => `Ustada cəmi ${limit} ${unit} var.`} />
             )}
             {holding.quantity > 1 && !asking ? (
-              <Button variant="secondary" size="sm" onClick={() => r.setAsking(true)} className="!h-8 max-sm:!h-7 max-sm:!px-2 max-sm:!text-xs">Geri al</Button>
+              <Button variant="secondary" size="sm" onClick={() => r.setAsking(true)} className="!h-8 max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">Geri al</Button>
             ) : (
-              <Button type="submit" variant="secondary" size="sm" disabled={pending} className="!h-8">{pending ? "..." : "Geri al"}</Button>
+              <Button type="submit" variant="secondary" size="sm" disabled={pending} className="!h-8 max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">{pending ? "..." : "Geri al"}</Button>
             )}
           </ActionForm>
         )}
         {canManage && tool && (
-          <button type="button" onClick={() => setWriteoff(true)} className="icon-btn icon-btn-danger !h-8 !w-8 max-sm:!h-7 max-sm:!w-7 max-sm:order-2" title="Silinmə aktı (itib, xarab)" aria-label="Silinmə aktı">
+          <button type="button" onClick={() => setWriteoff(true)} className="icon-btn icon-btn-danger !h-8 !w-8 max-sm:!h-6 max-sm:!w-6 max-sm:order-2" title="Silinmə aktı (itib, xarab)" aria-label="Silinmə aktı">
             <Trash2 size={14} />
           </button>
         )}
