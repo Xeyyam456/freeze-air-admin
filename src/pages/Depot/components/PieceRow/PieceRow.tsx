@@ -18,11 +18,11 @@ export function PieceRow({ piece, tool, employees, canManage, writeoffPending }:
       {giving && <PieceGiveModal piece={piece} tool={tool} employees={employees} onClose={() => setGiving(false)} />}
       {writeoff && <WriteoffModal tool={tool} source={{ kind: "piece", piece }} onClose={() => setWriteoff(false)} />}
       {/* Qalan miqdar; hissə verilibsə ilkin miqdar da yazılır */}
-      <span className="w-24 shrink-0 max-sm:w-auto max-sm:flex-1">
+      <span className="w-24 shrink-0 max-sm:w-auto">
         <span className="block text-sm max-sm:text-[13px] font-bold tabular-nums">{fmt(piece.length)} {unit}</span>
         {original > piece.length && <span className="muted block text-[11px]">ilkin {fmt(original)}</span>}
       </span>
-      <span className="muted min-w-0 flex-1 truncate text-[13px] max-sm:order-last max-sm:basis-full max-sm:text-[11px]" title={who}>{who ? `${who} · ` : ""}{dateAz(piece.created_at)}</span>
+      <span className={`muted min-w-0 flex-1 truncate text-[13px] max-sm:text-[11px] ${who ? "max-sm:order-last max-sm:basis-full" : "max-sm:text-center"}`} title={who}>{who ? `${who} · ` : ""}{dateAz(piece.created_at)}</span>
       {writeoffPending && <span className="shrink-0 rounded-full bg-danger-soft px-2 py-0.5 text-[11px] font-bold text-danger">silinmə gözləyir</span>}
       {canManage && (
         <>
