@@ -2,7 +2,7 @@ import { isServer, QueryClient } from "@tanstack/react-query";
 
 // Məlumat keşi (TanStack Query): səhifələr arası keçiddə məlumat dərhal keşdən görünür, arxada yenilənir;
 // eyni açarlı sorğu bir dəfə gedir. Brauzerdə bir keş; serverdə (web, Next SSR) hər sorğuya ayrıca — istifadəçilər qarışmasın.
-// web-ə scripts/sync-depot-to-web.cjs ilə köçürülür.
+// Web-də öz kopyası var (ayrıdır).
 function make() {
   return new QueryClient({
     defaultOptions: {

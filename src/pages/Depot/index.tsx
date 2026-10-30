@@ -10,7 +10,7 @@ import { DEPOT_KEEPER_EMAILS_KEY } from "./queries/keys";
 import { useDepotData } from "./queries/useDepotData";
 
 // Admin depo səhifəsi: ortaq ekran + "Depo məsulu" (yalnız admin; ⚙, < 380px-də "Daha çox" menyusunda).
-// Web-də öz index.tsx-i var (sinxron skripti bu faylı köçürmür).
+// Web-də öz kopyası və index.tsx-i var (ayrıdır).
 export default function DepotPage() {
   const { admin, owner, canManageTools, employeeId, session } = useAuth();
   const data = useDepotData();
