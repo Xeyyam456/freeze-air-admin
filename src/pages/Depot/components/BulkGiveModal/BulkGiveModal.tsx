@@ -48,7 +48,7 @@ export function BulkGiveModal({ emp, kind, tools, onClose }: BulkGiveModalProps)
       <div className="search">
         <Search size={16} className="!left-4" />
         <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={TEXT[kind].search.split(" və ")[0] + " axtar..."} aria-label="Axtarış" autoFocus
-          className="!h-10 !pl-10 !text-sm" />
+          className="!h-10 !pl-10 !text-sm max-sm:!h-8 max-sm:!text-xs" />
       </div>
 
       {available.length === 0 ? (
@@ -58,19 +58,19 @@ export function BulkGiveModal({ emp, kind, tools, onClose }: BulkGiveModalProps)
           {shown.map((t) => {
             const on = qty[t.id] !== undefined;
             return (
-              <li key={t.id} className="flex items-center gap-3 py-2">
-                <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
+              <li key={t.id} className="flex items-center gap-3 py-2 max-sm:gap-2 max-sm:py-1.5">
+                <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 max-sm:gap-2">
                   <input type="checkbox" checked={on} onChange={() => toggle(t)} className="h-4 w-4 shrink-0 accent-[var(--color-primary)]" />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold">{t.name}</span>
-                    <span className="muted block text-[11px]">depoda {withUnit(t.available, t)}</span>
+                    <span className="block truncate text-sm max-sm:text-xs font-semibold">{t.name}</span>
+                    <span className="muted block text-[11px] max-sm:text-[10px]">depoda {withUnit(t.available, t)}</span>
                   </span>
                 </label>
                 {on && (
                   <span className="flex shrink-0 items-center gap-1.5">
                     <input inputMode="decimal" autoComplete="off" value={qty[t.id]} aria-label={`${t.name} sayı`}
                       onChange={(e) => setQty((q) => ({ ...q, [t.id]: e.target.value }))}
-                      className={`field !h-8 !w-20 !px-2 !text-[13px] ${okQty(t) ? "" : "!border-danger"}`} />
+                      className={`field !h-8 !w-20 !px-2 !text-[13px] max-sm:!h-7 max-sm:!w-14 max-sm:!text-xs ${okQty(t) ? "" : "!border-danger"}`} />
                     <span className="muted text-xs">{t.kind === "material" ? t.unit : "ədəd"}</span>
                   </span>
                 )}
@@ -81,11 +81,11 @@ export function BulkGiveModal({ emp, kind, tools, onClose }: BulkGiveModalProps)
         </ul>
       )}
 
-      <div className="mt-4 flex gap-2 border-t border-line pt-4">
-        <Button disabled={pending || !valid} onClick={give} className="flex-1">
+      <div className="mt-4 flex gap-2 border-t border-line pt-4 max-sm:mt-3 max-sm:pt-3">
+        <Button disabled={pending || !valid} onClick={give} className="min-w-0 flex-1 max-sm:!h-8 max-sm:!px-2 max-sm:!text-xs">
           {pending ? "Gözləyin..." : chosen.length ? `Seçilənləri ver (${chosen.length})` : `Yuxarıdan ${TEXT[kind].word} seç`}
         </Button>
-        <Button variant="cancel" onClick={onClose}>Ləğv et</Button>
+        <Button variant="cancel" onClick={onClose} className="max-sm:!h-8 max-sm:!px-3 max-sm:!text-xs">Ləğv et</Button>
       </div>
     </Modal>
   );
