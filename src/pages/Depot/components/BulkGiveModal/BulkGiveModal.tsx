@@ -67,11 +67,11 @@ export function BulkGiveModal({ emp, kind, tools, onClose }: BulkGiveModalProps)
                   </span>
                 </label>
                 {on && (
-                  <span className="flex shrink-0 items-center gap-1.5">
+                  <span className="flex shrink-0 items-center gap-1.5 max-sm:gap-1">
                     <input inputMode="decimal" autoComplete="off" value={qty[t.id]} aria-label={`${t.name} sayı`}
                       onChange={(e) => setQty((q) => ({ ...q, [t.id]: e.target.value }))}
-                      className={`field !h-8 !w-20 !px-2 !text-[13px] max-sm:!h-7 max-sm:!w-14 max-sm:!text-xs ${okQty(t) ? "" : "!border-danger"}`} />
-                    <span className="muted text-xs">{t.kind === "material" ? t.unit : "ədəd"}</span>
+                      className={`field !h-8 !w-20 !px-2 !text-[13px] max-sm:!h-7 max-sm:!w-10 max-sm:!px-1 max-sm:text-center max-sm:!text-xs ${okQty(t) ? "" : "!border-danger"}`} />
+                    <span className="muted text-xs max-sm:text-[10px]">{t.kind === "material" ? t.unit : "ədəd"}</span>
                   </span>
                 )}
               </li>
