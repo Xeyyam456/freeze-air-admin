@@ -1,7 +1,8 @@
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronUp, PackageOpen, Search, Wrench, type LucideIcon } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronUp, Wrench, type LucideIcon } from "lucide-react";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
+import { ToolPickerMenu } from "./ToolPickerMenu";
 
 type Item = { id: number; name: string; hint?: string };
 
@@ -32,6 +33,8 @@ export function ToolPicker({
   const [active, setActive] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const close = useCallback(() => setOpen(false), []);
 
   // Esc yalnız siyahını bağlasın, usta pəncərəsini yox (ümumi qat növbəsi)
   useEscapeLayer(() => setOpen(false), open);
@@ -46,7 +49,8 @@ export function ToolPicker({
   useEffect(() => {
     if (!open) return;
     const onDown = (e: MouseEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+      const t = e.target as Element;
+      if (!rootRef.current?.contains(t) && !t.closest("[data-picker-menu]")) setOpen(false);
     };
     document.addEventListener("mousedown", onDown);
     searchRef.current?.focus();
@@ -84,6 +88,7 @@ export function ToolPicker({
     <div ref={rootRef} className="relative min-w-0 flex-1" onKeyDown={onKeyDown}>
       <input type="hidden" name={name} value={value ?? ""} />
       <button
+        ref={btnRef}
         type="button"
         onClick={toggle}
         disabled={empty}
@@ -106,54 +111,8 @@ export function ToolPicker({
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 right-0 z-20 mb-2 overflow-hidden rounded-xl border border-line bg-surface shadow-[0_16px_40px_rgba(16,24,40,0.18)] max-sm:fixed max-sm:inset-auto max-sm:left-1/2 max-sm:top-1/2 max-sm:mb-0 max-sm:w-[min(20rem,calc(100vw-3rem))] max-sm:-translate-x-1/2 max-sm:-translate-y-1/2">
-          <div className="flex items-center gap-2 border-b border-line px-3">
-            <Search size={14} className="muted shrink-0" />
-            <input
-              ref={searchRef}
-              value={query}
-              onChange={(e) => { setQuery(e.target.value); setActive(0); }}
-              placeholder={searchLabel}
-              className="h-10 w-full bg-transparent text-[13px] outline-none max-sm:h-8 max-sm:text-xs"
-              aria-label={searchLabel}
-            />
-            <span className="muted shrink-0 text-xs">{filtered.length}</span>
-          </div>
-          {filtered.length === 0 ? (
-            <div className="flex flex-col items-center gap-1 px-3 py-5 text-center">
-              <PackageOpen size={18} className="muted" />
-              <p className="muted text-xs">Bu adla heç nə tapılmadı</p>
-            </div>
-          ) : (
-            <ul role="listbox" className="nice-scroll max-h-[212px] overflow-y-auto p-1.5">
-              {filtered.map((item, i) => {
-                const isSelected = item.id === value;
-                return (
-                  <li key={item.id} role="option" aria-selected={isSelected}>
-                    <button
-                      type="button"
-                      onMouseEnter={() => setActive(i)}
-                      onClick={() => choose(item)}
-                      className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] font-medium transition-colors ${
-                        i === active ? "bg-primary-soft text-primary" : "hover:bg-bg"
-                      }`}
-                    >
-                      <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-md ${i === active ? "bg-surface" : "bg-bg"} text-primary`}>
-                        <Icon size={13} />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate">{item.name}</span>
-                        {item.hint && <span className="muted hidden text-[10.5px] font-semibold leading-tight max-sm:block">{item.hint}</span>}
-                      </span>
-                      {item.hint && <span className="muted shrink-0 text-[11px] font-semibold max-sm:hidden">{item.hint}</span>}
-                      {isSelected && <Check size={15} className="shrink-0 text-primary" />}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
+        <ToolPickerMenu anchor={btnRef.current} items={filtered} value={value} active={active} query={query} searchRef={searchRef} icon={Icon} searchLabel={searchLabel}
+          onActive={setActive} onQuery={(q) => { setQuery(q); setActive(0); }} onChoose={choose} onClose={close} />
       )}
     </div>
   );
