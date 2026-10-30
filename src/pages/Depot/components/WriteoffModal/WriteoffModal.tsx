@@ -52,7 +52,7 @@ export function WriteoffModal({ tool, source, onClose }: WriteoffModalProps) {
             <div className="flex flex-wrap gap-1.5">
               {(Object.keys(REASONS) as WriteoffReason[]).map((r) => (
                 <button key={r} type="button" aria-pressed={reason === r} onClick={() => setReason(r)}
-                  className={`h-9 rounded-full px-3.5 text-[13px] font-semibold transition-colors ${reason === r ? "bg-danger text-white" : "bg-bg text-muted hover:text-ink"}`}>
+                  className={`h-9 rounded-full px-3.5 text-[13px] font-semibold transition-colors max-sm:h-7 max-sm:px-2.5 max-sm:text-[11px] ${reason === r ? "bg-danger text-white" : "bg-bg text-muted hover:text-ink"}`}>
                   {REASONS[r]}
                 </button>
               ))}
@@ -62,7 +62,7 @@ export function WriteoffModal({ tool, source, onClose }: WriteoffModalProps) {
             <span className="label">Miqdar</span>
             <div className="flex items-center gap-2">
               <input value={qtyText} onChange={(e) => setQtyText(e.target.value)} inputMode="decimal" aria-invalid={over} aria-label="Miqdar" autoComplete="off"
-                className={`field !w-32 ${over ? "!border-danger" : ""}`} required />
+                className={`field !w-32 max-sm:!h-8 max-sm:!w-24 max-sm:!text-xs ${over ? "!border-danger" : ""}`} required />
               <span className="muted text-sm">{unit} · ən çox {fmt(limit)}</span>
             </div>
           </div>

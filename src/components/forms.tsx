@@ -85,11 +85,11 @@ export function Field({ label, children }: { label: string; children: React.Reac
 export function Buttons({ pending, label, onCancel }: { pending: boolean; label: string; onCancel?: () => void }) {
   return (
     <div className="flex gap-2 pt-1">
-      <button type="submit" disabled={pending} className="btn btn-primary min-w-0 flex-1 max-sm:!px-2 max-sm:text-[13px]">
+      <button type="submit" disabled={pending} className="btn btn-primary min-w-0 flex-1 max-sm:!h-8 max-sm:!px-2 max-sm:!text-xs">
         {pending ? "Gözləyin..." : label}
       </button>
       {onCancel && (
-        <button type="button" onClick={onCancel} className="btn btn-cancel max-sm:min-w-0 max-sm:flex-1 max-sm:!px-2 max-sm:text-[13px]">Ləğv et</button>
+        <button type="button" onClick={onCancel} className="btn btn-cancel max-sm:min-w-0 max-sm:flex-1 max-sm:!h-8 max-sm:!px-2 max-sm:!text-xs">Ləğv et</button>
       )}
     </div>
   );

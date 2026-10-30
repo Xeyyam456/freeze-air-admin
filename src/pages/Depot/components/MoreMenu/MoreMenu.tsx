@@ -34,7 +34,7 @@ export function MoreMenu({ items, dark = false }: MoreMenuProps) {
           const r = rectOf(e.currentTarget);
           setPos({ top: r.bottom + 8, right: Math.max(12, Math.min(viewport().w - r.right, viewport().w - 224 - 12)) });
         }}
-        className={`inline-flex h-10 items-center gap-1.5 rounded-xl px-3.5 text-sm font-semibold transition-colors max-sm:w-10 max-sm:justify-center max-sm:px-0 ${dark ? "bg-white/10 text-white hover:bg-white/20" : "border border-line bg-surface hover:bg-bg"}`}>
+        className={`inline-flex h-10 items-center gap-1.5 rounded-xl px-3.5 text-sm font-semibold transition-colors max-sm:h-8 max-sm:w-8 max-sm:justify-center max-sm:px-0 ${dark ? "bg-white/10 text-white hover:bg-white/20" : "border border-line bg-surface hover:bg-bg"}`}>
         <span className="max-sm:hidden">Daha çox</span><MoreHorizontal size={18} className="sm:hidden" aria-label="Daha çox" /><ChevronDown size={15} className={`max-sm:hidden ${pos ? "rotate-180" : ""}`} />
       </button>
       {pos && createPortal(

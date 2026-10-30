@@ -8,8 +8,8 @@ export function NoteRow({ note, onNote, file, onFile, placeholder = "Qeyd (istə
     <div>
       <div className="flex gap-2">
         <input name="note" value={note} onChange={onNote ? (e) => onNote(e.target.value) : undefined} required={required} placeholder={placeholder}
-          autoComplete="off" className="field min-w-0 flex-1" />
-        <label className={`icon-btn !h-11 !w-11 shrink-0 cursor-pointer border border-line ${file ? "!text-primary" : ""}`} title="Qaimə və ya şəkil əlavə et">
+          autoComplete="off" className="field min-w-0 flex-1 max-sm:!h-8 max-sm:!text-xs" />
+        <label className={`icon-btn !h-11 !w-11 max-sm:!h-8 max-sm:!w-8 shrink-0 cursor-pointer border border-line ${file ? "!text-primary" : ""}`} title="Qaimə və ya şəkil əlavə et">
           <Paperclip size={16} />
           <input type="file" accept="image/*,application/pdf" className="sr-only" onChange={(e) => onFile(e.target.files?.[0] ?? null)} />
         </label>

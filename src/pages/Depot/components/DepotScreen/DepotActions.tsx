@@ -18,7 +18,7 @@ export function DepotActions({ hasData, low, canManage, variant, extraActions, e
         ]} />
       )}
       {admin && canManage && (
-        <button type="button" onClick={onReceipt} className="hero-action max-sm:!w-10 max-sm:justify-center max-sm:!px-0" aria-label="Mədaxil">
+        <button type="button" onClick={onReceipt} className="hero-action max-sm:!h-8 max-sm:!w-8 max-sm:justify-center max-sm:!px-0" aria-label="Mədaxil">
           <PackagePlus size={17} /> <span className="max-sm:hidden">Mədaxil</span>
         </button>
       )}

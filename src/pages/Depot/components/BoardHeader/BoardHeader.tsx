@@ -12,7 +12,7 @@ export function BoardHeader({ b, tab, onTab }: BoardHeaderProps) {
   return (
     <>
       <div className="flex flex-wrap items-center gap-3.5 p-4 max-sm:gap-x-2 max-sm:gap-y-3 max-sm:p-3 sm:p-5">
-        <button type="button" onClick={() => onTab("home")} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line text-ink/70 transition-colors hover:bg-bg hover:text-ink max-sm:h-8 max-sm:w-8" title="Ümumi baxış" aria-label="Ümumi baxış">
+        <button type="button" onClick={() => onTab("home")} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line text-ink/70 transition-colors hover:bg-bg hover:text-ink max-sm:h-7 max-sm:w-7" title="Ümumi baxış" aria-label="Ümumi baxış">
           <ArrowLeft size={18} />
         </button>
         <span className="contents max-sm:[&>span]:!hidden"><IconTile icon={TAB_ICON[tab]} tone={tab === "tool" ? "blue" : tab === "material" ? "teal" : "violet"} /></span>

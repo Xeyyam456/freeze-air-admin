@@ -1305,9 +1305,22 @@ html {
       gap: 10px;
     }
     .hero-action {
-      height: 38px;
-      padding: 0 12px;
-      font-size: 13px;
+      height: 32px;
+      padding: 0 10px;
+      font-size: 12px;
+    }
+    .nav-burger {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+    .user-chip {
+      padding: 3px;
+    }
+    .user-chip .avatar {
+      width: 26px;
+      height: 26px;
+      font-size: 11px;
     }
   }
 }
@@ -1335,7 +1348,7 @@ html {
   /* Çox dar ekranda başlıqdakı "+ Yeni ..." düyməsi yalnız ikondur: səhifə adına yer qalsın */
   @media (width < 380px) {
     .hero-action {
-      width: 38px;
+      width: 32px;
       padding: 0;
       gap: 0;
       justify-content: center;
