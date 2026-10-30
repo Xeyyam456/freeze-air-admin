@@ -1,4 +1,5 @@
 import { revalidate } from "@/lib/revalidate";
+import { markSelfAction } from "@/lib/selfAction";
 import { createClient } from "@/lib/supabase/client";
 import type { FormState } from "@/lib/form-state";
 import { num } from "./toolForm";
@@ -14,6 +15,7 @@ export async function giveTool(_prev: FormState, formData: FormData): Promise<Fo
 
   const { error } = await createClient().rpc("give_tool", { p_tool_id: toolId, p_employee_id: employeeId, p_quantity: quantity });
   if (error) return { error: error.message };
+  markSelfAction();
   revalidate();
   return { ok: true };
 }
@@ -29,6 +31,7 @@ export async function giveTools(employeeId: number, items: { toolId: number; nam
     const { error } = await supabase.rpc("give_tool", { p_tool_id: it.toolId, p_employee_id: employeeId, p_quantity: it.quantity });
     if (error) failed.push(`${it.name}: ${error.message}`);
   }
+  if (failed.length < items.length) markSelfAction();
   revalidate();
   if (failed.length) return { error: `${items.length - failed.length}/${items.length} verildi. Verilməyən: ${failed.join("; ")}` };
   return { ok: true };
@@ -68,6 +71,7 @@ export async function settleMaterial(assignmentId: number, used: number, returne
 export async function givePiece(pieceId: number, employeeId: number, amount?: number): Promise<FormState> {
   const { error } = await createClient().rpc("give_piece", { p_piece_id: pieceId, p_employee_id: employeeId, p_amount: amount });
   if (error) return { error: error.message };
+  markSelfAction();
   revalidate();
   return { ok: true };
 }
