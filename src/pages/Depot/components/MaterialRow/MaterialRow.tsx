@@ -27,15 +27,15 @@ export function MaterialRow({ t, losses, canManage, onOpen, onGive }: MaterialRo
         <span className="flex items-center gap-3">
           <span className="max-sm:hidden"><IconTile icon={Package} tone="teal" size={36} /></span>
           <span className="min-w-0">
-            <span className="block truncate text-[14.5px] font-semibold group-hover:text-[#0f766e] max-sm:whitespace-normal max-sm:text-[12px]">{t.name}</span>
+            <span className="block truncate text-[14.5px] font-semibold group-hover:text-[#0f766e] max-sm:text-[12px]">{t.name}</span>
             <span className="mt-0.5 flex flex-wrap items-center gap-1.5">
-              <span className="rounded-md bg-[#e7f8f5] px-1.5 py-px text-[11px] font-semibold text-[#0f766e]">{measure}</span>
+              <span className="whitespace-nowrap rounded-md bg-[#e7f8f5] px-1.5 py-px text-[11px] font-semibold text-[#0f766e] max-sm:px-1 max-sm:text-[10px]">{measure}</span>
               {losses.length > 0 && <span className="truncate text-xs font-medium text-[#dc2626]">{lossText(losses, t.unit)}</span>}
             </span>
           </span>
         </span>
       </td>
-      <td className="px-3 py-3 text-right tabular-nums max-sm:px-1 max-sm:text-center">
+      <td className="px-3 py-3 text-right tabular-nums max-sm:px-0.5 max-sm:text-center">
         <b className={`text-[16px] max-sm:text-[13px] ${t.available > 0 ? "" : "text-muted"}`}>{fmt(t.available)}</b> <span className="text-xs text-muted max-sm:text-[11px]">{t.unit}</span>
         {full !== null && full > 0 && <span className="muted block text-[11px]">{full} {t.pack_name}</span>}
       </td>
@@ -44,7 +44,7 @@ export function MaterialRow({ t, losses, canManage, onOpen, onGive }: MaterialRo
           ? <><b>{fmt(t.pieces_total)}</b> <span className="text-xs text-muted">{t.unit}</span><span className="muted block text-[11px]">{t.pieces_count} {pieceWord(t)}</span></>
           : <span className="text-muted">—</span>}
       </td>
-      <td className="px-3 py-3 text-right tabular-nums max-sm:px-1 max-sm:text-center">
+      <td className="px-3 py-3 text-right tabular-nums max-sm:px-0.5 max-sm:text-center">
         {t.given_out > 0 ? <><b className="max-sm:text-[13px]">{fmt(t.given_out)}</b> <span className="text-xs text-muted max-sm:text-[11px]">{t.unit}</span></> : <span className="text-muted">—</span>}
       </td>
       <td className="px-3 py-3 max-xl:hidden">
@@ -55,7 +55,7 @@ export function MaterialRow({ t, losses, canManage, onOpen, onGive }: MaterialRo
         <span className="muted mt-1 block text-[11px]">{t.min_stock != null ? `min. ${fmt(t.min_stock)} ${t.unit}` : "minimum yoxdur"}</span>
       </td>
       <td className="px-3 py-3 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>
-      <td className="py-3 pl-3 pr-5 text-right max-sm:pl-1 max-sm:pr-3">
+      <td className="py-3 pl-3 pr-5 text-right max-sm:pl-1 max-sm:pr-2">
         {canManage && t.available > 0 && (
           <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-sm !h-8 !px-4 bg-[#0d9488] text-white hover:bg-[#0f766e] max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">Ver</button>
         )}
