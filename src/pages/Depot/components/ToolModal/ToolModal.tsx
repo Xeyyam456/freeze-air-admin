@@ -29,7 +29,7 @@ export function ToolModal({ tool, holders, pieces, repairs, losses = [], request
   const empty = tool.quantity === 0 && tool.pieces_total === 0 && holders.length === 0;
   const pendingPieces = new Set(requests.filter((r) => r.type === "writeoff" && r.piece_id).map((r) => r.piece_id!));
   const pendingReturns = new Set(requests.filter((r) => r.type === "return" && r.assignment_id).map((r) => r.assignment_id!));
-  const measure = !material ? "Alət · ədəd" : isPacked(tool) ? `Material · 1 ${tool.pack_name} = ${fmt(tool.pack_size)} ${tool.unit}` : `Material · ${tool.unit}`;
+  const measure = !material ? "Alət · ədəd" : isPacked(tool) ? <>Material<span className="max-sm:hidden"> · </span><span className="block sm:inline">1&nbsp;{tool.pack_name}&nbsp;=&nbsp;{fmt(tool.pack_size)}&nbsp;{tool.unit}</span></> : `Material · ${tool.unit}`;
   const piecesTitle = !isPacked(tool) ? "Parçalar" : tool.pack_name === "balon" ? "Açıq balonlar" : "Açıq qablar";
   const actions = [
     canManage && { icon: PackagePlus, tone: "green" as const, label: "Mədaxil", onClick: onReceipt },
