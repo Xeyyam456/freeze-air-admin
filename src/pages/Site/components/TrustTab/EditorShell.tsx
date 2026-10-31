@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
 import type { EditorShellProps } from "@/types/site";
+import { Button } from "@/shared/components/Button";
 
 export function EditorShell({ title, onClose, onSubmit, pending, children, wide = false }: EditorShellProps) {
   return (
@@ -12,8 +13,8 @@ export function EditorShell({ title, onClose, onSubmit, pending, children, wide 
       <form onSubmit={(e) => { e.preventDefault(); onSubmit(new FormData(e.currentTarget)); }} className="space-y-4">
         {children}
         <div className="flex justify-end gap-3 border-t border-line pt-4">
-          <button type="button" onClick={onClose} className="btn btn-cancel">Ləğv et</button>
-          <button type="submit" disabled={pending} className="btn btn-primary min-w-36">{pending ? "Gözləyin..." : "Yadda saxla"}</button>
+          <Button type="button" onClick={onClose} variant="cancel">Ləğv et</Button>
+          <Button type="submit" disabled={pending} className="min-w-36">{pending ? "Gözləyin..." : "Yadda saxla"}</Button>
         </div>
       </form>
     </Modal>

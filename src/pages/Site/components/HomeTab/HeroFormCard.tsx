@@ -5,6 +5,7 @@ import { saveHeroForm } from "@/services/site/texts";
 import type { HeroFormCardProps, QuickKey } from "@/types/site";
 import { QUICK_DEFAULTS, QUICK_FIELDS, SITE_DELAY } from "../../constants/homeConstants";
 import { HeroFormPreview } from "./HeroFormPreview";
+import { Button } from "@/shared/components/Button";
 
 // Hero-dakı sürətli müraciət: açıb-bağlamaq və mətnləri dəyişmək. Müraciətlər "Müraciətlər" səhifəsinə düşür.
 export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCardProps) {
@@ -51,7 +52,7 @@ export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCard
       </div>
 
       <div className="mt-5 flex justify-end">
-        <button type="button" onClick={save} disabled={pending} className="btn btn-primary min-w-40">{pending ? "Gözləyin..." : "Yadda saxla"}</button>
+        <Button type="button" onClick={save} disabled={pending} className="min-w-40">{pending ? "Gözləyin..." : "Yadda saxla"}</Button>
       </div>
     </section>
   );

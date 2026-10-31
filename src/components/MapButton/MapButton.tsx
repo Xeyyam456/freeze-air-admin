@@ -4,6 +4,7 @@ import { ExternalLink, Map as MapIcon, MapPin, X } from "lucide-react";
 import { mapEmbedUrl, mapSearchUrl } from "@/lib/navigation";
 import { Modal } from "@/shared/components/Modal";
 import type { MapButtonProps } from "@/types/shared";
+import { Button } from "@/shared/components/Button";
 
 export function MapButton({ place }: MapButtonProps) {
   const [open, setOpen] = useState(false);
@@ -11,10 +12,10 @@ export function MapButton({ place }: MapButtonProps) {
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} disabled={!hasLocation}
-        className="btn btn-soft btn-sm" title={hasLocation ? undefined : "Nə ünvan, nə koordinat yazılıb"}>
+      <Button type="button" onClick={() => setOpen(true)} disabled={!hasLocation}
+        variant="soft" size="sm" title={hasLocation ? undefined : "Nə ünvan, nə koordinat yazılıb"}>
         <MapIcon size={14} /> Xəritədə göstər
-      </button>
+      </Button>
 
       {open && (
         <Modal onClose={() => setOpen(false)} labelledBy="map-title" className="!max-w-4xl overflow-hidden !p-0">

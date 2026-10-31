@@ -5,6 +5,7 @@ import { toast } from "@/lib/toast";
 import { Modal } from "@/shared/components/Modal";
 import type { PayModalProps } from "@/types/fuel";
 import { addPayment } from "../../queries/mutations";
+import { Button } from "@/shared/components/Button";
 
 // "Pul ver": istənilən tarix və məbləğ (məs. həftəlik bir dəfəyə); standart məbləğ = seçilmiş dövrün borcu
 export function PayModal({ name, employeeId, today, suggest, onClose }: PayModalProps) {
@@ -44,8 +45,8 @@ export function PayModal({ name, employeeId, today, suggest, onClose }: PayModal
           <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="məs. həftəlik, nağd, karta" className="field" />
         </label>
         <div className="flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="btn btn-soft">Ləğv et</button>
-          <button type="submit" disabled={pending} className="btn btn-primary"><HandCoins size={16} /> {pending ? "..." : "Verildi"}</button>
+          <Button type="button" onClick={onClose} variant="soft">Ləğv et</Button>
+          <Button type="submit" disabled={pending}><HandCoins size={16} /> {pending ? "..." : "Verildi"}</Button>
         </div>
       </form>
     </Modal>

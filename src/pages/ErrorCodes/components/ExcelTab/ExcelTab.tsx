@@ -2,6 +2,7 @@ import { Download, Upload } from "lucide-react";
 import { useCodeImport } from "../../hooks/useCodeImport";
 import { downloadTemplate } from "../../utils/downloadTemplate";
 import { CodeImportPreview } from "./CodeImportPreview";
+import { Button } from "@/shared/components/Button";
 
 // Tab: Excel-dən toplu yükləmə
 export function ExcelTab() {
@@ -12,7 +13,7 @@ export function ExcelTab() {
       <p className="muted text-xs">
         Sütunlar: <b>Model</b>, <b>Kod</b>, <b>Açıqlama</b>, <b>Edilecək iş</b>. Siyahıda olmayan model avtomatik yaranır. Eyni model və kodla xəta varsa, yenilənir.
       </p>
-      <button type="button" onClick={() => void downloadTemplate()} className="btn btn-soft btn-sm w-full"><Download size={14} /> Şablonu yüklə</button>
+      <Button type="button" onClick={() => void downloadTemplate()} variant="soft" size="sm" className="w-full"><Download size={14} /> Şablonu yüklə</Button>
 
       <label className="flex cursor-pointer flex-col items-center gap-1 rounded-xl border-2 border-dashed border-line px-4 py-4 text-center hover:border-primary hover:bg-primary-soft/40">
         <Upload size={20} className="text-primary" />
@@ -27,9 +28,9 @@ export function ExcelTab() {
             {invalid > 0 && <span className="text-danger"> · {invalid} səhvli (yüklənməyəcək)</span>}
           </p>
           <CodeImportPreview rows={rows} />
-          <button type="button" onClick={upload} disabled={pending || valid.length === 0} className="btn btn-primary w-full">
+          <Button type="button" onClick={upload} disabled={pending || valid.length === 0} className="w-full">
             {pending ? "Yüklənir..." : `${valid.length} xətanı yüklə`}
-          </button>
+          </Button>
         </>
       )}
     </div>

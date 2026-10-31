@@ -3,6 +3,7 @@ import { Check, Save, Search, UsersRound, X } from "lucide-react";
 import { Avatar } from "@/shared/components/Avatar";
 import { norm } from "@/shared/utils/norm";
 import type { CrewEditorProps } from "@/types/tasks";
+import { Button } from "@/shared/components/Button";
 
 // Yeni / redaktə olunan briqada: ad (istəyə görə) + üzvlər (axtarışlı 2 sütunlu seçim; başqa briqadadakı usta bağlıdır)
 export function CrewEditor({ edit, onEdit, employees, taken, conflicts, pending, onSave, onCancel }: CrewEditorProps) {
@@ -60,8 +61,8 @@ export function CrewEditor({ edit, onEdit, employees, taken, conflicts, pending,
         </p>
       )}
       <div className="flex justify-end gap-2 border-t border-line pt-4">
-        <button type="button" onClick={onCancel} className="btn btn-soft">Ləğv et</button>
-        <button type="button" onClick={onSave} disabled={pending} className="btn btn-primary"><Save size={16} /> {pending ? "..." : "Yadda saxla"}</button>
+        <Button type="button" onClick={onCancel} variant="soft">Ləğv et</Button>
+        <Button type="button" onClick={onSave} disabled={pending}><Save size={16} /> {pending ? "..." : "Yadda saxla"}</Button>
       </div>
     </div>
   );

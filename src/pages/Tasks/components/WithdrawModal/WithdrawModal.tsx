@@ -5,6 +5,7 @@ import { withdrawTask } from "@/services/tasks/tasks";
 import { Modal } from "@/shared/components/Modal";
 import type { WithdrawModalProps } from "@/types/tasks";
 import { TaskSummary } from "../TaskSummary";
+import { Button } from "@/shared/components/Button";
 
 // Geri almaq: istəyə görə başqa ustaya verilir (eyni yer və səbəblə yeni tapşırıq). Köhnəsi siyahıda "Geri alınıb" kimi qalır.
 export function WithdrawModal({ task, employees, onClose }: WithdrawModalProps) {
@@ -37,10 +38,10 @@ export function WithdrawModal({ task, employees, onClose }: WithdrawModalProps) 
         </div>
         <p className="muted mt-2 text-xs">Tapşırıq silinmir: siyahıda "Geri alınıb" kimi qalır.{task.group_id && " Yeni usta qrupa qoşulur."}</p>
         <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="btn btn-soft">Ləğv et</button>
-          <button type="submit" disabled={pending} className="btn btn-primary">
+          <Button type="button" onClick={onClose} variant="soft">Ləğv et</Button>
+          <Button type="submit" disabled={pending}>
             <Undo2 size={16} /> {pending ? "..." : to ? "Geri al və ver" : "Geri al"}
-          </button>
+          </Button>
         </div>
       </form>
     </Modal>

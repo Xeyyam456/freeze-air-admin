@@ -6,6 +6,7 @@ import type { CrewListProps } from "@/types/tasks";
 import { crewLabel } from "../../utils/labels";
 import { Faces } from "../Faces";
 import { FreeEmployees } from "../FreeEmployees";
+import { Button } from "@/shared/components/Button";
 
 // Briqadaların siyahısı (redaktə, sil); boşdursa "İlk briqadanı yarat"; altda briqadasız ustalar
 export function CrewList({ crews, employees, onEdit }: CrewListProps) {
@@ -17,7 +18,7 @@ export function CrewList({ crews, employees, onEdit }: CrewListProps) {
           <span className="icon-tile mx-auto"><UsersRound size={20} /></span>
           <p className="mt-3 font-semibold">Hələ briqada yoxdur</p>
           <p className="muted text-sm">Tez-tez birlikdə işləyən ustaları (məs. usta + köməkçi) briqada kimi saxla: tapşırıq verəndə bir kliklə seçilir.</p>
-          <button type="button" onClick={() => onEdit({ name: "", members: [] })} className="btn btn-primary btn-sm mt-4"><Plus size={15} /> İlk briqadanı yarat</button>
+          <Button type="button" onClick={() => onEdit({ name: "", members: [] })} size="sm" className="mt-4"><Plus size={15} /> İlk briqadanı yarat</Button>
         </div>
       ) : (
         // Sabit hündürlük: briqada çoxaldıqca pəncərə uzanmır, siyahı öz içində sürüşür

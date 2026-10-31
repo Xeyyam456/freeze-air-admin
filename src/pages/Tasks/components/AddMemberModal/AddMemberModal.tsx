@@ -7,6 +7,7 @@ import { Modal } from "@/shared/components/Modal";
 import type { AddMemberModalProps } from "@/types/tasks";
 import { MemberFaces } from "../MemberFaces";
 import { TaskSummary } from "../TaskSummary";
+import { Button } from "@/shared/components/Button";
 
 // Qrupa usta əlavə et (0073): geri alınan üzvün yerinə və ya əlavə; tək tapşırıq qrupa çevrilir
 export function AddMemberModal({ task, members, employees, onClose }: AddMemberModalProps) {
@@ -41,8 +42,8 @@ export function AddMemberModal({ task, members, employees, onClose }: AddMemberM
         </div>
         <p className="muted mt-2 text-xs">Eyni yer və səbəblə. Biri «görüldü» basanda hamı üçün görülür.</p>
         <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="btn btn-soft">Ləğv et</button>
-          <button type="submit" disabled={pending} className="btn btn-primary"><UserPlus size={16} /> {pending ? "..." : "Əlavə et"}</button>
+          <Button type="button" onClick={onClose} variant="soft">Ləğv et</Button>
+          <Button type="submit" disabled={pending}><UserPlus size={16} /> {pending ? "..." : "Əlavə et"}</Button>
         </div>
       </form>
     </Modal>

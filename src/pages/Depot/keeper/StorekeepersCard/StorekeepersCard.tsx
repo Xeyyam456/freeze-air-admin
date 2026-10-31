@@ -26,7 +26,7 @@ export function StorekeepersCard({ employees, accounts, selfId }: StorekeepersCa
       <div className="flex items-center gap-3 max-[380px]:flex-wrap">
         <p className="muted min-w-0 flex-1 text-[13px] max-sm:text-xs max-sm:leading-snug"><span className="max-[380px]:hidden">Depo məsulu da adminlər kimi mədaxil, silinmə yazır və sənədləri təsdiqləyir.</span><span className="min-[381px]:hidden">Adminlər kimi mədaxil, silinmə yazır, sənədləri təsdiqləyir.</span></p>
         {!adding && (
-          <button type="button" onClick={() => setAdding(true)} className="btn btn-primary btn-sm shrink-0"><UserPlus size={14} /> Yeni</button>
+          <Button type="button" onClick={() => setAdding(true)} size="sm" className="shrink-0"><UserPlus size={14} /> Yeni</Button>
         )}
       </div>
 

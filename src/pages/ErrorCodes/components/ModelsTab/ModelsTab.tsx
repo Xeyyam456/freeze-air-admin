@@ -5,6 +5,7 @@ import { addModel } from "@/services/errorCodes/models";
 import type { Model, ModelsTabProps } from "@/types/errorCodes";
 import { ModelRow } from "./ModelRow";
 import { RenameModal } from "./RenameModal";
+import { Button } from "@/shared/components/Button";
 
 // Tab: modellər (əlavə et, adını dəyiş, sil)
 export function ModelsTab({ models, counts }: ModelsTabProps) {
@@ -18,7 +19,7 @@ export function ModelsTab({ models, counts }: ModelsTabProps) {
       {renaming && <RenameModal model={renaming} onClose={() => setRenaming(null)} />}
       <ActionForm ref={ref} action={action} className="flex gap-2">
         <input name="name" required autoComplete="off" placeholder="Model adı, məs. Daikin VRV" className="field" aria-label="Model adı" />
-        <button type="submit" disabled={pending} className="btn btn-primary shrink-0"><Plus size={16} /> Əlavə et</button>
+        <Button type="submit" disabled={pending} className="shrink-0"><Plus size={16} /> Əlavə et</Button>
       </ActionForm>
 
       {models.length === 0 ? (

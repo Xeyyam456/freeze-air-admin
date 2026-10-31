@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { CircleCheck, TriangleAlert } from "lucide-react";
 import type { ConfirmModalProps } from "@/types/shared";
+import { Button } from "@/shared/components/Button";
 
 export function ConfirmModal({ open, title, message, confirmLabel, tone = "primary", pending, icon, onConfirm, onCancel }: ConfirmModalProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
@@ -35,9 +36,9 @@ export function ConfirmModal({ open, title, message, confirmLabel, tone = "prima
         <h2 id="confirm-title" className="mt-4 text-lg font-bold">{title}</h2>
         <div className="muted mt-1 text-sm">{message}</div>
         <div className="mt-6 flex gap-3">
-          <button type="button" onClick={onCancel} disabled={pending} className="btn btn-cancel flex-1">
+          <Button type="button" onClick={onCancel} disabled={pending} variant="cancel" className="flex-1">
             Ləğv et
-          </button>
+          </Button>
           <button ref={confirmRef} type="button" onClick={onConfirm} disabled={pending}
             className={`btn flex-1 ${tone === "danger" ? "btn-danger" : "btn-primary"}`}>
             {pending ? "Gözləyin..." : confirmLabel}

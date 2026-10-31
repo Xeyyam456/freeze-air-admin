@@ -6,6 +6,7 @@ import { isLowStock, lossText } from "../../utils/stock";
 import { REASONS } from "../../constants/requests";
 import { inStock } from "../../utils/inStock";
 import { StatusDot } from "../StatusDot";
+import { Button } from "@/shared/components/Button";
 
 // Material sətri (alətdən fərqli sütunlar): ad + ölçü çipi ("metr", "1 balon = 11,3 kq"), depoda (tam; qablıda balon sayı),
 // parçalar / açıq balonlar, ustalarda, doluluq zolağı (depoda / ustalarda; minimum qalıq xətti), vəziyyət, "Ver"
@@ -57,7 +58,7 @@ export function MaterialRow({ t, losses, canManage, onOpen, onGive }: MaterialRo
       <td className="px-3 py-3 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>
       <td className="py-3 pl-3 pr-5 text-right max-sm:pl-1 max-sm:pr-2">
         {canManage && t.available > 0 && (
-          <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-sm !h-8 !px-4 bg-[#0d9488] text-white hover:bg-[#0f766e] max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">Ver</button>
+          <Button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} variant="plain" size="sm" className="!h-8 !px-4 bg-[#0d9488] text-white hover:bg-[#0f766e] max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">Ver</Button>
         )}
       </td>
     </tr>

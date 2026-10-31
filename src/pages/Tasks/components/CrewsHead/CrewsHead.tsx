@@ -1,5 +1,6 @@
 import { Plus, UsersRound, X } from "lucide-react";
 import type { CrewsHeadProps } from "@/types/tasks";
+import { Button } from "@/shared/components/Button";
 
 // Briqadalar pəncərəsinin başlıq zolağı (admin palitrası); onCreate: siyahı görünüşündə "Yeni briqada"
 export function CrewsHead({ title, onCreate, onClose }: CrewsHeadProps) {
@@ -11,9 +12,9 @@ export function CrewsHead({ title, onCreate, onClose }: CrewsHeadProps) {
         <p className="text-xs text-white/60">Birlikdə işləyən ustalar · bir usta yalnız bir briqadada</p>
       </div>
       {onCreate && (
-        <button type="button" onClick={onCreate} className="btn btn-sm shrink-0 !bg-white !text-[#0b1324] hover:!bg-frost">
+        <Button type="button" onClick={onCreate} variant="plain" size="sm" className="shrink-0 !bg-white !text-[#0b1324] hover:!bg-frost">
           <Plus size={15} /> Yeni briqada
-        </button>
+        </Button>
       )}
       <button type="button" onClick={onClose} className="grid h-8 w-8 place-items-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white" aria-label="Bağla"><X size={18} /></button>
     </div>

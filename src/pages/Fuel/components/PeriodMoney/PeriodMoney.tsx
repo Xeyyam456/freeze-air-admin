@@ -3,6 +3,7 @@ import type { PeriodMoneyProps } from "@/types/fuel";
 import { azn, BAL_CLS } from "../../shared/money";
 import { PERIOD_TOTAL } from "../../shared/period";
 import { balanceText } from "../../utils/balanceText";
+import { Button } from "@/shared/components/Button";
 
 // Seçilmiş dövrün yanacaq pulu: sürülən km-ə görə
 export function PeriodMoney({ sel, period, range, monthR, onPay }: PeriodMoneyProps) {
@@ -22,7 +23,7 @@ export function PeriodMoney({ sel, period, range, monthR, onPay }: PeriodMoneyPr
       </div>
       <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
         <p className={`text-xs font-semibold ${BAL_CLS[bal.tone]}`}>{bal.text} · {monthR.label}</p>
-        <button type="button" onClick={onPay} className="btn btn-sm !bg-white !text-[#0b1324] hover:!bg-frost"><HandCoins size={14} /> Pul ver</button>
+        <Button type="button" onClick={onPay} variant="plain" size="sm" className="!bg-white !text-[#0b1324] hover:!bg-frost"><HandCoins size={14} /> Pul ver</Button>
       </div>
     </div>
   );

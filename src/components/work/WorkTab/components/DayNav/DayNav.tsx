@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
 import type { DayNavProps } from "@/types/workLogs";
 import { dayIso } from "../../hooks/useWorkTab";
+import { Button } from "@/shared/components/Button";
 
 const chip = (active: boolean) =>
   `h-9 rounded-lg px-3 text-[13px] font-semibold transition-colors ${active ? "bg-primary text-white" : "bg-bg text-ink hover:bg-primary-soft"}`;
@@ -25,9 +26,9 @@ export function DayNav({ day, today, yesterday, canAdd, onDay, onAdd }: DayNavPr
         </button>
       </div>
       {canAdd && (
-        <button type="button" onClick={onAdd} className="btn btn-primary btn-sm !h-9">
+        <Button type="button" onClick={onAdd} size="sm" className="!h-9">
           <Plus size={14} /> Yeni iş
-        </button>
+        </Button>
       )}
     </div>
   );

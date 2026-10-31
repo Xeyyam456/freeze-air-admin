@@ -6,6 +6,7 @@ import { isLowStock, lossText } from "../../utils/stock";
 import { REASONS } from "../../constants/requests";
 import { inStock } from "../../utils/inStock";
 import { StatusDot } from "../StatusDot";
+import { Button } from "@/shared/components/Button";
 
 // Cədvəl sətri: ad (ikon), depoda, ustalarda, vəziyyət, "Ver". Sətrə basanda alətin pəncərəsi açılır.
 export function ToolRow({ t, losses, canManage, onOpen, onGive }: ToolRowProps) {
@@ -40,7 +41,7 @@ export function ToolRow({ t, losses, canManage, onOpen, onGive }: ToolRowProps) 
       <td className="px-3 py-2.5 max-md:hidden"><StatusDot tone={st.tone} label={st.label} /></td>
       <td className="py-2.5 pl-3 pr-5 text-right max-sm:pl-1 max-sm:pr-2">
         {canManage && t.available > 0 && (
-          <button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} className="btn btn-primary btn-sm !h-8 !px-4 max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">Ver</button>
+          <Button type="button" onClick={(e) => { e.stopPropagation(); onGive(); }} size="sm" className="!h-8 !px-4 max-sm:!h-6 max-sm:!px-2 max-sm:!text-[11px]">Ver</Button>
         )}
       </td>
     </tr>

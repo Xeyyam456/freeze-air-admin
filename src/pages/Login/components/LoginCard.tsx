@@ -2,6 +2,7 @@ import { ArrowRight, Mail, Snowflake } from "lucide-react";
 import { ActionForm } from "@/components/forms";
 import { useLogin } from "../hooks/useLogin";
 import { PasswordField } from "./PasswordField";
+import { Button } from "@/shared/components/Button";
 
 // Sağ: giriş kartı; dar ekranda sol hissə gizlidir, marka burada görünür
 export function LoginCard() {
@@ -31,9 +32,9 @@ export function LoginCard() {
 
           <PasswordField show={show} onToggle={toggleShow} />
 
-          <button type="submit" disabled={pending} className="btn btn-primary !h-12 w-full !text-[15px]">
+          <Button type="submit" disabled={pending} className="!h-12 w-full !text-[15px]">
             {pending ? "Yoxlanılır..." : <>Daxil ol <ArrowRight size={17} /></>}
-          </button>
+          </Button>
 
           <p className="muted text-center text-xs leading-relaxed">Hesabı admin yaradır. Hesabın yoxdursa, rəhbərliyə müraciət et.</p>
         </ActionForm>

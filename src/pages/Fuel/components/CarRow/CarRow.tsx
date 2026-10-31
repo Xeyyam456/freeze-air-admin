@@ -7,6 +7,7 @@ import { azn } from "../../shared/money";
 import { PERIOD_LABEL } from "../../shared/period";
 import { todayState } from "../../utils/todayState";
 import { NumberSave } from "../NumberSave";
+import { Button } from "@/shared/components/Button";
 
 // Kartın xülasə sətri: usta və maşın, 100 km-ə sərf, bu günün hesabatı, dövrün məbləği; klik → başlıqda bu usta
 export function CarRow({ item, period, range, expanded, onPick, onToggle }: CarRowProps) {
@@ -48,10 +49,10 @@ export function CarRow({ item, period, range, expanded, onPick, onToggle }: CarR
         <p className="muted text-[11px] font-semibold uppercase tracking-wide max-sm:whitespace-nowrap max-sm:text-[10px]">{PERIOD_LABEL[period]}: {range.label}</p>
         <p className="font-extrabold tabular-nums">{azn(total.cost)}</p>
       </div>
-      <button type="button" onClick={(e) => { e.stopPropagation(); onToggle(); }} aria-expanded={expanded}
-        className="btn btn-soft btn-sm max-sm:w-full max-sm:justify-center">
+      <Button type="button" onClick={(e) => { e.stopPropagation(); onToggle(); }} aria-expanded={expanded}
+        variant="soft" size="sm" className="max-sm:w-full max-sm:justify-center">
         {total.days} gün <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
-      </button>
+      </Button>
     </div>
   );
 }

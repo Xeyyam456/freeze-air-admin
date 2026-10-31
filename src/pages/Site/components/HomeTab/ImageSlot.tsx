@@ -2,6 +2,7 @@ import { ImagePlus, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import type { ImageSlotProps } from "@/types/site";
 import { useImageSlot } from "../../hooks/useImageSlot";
+import { Button } from "@/shared/components/Button";
 
 // Şəkil yeri: yüklənən kimi bazaya yazılır, köhnə şəkil silinir. Şəkil kəsilmir (öz nisbətində).
 export function ImageSlot({ field, url, folder, hint, small = false, compact = false, hideImage = false, empty = "Şəkil yoxdur: saytda illüstrasiya göstərilir" }: ImageSlotProps) {
@@ -18,9 +19,9 @@ export function ImageSlot({ field, url, folder, hint, small = false, compact = f
       )}
       <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
       <div className={`flex flex-wrap items-center gap-2 ${hideImage ? "" : "mt-2"}`}>
-        <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} className="btn btn-secondary btn-sm">
+        <Button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} variant="secondary" size="sm">
           <ImagePlus size={14} /> {uploading ? "Yüklənir..." : url ? "Dəyiş" : "Yüklə"}
-        </button>
+        </Button>
         {url && !uploading && (
           <ConfirmButton onConfirm={onRemove} title="Şəkli sil" success={false} className="icon-btn icon-btn-danger !h-8"
             question="Şəkil silinəcək, saytda yenidən ikon və ya illüstrasiya göstəriləcək.">

@@ -7,6 +7,7 @@ import { Modal } from "@/shared/components/Modal";
 import type { WithdrawGroupModalProps } from "@/types/tasks";
 import { MemberFaces } from "../MemberFaces";
 import { TaskSummary } from "../TaskSummary";
+import { Button } from "@/shared/components/Button";
 
 // Qrup tapşırığını bütövlükdə geri al: görülməmiş bütün üzvlərdən (hər üzvün sətri ayrıca geri alınır, 0057)
 export function WithdrawGroupModal({ rows, employees, onClose }: WithdrawGroupModalProps) {
@@ -38,8 +39,8 @@ export function WithdrawGroupModal({ rows, employees, onClose }: WithdrawGroupMo
         </TaskSummary>
         <p className="muted mt-3 text-xs">Tapşırıq silinmir: siyahıda "Geri alınıb" kimi qalır. Yalnız bir ustanı geri almaq üçün üzvlər siyahısından istifadə et.</p>
         <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="btn btn-soft">Ləğv et</button>
-          <button type="submit" disabled={pending} className="btn btn-primary"><Undo2 size={16} /> {pending ? "..." : "Hamısını geri al"}</button>
+          <Button type="button" onClick={onClose} variant="soft">Ləğv et</Button>
+          <Button type="submit" disabled={pending}><Undo2 size={16} /> {pending ? "..." : "Hamısını geri al"}</Button>
         </div>
       </form>
     </Modal>

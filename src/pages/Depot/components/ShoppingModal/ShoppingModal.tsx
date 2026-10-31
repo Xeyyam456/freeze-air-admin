@@ -5,6 +5,7 @@ import { isLowStock } from "../../utils/stock";
 import { TEXT } from "../../constants/text";
 import { withUnit } from "../../utils/quantity";
 import type { Kind, ShoppingModalProps } from "@/types/depot";
+import { Button } from "@/shared/components/Button";
 
 // Alınmalı: minimum qalıq həddinə çatan alət və materiallar (həddi olmayan siyahıya düşmür). Sətirdən "Mədaxil".
 export function ShoppingModal({ tools, onReceipt, onClose }: ShoppingModalProps) {
@@ -27,7 +28,7 @@ export function ShoppingModal({ tools, onReceipt, onClose }: ShoppingModalProps)
                     {TEXT[t.kind as Kind].col} · depoda <b className={have ? "text-ink" : "text-danger"}>{withUnit(have, t)}</b>, minimum {withUnit(t.min_stock ?? 0, t)} · ən az {withUnit(need, t)} lazımdır
                   </span>
                 </span>
-                <button type="button" onClick={() => onReceipt(t)} className="btn btn-secondary btn-sm !h-8 shrink-0">Mədaxil</button>
+                <Button type="button" onClick={() => onReceipt(t)} variant="secondary" size="sm" className="!h-8 shrink-0">Mədaxil</Button>
               </li>
             );
           })}

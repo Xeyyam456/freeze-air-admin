@@ -3,6 +3,7 @@ import { createEmployeeAccount } from "@/actions/accounts";
 import { ActionForm, useOnSuccess } from "@/components/forms";
 import type { AccountCreateProps } from "@/types/employees";
 import { AccountBox } from "./AccountBox";
+import { Button } from "@/shared/components/Button";
 
 // Hesab yoxdur: e-poçt + parol ilə aç
 export function AccountCreate({ employeeId, note }: AccountCreateProps) {
@@ -16,7 +17,7 @@ export function AccountCreate({ employeeId, note }: AccountCreateProps) {
         <input name="email" type="email" required placeholder="E-poçt" autoComplete="off" className="field !h-9 !text-[13px]" />
         <input name="password" type="password" minLength={8} required placeholder="Parol (ən azı 8)" autoComplete="new-password"
           className="field !h-9 !text-[13px]" />
-        <button type="submit" disabled={creating} className="btn btn-primary btn-sm !h-9">{creating ? "..." : "Hesab aç"}</button>
+        <Button type="submit" disabled={creating} size="sm" className="!h-9">{creating ? "..." : "Hesab aç"}</Button>
       </ActionForm>
     </AccountBox>
   );

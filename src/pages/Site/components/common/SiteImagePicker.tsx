@@ -1,5 +1,6 @@
 import { ImagePlus, Trash2 } from "lucide-react";
 import type { SiteImagePickerProps } from "@/types/site";
+import { Button } from "@/shared/components/Button";
 
 // Redaktorda şəkil bloku: önizləmə, "Yüklə / Dəyiş", götür
 export function SiteImagePicker({ picker, label, empty, previewClass, imgClass, hint, hintClass = "", children }: SiteImagePickerProps) {
@@ -15,9 +16,9 @@ export function SiteImagePicker({ picker, label, empty, previewClass, imgClass, 
       <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
       {children}
       <div className="mt-2 flex gap-2">
-        <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} className="btn btn-secondary btn-sm flex-1">
+        <Button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} variant="secondary" size="sm" className="flex-1">
           <ImagePlus size={14} /> {uploading ? "Yüklənir..." : imageUrl ? "Dəyiş" : "Yüklə"}
-        </button>
+        </Button>
         {imageUrl && (
           <button type="button" onClick={() => setImageUrl(null)} className="icon-btn icon-btn-danger !h-8" title="Şəkli götür" aria-label="Şəkli götür">
             <Trash2 size={15} />

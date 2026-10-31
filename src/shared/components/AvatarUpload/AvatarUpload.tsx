@@ -3,6 +3,7 @@ import { useAuth } from "@/auth/AuthProvider";
 import { Avatar } from "@/shared/components/Avatar";
 import type { AvatarUploadProps } from "@/types/employees";
 import { useAvatarUpload } from "./useAvatarUpload";
+import { Button } from "@/shared/components/Button";
 
 // Əməkdaşın şəkli: yüklə / sil, dəyişiklik dərhal saxlanır.
 // Əməkdaşın özü və istənilən rəhbər (admin) görür (baza da yalnız onlara icazə verir: set_employee_photo, 0069).
@@ -22,9 +23,9 @@ export function AvatarUpload(props: AvatarUploadProps) {
       </div>
       <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only"
         onChange={(e) => onFile(e.target.files?.[0])} />
-      <button type="button" onClick={() => inputRef.current?.click()} disabled={pending} className="btn btn-secondary btn-sm">
+      <Button type="button" onClick={() => inputRef.current?.click()} disabled={pending} variant="secondary" size="sm">
         <ImagePlus size={14} /> {pending ? "..." : photoUrl ? "Dəyiş" : "Yüklə"}
-      </button>
+      </Button>
       {photoUrl && (
         <button type="button" onClick={onRemove} disabled={pending} className="icon-btn icon-btn-danger" title="Şəkli sil" aria-label="Şəkli sil">
           <Trash2 size={16} />

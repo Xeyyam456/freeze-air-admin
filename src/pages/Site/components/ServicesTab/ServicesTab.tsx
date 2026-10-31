@@ -5,6 +5,7 @@ import { useServices } from "../../queries/useSiteLists";
 import { nextSort } from "../../utils/formText";
 import { ServiceEditor } from "../ServiceEditor";
 import { ServiceCard } from "./ServiceCard";
+import { Button } from "@/shared/components/Button";
 
 // Xidmətlər: saytdakı siyahı, footer və hər xidmətin öz səhifəsi (/xidmet/<slug>)
 export function ServicesTab() {
@@ -20,7 +21,7 @@ export function ServicesTab() {
         <p className="muted text-sm">
           {services.length} xidmət · saytdakı siyahı, footer və hər xidmətin öz səhifəsi. Karta klik edin: redaktə açılır.
         </p>
-        <button type="button" onClick={() => setEditing("new")} className="btn btn-primary btn-sm"><Plus size={14} /> Yeni xidmət</button>
+        <Button type="button" onClick={() => setEditing("new")} size="sm"><Plus size={14} /> Yeni xidmət</Button>
       </div>
 
       <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

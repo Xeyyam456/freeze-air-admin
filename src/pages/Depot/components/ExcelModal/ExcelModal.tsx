@@ -53,7 +53,7 @@ export function ExcelModal({ tools, holdings, employees, onClose }: ExcelModalPr
           <div className="flex gap-2">
             <ToolPicker items={masters.map((e) => ({ id: e.id, name: e.full_name }))} value={emp} onChange={setEmp} icon={Users}
               placeholder="Bütün ustalar" emptyLabel="Usta yoxdur" searchLabel="Usta axtar..." />
-            {emp !== null && <button type="button" onClick={() => setEmp(null)} className="btn btn-cancel btn-sm !h-9 shrink-0 max-sm:!px-2.5">Hamısı</button>}
+            {emp !== null && <Button type="button" onClick={() => setEmp(null)} variant="cancel" size="sm" className="!h-9 shrink-0 max-sm:!px-2.5">Hamısı</Button>}
           </div>
         </div>
       )}

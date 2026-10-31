@@ -3,6 +3,7 @@ import { KIND } from "@/lib/kinds";
 import type { StoreScopeProps } from "@/types/clients";
 import { useStoreImport } from "../../hooks/useStoreImport";
 import { ImportPreview } from "./ImportPreview";
+import { Button } from "@/shared/components/Button";
 
 // Excel-dən toplu filial/mağaza yükləmə
 export function StoreImport(props: StoreScopeProps) {
@@ -32,9 +33,9 @@ export function StoreImport(props: StoreScopeProps) {
             {invalid > 0 && <span className="text-danger"> · {invalid} səhvli (yüklənməyəcək)</span>}
           </p>
           <ImportPreview rows={rows} />
-          <button type="button" onClick={upload} disabled={pending || valid.length === 0} className="btn btn-primary w-full">
+          <Button type="button" onClick={upload} disabled={pending || valid.length === 0} className="w-full">
             {pending ? "Yüklənir..." : `${valid.length} ${k.unitAcc} yüklə`}
-          </button>
+          </Button>
         </>
       )}
     </div>

@@ -5,6 +5,7 @@ import { useEquipmentList, useSegments } from "../../queries/useSiteLists";
 import { nextSort } from "../../utils/formText";
 import { SegmentEditor } from "../SegmentEditor";
 import { SegmentCard } from "./SegmentCard";
+import { Button } from "@/shared/components/Button";
 
 // Obyekt növləri: Ev və mənzil, Market və mağaza, ... (saytda /xidmetler/<slug>)
 export function SegmentsTab() {
@@ -23,7 +24,7 @@ export function SegmentsTab() {
       )}
       <div className="flex items-center justify-between gap-3">
         <p className="muted text-sm">Ana səhifədəki və Xidmətlər səhifəsindəki kartlar; hər birinin ayrıca səhifəsi var.</p>
-        <button type="button" onClick={() => setEditing("new")} className="btn btn-primary btn-sm"><Plus size={14} /> Yeni obyekt növü</button>
+        <Button type="button" onClick={() => setEditing("new")} size="sm"><Plus size={14} /> Yeni obyekt növü</Button>
       </div>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {segments.map((s) => <SegmentCard key={s.id} segment={s} equipmentTitle={equipmentTitle} onEdit={() => setEditing(s)} />)}

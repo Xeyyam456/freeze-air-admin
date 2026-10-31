@@ -4,6 +4,7 @@ import { ConfirmButton } from "@/components/ConfirmButton";
 import { toast } from "@/lib/toast";
 import { dateAz, daysSince } from "../../utils/dates";
 import type { RepairRowProps } from "@/types/depot";
+import { Button } from "@/shared/components/Button";
 
 // Təmirdə olan: harada, nə vaxtdan; qayıdanda "Düzəldi" (depoya) və ya "Bərpa olunmadı" (silinmə aktı gözləməyə düşür)
 export function RepairRow({ r, unit, canManage }: RepairRowProps) {
@@ -23,7 +24,7 @@ export function RepairRow({ r, unit, canManage }: RepairRowProps) {
       </span>
       {canManage && (
         <span className="flex gap-1.5">
-          <button type="button" disabled={pending} onClick={() => finish(true)} className="btn btn-secondary btn-sm !h-8">Düzəldi</button>
+          <Button type="button" disabled={pending} onClick={() => finish(true)} variant="secondary" size="sm" className="!h-8">Düzəldi</Button>
           <ConfirmButton onConfirm={() => finish(false)} success={false} className="btn btn-cancel btn-sm !h-8" title="Bərpa olunmadı"
             question="Depoya qayıdır və silinmə aktı (xarab) yazılır; başqası təsdiqləyəndə depodan silinir." confirmLabel="Bəli">
             Bərpa olunmadı

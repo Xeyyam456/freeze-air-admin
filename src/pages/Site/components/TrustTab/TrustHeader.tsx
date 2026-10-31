@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import type { TrustHeaderProps } from "@/types/site";
+import { Button } from "@/shared/components/Button";
 
 // Bölmənin başlığı: ikon, ad, izah və "Yeni ..." düyməsi
 export function TrustHeader({ icon: Icon, title, text, addLabel, onAdd }: TrustHeaderProps) {
@@ -12,7 +13,7 @@ export function TrustHeader({ icon: Icon, title, text, addLabel, onAdd }: TrustH
           <p className="muted text-sm">{text}</p>
         </div>
       </div>
-      <button type="button" onClick={onAdd} className="btn btn-primary btn-sm"><Plus size={14} /> {addLabel}</button>
+      <Button type="button" onClick={onAdd} size="sm"><Plus size={14} /> {addLabel}</Button>
     </div>
   );
 }

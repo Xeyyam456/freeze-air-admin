@@ -5,6 +5,7 @@ import { addErrorCode } from "@/services/errorCodes/codes";
 import type { CodeTabProps } from "@/types/errorCodes";
 import { CodeFields } from "../CodeFields";
 import { ModelSelect } from "../ModelSelect";
+import { Button } from "@/shared/components/Button";
 
 // Tab: yeni xəta kodu
 export function CodeTab({ models, goModels }: CodeTabProps) {
@@ -22,7 +23,7 @@ export function CodeTab({ models, goModels }: CodeTabProps) {
       <div className="rounded-xl border border-dashed border-line p-4 text-center">
         <p className="text-sm font-semibold">Hələ model yoxdur</p>
         <p className="muted mt-1 text-xs">Xəta kodu yazmaq üçün əvvəl kondisioner modelini əlavə et.</p>
-        <button type="button" onClick={goModels} className="btn btn-primary btn-sm mt-3"><Box size={14} /> Model əlavə et</button>
+        <Button type="button" onClick={goModels} size="sm" className="mt-3"><Box size={14} /> Model əlavə et</Button>
       </div>
     );
   }
