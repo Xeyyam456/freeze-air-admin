@@ -3,7 +3,7 @@ import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { updateSiteSettings } from "@/services/site/settings";
 import type { ContactFormProps } from "@/types/site";
 import { CONTACT_FIELDS, CONTACT_PLACES } from "../../constants/contactFields";
-import { formatTime } from "../../utils/contactFormat";
+import { formatTime } from "@/shared/utils/formatDateTime";
 
 // Əlaqə formu: sahələr + saytda harada göründüyü; "Yadda saxla" təsdiqlə
 export function ContactForm({ settings, values, onChange }: ContactFormProps) {

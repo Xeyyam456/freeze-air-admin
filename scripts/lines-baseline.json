@@ -1,9 +1,4 @@
 {
-  "components/CommandPalette.tsx": 135,
   "components/DatePicker.tsx": 193,
-  "components/Sidebar.tsx": 159,
-  "components/ToolPicker.tsx": 119,
-  "pages/Home.tsx": 324,
-  "pages/Login.tsx": 117,
-  "pages/Requests.tsx": 197
+  "components/ToolPicker.tsx": 119
 }
