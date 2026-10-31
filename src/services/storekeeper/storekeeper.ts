@@ -1,8 +1,9 @@
 import { createEmployeeAccount } from "@/actions/accounts";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
-import { text, type FormState } from "@/lib/form-state";
+import { text } from "@/lib/form-state";
 import { toast } from "@/lib/toast";
+import type { FormState } from "@/types/shared";
 
 // Yeni depo məsulu (yalnız admin): əməkdaş kartı + giriş hesabı bir addımda. Depo məsulu usta paneli ilə daxil olur (orada Depo bölməsi).
 // Hesab açılmasa, kart qalır və kartdakı açar düyməsi ilə yenidən cəhd edilir.

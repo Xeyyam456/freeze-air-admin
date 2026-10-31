@@ -1,6 +1,5 @@
 import { AirVent, Image as ImageIcon, LayoutGrid, List, Phone, ShieldCheck, Type, type LucideIcon } from "lucide-react";
-
-export type SiteTab = "contact" | "texts" | "hero" | "trust" | "segments" | "equipment" | "services";
+import type { SiteTab } from "@/types/site";
 
 export const SITE_TABS: { id: SiteTab; label: string; icon: LucideIcon }[] = [
   { id: "contact", label: "Əlaqə", icon: Phone },

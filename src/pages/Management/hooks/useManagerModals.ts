@@ -1,11 +1,10 @@
 import { useState } from "react";
 import type { ManagerModalState } from "@/types/management";
-
-type Mode = "view" | "edit" | "contact" | null;
+import type { ManagerModalMode } from "@/types/management";
 
 // Kartın pəncərələri: məlumat, redaktə, telefon/şəkil (eyni anda biri açıq)
 export function useManagerModals(): ManagerModalState {
-  const [mode, setMode] = useState<Mode>(null);
+  const [mode, setMode] = useState<ManagerModalMode>(null);
   return {
     viewing: mode === "view",
     editing: mode === "edit",

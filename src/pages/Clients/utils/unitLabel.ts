@@ -1,4 +1,5 @@
-import { KIND, type Kind } from "@/lib/kinds";
+import { KIND } from "@/lib/kinds";
+import type { Kind } from "@/types/clients";
 
 // Kartdakı alt yazı: filial sayı, filialı olmayan şirkətdə isə ünvanı
 export function unitLabel(kind: Kind, count: number, address: string | null) {

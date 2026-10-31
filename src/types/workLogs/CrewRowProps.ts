@@ -5,6 +5,6 @@ export type CrewRowProps = {
   logs: WorkLog[];
   open: boolean;
   onToggle: () => void;
-  filesOf: (l: WorkLog) => import("@/lib/jobs").FileCount | undefined;
+  filesOf: (l: WorkLog) => import("@/types/workLogs").FileCount | undefined;
   onOpen: (id: number) => void;
 };

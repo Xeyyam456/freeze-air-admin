@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
-import type { Kind } from "@/lib/kinds";
 import type { ClientListRow } from "@/types/clients";
+import type { Kind } from "@/types/clients";
 
 // Şirkətlərin və ya market şəbəkələrinin siyahısı (filial/mağaza sayı ilə)
 export async function fetchClients(kind: Kind): Promise<ClientListRow[]> {

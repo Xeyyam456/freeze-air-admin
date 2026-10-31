@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import type { FormState } from "@/lib/form-state";
 import { toast } from "@/lib/toast";
+import type { FormState } from "@/types/shared";
 
 // Form nəticəsi: uğurda tost + fn (formu təmizlə və ya bağla), xətada xəta tostu.
 export function useOnSuccess(state: FormState, fn: () => void = () => {}, success = "Yadda saxlanıldı") {

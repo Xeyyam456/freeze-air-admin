@@ -1,7 +1,8 @@
 
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
-import { text, type FormState } from "@/lib/form-state";
+import { text } from "@/lib/form-state";
+import type { FormState } from "@/types/shared";
 
 function employeeFields(formData: FormData) {
   return {

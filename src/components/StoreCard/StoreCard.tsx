@@ -1,14 +1,8 @@
 import { MapPin, Phone } from "lucide-react";
-import type { Tables } from "@/types/database";
 import { MapButton } from "../MapButton";
+import type { StoreCardProps } from "@/types/shared";
 
-type Props = {
-  store: Tables<"stores">;
-  companyName?: string;
-  action?: React.ReactNode;
-};
-
-export function StoreCard({ store, companyName, action }: Props) {
+export function StoreCard({ store, companyName, action }: StoreCardProps) {
   const hasCoords = store.lat != null && store.lng != null;
 
   return (

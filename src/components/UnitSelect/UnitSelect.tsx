@@ -4,6 +4,7 @@ import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
 import { Boxes, Check, ChevronDown, Droplets, Hash, Package, Ruler, Scroll, Weight, type LucideIcon } from "lucide-react";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
+import type { UnitSelectPos } from "@/types/shared";
 
 // Hər vahidin ikonu və qısa izahı (siyahıda olmayan vahid üçün ümumi qutu ikonu)
 const META: Record<string, { icon: LucideIcon; hint: string }> = {
@@ -16,8 +17,6 @@ const META: Record<string, { icon: LucideIcon; hint: string }> = {
 };
 const metaOf = (u: string) => META[u] ?? { icon: Package, hint: "Xüsusi vahid" };
 
-type Pos = { left: number; width: number; top?: number; bottom?: number };
-
 // Vahid seçimi: standart <select> əvəzinə ikonlu, izahlı açılan siyahı. Seçim gizli sahə (name, standart "unit") ilə formaya gedir.
 // Siyahı portal ilə body-yə çıxır ki, yan panelin və ya pəncərənin kənarında kəsilməsin; yer yoxdursa yuxarı açılır.
 export function UnitSelect({ value, onChange, options, name = "unit" }: {
@@ -27,7 +26,7 @@ export function UnitSelect({ value, onChange, options, name = "unit" }: {
   name?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [pos, setPos] = useState<Pos | null>(null);
+  const [pos, setPos] = useState<UnitSelectPos | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   useEscapeLayer(() => setOpen(false), open);

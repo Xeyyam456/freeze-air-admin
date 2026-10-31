@@ -1,6 +1,6 @@
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
-import type { FormState } from "@/lib/form-state";
+import type { FormState } from "@/types/shared";
 
 // Təmir: göndərilən say depoda boş sayılmır; qayıdanda düzəlibsə depoya, düzəlməyibsə silinmə aktı gözləməyə düşür
 export async function sendRepair(toolId: number, quantity: number, place: string | null, note: string | null): Promise<FormState> {

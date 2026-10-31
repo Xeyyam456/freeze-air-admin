@@ -1,5 +1,5 @@
 import { FileText, Image as ImageIcon, Play } from "lucide-react";
-import type { FileCount } from "@/lib/jobs";
+import type { FileCount } from "@/types/workLogs";
 
 // İşin faylları siyahıda nişan kimi: ▶ video, şəkil sayı, akt — işi açmadan görünsün (qrup işində qrupun bütün faylları, fetchFileCounts).
 // Web-də eyni fayl: components/work/FileBadges.tsx

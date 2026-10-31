@@ -1,4 +1,5 @@
-import { SITE_TABS, type SiteTab } from "../constants/siteTabs";
+import { SITE_TABS } from "../constants/siteTabs";
+import type { SiteTab } from "@/types/site";
 
 // Tab düymələri: dar ekranda iki sütun, ≥ 640 bir sətir
 export function SiteTabs({ tab, onTab }: { tab: SiteTab; onTab: (t: SiteTab) => void }) {

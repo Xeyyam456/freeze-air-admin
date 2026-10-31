@@ -1,17 +1,10 @@
 import { Link } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import { AppHeader } from "../AppHeader";
-
-type Props = {
-  title: string;
-  subtitle?: string;
-  back?: { href: string; label: string };
-  actions?: React.ReactNode;
-  children: React.ReactNode;
-};
+import type { PageProps } from "@/types/shared";
 
 // Səhifə şablonu: başlıq və əməliyyat düymələri yuxarıda sabit zolaqdadır (menyu solda, AppLayout-da).
-export function Page({ title, subtitle, back, actions, children }: Props) {
+export function Page({ title, subtitle, back, actions, children }: PageProps) {
   return (
     <>
       <AppHeader actions={actions}>

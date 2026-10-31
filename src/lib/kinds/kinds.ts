@@ -1,5 +1,4 @@
-// Müştəri növü: şirkət (Rabitəbank, stadion) və ya market şəbəkəsi (Oba, Araz, ALL).
-export type Kind = "company" | "market";
+import type { Kind } from "@/types/clients";
 
 export const KIND = {
   company: {

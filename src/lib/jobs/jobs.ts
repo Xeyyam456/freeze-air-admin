@@ -1,5 +1,7 @@
 import { fetchAll } from "@/lib/fetchAll";
 import { createClient } from "@/lib/supabase/client";
+import type { FileCount } from "@/types/workLogs";
+import type { LogPerson } from "@/types/workLogs";
 
 // Qrup tapşırığı (0071) hər üzvə ayrıca iş qeydi yaradır, amma bu BİR işdir: ümumi saylarda bir dəfə sayılır.
 // İş qeydi → qrup (tapşırığın `group_id`-si). Aralıq verilməsə hamısı (tapşırıq tarixi = iş tarixi).
@@ -21,8 +23,6 @@ export const jobKey = (id: number, groups: Map<number, string> | null | undefine
 export const countJobs = (logs: { id: number }[], groups: Map<number, string> | null | undefined) =>
   new Set(logs.map((l) => jobKey(l.id, groups))).size;
 
-export type FileCount = { act: number; photo: number; video: number };
-
 // İş qeydlərinin faylları (akt, şəkil, video) siyahıda nişan üçün. Qrup işində fayl istənilən üzvün qeydinə yüklənə bilər:
 // qrupun bütün qeydlərinin faylları toplanır və hər üzvün qeydinə eyni say verilir (işi açmadan görünsün).
 // Bir sorğu: baza funksiyası work_file_counts (0094).
@@ -32,11 +32,9 @@ export async function fetchFileCounts(logIds: number[]): Promise<Map<number, Fil
   return new Map((data ?? []).map((r: { work_log_id: number } & FileCount) => [r.work_log_id, { act: r.act, photo: r.photo, video: r.video }]));
 }
 
-type Person = { full_name: string; photo_url: string | null } | null;
-
 // Admin siyahılarında qrup işi BİR sətirdir: üzvlərin adları birləşir ("Xəyyam + Fərhad"), şəkil birincinindir.
 // Sıra birinci qeydin yerini saxlayır. Ustanın öz hesabında (web) hər üzv öz işini görür, bura aid deyil.
-export function mergeGroupLogs<T extends { id: number; employees: Person }>(logs: T[], groups: Map<number, string> | null | undefined): T[] {
+export function mergeGroupLogs<T extends { id: number; employees: LogPerson }>(logs: T[], groups: Map<number, string> | null | undefined): T[] {
   if (!groups?.size) return logs;
   const out: T[] = [];
   const at = new Map<string, number>();

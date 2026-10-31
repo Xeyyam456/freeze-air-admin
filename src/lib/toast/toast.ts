@@ -1,7 +1,5 @@
 import { useSyncExternalStore } from "react";
-
-// Tost bildirişləri: istənilən yerdən toast.success("...") / toast.error("..."), <Toaster /> göstərir.
-export type Toast = { id: number; kind: "success" | "error"; title: string; text?: string };
+import type { Toast } from "@/types/shared";
 
 let toasts: Toast[] = [];
 let nextId = 1;

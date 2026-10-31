@@ -1,3 +1,3 @@
-import type { Kind } from "@/lib/kinds";
+import type { Kind } from "@/types/clients";
 
 export type EmptyClientsProps = { kind: Kind; hint: string };

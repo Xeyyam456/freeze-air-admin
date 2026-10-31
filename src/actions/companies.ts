@@ -1,9 +1,10 @@
 
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
-import { dbError, text, type FormState } from "@/lib/form-state";
+import { dbError, text } from "@/lib/form-state";
 import { asKind, KIND } from "@/lib/kinds";
 import { parseCoordinates } from "@/lib/navigation";
+import type { FormState } from "@/types/shared";
 
 const BAD_COORDS = "Koordinat formatı səhvdir. Nümunə: 40.40930, 49.86710";
 

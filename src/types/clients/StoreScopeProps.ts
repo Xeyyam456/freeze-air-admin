@@ -1,4 +1,4 @@
-import type { Kind } from "@/lib/kinds";
+import type { Kind } from "@/types/clients";
 
 // Filial/mağaza əlavə etmə və Excel yükləmə: hansı şirkət/market üçün
 export type StoreScopeProps = { companyId: number; kind: Kind };

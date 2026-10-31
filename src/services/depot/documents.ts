@@ -1,8 +1,8 @@
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
-import type { FormState } from "@/lib/form-state";
 import type { WriteoffReason } from "@/types/depot";
 import { uploadDepotFile } from "./files";
+import type { FormState } from "@/types/shared";
 
 // ===== Sənədlər (0084): yazılır → başqası təsdiqləyir → say dəyişir =====
 

@@ -1,6 +1,7 @@
-import { text, type FormState } from "@/lib/form-state";
+import { text } from "@/lib/form-state";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
+import type { FormState } from "@/types/shared";
 
 // Usta hesabları Supabase Edge Function ("admin-accounts") ilə idarə olunur:
 // gizli açar orada, serverdədir; funksiya çağıranın admin olduğunu özü yoxlayır.

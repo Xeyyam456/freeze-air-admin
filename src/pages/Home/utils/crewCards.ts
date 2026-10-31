@@ -1,9 +1,9 @@
-type Person = { id: number; full_name: string; photo_url: string | null; specialty: string | null };
-type TodayLog = { id: number; employee_id: number };
+import type { CrewPerson } from "@/types/home";
+import type { CrewTodayLog } from "@/types/home";
 
 // "Ustalar bu gün" kartları: tək işləyən öz kartında; qrupla işləyənlər (eyni tapşırıq) bir qrup kartında, qrupun işi bir say.
 // Ən çox iş görən yuxarıda.
-export function crewCards<E extends Person>(masters: E[], employees: E[], todayLogs: TodayLog[], groups: Map<number, string>) {
+export function crewCards<E extends CrewPerson>(masters: E[], employees: E[], todayLogs: CrewTodayLog[], groups: Map<number, string>) {
   const soloCount: Record<number, number> = {};
   const groupMembers = new Map<string, Set<number>>();
   for (const l of todayLogs) {

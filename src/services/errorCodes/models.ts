@@ -1,7 +1,8 @@
-import { text, type FormState } from "@/lib/form-state";
+import { text } from "@/lib/form-state";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
+import type { FormState } from "@/types/shared";
 
 // Kondisioner modelləri (yalnız admin yazır, RLS). Əvvəl modellər əlavə olunur, xəta kodu yazanda model seçilir.
 // Təkrar yoxlaması bazadadır: eyni model adı ikinci dəfə yazılmır (böyük/kiçik hərf və boşluq nəzərə alınmır).

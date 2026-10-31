@@ -1,8 +1,9 @@
-import { text, type FormState } from "@/lib/form-state";
+import { text } from "@/lib/form-state";
 import { revalidateSite } from "@/lib/site";
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/types/database";
 import type { HomeImageField } from "@/types/site";
+import type { FormState } from "@/types/shared";
 
 // Açıq saytın əlaqə məlumatları (tək sətir, id = 1). Saytda ən gec ~1 dəqiqəyə yenilənir.
 export async function updateSiteSettings(_prev: FormState, formData: FormData): Promise<FormState> {

@@ -1,18 +1,18 @@
-type Place = { lat: number | null; lng: number | null; address: string | null };
+import type { NavPlace } from "@/types/shared";
 
 // Koordinat varsa dəqiq nöqtə, yoxdursa ünvan.
-function query(p: Place) {
+function query(p: NavPlace) {
   if (p.lat != null && p.lng != null) return `${p.lat},${p.lng}`;
   return p.address ?? "";
 }
 
 // Panel içində iframe ilə göstərmək üçün
-export function mapEmbedUrl(p: Place) {
+export function mapEmbedUrl(p: NavPlace) {
   return `https://www.google.com/maps?q=${encodeURIComponent(query(p))}&z=16&output=embed`;
 }
 
 // Ayrıca tabda Google Maps-də açmaq üçün
-export function mapSearchUrl(p: Place) {
+export function mapSearchUrl(p: NavPlace) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query(p))}`;
 }
 

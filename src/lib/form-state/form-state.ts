@@ -1,4 +1,4 @@
-export type FormState = { error?: string; ok?: boolean } | null;
+import type { FormState } from "@/types/shared";
 
 export function text(formData: FormData, key: string) {
   const v = String(formData.get(key) ?? "").trim();

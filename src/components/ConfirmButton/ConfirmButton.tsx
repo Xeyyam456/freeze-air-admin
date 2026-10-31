@@ -2,17 +2,7 @@
 import { useState, useTransition } from "react";
 import { ConfirmModal } from "@/shared/components/ConfirmModal";
 import { toast } from "@/lib/toast";
-
-type Props = {
-  onConfirm: () => Promise<void>;
-  children: React.ReactNode;
-  className?: string;
-  title?: string;
-  question?: React.ReactNode;
-  confirmLabel?: string;
-  // Uğurdan sonra tost; false → tost yoxdur (onConfirm özü bildirir)
-  success?: string | false;
-};
+import type { ConfirmButtonProps } from "@/types/shared";
 
 // Silmə düyməsi: basanda təsdiq modalı açılır, sonra nəticə tostla bildirilir.
 export function ConfirmButton({
@@ -20,7 +10,7 @@ export function ConfirmButton({
   question = "Bu əməliyyatı geri qaytarmaq olmur.",
   confirmLabel = "Bəli, sil",
   success = "Silindi",
-}: Props) {
+}: ConfirmButtonProps) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 

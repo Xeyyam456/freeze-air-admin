@@ -1,4 +1,5 @@
-import { text, type FormState } from "@/lib/form-state";
+import { text } from "@/lib/form-state";
+import type { FormState } from "@/types/shared";
 
 // Yalnız formada olan sahələr yazılır: formada olmayan (məs. bazadakı kateqoriya, qeyd) toxunulmaz qalır.
 // kind ("tool" | "material") yalnız əlavə edəndə gəlir (gizli sahə); unit (ölçü vahidi) yalnız materialda.

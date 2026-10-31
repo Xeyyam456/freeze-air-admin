@@ -1,7 +1,8 @@
-import { text, type FormState } from "@/lib/form-state";
+import { text } from "@/lib/form-state";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
+import type { FormState } from "@/types/shared";
 
 // Xəta kodları (yalnız admin yazır, RLS). Sahələr: model (ac_models), kod (code), açıqlama (title), edilecək iş (solution).
 // Təkrar yoxlaması bazadadır: eyni modeldə eyni kod ikinci dəfə yazılmır.

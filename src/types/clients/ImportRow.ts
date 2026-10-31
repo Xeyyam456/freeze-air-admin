@@ -1,3 +1,3 @@
-import type { StoreInput } from "@/actions/stores";
+import type { StoreInput } from "@/types/clients";
 
 export type ImportRow = StoreInput & { line: number; error?: string };

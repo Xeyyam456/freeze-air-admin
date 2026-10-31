@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { jobKey, type FileCount } from "@/lib/jobs";
+import { jobKey } from "@/lib/jobs";
 import type { LogDay, WorkLog } from "@/types/workLogs";
-
-type GroupMap = Parameters<typeof jobKey>[1];
+import type { GroupMap } from "@/types/workLogs";
+import type { FileCount } from "@/types/workLogs";
 
 // Fayl sayları işə görə və günlərə bölünmüş siyahı (qrup işləri eyni üzvlü qrupa görə bir açılan sətirdə)
 export function useLogGroups(logs: WorkLog[] | null, list: WorkLog[], groupMap: GroupMap) {

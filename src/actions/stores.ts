@@ -2,16 +2,9 @@
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { parseCoordinates } from "@/lib/navigation";
-import { dbError, text, type FormState } from "@/lib/form-state";
-
-export type StoreInput = {
-  code: string;
-  name: string;
-  address: string | null;
-  phone: string | null;
-  lat: number | null;
-  lng: number | null;
-};
+import { dbError, text } from "@/lib/form-state";
+import type { StoreInput } from "@/types/clients";
+import type { FormState } from "@/types/shared";
 
 function storeFields(formData: FormData): { error: string } | { data: StoreInput & { company_id: number } } {
   const companyId = Number(formData.get("company_id"));

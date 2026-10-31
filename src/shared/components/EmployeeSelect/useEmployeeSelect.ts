@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { norm } from "@/shared/utils/norm";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
-import type { EmployeeSelectProps, SelectableEmployee } from "@/types/employees";
+import type { SelectableEmployee } from "@/types/employees";
 import { useSelectDismiss } from "./useSelectDismiss";
 import { useSelectPosition } from "./useSelectPosition";
-
-type Args = Pick<EmployeeSelectProps, "value" | "onChange" | "employees" | "emptyLabel">;
+import type { EmployeeSelectArgs } from "@/types/shared";
 
 // Açılan siyahının vəziyyəti: axtarış, aktiv sətir, klaviatura (↑↓ seçir, Enter təsdiqləyir)
-export function useEmployeeSelect({ value, onChange, employees, emptyLabel }: Args) {
+export function useEmployeeSelect({ value, onChange, employees, emptyLabel }: EmployeeSelectArgs) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);

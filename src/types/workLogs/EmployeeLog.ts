@@ -1,5 +1,5 @@
-import type { FileCount } from "@/lib/jobs";
 import type { EmployeeLogFile } from "./EmployeeLogFile";
+import type { FileCount } from "@/types/workLogs";
 
 // Ustanın kartındakı iş (fayllar imzalı linklə)
 export type EmployeeLog = {

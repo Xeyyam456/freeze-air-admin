@@ -8,7 +8,7 @@ import { ServicesTab } from "./components/ServicesTab";
 import { SiteTabs } from "./components/SiteTabs";
 import { TextsTab } from "./components/TextsTab";
 import { TrustTab } from "./components/TrustTab";
-import type { SiteTab } from "./constants/siteTabs";
+import type { SiteTab } from "@/types/site";
 
 const VIEWS: Record<SiteTab, React.ComponentType> = {
   contact: ContactTab,

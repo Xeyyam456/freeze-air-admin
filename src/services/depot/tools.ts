@@ -1,9 +1,10 @@
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
-import { text, type FormState } from "@/lib/form-state";
+import { text } from "@/lib/form-state";
 import { toast } from "@/lib/toast";
 import { createReceipt } from "./documents";
 import { checkFields, nameKey, toolError, toolFields } from "./toolForm";
+import type { FormState } from "@/types/shared";
 
 export async function addTool(_prev: FormState, formData: FormData): Promise<FormState> {
   const f = toolFields(formData);

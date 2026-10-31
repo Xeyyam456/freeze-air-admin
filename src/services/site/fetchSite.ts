@@ -1,8 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
 import type { HomeData, SiteSettings, TextMap } from "@/types/site";
-
-// Sıra və id ilə sıralanan sayt cədvəlləri (obyekt, avadanlıq, xidmət, rəqəm, sual)
-type SortedTable = "site_segments" | "site_equipment" | "site_services" | "site_stats" | "site_faq";
+import type { SortedTable } from "@/types/site";
 
 export async function fetchSorted<T extends SortedTable>(table: T) {
   const { data } = await createClient().from(table).select("*").order("sort").order("id");

@@ -1,8 +1,8 @@
 import { revalidate } from "@/lib/revalidate";
 import { markSelfAction } from "@/lib/selfAction";
 import { createClient } from "@/lib/supabase/client";
-import type { FormState } from "@/lib/form-state";
 import { num } from "./toolForm";
+import type { FormState } from "@/types/shared";
 
 // Ustaya ver: ustada bu alət varsa say artır. Forma: tool_id, employee_id, quantity.
 export async function giveTool(_prev: FormState, formData: FormData): Promise<FormState> {
