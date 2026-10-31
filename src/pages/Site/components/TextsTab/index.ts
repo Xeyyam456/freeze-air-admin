@@ -1,0 +1,1 @@
+export { TextsTab } from "./TextsTab";

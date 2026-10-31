@@ -1,0 +1,1 @@
+export { EquipmentTab } from "./EquipmentTab";

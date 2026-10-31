@@ -1,0 +1,1 @@
+export { TrustTab } from "./TrustTab";
