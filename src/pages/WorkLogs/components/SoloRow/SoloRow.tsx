@@ -1,9 +1,9 @@
 import { MapPin } from "lucide-react";
 import { Avatar } from "@/shared/components/Avatar";
 import { FileBadges } from "@/components/work/FileBadges";
-import { timeOf } from "@/components/work/WorkLogModal";
 import type { SoloRowProps } from "@/types/workLogs";
 import { placeOf } from "../../utils/logs";
+import { timeOf } from "@/components/work/WorkLogModal/utils/time";
 
 // Tək iş: usta, yer, görülən iş, fayl nişanları, saat; klik → iş pəncərəsi
 export function SoloRow({ l, files, onOpen }: SoloRowProps) {

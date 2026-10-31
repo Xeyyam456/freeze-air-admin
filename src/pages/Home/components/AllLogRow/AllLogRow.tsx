@@ -1,9 +1,9 @@
 import { MapPin } from "lucide-react";
 import { Avatar } from "@/shared/components/Avatar";
 import { FileBadges } from "@/components/work/FileBadges";
-import { timeOf } from "@/components/work/WorkLogModal";
 import type { AllLogRowProps } from "@/types/dashboard";
 import { allPlaceOf } from "../../utils/allLogs";
+import { timeOf } from "@/components/work/WorkLogModal/utils/time";
 
 // İş sətri: usta(lar), yer, görülən iş, fayl nişanları, saat
 export function AllLogRow({ l, files, onOpen }: AllLogRowProps) {

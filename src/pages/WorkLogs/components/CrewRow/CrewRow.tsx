@@ -1,8 +1,8 @@
 import { ChevronDown, MapPin, Play, Users } from "lucide-react";
 import { FileBadges } from "@/components/work/FileBadges";
-import { timeOf } from "@/components/work/WorkLogModal";
 import type { CrewRowProps } from "@/types/workLogs";
 import { placeOf } from "../../utils/logs";
+import { timeOf } from "@/components/work/WorkLogModal/utils/time";
 
 // Eyni üzvlü qrupun işləri bir açılan sətirdə (bağlı başlayır); bağlı halda da videolu iş görünür
 export function CrewRow({ names, logs, open, onToggle, filesOf, onOpen }: CrewRowProps) {

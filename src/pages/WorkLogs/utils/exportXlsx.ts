@@ -1,8 +1,8 @@
 import { formatDateAz } from "@/shared/utils/formatDateAz";
-import { timeOf } from "@/components/work/WorkLogModal";
 import { toast } from "@/lib/toast";
 import type { ExportInfo, WorkLog } from "@/types/workLogs";
 import { placeOf } from "./logs";
+import { timeOf } from "@/components/work/WorkLogModal/utils/time";
 
 // Rəngli, formatlı .xlsx: başlıq zolağı, xülasə sətri, donmuş başlıq, zebra, bölgülər, uzun mətn sarılır
 export async function exportXlsx(logs: WorkLog[], info: ExportInfo) {

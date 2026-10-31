@@ -2,13 +2,14 @@ import { useActionState, useState } from "react";
 import { Users } from "lucide-react";
 import { giveTool } from "@/services/depot/assignments";
 import { ActionForm, useOnSuccess } from "@/components/forms";
-import { giveLimitText, QuantityInput } from "@/components/QuantityInput";
+import { QuantityInput } from "@/components/QuantityInput";
 import { ToolPicker } from "@/shared/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { isPacked, round2 } from "../../utils/quantity";
 import type { GiveFormProps } from "@/types/depot";
 import { MiniSeg } from "../MiniSeg";
 import { Button } from "@/shared/components/Button";
+import { giveLimitText } from "@/components/QuantityInput/utils/giveLimitText";
 
 // Ustaya ver. Qablı materialda say balonla (standart) və ya kq ilə yazılır; baza həmişə ölçü vahidi ilə işləyir (1 balon → 11,3 kq).
 export function GiveForm({ tool, employees, onDone }: GiveFormProps) {

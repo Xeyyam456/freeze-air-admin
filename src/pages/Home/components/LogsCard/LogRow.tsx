@@ -1,11 +1,11 @@
 import { MapPin } from "lucide-react";
 import { FileBadges } from "@/components/work/FileBadges";
-import { timeOf } from "@/components/work/WorkLogModal";
 import { Avatar } from "@/shared/components/Avatar";
 import { localDate } from "@/shared/utils/localDate";
 import type { LogRowProps } from "@/types/dashboard";
 import { ago } from "../../utils/dateText";
 import { placeOf } from "../../utils/placeOf";
+import { timeOf } from "@/components/work/WorkLogModal/utils/time";
 
 // İş qeydinin sətri: klik → işin ətraflı pəncərəsi
 export function LogRow({ log: l, files, onOpen }: LogRowProps) {

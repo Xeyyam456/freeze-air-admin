@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Place } from "@/components/work/PlacePicker";
-import { loadPlaces } from "@/components/work/WorkLogForm";
 import { toast } from "@/lib/toast";
 import { addTask } from "@/services/tasks/tasks";
+import type { Place } from "@/types/workLogs";
+import { loadPlaces } from "@/services/workLogs/places";
 
 // "Yeni tapşırıq" formu: usta(lar), tarix, yer, səbəb. Göndərəndən sonra usta və tarix qalır, yer və səbəb təmizlənir
 export function useTaskForm(day: string, today: string, onDay: (day: string) => void) {
