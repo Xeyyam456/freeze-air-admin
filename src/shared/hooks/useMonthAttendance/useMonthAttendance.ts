@@ -1,7 +1,7 @@
 import { useData } from "@/lib/useData";
 import { fetchMonthAttendance } from "@/services/attendance/fetchMonthAttendance";
 import { todayBaku } from "@/shared/utils/todayBaku";
-import { useAttendanceLive } from "./useAttendanceLive";
+import { useAttendanceLive } from "../useAttendanceLive";
 
 // Ayın davamiyyəti (bütün ustalar; standart bu ay), keşdə + canlı. Ay dəyişəndə köhnə ayın cavabı göstərilmir.
 export function useMonthAttendance(month?: string) {
