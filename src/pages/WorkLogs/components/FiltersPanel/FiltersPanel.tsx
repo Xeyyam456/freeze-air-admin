@@ -1,7 +1,7 @@
 import { Building2, Download, Search } from "lucide-react";
 import { DatePicker } from "@/components/DatePicker";
 import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
-import { ModelDropdown } from "@/components/errors/ModelDropdown";
+import { ModelDropdown } from "@/shared/components/ModelDropdown";
 import { LOGS_LIMIT } from "@/services/workLogs/fetchLogs";
 import type { FiltersPanelProps } from "@/types/workLogs";
 import { exportXlsx } from "../../utils/exportXlsx";

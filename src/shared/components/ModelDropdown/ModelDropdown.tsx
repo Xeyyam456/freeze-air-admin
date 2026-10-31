@@ -1,28 +1,15 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
-import { Box, Boxes, Check, ChevronDown, type LucideIcon } from "lucide-react";
+import { Box, Boxes, Check, ChevronDown } from "lucide-react";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
-
-export type ModelOption = { value: string; label: string; hint?: string };
-
-type Pos = { left: number; width: number; top?: number; bottom?: number };
+import type { ModelDropdownPos, ModelDropdownProps } from "@/types/errorCodes";
 
 // Model seçimi: standart <select> əvəzinə ikonlu, izahlı açılan siyahı (UnitSelect ilə eyni üslub).
 // Seçim gizli sahə (name) ilə formaya gedir. Siyahı portal ilə body-yə çıxır, yer yoxdursa yuxarı açılır.
-// all: "Bütün modellər" kimi ümumi seçim (boş dəyər) üçün ikon fərqli olur.
-export function ModelDropdown({ value, onChange, options, name, placeholder = "Model seç...", all = false, icon: ItemIcon = Box, className = "" }: {
-  value: string;
-  onChange: (v: string) => void;
-  options: ModelOption[];
-  name?: string;
-  placeholder?: string;
-  all?: boolean;
-  icon?: LucideIcon; // siyahı elementlərinin ikonu (standart: model qutusu)
-  className?: string;
-}) {
+export function ModelDropdown({ value, onChange, options, name, placeholder = "Model seç...", all = false, icon: ItemIcon = Box, className = "" }: ModelDropdownProps) {
   const [open, setOpen] = useState(false);
-  const [pos, setPos] = useState<Pos | null>(null);
+  const [pos, setPos] = useState<ModelDropdownPos | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   useEscapeLayer(() => setOpen(false), open);
