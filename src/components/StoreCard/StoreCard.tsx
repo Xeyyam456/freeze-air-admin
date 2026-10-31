@@ -1,6 +1,6 @@
 import { MapPin, Phone } from "lucide-react";
 import type { Tables } from "@/types/database";
-import { MapButton } from "./MapButton";
+import { MapButton } from "../MapButton";
 
 type Props = {
   store: Tables<"stores">;

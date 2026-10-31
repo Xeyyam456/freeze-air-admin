@@ -3,8 +3,8 @@ import { Menu } from "lucide-react";
 import { useNavDrawer } from "@/lib/navDrawer";
 import { useAuth } from "@/auth/AuthProvider";
 import { initials } from "@/lib/experience";
-import { LogoutButton } from "./LogoutButton";
-import { ProfileModal } from "./ProfileModal";
+import { LogoutButton } from "../LogoutButton";
+import { ProfileModal } from "../ProfileModal";
 
 // Sağ yuxarıdakı profil: ad və vəzifə. Klik profil pəncərəsini açır (ad yazılmayıbsa, orada yazılır).
 function UserChip() {

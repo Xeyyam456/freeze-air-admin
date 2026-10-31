@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { usePref } from "@/lib/usePref";
 import { NavDrawerContext, useCompact, useNarrow } from "@/lib/navDrawer";
-import { CommandPalette } from "./CommandPalette";
-import { Sidebar } from "./Sidebar";
+import { CommandPalette } from "../CommandPalette";
+import { Sidebar } from "../Sidebar";
 
 // Girişdən sonrakı bütün səhifələrin çərçivəsi: solda menyu, sağda səhifə; Ctrl+K hər yerdə axtarışı açır.
 // Dar ekranda (< 1024px) menyu sürüşən siyirtmədir.

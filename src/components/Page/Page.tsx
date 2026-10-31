@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import { AppHeader } from "./AppHeader";
+import { AppHeader } from "../AppHeader";
 
 type Props = {
   title: string;

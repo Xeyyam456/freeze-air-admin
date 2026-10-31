@@ -1,18 +1,11 @@
 import { useState } from "react";
 import { toast } from "@/lib/toast";
+import type { QuantityInputProps } from "@/types/shared";
 
 // Say sahəsi: limitdən çox yazılan kimi tost + sahənin altında qırmızı yazı.
 // Brauzerin öz max yoxlaması yoxdur (o, səssizcə bloklayır); yoxlama burada və bazada.
 // Kəsr yazmaq olur (11,3 kq): vergül nöqtəyə çevrilir ki, forma Number() ilə oxusun.
-export function QuantityInput({ limit, limitText, className = "", defaultValue = 1, min = 1, onValid, onValue }: {
-  limit: number;
-  limitText: (limit: number, wanted: number) => string; // xəta mətni
-  className?: string;
-  defaultValue?: number;
-  min?: number; // ən az dəyər (materialda "işlədilib" üçün 0)
-  onValid?: (ok: boolean) => void;
-  onValue?: (n: number) => void; // hər dəyişmədə cari dəyər
-}) {
+export function QuantityInput({ limit, limitText, className = "", defaultValue = 1, min = 1, onValid, onValue }: QuantityInputProps) {
   const [error, setError] = useState<string | null>(null);
   return (
     <span className="relative">
@@ -32,10 +25,3 @@ export function QuantityInput({ limit, limitText, className = "", defaultValue =
     </span>
   );
 }
-
-const fmt = (n: number) => String(Math.round(n * 100) / 100).replace(".", ",");
-
-// Ustaya vermək: depodakından çox yazılanda göstərilən mətn
-// unit: alət üçün "ədəd", material üçün ölçü vahidi (metr, kq...)
-export const giveLimitText = (limit: number, wanted: number, unit = "ədəd") =>
-  limit === 0 ? "Depoda qalmayıb." : `Depoda cəmi ${fmt(limit)} ${unit} qalıb — ${fmt(wanted)} ${unit} vermək olmur.`;

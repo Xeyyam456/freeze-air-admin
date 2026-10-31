@@ -2,11 +2,10 @@
 import { useState } from "react";
 import { ExternalLink, Map as MapIcon, MapPin, X } from "lucide-react";
 import { mapEmbedUrl, mapSearchUrl } from "@/lib/navigation";
-// Xəritədə göstərilən yer: filial/mağaza və ya sabit məkanlı şirkət
-export type Place = { code?: string | null; name: string; address: string | null; lat: number | null; lng: number | null };
 import { Modal } from "@/shared/components/Modal";
+import type { MapButtonProps } from "@/types/shared";
 
-export function MapButton({ place }: { place: Place }) {
+export function MapButton({ place }: MapButtonProps) {
   const [open, setOpen] = useState(false);
   const hasLocation = (place.lat != null && place.lng != null) || !!place.address;
 
