@@ -59,3 +59,8 @@ src/
 ## Keçid dövrü (CSS)
 - `Button`, `Input`, `Textarea`, `FormField`, `Modal` hələlik qlobal class-ları (`.btn`, `.field`, `.label`, `.modal`) işlədir. Xam `<button className="btn ...">` yazma — `<Button variant="primary" size="sm">` işlət.
 - `.module.css`-ə köçəndə qaydaları `@layer components { ... }` içində yaz: qatsız CSS Tailwind utility-lərini (`className="w-full"`) üstələyir.
+
+## Ortaq UI komponentləri (2026-10-31)
+- Xam `<button className="btn ...">`, `<input|textarea|select className="field">`, `<div className="card">` yazma: `Button` (`variant`: primary, secondary, soft, danger, cancel, glass, plain; `size="sm"`), `Input`, `Textarea`, `Select`, `Card` (`as="section"`), `FormField` işlət (`@/shared/components/...`). Rəngi yerli class-lar verirsə `variant="plain"`.
+- Düymə/sahə üçün ortaq komponent yoxdursa əvvəl `shared/components`-ə əlavə et, sonra işlət.
+- Feature qovluğunun kökündə yalnız `index.tsx`: `components/<Hissə>/`, `hooks/`, `utils/` alt qovluqları.
