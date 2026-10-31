@@ -1,4 +1,4 @@
-import type { SelectableEmployee } from "@/components/employees/EmployeeSelect";
+import type { SelectableEmployee } from "@/types/employees";
 import type { Crew } from "./Crew";
 
 // hint: dropdown-da ustanın yanında yazı (məs. həmin gün neçə tapşırığı var)

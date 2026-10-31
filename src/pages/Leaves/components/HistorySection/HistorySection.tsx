@@ -1,6 +1,6 @@
 import { History, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
-import { EmployeeSelect } from "@/components/employees/EmployeeSelect";
+import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
 import { MONTHS_AZ } from "@/shared/utils/monthsAz";
 import type { HistorySectionProps } from "@/types/leaves";
 import { FilterChip } from "../FilterChip";

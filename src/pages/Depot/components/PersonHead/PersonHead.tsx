@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { PersonHeadProps } from "@/types/depot";
 
 // Ustanın pəncərəsinin bənövşəyi başlığı: şəkil, ad, vəzifə, bağla + 3 göstərici

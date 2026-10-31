@@ -1,0 +1,1 @@
+export { ManagerDetailsModal } from "./ManagerDetailsModal";

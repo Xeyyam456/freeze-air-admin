@@ -1,5 +1,5 @@
 import { Check, ChevronDown } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { CrewRowProps } from "@/types/tasks";
 import { hasVideo, teamLabel } from "../../utils/labels";
 import { GroupTaskRow } from "../GroupTaskRow";

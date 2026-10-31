@@ -1,4 +1,4 @@
-import { workerTypeLabel } from "@/components/employees/EmployeeForms";
+import { workerTypeLabel } from "@/shared/utils/workerType";
 import { createClient } from "@/lib/supabase/client";
 import { listCrews } from "./crews";
 

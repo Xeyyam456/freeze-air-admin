@@ -1,6 +1,6 @@
 import { Pencil, Plus, Trash2, UsersRound } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
-import type { SelectableEmployee } from "@/components/employees/EmployeeSelect";
+import type { SelectableEmployee } from "@/types/employees";
 import { deleteCrew } from "@/services/tasks/crews";
 import type { CrewListProps } from "@/types/tasks";
 import { crewLabel } from "../../utils/labels";

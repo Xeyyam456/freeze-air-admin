@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UserPlus, X } from "lucide-react";
-import { EmployeeSelect } from "@/components/employees/EmployeeSelect";
+import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
 import { toast } from "@/lib/toast";
 import { addTaskMember } from "@/services/tasks/tasks";
 import { Modal } from "@/shared/components/Modal";

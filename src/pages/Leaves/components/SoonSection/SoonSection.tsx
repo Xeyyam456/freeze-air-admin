@@ -1,5 +1,5 @@
 import { CalendarClock } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import { leaveRange } from "@/shared/utils/attendance/leaveRange";
 import { leaveWorkdays } from "@/shared/utils/attendance/leaveWorkdays";
 import type { SoonSectionProps } from "@/types/leaves";

@@ -1,4 +1,4 @@
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { SelectedPersonProps } from "@/types/fuel";
 import { fuelLabel } from "../../shared/fuelTypes";
 

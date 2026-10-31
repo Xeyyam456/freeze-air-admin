@@ -1,6 +1,6 @@
 import { Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import { leaveRange } from "@/shared/utils/attendance/leaveRange";
 import { leaveWorkdays } from "@/shared/utils/attendance/leaveWorkdays";
 import type { HistoryRowProps } from "@/types/leaves";

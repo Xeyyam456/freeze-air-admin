@@ -1,4 +1,4 @@
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { MemberFacesProps } from "@/types/tasks";
 
 // Ustaların kiçik şəkil + ad siyahısı (pəncərələrdə)

@@ -1,5 +1,5 @@
 import { Save, X } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { SelectedListProps } from "@/types/tasks";
 
 // Seçilən ustalar (bir usta və ya qrup): sətir-sətir, × ilə çıxır; altda "Daha bir usta"; 2+ nəfərdə "Briqada kimi saxla"

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Undo2, X } from "lucide-react";
-import { EmployeeSelect } from "@/components/employees/EmployeeSelect";
+import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
 import { withdrawTask } from "@/services/tasks/tasks";
 import { Modal } from "@/shared/components/Modal";
 import type { WithdrawModalProps } from "@/types/tasks";

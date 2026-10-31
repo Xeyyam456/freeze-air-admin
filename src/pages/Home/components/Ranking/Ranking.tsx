@@ -1,5 +1,5 @@
 import { Trophy } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { RankingProps } from "@/types/dashboard";
 
 // Ustalar üzrə reyting: nazik parlayan zolaqlar, klik → ustanın işləri

@@ -1,5 +1,5 @@
 import { MapPin } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import { FileBadges } from "@/components/work/FileBadges";
 import { timeOf } from "@/components/work/WorkLogModal";
 import type { SoloRowProps } from "@/types/workLogs";

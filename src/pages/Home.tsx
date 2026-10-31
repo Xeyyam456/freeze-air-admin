@@ -8,7 +8,7 @@ import { useAuth } from "@/auth/AuthProvider";
 import { fmt } from "@/pages/Depot/utils/quantity";
 import { isLowStock } from "@/pages/Depot/utils/stock";
 import { CountUp } from "@/components/CountUp";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import { Page } from "@/components/Page";
 import { AllLogsModal } from "@/pages/Home/components/AllLogsModal";
 import { MonthDashboard } from "@/pages/Home/components/MonthDashboard";

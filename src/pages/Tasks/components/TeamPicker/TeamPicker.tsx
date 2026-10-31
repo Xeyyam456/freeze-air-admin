@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { UsersRound } from "lucide-react";
-import { EmployeeSelect, type SelectableEmployee } from "@/components/employees/EmployeeSelect";
+import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
+import type { SelectableEmployee } from "@/types/employees";
 import type { Crew, ManagingState, TeamPickerProps } from "@/types/tasks";
 import { crewLabel } from "../../utils/labels";
 import { CrewSelect } from "../CrewSelect";

@@ -1,5 +1,5 @@
 import { ChevronDown } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { CarRowProps } from "@/types/fuel";
 import { savePer100 } from "../../queries/mutations";
 import { fuelLabel } from "../../shared/fuelTypes";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { UserRound, X } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
-import { AvatarUpload } from "@/components/employees/AvatarUpload";
+import { AvatarUpload } from "@/shared/components/AvatarUpload";
 import { Buttons, Field } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { createClient } from "@/lib/supabase/client";

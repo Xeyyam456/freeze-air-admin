@@ -1,5 +1,5 @@
 import { Check, X } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import { Button } from "@/shared/components/Button";
 import { leaveRange } from "@/shared/utils/attendance/leaveRange";
 import { leaveWorkdays } from "@/shared/utils/attendance/leaveWorkdays";

@@ -1,4 +1,4 @@
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { FreeEmployeesProps } from "@/types/tasks";
 
 // Briqadasız ustalar: yeni briqada üçün kim boşdur

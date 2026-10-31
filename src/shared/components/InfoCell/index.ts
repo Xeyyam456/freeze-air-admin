@@ -1,0 +1,1 @@
+export { InfoCell } from "./InfoCell";

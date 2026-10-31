@@ -1,4 +1,4 @@
-import type { SelectableEmployee } from "@/components/employees/EmployeeSelect";
+import type { SelectableEmployee } from "@/types/employees";
 import type { Crew, Task, TaskEmployee } from "@/types/tasks";
 
 // Yer: mağaza/filial (şirkət adı ilə) | sabit məkanlı şirkət | siyahıda olmayan yer | silinib

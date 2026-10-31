@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { SelectableEmployee } from "@/components/employees/EmployeeSelect";
+import type { SelectableEmployee } from "@/types/employees";
 import { toast } from "@/lib/toast";
 import { saveCrew } from "@/services/tasks/crews";
 import { Modal } from "@/shared/components/Modal";

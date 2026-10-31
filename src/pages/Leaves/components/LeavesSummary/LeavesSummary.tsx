@@ -1,5 +1,5 @@
 import { Hourglass } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { LeavesSummaryProps } from "@/types/leaves";
 import { personOf } from "../../utils/personOf";
 

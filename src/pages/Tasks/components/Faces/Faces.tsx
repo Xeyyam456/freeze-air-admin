@@ -1,4 +1,4 @@
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { FacesProps } from "@/types/tasks";
 
 // Üst-üstə avatarlar (briqada üzvləri)

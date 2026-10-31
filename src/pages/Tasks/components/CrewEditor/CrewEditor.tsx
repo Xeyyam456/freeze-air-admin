@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Check, Save, Search, UsersRound, X } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import { norm } from "@/shared/utils/norm";
 import type { CrewEditorProps } from "@/types/tasks";
 

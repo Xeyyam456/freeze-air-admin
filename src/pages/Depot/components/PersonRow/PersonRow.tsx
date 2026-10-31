@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import { Avatar } from "@/components/employees/EmployeeForms";
+import { Avatar } from "@/shared/components/Avatar";
 import type { Tone, Holding, Kind, PersonRowProps } from "@/types/depot";
 import { fmt } from "../../utils/quantity";
 import { StatusDot } from "../StatusDot";
