@@ -1,4 +1,4 @@
-import { MONTHS_AZ } from "./monthsAz";
+import { MONTHS_AZ } from "../monthsAz";
 
 // "2026-10-16" → "16 oktyabr 2026"
 export function formatDateAz(value: string) {
