@@ -3,7 +3,7 @@ import { PackageOpen, Users } from "lucide-react";
 import { givePiece } from "@/services/depot/assignments";
 import { Modal } from "@/shared/components/Modal";
 import { QuantityInput } from "@/components/QuantityInput";
-import { ToolPicker } from "@/components/ToolPicker";
+import { ToolPicker } from "@/shared/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { DHead } from "../DHead";
 import { fmt, isPacked, pieceWord, round2 } from "../../utils/quantity";

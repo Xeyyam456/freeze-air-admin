@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { DatePicker } from "@/components/DatePicker";
+import { DatePicker } from "@/shared/components/DatePicker";
 import { PlacePicker } from "@/components/work/PlacePicker";
 import type { TaskFormProps } from "@/types/tasks";
 import { useTaskForm } from "../../hooks/useTaskForm";

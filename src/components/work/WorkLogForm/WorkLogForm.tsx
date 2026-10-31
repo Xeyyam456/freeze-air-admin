@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { DatePicker } from "@/components/DatePicker";
+import { DatePicker } from "@/shared/components/DatePicker";
 import { Buttons, Field } from "@/components/forms";
 import { ConfirmModal } from "@/shared/components/ConfirmModal";
 import { Modal } from "@/shared/components/Modal";

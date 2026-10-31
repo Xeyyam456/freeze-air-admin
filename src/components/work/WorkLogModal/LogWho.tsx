@@ -1,5 +1,5 @@
 import { CalendarDays, Clock } from "lucide-react";
-import { formatDateAz } from "@/components/DatePicker";
+import { formatDateAz } from "@/shared/utils/formatDateAz";
 import { Avatar } from "@/shared/components/Avatar";
 import type { LogPartProps } from "@/types/workLogs";
 import { dateOf, timeOf } from "./time";

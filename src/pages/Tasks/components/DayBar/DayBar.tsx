@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
-import { formatDateAz } from "@/components/DatePicker";
+import { formatDateAz } from "@/shared/utils/formatDateAz";
 import type { DayBarProps } from "@/types/tasks";
 import { shiftDay } from "../../utils/days";
 

@@ -1,4 +1,4 @@
-import { DatePicker } from "@/components/DatePicker";
+import { DatePicker } from "@/shared/components/DatePicker";
 import { Field } from "@/components/forms";
 import type { EmployeeFieldsProps } from "@/types/employees";
 import { SPECIALTIES } from "../../constants/specialties";

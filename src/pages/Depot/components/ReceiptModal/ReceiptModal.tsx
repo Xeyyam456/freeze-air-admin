@@ -4,7 +4,7 @@ import { addTool } from "@/services/depot/tools";
 import { createReceipt } from "@/services/depot/documents";
 import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
-import { ToolPicker } from "@/components/ToolPicker";
+import { ToolPicker } from "@/shared/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { DHead } from "../DHead";
 import { isPacked, parseQty, round2, withUnit } from "../../utils/quantity";

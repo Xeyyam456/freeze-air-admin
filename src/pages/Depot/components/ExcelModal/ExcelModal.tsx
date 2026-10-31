@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FileSpreadsheet, Users } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
-import { ToolPicker } from "@/components/ToolPicker";
+import { ToolPicker } from "@/shared/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { DHead } from "../DHead";
 import { SOFT } from "../../constants/tones";

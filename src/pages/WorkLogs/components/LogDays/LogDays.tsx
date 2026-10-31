@@ -1,4 +1,4 @@
-import { formatDateAz } from "@/components/DatePicker";
+import { formatDateAz } from "@/shared/utils/formatDateAz";
 import type { LogDaysProps } from "@/types/workLogs";
 import { WEEKDAYS } from "../../utils/logs";
 import { CrewRow } from "../CrewRow";

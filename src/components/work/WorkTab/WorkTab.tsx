@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { formatDateAz } from "@/components/DatePicker";
+import { formatDateAz } from "@/shared/utils/formatDateAz";
 import type { EmployeeLog, WorkTabProps } from "@/types/workLogs";
 import { WorkLogForm } from "../WorkLogForm";
 import { WorkLogModal } from "../WorkLogModal";

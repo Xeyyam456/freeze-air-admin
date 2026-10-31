@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { HandCoins, X } from "lucide-react";
-import { DatePicker } from "@/components/DatePicker";
+import { DatePicker } from "@/shared/components/DatePicker";
 import { toast } from "@/lib/toast";
 import { Modal } from "@/shared/components/Modal";
 import type { PayModalProps } from "@/types/fuel";

@@ -4,7 +4,7 @@ import { setStorekeeper } from "@/services/storekeeper/storekeeper";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { AccountSection } from "@/shared/components/AccountSection";
 import { Avatar } from "@/shared/components/Avatar";
-import { ToolPicker } from "@/components/ToolPicker";
+import { ToolPicker } from "@/shared/components/ToolPicker";
 import { NewKeeperForm } from "../NewKeeperForm";
 import type { StorekeepersCardProps } from "@/types/storekeeper";
 import { Button } from "@/shared/components/Button";

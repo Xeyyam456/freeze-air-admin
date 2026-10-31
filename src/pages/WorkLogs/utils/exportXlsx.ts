@@ -1,4 +1,4 @@
-import { formatDateAz } from "@/components/DatePicker";
+import { formatDateAz } from "@/shared/utils/formatDateAz";
 import { timeOf } from "@/components/work/WorkLogModal";
 import { toast } from "@/lib/toast";
 import type { ExportInfo, WorkLog } from "@/types/workLogs";

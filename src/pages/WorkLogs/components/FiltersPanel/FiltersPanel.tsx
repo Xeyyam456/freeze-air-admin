@@ -1,5 +1,5 @@
 import { Building2, Download, Search } from "lucide-react";
-import { DatePicker } from "@/components/DatePicker";
+import { DatePicker } from "@/shared/components/DatePicker";
 import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
 import { ModelDropdown } from "@/shared/components/ModelDropdown";
 import { LOGS_LIMIT } from "@/services/workLogs/fetchLogs";

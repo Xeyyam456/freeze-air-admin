@@ -3,7 +3,7 @@ import { Users } from "lucide-react";
 import { giveTool } from "@/services/depot/assignments";
 import { ActionForm, useOnSuccess } from "@/components/forms";
 import { giveLimitText, QuantityInput } from "@/components/QuantityInput";
-import { ToolPicker } from "@/components/ToolPicker";
+import { ToolPicker } from "@/shared/components/ToolPicker";
 import { toast } from "@/lib/toast";
 import { isPacked, round2 } from "../../utils/quantity";
 import type { GiveFormProps } from "@/types/depot";

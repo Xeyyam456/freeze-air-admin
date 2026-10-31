@@ -1,5 +1,5 @@
 import { ArrowDownToLine, ArrowUpFromLine, ClipboardCheck, Flame, PackagePlus, Trash2, Wrench, type LucideIcon } from "lucide-react";
-import { formatDateAz } from "@/components/DatePicker";
+import { formatDateAz } from "@/shared/utils/formatDateAz";
 import type { Movement } from "@/types/depot";
 
 // Yerli tarix "YYYY-MM-DD"; offset gün qədər geri
