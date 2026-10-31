@@ -2,8 +2,8 @@ import { createPortal } from "react-dom";
 import { Search } from "lucide-react";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import type { CommandPaletteProps } from "@/types/layout";
-import { PaletteRow } from "./PaletteRow";
-import { useCommandPalette } from "./useCommandPalette";
+import { PaletteRow } from "./components/PaletteRow";
+import { useCommandPalette } from "./hooks/useCommandPalette";
 
 // Ctrl+K axtarışı: şirkət, mağaza, usta, alət və bölmələr
 export function CommandPalette({ onClose }: CommandPaletteProps) {

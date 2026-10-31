@@ -2,7 +2,7 @@ import { CalendarDays, Clock } from "lucide-react";
 import { formatDateAz } from "@/shared/utils/formatDateAz";
 import { Avatar } from "@/shared/components/Avatar";
 import type { LogPartProps } from "@/types/workLogs";
-import { dateOf, timeOf } from "./time";
+import { dateOf, timeOf } from "../../utils/time";
 
 // Usta (qrup işində bütün üzvlər) və vaxt: iş günü + əlavə olunma tarixi və saatı
 export function LogWho({ log }: LogPartProps) {

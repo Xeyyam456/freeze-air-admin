@@ -1,10 +1,10 @@
 import { Clock, Home, MapPin, Pencil, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import type { LogCardProps } from "@/types/workLogs";
-import { FileBadges } from "../FileBadges";
-import { timeOf } from "../WorkLogModal";
-import { LogFileTiles } from "./LogFileTiles";
-import { placeLabel } from "./placeLabel";
+import { FileBadges } from "../../../FileBadges";
+import { timeOf } from "../../../WorkLogModal";
+import { LogFileTiles } from "../LogFileTiles";
+import { placeLabel } from "../../utils/placeLabel";
 
 // İş kartı: yer, əlavə olunma saatı, redaktə/sil, görülən iş, qrupun faylları, akt/şəkil/video
 export function LogCard({ log, canDelete, canEdit, onEdit, onDelete, onOpenGroup, onPlay }: LogCardProps) {

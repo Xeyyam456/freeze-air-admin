@@ -6,7 +6,7 @@ import { LogoutButton } from "@/components/LogoutButton";
 import { useData } from "@/lib/useData";
 import { fetchNavBadges } from "@/services/nav/fetchNavBadges";
 import type { SidebarProps } from "@/types/layout";
-import { SidebarNav } from "./SidebarNav";
+import { SidebarNav } from "./components/SidebarNav";
 
 export function Sidebar({ collapsed, narrow, open, onToggle, onClose }: SidebarProps) {
   const { pathname } = useLocation();

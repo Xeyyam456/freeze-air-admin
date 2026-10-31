@@ -4,12 +4,12 @@ import { useData } from "@/lib/useData";
 import { fetchLogDetail } from "@/services/workLogs/fetchLogDetail";
 import { Modal } from "@/shared/components/Modal";
 import type { ViewingFile, WorkLogModalProps } from "@/types/workLogs";
-import { FileViewer } from "./FileViewer";
-import { LogFiles } from "./LogFiles";
-import { LogMaterials } from "./LogMaterials";
-import { LogPlaceCard } from "./LogPlaceCard";
-import { LogWhat } from "./LogWhat";
-import { LogWho } from "./LogWho";
+import { FileViewer } from "./components/FileViewer";
+import { LogFiles } from "./components/LogFiles";
+import { LogMaterials } from "./components/LogMaterials";
+import { LogPlaceCard } from "./components/LogPlaceCard";
+import { LogWhat } from "./components/LogWhat";
+import { LogWho } from "./components/LogWho";
 
 // İş qeydinin ətraflı pəncərəsi: kim, harada, nə vaxt (iş günü + əlavə olunma saatı), nə edib, akt və şəkillər
 export function WorkLogModal({ logId, onClose }: WorkLogModalProps) {

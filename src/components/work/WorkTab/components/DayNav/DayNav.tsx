@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
 import type { DayNavProps } from "@/types/workLogs";
-import { dayIso } from "./useWorkTab";
+import { dayIso } from "../../hooks/useWorkTab";
 
 const chip = (active: boolean) =>
   `h-9 rounded-lg px-3 text-[13px] font-semibold transition-colors ${active ? "bg-primary text-white" : "bg-bg text-ink hover:bg-primary-soft"}`;

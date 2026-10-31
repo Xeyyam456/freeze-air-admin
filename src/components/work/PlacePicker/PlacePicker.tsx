@@ -1,9 +1,9 @@
 import { ChevronDown, Search } from "lucide-react";
 import type { PlacePickerProps } from "@/types/workLogs";
-import { MAX_CUSTOM } from "./place";
-import { PlaceList } from "./PlaceList";
-import { SelectedPlace } from "./SelectedPlace";
-import { usePlacePicker } from "./usePlacePicker";
+import { MAX_CUSTOM } from "./utils/place";
+import { PlaceList } from "./components/PlaceList";
+import { SelectedPlace } from "./components/SelectedPlace";
+import { usePlacePicker } from "./hooks/usePlacePicker";
 
 // Yer seçimi: kliklə bütün siyahı qruplarla açılır, yazdıqca süzülür.
 // Uyğun yer yoxdursa, yazılan mətn özü yer kimi saxlanır (məs. "Fərdi ev").

@@ -1,6 +1,6 @@
 import { Building2, PenLine, Store } from "lucide-react";
 import type { PlaceListProps } from "@/types/workLogs";
-import { FIXED_GROUP } from "./place";
+import { FIXED_GROUP } from "../../utils/place";
 
 // Açılan siyahı: qruplar (sabit məkanlar, şəbəkələr), yerlər; sonda yazılan mətni "siyahıda olmayan yer" kimi yazmaq
 export function PlaceList({ loading, groups, trimmed, empty, customIndex, active, onActive, onChoose }: PlaceListProps) {

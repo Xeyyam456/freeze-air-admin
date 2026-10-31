@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { loadSearchItems } from "@/services/search/loadSearchItems";
 import { norm } from "@/shared/utils/norm";
 import type { PaletteItem } from "@/types/layout";
-import { NAV_ITEMS } from "../Sidebar";
+import { NAV_ITEMS } from "../../Sidebar";
 
 const PAGES: PaletteItem[] = NAV_ITEMS.filter((n) => !n.ownerOnly).map((n) => ({ key: `p${n.href}`, group: "Bölmələr", label: n.label, icon: n.icon, href: n.href }));
 const LIMIT = 40;

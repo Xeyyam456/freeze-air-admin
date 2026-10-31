@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import type { SidebarNavProps } from "@/types/layout";
-import { BADGE_STYLE, BADGE_TITLE, GROUPS, isActive } from "./navGroups";
+import { BADGE_STYLE, BADGE_TITLE, GROUPS, isActive } from "../../utils/navGroups";
 
 // Menyu qrupları və bəndləri (qırmızı nişanlarla); ownerOnly bəndlər yalnız müdirə görünür
 export function SidebarNav({ collapsed, owner, pathname, badges }: SidebarNavProps) {

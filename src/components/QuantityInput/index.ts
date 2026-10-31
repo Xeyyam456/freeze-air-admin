@@ -1,2 +1,2 @@
 export * from "./QuantityInput";
-export { giveLimitText } from "./giveLimitText";
+export { giveLimitText } from "./utils/giveLimitText";

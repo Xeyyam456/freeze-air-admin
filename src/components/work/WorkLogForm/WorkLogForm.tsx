@@ -5,9 +5,9 @@ import { ConfirmModal } from "@/shared/components/ConfirmModal";
 import { Modal } from "@/shared/components/Modal";
 import type { WorkLogFormProps } from "@/types/workLogs";
 import { PlacePicker } from "../PlacePicker";
-import { ExistingFilesEditor } from "./ExistingFilesEditor";
-import { NewFiles } from "./NewFiles";
-import { useWorkLogForm } from "./useWorkLogForm";
+import { ExistingFilesEditor } from "./components/ExistingFilesEditor";
+import { NewFiles } from "./components/NewFiles";
+import { useWorkLogForm } from "./hooks/useWorkLogForm";
 
 function today() {
   const d = new Date();

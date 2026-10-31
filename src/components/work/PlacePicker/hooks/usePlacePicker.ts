@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import { norm } from "@/shared/utils/norm";
 import type { Place, PlacePickerProps } from "@/types/workLogs";
-import { customPlace, MAX_CUSTOM } from "./place";
+import { customPlace, MAX_CUSTOM } from "../utils/place";
 
 // Yer seçiminin vəziyyəti: açıq/bağlı, axtarış, süzülmüş qruplar, klaviatura ilə gəzmə, kənara klik
 export function usePlacePicker({ places, onChange }: Pick<PlacePickerProps, "places" | "onChange">) {
