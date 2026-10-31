@@ -9,19 +9,20 @@ import { ClientAside, ClientInfo, ClientTools } from "../ClientPanels";
 import { LocationLogButton } from "../LocationLog";
 import { UnitList } from "../UnitList";
 import { LocationView } from "./LocationView";
+import { Card } from "@/shared/components/Card";
 
 // Şirkətin filialları və ya marketin mağazaları
 export function ClientDetail({ id, kind }: ClientDetailProps) {
   const { admin } = useAuth();
   const data = useClientDetail(id);
 
-  if (!data) return <Page title="Yüklənir..."><div className="card muted">Yüklənir...</div></Page>;
+  if (!data) return <Page title="Yüklənir..."><Card className="muted">Yüklənir...</Card></Page>;
   const { client, units } = data;
 
   if (!client) {
     return (
       <Page title="Tapılmadı" back={{ href: KIND[kind].route, label: KIND[kind].section }}>
-        <div className="card muted">Bu {KIND[kind].one} tapılmadı və ya silinib.</div>
+        <Card className="muted">Bu {KIND[kind].one} tapılmadı və ya silinib.</Card>
       </Page>
     );
   }

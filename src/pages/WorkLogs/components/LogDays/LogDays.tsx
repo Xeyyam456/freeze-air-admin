@@ -3,11 +3,12 @@ import type { LogDaysProps } from "@/types/workLogs";
 import { WEEKDAYS } from "../../utils/logs";
 import { CrewRow } from "../CrewRow";
 import { SoloRow } from "../SoloRow";
+import { Card } from "@/shared/components/Card";
 
 // Günlərə görə siyahı: yapışan gün başlığı (tarix, həftənin günü, iş sayı), tək işlər və qrup sətirləri
 export function LogDays({ days, filesOf, openCrews, onToggleCrew, onOpen }: LogDaysProps) {
   return (
-    <div className="card min-h-0 flex-1 overflow-y-auto !p-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <Card className="min-h-0 flex-1 overflow-y-auto !p-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {days === null ? (
         <p className="muted py-12 text-center text-sm">Yüklənir...</p>
       ) : days.length === 0 ? (
@@ -27,6 +28,6 @@ export function LogDays({ days, filesOf, openCrews, onToggleCrew, onOpen }: LogD
           </section>
         ))
       )}
-    </div>
+    </Card>
   );
 }

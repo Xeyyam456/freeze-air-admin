@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
-import { Field } from "@/components/forms";
 import { fmt, isPacked, parseQty, round2 } from "../../utils/quantity";
 import { TEXT } from "../../constants/text";
 import type { ToolFieldsProps } from "@/types/depot";
 import { MEASURES, COUNTS, measureOf, inPack } from "../../utils/measures";
 import { Input } from "@/shared/components/Input";
+import { FormField } from "@/shared/components/FormField";
 
 // Alət / material əlavə et və redaktə et sahələri. Ad: mövcud adlar təklif olunur (təkrar ad bloklanır).
 // Alət həmişə ədəddir. Redaktədə miqdar yoxdur: say yalnız Mədaxil / Silinmə aktı / Sayım ilə dəyişir.
@@ -34,10 +34,10 @@ export function ToolFields({ t, kind, names = [] }: ToolFieldsProps) {
 
   return (
     <>
-      <Field label="Adı">
+      <FormField label="Adı">
         <Input name="name" defaultValue={t?.name} placeholder={TEXT[kind].placeholder} required list={editing ? undefined : "depot-names"} autoComplete="off" />
         {!editing && <datalist id="depot-names">{names.map((n) => <option key={n} value={n} />)}</datalist>}
-      </Field>
+      </FormField>
 
       {material && (
         <div>
@@ -62,27 +62,27 @@ export function ToolFields({ t, kind, names = [] }: ToolFieldsProps) {
       {!material && !editing && <input type="hidden" name="unit" value="ədəd" />}
 
       {pack && (
-        <Field label={`${inPack(pack)} neçə ${unit}`}>
+        <FormField label={`${inPack(pack)} neçə ${unit}`}>
           <Input name="pack_size" inputMode="decimal" value={packSize} onChange={(e) => setPackSize(e.target.value)} placeholder={unit === "kq" ? "11,3" : ""} required autoComplete="off" />
-        </Field>
+        </FormField>
       )}
 
       <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-3">
         {!editing && (
-          <Field label={pack ? `Neçə ${pack}` : material ? `Miqdar (${unit})` : "Say"}>
+          <FormField label={pack ? `Neçə ${pack}` : material ? `Miqdar (${unit})` : "Say"}>
             <Input name="quantity" inputMode="decimal" value={countText} onChange={(e) => setCountText(e.target.value)} placeholder="0" autoComplete="off" />
-          </Field>
+          </FormField>
         )}
-        <Field label={`Min. qalıq (${unit})`}>
+        <FormField label={`Min. qalıq (${unit})`}>
           <Input name="min_stock" inputMode="decimal" defaultValue={t?.min_stock != null ? fmt(t.min_stock) : ""} placeholder="istəyə görə" autoComplete="off" />
-        </Field>
+        </FormField>
       </div>
       {pack && !editing && count > 0 && size > 0 && <p className="muted -mt-2 text-xs">= {fmt(round2(count * size))} {unit}</p>}
 
       {editing && kind === "tool" && (
-        <Field label="İnventar kodu">
+        <FormField label="İnventar kodu">
           <Input name="inventory_code" defaultValue={t.inventory_code ?? ""} placeholder="istəyə görə" />
-        </Field>
+        </FormField>
       )}
     </>
   );

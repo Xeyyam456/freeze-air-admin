@@ -1,10 +1,11 @@
 import { X } from "lucide-react";
-import { Buttons, Field } from "@/components/forms";
+import { Buttons } from "@/components/forms";
 import { AvatarUpload } from "@/shared/components/AvatarUpload";
 import { Modal } from "@/shared/components/Modal";
 import type { ManagerModalProps } from "@/types/management";
 import { useSavePhone } from "./useSavePhone";
 import { Input } from "@/shared/components/Input";
+import { FormField } from "@/shared/components/FormField";
 
 // Müdir olmayan rəhbər (və müdir öz kartında): yalnız telefon və şəkil
 export function ContactModal(props: ManagerModalProps) {
@@ -22,9 +23,9 @@ export function ContactModal(props: ManagerModalProps) {
       </div>
       <div className="mb-4"><AvatarUpload employee={manager} /></div>
       <form onSubmit={save} className="space-y-4">
-        <Field label="Telefon">
+        <FormField label="Telefon">
           <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+994 50 000 00 00" />
-        </Field>
+        </FormField>
         <p className="muted text-xs">Ad, vəzifə və hesabı yalnız müdir dəyişir.</p>
         <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
       </form>

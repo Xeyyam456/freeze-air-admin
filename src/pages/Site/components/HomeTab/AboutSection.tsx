@@ -1,11 +1,12 @@
 import type { AboutFormProps } from "@/types/site";
 import { AboutForm } from "./AboutForm";
 import { ImageSlot } from "./ImageSlot";
+import { Card } from "@/shared/components/Card";
 
 // Haqqımızda: şəkillər | mətn | siyahı + kart
 export function AboutSection({ settings }: AboutFormProps) {
   return (
-    <section className="card">
+    <Card as="section">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="card-title">Haqqımızda</h2>
@@ -26,6 +27,6 @@ export function AboutSection({ settings }: AboutFormProps) {
         </div>
         <AboutForm key={settings.updated_at} settings={settings} />
       </div>
-    </section>
+    </Card>
   );
 }

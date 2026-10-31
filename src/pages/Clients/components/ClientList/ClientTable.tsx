@@ -2,12 +2,13 @@ import { useNavigate } from "react-router";
 import { KIND } from "@/lib/kinds";
 import type { ClientTableProps } from "@/types/clients";
 import { unitLabel } from "../../utils/unitLabel";
+import { Card } from "@/shared/components/Card";
 
 // Cədvəl görünüşü; mobildə hər sətir iki sütunlu kiçik karta çevrilir
 export function ClientTable({ clients, kind }: ClientTableProps) {
   const navigate = useNavigate();
   return (
-    <div className="card overflow-hidden !p-0">
+    <Card className="overflow-hidden !p-0">
       <table className="data-table max-sm:block">
         <thead className="max-sm:hidden">
           <tr>
@@ -36,6 +37,6 @@ export function ClientTable({ clients, kind }: ClientTableProps) {
           })}
         </tbody>
       </table>
-    </div>
+    </Card>
   );
 }

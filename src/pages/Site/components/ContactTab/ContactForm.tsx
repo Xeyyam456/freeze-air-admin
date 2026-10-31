@@ -5,6 +5,7 @@ import type { ContactFormProps } from "@/types/site";
 import { CONTACT_FIELDS, CONTACT_PLACES } from "../../constants/contactFields";
 import { formatTime } from "@/shared/utils/formatDateTime";
 import { Input } from "@/shared/components/Input";
+import { Card } from "@/shared/components/Card";
 
 // Əlaqə formu: sahələr + saytda harada göründüyü; "Yadda saxla" təsdiqlə
 export function ContactForm({ settings, values, onChange }: ContactFormProps) {
@@ -12,7 +13,7 @@ export function ContactForm({ settings, values, onChange }: ContactFormProps) {
   useOnSuccess(state, undefined, "Əlaqə məlumatları yadda saxlanıldı");
 
   return (
-    <div className="card flex flex-col">
+    <Card className="flex flex-col">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="card-title">Əlaqə məlumatları</h2>
@@ -49,6 +50,6 @@ export function ContactForm({ settings, values, onChange }: ContactFormProps) {
           <Buttons pending={pending} label="Yadda saxla" />
         </div>
       </SaveConfirmForm>
-    </div>
+    </Card>
   );
 }

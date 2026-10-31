@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { FileSpreadsheet, Globe, Plus, UserPlus } from "lucide-react";
+import { Card } from "@/shared/components/Card";
 
 const LINKS = [
   { to: "/sirketler", icon: Plus, label: "Yeni şirkət" },
@@ -11,7 +12,7 @@ const LINKS = [
 // Sürətli keçidlər
 export function QuickLinks() {
   return (
-    <section className="card">
+    <Card as="section">
       <h2 className="card-title">Sürətli keçidlər</h2>
       <div className="mt-4 grid grid-cols-2 gap-2">
         {LINKS.map(({ to, icon: Icon, label }) => (
@@ -22,6 +23,6 @@ export function QuickLinks() {
           </Link>
         ))}
       </div>
-    </section>
+    </Card>
   );
 }

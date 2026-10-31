@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Field } from "@/components/forms";
 import { toast } from "@/lib/toast";
 import { saveFaq } from "@/services/site/content";
 import type { FaqEditorProps } from "@/types/site";
@@ -8,6 +7,7 @@ import { SortActive } from "../common/SortActive";
 import { EditorShell } from "./EditorShell";
 import { Input } from "@/shared/components/Input";
 import { Textarea } from "@/shared/components/Textarea";
+import { FormField } from "@/shared/components/FormField";
 
 export function FaqEditor({ item, sort, onClose }: FaqEditorProps) {
   const [pending, setPending] = useState(false);
@@ -23,8 +23,8 @@ export function FaqEditor({ item, sort, onClose }: FaqEditorProps) {
 
   return (
     <EditorShell title={item ? "Sualı redaktə et" : "Yeni sual"} onClose={onClose} onSubmit={submit} pending={pending} wide>
-      <Field label="Sual"><Input name="question" defaultValue={item?.question} maxLength={160} required /></Field>
-      <Field label="Cavab"><Textarea name="answer" defaultValue={item?.answer} maxLength={800} required rows={5} className="resize-none !py-2" /></Field>
+      <FormField label="Sual"><Input name="question" defaultValue={item?.question} maxLength={160} required /></FormField>
+      <FormField label="Cavab"><Textarea name="answer" defaultValue={item?.answer} maxLength={800} required rows={5} className="resize-none !py-2" /></FormField>
       <SortActive sort={item?.sort ?? sort} active={item?.is_active ?? true} />
     </EditorShell>
   );

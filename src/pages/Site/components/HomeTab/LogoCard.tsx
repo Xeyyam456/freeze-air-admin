@@ -1,11 +1,12 @@
 import { Snowflake } from "lucide-react";
 import type { HomeCardProps } from "@/types/site";
 import { ImageSlot } from "./ImageSlot";
+import { Card } from "@/shared/components/Card";
 
 // Loqo + header önizləməsi
 export function LogoCard({ settings, t }: HomeCardProps) {
   return (
-    <section className="card flex flex-col">
+    <Card as="section" className="flex flex-col">
       <h2 className="card-title">Loqo</h2>
       <p className="muted mt-1 text-sm">Saytın bütün səhifələrində: header-də şirkət adının solunda və footer-də.</p>
       {/* Saytın yeni header-i (2026-10-20): bir sətir, şüşə ağ fon; solda loqo, sağda tünd "Usta çağır" (menyu həbləri dar kartda sığmadığı üçün göstərilmir) */}
@@ -27,6 +28,6 @@ export function LogoCard({ settings, t }: HomeCardProps) {
           empty="Loqo yoxdur: saytda qar dənəsi ikonu göstərilir"
           hint="Şəffaf fonlu PNG, hündürlüyü ən azı 200 px." />
       </div>
-    </section>
+    </Card>
   );
 }

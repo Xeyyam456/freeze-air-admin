@@ -6,13 +6,14 @@ import { nextSort } from "../../utils/formText";
 import { ServiceEditor } from "../ServiceEditor";
 import { ServiceCard } from "./ServiceCard";
 import { Button } from "@/shared/components/Button";
+import { Card } from "@/shared/components/Card";
 
 // Xidmətlər: saytdakı siyahı, footer və hər xidmətin öz səhifəsi (/xidmet/<slug>)
 export function ServicesTab() {
   const [editing, setEditing] = useState<SiteService | "new" | null>(null);
   const services = useServices();
 
-  if (!services) return <div className="card muted">Yüklənir...</div>;
+  if (!services) return <Card className="muted">Yüklənir...</Card>;
 
   return (
     <div className="space-y-4">

@@ -6,13 +6,14 @@ import { nextSort } from "../../utils/formText";
 import { EquipmentEditor } from "../EquipmentEditor";
 import { EquipmentCard } from "./EquipmentCard";
 import { Button } from "@/shared/components/Button";
+import { Card } from "@/shared/components/Card";
 
 // Avadanlıq növləri (saytda /avadanliq və obyekt səhifəsindəki "Tipik avadanlıq")
 export function EquipmentTab() {
   const [editing, setEditing] = useState<SiteEquipment | "new" | null>(null);
   const items = useEquipmentList();
 
-  if (!items) return <div className="card muted">Yüklənir...</div>;
+  if (!items) return <Card className="muted">Yüklənir...</Card>;
 
   return (
     <div className="space-y-3">

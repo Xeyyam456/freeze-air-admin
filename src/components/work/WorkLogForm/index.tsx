@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
-import { Buttons, Field } from "@/components/forms";
+import { Buttons } from "@/components/forms";
 import { ConfirmModal } from "@/shared/components/ConfirmModal";
 import { Modal } from "@/shared/components/Modal";
 import type { WorkLogFormProps } from "@/types/workLogs";
@@ -9,6 +9,7 @@ import { ExistingFilesEditor } from "./components/ExistingFilesEditor";
 import { NewFiles } from "./components/NewFiles";
 import { useWorkLogForm } from "./hooks/useWorkLogForm";
 import { Textarea } from "@/shared/components/Textarea";
+import { FormField } from "@/shared/components/FormField";
 
 function today() {
   const d = new Date();
@@ -30,19 +31,19 @@ export function WorkLogForm(props: WorkLogFormProps) {
       </div>
 
       <form onSubmit={f.onSubmit} className="space-y-4">
-        <Field label="Tarix">
+        <FormField label="Tarix">
           <DatePicker name="work_date" defaultValue={existing?.work_date ?? today()} max={today()} required />
-        </Field>
+        </FormField>
 
         <div>
           <span className="label">Yer</span>
           <PlacePicker places={f.places} value={f.place} onChange={f.setPlace} />
         </div>
 
-        <Field label="Görülən iş">
+        <FormField label="Görülən iş">
           <Textarea name="description" rows={3} required className="resize-none" defaultValue={existing?.description}
             placeholder="Məs. 2 ədəd split kondisionerin profilaktikası, freon dolduruldu" />
-        </Field>
+        </FormField>
 
         {existing && existing.files.length > 0 && <ExistingFilesEditor files={existing.files} removed={f.removed} onToggle={f.toggleRemove} />}
         <NewFiles act={f.act} hasAct={f.hasAct} photos={f.photos} onAct={f.setAct} onPhotos={f.setPhotos} />

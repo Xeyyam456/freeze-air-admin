@@ -4,6 +4,7 @@ export type { ButtonsProps } from "./ButtonsProps";
 export type { ButtonVariant } from "./ButtonVariant";
 export type { CalendarProps } from "./CalendarProps";
 export type { CalendarView } from "./CalendarView";
+export type { CardProps } from "./CardProps";
 export type { ConfirmButtonProps } from "./ConfirmButtonProps";
 export type { ConfirmModalProps } from "./ConfirmModalProps";
 export type { DatePickerProps } from "./DatePickerProps";

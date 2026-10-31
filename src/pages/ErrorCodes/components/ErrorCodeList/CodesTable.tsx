@@ -1,9 +1,10 @@
 import type { CodesTableProps } from "@/types/errorCodes";
 import { CodeRow } from "./CodeRow";
+import { Card } from "@/shared/components/Card";
 
 export function CodesTable({ codes, names, onEdit }: CodesTableProps) {
   return (
-    <div className="card min-h-0 flex-1 overflow-y-auto !p-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <Card className="min-h-0 flex-1 overflow-y-auto !p-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <table className="w-full text-sm">
         <thead className="sticky top-0 z-[1] bg-[#f8f9fc] text-left text-xs font-semibold text-muted">
           <tr>
@@ -19,6 +20,6 @@ export function CodesTable({ codes, names, onEdit }: CodesTableProps) {
         </tbody>
       </table>
       {codes.length === 0 && <p className="muted border-t border-line py-8 text-center text-sm">Heç nə tapılmadı.</p>}
-    </div>
+    </Card>
   );
 }

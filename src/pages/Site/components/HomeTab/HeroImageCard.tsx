@@ -1,6 +1,7 @@
 import { CircleCheck } from "lucide-react";
 import type { HomeCardProps } from "@/types/site";
 import { ImageSlot } from "./ImageSlot";
+import { Card } from "@/shared/components/Card";
 
 const NOTES = [
   "Şəkil bütün ekranı örtür; ekran nisbətinə görə aşağı hissəsi kəsilə bilər.",
@@ -12,7 +13,7 @@ const NOTES = [
 // Hero: saytdakı kimi tam enli fon şəkli, soldan tünd keçid, üstündə başlıq və sürətli forma
 export function HeroImageCard({ settings, t }: HomeCardProps) {
   return (
-    <section className="card">
+    <Card as="section">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="card-title">Hero şəkli</h2>
@@ -42,6 +43,6 @@ export function HeroImageCard({ settings, t }: HomeCardProps) {
           <ImageSlot field="hero_image_url" url={settings.hero_image_url} folder="hero" hideImage hint="" />
         </div>
       </div>
-    </section>
+    </Card>
   );
 }

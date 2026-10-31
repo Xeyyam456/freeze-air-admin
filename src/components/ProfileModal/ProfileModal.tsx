@@ -2,11 +2,12 @@ import { useState } from "react";
 import { UserRound, X } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { AvatarUpload } from "@/shared/components/AvatarUpload";
-import { Buttons, Field } from "@/components/forms";
+import { Buttons } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
 import { Input } from "@/shared/components/Input";
+import { FormField } from "@/shared/components/FormField";
 
 // Profil: hesabın adı. Əməkdaşa bağlı hesabda ad əməkdaş kartından gəlir və orada dəyişdirilir.
 export function ProfileModal({ onClose }: { onClose: () => void }) {
@@ -50,9 +51,9 @@ export function ProfileModal({ onClose }: { onClose: () => void }) {
         </p>
       ) : (
         <form onSubmit={onSubmit} className="space-y-4">
-          <Field label="Ad və soyad">
+          <FormField label="Ad və soyad">
             <Input name="full_name" defaultValue={name ?? ""} placeholder="Məs. Məmmədov Əli" required autoFocus />
-          </Field>
+          </FormField>
           <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
         </form>
       )}

@@ -7,11 +7,12 @@ import type { FiltersPanelProps } from "@/types/workLogs";
 import { exportXlsx } from "../../utils/exportXlsx";
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
+import { Card } from "@/shared/components/Card";
 
 // Yan panel: tarix aralığı (+ hazır aralıqlar), usta, şirkət/market, axtarış, Excel-ə ixrac
 export function FiltersPanel({ from, to, onFrom, onTo, onRange, filters, employeeId, onEmployee, companyId, onCompany, query, onQuery, list, tooMany }: FiltersPanelProps) {
   return (
-    <div className="card space-y-4">
+    <Card className="space-y-4">
       <div className="flex items-center gap-3">
         <span className="icon-tile !h-9 !w-9"><Search size={18} /></span>
         <h2 className="card-title">Filtrlər</h2>
@@ -55,6 +56,6 @@ export function FiltersPanel({ from, to, onFrom, onTo, onRange, filters, employe
         <Download size={16} /> Excel-ə ixrac ({list.length})
       </Button>
       {tooMany && <p className="text-xs text-danger">Aralıqda {LOGS_LIMIT}-dən çox iş var: yalnız ən yenilər göstərilir. Aralığı daralt.</p>}
-    </div>
+    </Card>
   );
 }

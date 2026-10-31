@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { Field } from "@/components/forms";
 import { WORKER_TYPES } from "@/shared/utils/workerType";
 import type { WorkerTypeFieldProps } from "@/types/employees";
+import { FormField } from "@/shared/components/FormField";
 
 // Üç seçim olduğu üçün açılan siyahı yox, keçid düymələri (seçim gizli sahədə göndərilir)
 export function WorkerTypeField({ defaultValue = "master" }: WorkerTypeFieldProps) {
   const [value, setValue] = useState(defaultValue);
   return (
-    <Field label="İş növü">
+    <FormField label="İş növü">
       <input type="hidden" name="worker_type" value={value} />
       <div className="seg w-full" role="radiogroup" aria-label="İş növü">
         {WORKER_TYPES.map((w) => (
@@ -17,6 +17,6 @@ export function WorkerTypeField({ defaultValue = "master" }: WorkerTypeFieldProp
           </button>
         ))}
       </div>
-    </Field>
+    </FormField>
   );
 }

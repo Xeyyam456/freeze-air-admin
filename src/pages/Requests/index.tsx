@@ -4,6 +4,7 @@ import { RequestDetail } from "./components/RequestDetail";
 import { RequestFilters } from "./components/RequestFilters";
 import { RequestList } from "./components/RequestList";
 import { useRequestsPage } from "./hooks/useRequestsPage";
+import { Card } from "@/shared/components/Card";
 
 // Saytın "Bizə yazın" formasından gələn müraciətlər: solda siyahı, sağda seçilmiş müraciət
 export default function RequestsPage() {
@@ -12,7 +13,7 @@ export default function RequestsPage() {
   return (
     <Page title="Müraciətlər" subtitle="Saytdakı “Bizə yazın” formasından gələn mesajlar">
       {!p.loaded ? (
-        <div className="card muted">Yüklənir...</div>
+        <Card className="muted">Yüklənir...</Card>
       ) : (
         <div className="space-y-4">
           <RequestFilters filter={p.filter} onFilter={p.setFilter} counts={p.counts} query={p.query} onQuery={p.setQuery} />

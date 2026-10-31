@@ -1,8 +1,9 @@
 import { useActionState } from "react";
 import { addStorekeeper } from "@/services/storekeeper/storekeeper";
-import { ActionForm, Buttons, Field, useOnSuccess } from "@/components/forms";
+import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
 import type { NewKeeperFormProps } from "@/types/storekeeper";
 import { Input } from "@/shared/components/Input";
+import { FormField } from "@/shared/components/FormField";
 
 // Yeni depo məsulu: əməkdaş kartı + giriş hesabı bir formada (yalnız admin görür)
 export function NewKeeperForm({ onDone }: NewKeeperFormProps) {
@@ -10,19 +11,19 @@ export function NewKeeperForm({ onDone }: NewKeeperFormProps) {
   useOnSuccess(state, onDone, "Depo məsulu əlavə edildi");
   return (
     <ActionForm action={action} className="space-y-3 rounded-xl border border-line p-3">
-      <Field label="Soyad və ad">
+      <FormField label="Soyad və ad">
         <Input name="full_name" placeholder="Məmmədov Əli" required autoComplete="off" />
-      </Field>
-      <Field label="Telefon">
+      </FormField>
+      <FormField label="Telefon">
         <Input name="phone" placeholder="+994 50 000 00 00" />
-      </Field>
+      </FormField>
       <div className="grid grid-cols-2 gap-3">
-        <Field label="E-poçt (giriş)">
+        <FormField label="E-poçt (giriş)">
           <Input name="email" type="email" required autoComplete="off" />
-        </Field>
-        <Field label="Parol (min. 8)">
+        </FormField>
+        <FormField label="Parol (min. 8)">
           <Input name="password" type="password" minLength={8} required autoComplete="new-password" />
-        </Field>
+        </FormField>
       </div>
       <Buttons pending={pending} label="Yarat" onCancel={onDone} />
     </ActionForm>

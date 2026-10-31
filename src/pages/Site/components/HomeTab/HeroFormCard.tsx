@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Field } from "@/components/forms";
 import { toast } from "@/lib/toast";
 import { saveHeroForm } from "@/services/site/texts";
 import type { HeroFormCardProps, QuickKey } from "@/types/site";
 import { QUICK_DEFAULTS, QUICK_FIELDS, SITE_DELAY } from "../../constants/homeConstants";
 import { HeroFormPreview } from "./HeroFormPreview";
 import { Button } from "@/shared/components/Button";
+import { Card } from "@/shared/components/Card";
+import { FormField } from "@/shared/components/FormField";
 
 // Hero-dakı sürətli müraciət: açıb-bağlamaq və mətnləri dəyişmək. Müraciətlər "Müraciətlər" səhifəsinə düşür.
 export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCardProps) {
@@ -26,7 +27,7 @@ export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCard
   const v = (k: string) => values[k as QuickKey].trim() || QUICK_DEFAULTS[k as QuickKey];
 
   return (
-    <section className="card">
+    <Card as="section">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="card-title">Sürətli müraciət formu</h2>
@@ -41,10 +42,10 @@ export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCard
       <div className="mt-5 grid gap-6 xl:grid-cols-[1fr_1.1fr]">
         <div className={`grid gap-4 sm:grid-cols-2 ${enabled ? "" : "opacity-50"}`}>
           {QUICK_FIELDS.map((f) => (
-            <Field key={f.key} label={f.label}>
+            <FormField key={f.key} label={f.label}>
               <input value={values[f.key]} maxLength={f.max} disabled={!enabled} onChange={(e) => setValues((x) => ({ ...x, [f.key]: e.target.value }))}
                 className={`field ${f.key === "home.quick.note" ? "sm:col-span-2" : ""}`} />
-            </Field>
+            </FormField>
           ))}
           <p className="muted text-xs sm:col-span-2">Sahəni boş qoysan, saytda standart yazı çıxır.</p>
         </div>
@@ -54,6 +55,6 @@ export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCard
       <div className="mt-5 flex justify-end">
         <Button type="button" onClick={save} disabled={pending} className="min-w-40">{pending ? "Gözləyin..." : "Yadda saxla"}</Button>
       </div>
-    </section>
+    </Card>
   );
 }

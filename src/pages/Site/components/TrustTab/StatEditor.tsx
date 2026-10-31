@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Field } from "@/components/forms";
 import { toast } from "@/lib/toast";
 import { saveStat } from "@/services/site/content";
 import type { StatEditorProps } from "@/types/site";
@@ -7,6 +6,7 @@ import { str } from "../../utils/formText";
 import { SortActive } from "../common/SortActive";
 import { EditorShell } from "./EditorShell";
 import { Input } from "@/shared/components/Input";
+import { FormField } from "@/shared/components/FormField";
 
 export function StatEditor({ item, sort, onClose }: StatEditorProps) {
   const [pending, setPending] = useState(false);
@@ -23,8 +23,8 @@ export function StatEditor({ item, sort, onClose }: StatEditorProps) {
   return (
     <EditorShell title={item ? "Rəqəmi redaktə et" : "Yeni rəqəm"} onClose={onClose} onSubmit={submit} pending={pending}>
       <div className="grid gap-3 sm:grid-cols-[130px_1fr]">
-        <Field label="Rəqəm"><Input name="value" defaultValue={item?.value} maxLength={12} required placeholder="200+" /></Field>
-        <Field label="Yazı"><Input name="label" defaultValue={item?.label} maxLength={40} required placeholder="Mağaza və filial" /></Field>
+        <FormField label="Rəqəm"><Input name="value" defaultValue={item?.value} maxLength={12} required placeholder="200+" /></FormField>
+        <FormField label="Yazı"><Input name="label" defaultValue={item?.label} maxLength={40} required placeholder="Mağaza və filial" /></FormField>
       </div>
       <p className="muted -mt-1 text-xs">Rəqəm sayğacla artır; “200+”, “5 il”, “24/7” kimi yazmaq olar (başdakı rəqəmlər sayılır, qalanı olduğu kimi qalır).</p>
       <SortActive sort={item?.sort ?? sort} active={item?.is_active ?? true} />

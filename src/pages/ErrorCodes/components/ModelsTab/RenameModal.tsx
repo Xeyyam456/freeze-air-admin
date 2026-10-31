@@ -1,10 +1,11 @@
 import { useActionState } from "react";
 import { X } from "lucide-react";
-import { ActionForm, Buttons, Field, useOnSuccess } from "@/components/forms";
+import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { renameModel } from "@/services/errorCodes/models";
 import type { RenameModalProps } from "@/types/errorCodes";
 import { Input } from "@/shared/components/Input";
+import { FormField } from "@/shared/components/FormField";
 
 export function RenameModal({ model, onClose }: RenameModalProps) {
   const [state, action, pending] = useActionState(renameModel.bind(null, model.id), null);
@@ -17,7 +18,7 @@ export function RenameModal({ model, onClose }: RenameModalProps) {
         <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
       </div>
       <ActionForm action={action} className="space-y-4">
-        <Field label="Model adı"><Input name="name" defaultValue={model.name} required autoFocus autoComplete="off" /></Field>
+        <FormField label="Model adı"><Input name="name" defaultValue={model.name} required autoFocus autoComplete="off" /></FormField>
         <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
       </ActionForm>
     </Modal>

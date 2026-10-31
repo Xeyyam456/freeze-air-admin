@@ -8,6 +8,7 @@ import { toast } from "@/lib/toast";
 import { formatTime } from "@/shared/utils/formatDateTime";
 import type { RequestDetailProps } from "@/types/requests";
 import { digits, toneOf } from "../utils/requestFormat";
+import { Card } from "@/shared/components/Card";
 
 // Seçilmiş müraciət: ad, əlaqə düymələri (zəng, WhatsApp, e-poçt), mesaj, sil və "Baxıldı"
 export function RequestDetail({ r }: RequestDetailProps) {
@@ -22,7 +23,7 @@ export function RequestDetail({ r }: RequestDetailProps) {
   }
 
   return (
-    <section className="card flex flex-col lg:h-[calc(100dvh/var(--zoom)-300px)] lg:min-h-[380px]">
+    <Card as="section" className="flex flex-col lg:h-[calc(100dvh/var(--zoom)-300px)] lg:min-h-[380px]">
       <div className="flex flex-wrap items-start gap-4">
         <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${toneOf(r.name)} text-lg font-bold text-white`}>
           {initials(r.name)}
@@ -68,6 +69,6 @@ export function RequestDetail({ r }: RequestDetailProps) {
           {r.handled ? <><RotateCcw size={14} /> Yeni kimi işarələ</> : <><CircleCheck size={14} /> Baxıldı</>}
         </button>
       </div>
-    </section>
+    </Card>
   );
 }

@@ -6,6 +6,7 @@ import { nextSort } from "../../utils/formText";
 import { SegmentEditor } from "../SegmentEditor";
 import { SegmentCard } from "./SegmentCard";
 import { Button } from "@/shared/components/Button";
+import { Card } from "@/shared/components/Card";
 
 // Obyekt növləri: Ev və mənzil, Market və mağaza, ... (saytda /xidmetler/<slug>)
 export function SegmentsTab() {
@@ -13,7 +14,7 @@ export function SegmentsTab() {
   const segments = useSegments();
   const equipment = useEquipmentList();
 
-  if (!segments || !equipment) return <div className="card muted">Yüklənir...</div>;
+  if (!segments || !equipment) return <Card className="muted">Yüklənir...</Card>;
   const equipmentTitle = (key: string) => equipment.find((e) => e.key === key)?.title ?? key;
 
   return (

@@ -8,15 +8,16 @@ import type { SiteStat } from "@/types/site";
 import { nextSort } from "../../utils/formText";
 import { StatEditor } from "./StatEditor";
 import { TrustHeader } from "./TrustHeader";
+import { Card } from "@/shared/components/Card";
 
 // Rəqəmlər zolağı (ana səhifədə hero-nun altında)
 export function StatsSection() {
   const [editing, setEditing] = useState<SiteStat | "new" | null>(null);
   const rows = useData("site-stats", () => fetchSorted("site_stats"));
-  if (!rows) return <div className="card muted">Yüklənir...</div>;
+  if (!rows) return <Card className="muted">Yüklənir...</Card>;
 
   return (
-    <section className="card space-y-4">
+    <Card as="section" className="space-y-4">
       {editing && <StatEditor item={editing === "new" ? null : editing} sort={nextSort(rows)} onClose={() => setEditing(null)} />}
       <TrustHeader icon={Hash} title="Rəqəmlər zolağı" addLabel="Yeni rəqəm" onAdd={() => setEditing("new")}
         text="Ana səhifədə hero-nun altında. Ən azı 2 aktiv rəqəm olanda göstərilir (4-ə qədər tövsiyə olunur)." />
@@ -39,6 +40,6 @@ export function StatsSection() {
           ))}
         </ul>
       )}
-    </section>
+    </Card>
   );
 }

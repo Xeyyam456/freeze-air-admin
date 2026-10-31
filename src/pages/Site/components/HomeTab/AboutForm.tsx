@@ -1,5 +1,5 @@
 import { useActionState, useState } from "react";
-import { Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
+import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { updateAbout } from "@/services/site/settings";
 import type { AboutFormProps } from "@/types/site";
 import { CARD_COLORS } from "../../constants/homeConstants";
@@ -7,6 +7,7 @@ import { AboutCardPreview } from "./AboutCardPreview";
 import { CardColorPicker } from "./CardColorPicker";
 import { Input } from "@/shared/components/Input";
 import { Textarea } from "@/shared/components/Textarea";
+import { FormField } from "@/shared/components/FormField";
 
 // key (HomeTab-da): saxlandıqdan sonra sahələr bazadakı yeni dəyərlərlə yenilənsin
 export function AboutForm({ settings }: AboutFormProps) {
@@ -19,25 +20,25 @@ export function AboutForm({ settings }: AboutFormProps) {
   return (
     <SaveConfirmForm action={action} className="grid gap-5 lg:grid-cols-2">
       <div className="space-y-4">
-        <Field label="Başlıq">
+        <FormField label="Başlıq">
           <Input name="about_title" defaultValue={settings.about_title ?? ""} maxLength={120} />
-        </Field>
-        <Field label="Mətn (abzasları boş sətirlə ayırın)">
+        </FormField>
+        <FormField label="Mətn (abzasları boş sətirlə ayırın)">
           <Textarea name="about_text" defaultValue={settings.about_text ?? ""} maxLength={1500} rows={9} className="resize-y !py-2" />
-        </Field>
-        <Field label="Siyahı (hər sətir bir bənd)">
+        </FormField>
+        <FormField label="Siyahı (hər sətir bir bənd)">
           <Textarea name="about_points" defaultValue={settings.about_points ?? ""} maxLength={500} rows={3} className="resize-y !py-2" />
-        </Field>
+        </FormField>
       </div>
 
       <div className="flex flex-col gap-4">
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Kart: başlıq">
+          <FormField label="Kart: başlıq">
             <Input name="about_card_title" value={cardTitle} onChange={(e) => setCardTitle(e.target.value)} maxLength={60} />
-          </Field>
-          <Field label="Kart: alt yazı">
+          </FormField>
+          <FormField label="Kart: alt yazı">
             <Input name="about_card_text" value={cardText} onChange={(e) => setCardText(e.target.value)} maxLength={80} />
-          </Field>
+          </FormField>
         </div>
         <CardColorPicker color={color} onColor={setColor} />
         <AboutCardPreview title={cardTitle} text={cardText} color={CARD_COLORS.find((x) => x.id === color) ?? CARD_COLORS[0]} />

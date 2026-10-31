@@ -4,6 +4,7 @@ import { useErrorCodeList } from "../../hooks/useErrorCodeList";
 import { EditCodeModal } from "../EditCodeModal";
 import { CodeFilters } from "./CodeFilters";
 import { CodesTable } from "./CodesTable";
+import { Card } from "@/shared/components/Card";
 
 // Xəta kodları siyahısı: axtarış, model süzgəci, cədvəl
 export function ErrorCodeList({ codes, models }: ErrorCodeListProps) {
@@ -17,11 +18,11 @@ export function ErrorCodeList({ codes, models }: ErrorCodeListProps) {
         modelFilter={l.modelFilter} onModelFilter={l.setModelFilter} />
 
       {codes.length === 0 ? (
-        <div className="card py-14 text-center">
+        <Card className="py-14 text-center">
           <span className="icon-tile mx-auto"><TriangleAlert size={20} /></span>
           <p className="mt-3 font-semibold">Hələ xəta kodu yoxdur</p>
           <p className="muted text-sm">Əvvəl sağdan model əlavə et, sonra modeli seçib xəta kodu yaz.</p>
-        </div>
+        </Card>
       ) : (
         <CodesTable codes={l.filtered} names={l.names} onEdit={l.setEditing} />
       )}

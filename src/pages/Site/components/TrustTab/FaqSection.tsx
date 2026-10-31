@@ -8,15 +8,16 @@ import type { SiteFaq } from "@/types/site";
 import { nextSort } from "../../utils/formText";
 import { FaqEditor } from "./FaqEditor";
 import { TrustHeader } from "./TrustHeader";
+import { Card } from "@/shared/components/Card";
 
 // Tez-tez verilən suallar (ana səhifənin altında)
 export function FaqSection() {
   const [editing, setEditing] = useState<SiteFaq | "new" | null>(null);
   const rows = useData("site-faq", () => fetchSorted("site_faq"));
-  if (!rows) return <div className="card muted">Yüklənir...</div>;
+  if (!rows) return <Card className="muted">Yüklənir...</Card>;
 
   return (
-    <section className="card space-y-4">
+    <Card as="section" className="space-y-4">
       {editing && <FaqEditor item={editing === "new" ? null : editing} sort={nextSort(rows)} onClose={() => setEditing(null)} />}
       <TrustHeader icon={HelpCircle} title="Tez-tez verilən suallar" addLabel="Yeni sual" onAdd={() => setEditing("new")}
         text="Ana səhifənin altında açılan siyahı kimi görünür və Google üçün də işarələnir. Cavabı real və dəqiq yaz." />
@@ -39,6 +40,6 @@ export function FaqSection() {
           ))}
         </ul>
       )}
-    </section>
+    </Card>
   );
 }

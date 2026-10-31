@@ -2,11 +2,12 @@ import { ArrowRight, ClipboardList } from "lucide-react";
 import type { LogsCardProps } from "@/types/dashboard";
 import { EmptyState } from "../EmptyState";
 import { LogRow } from "./LogRow";
+import { Card } from "@/shared/components/Card";
 
 // Bu gün: iş qeydləri (son 4; hamısı pəncərədə)
 export function LogsCard({ d, onOpen, onAll }: LogsCardProps) {
   return (
-    <section className="card flex h-[374px] flex-col max-sm:h-auto">
+    <Card as="section" className="flex h-[374px] flex-col max-sm:h-auto">
       <div className="flex items-center justify-between gap-3">
         <h2 className="card-title flex items-center gap-2"><ClipboardList size={18} className="text-primary" /> İş qeydləri</h2>
         <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-bold text-primary">Bu gün: {d ? d.todayTotal : "–"}</span>
@@ -25,6 +26,6 @@ export function LogsCard({ d, onOpen, onAll }: LogsCardProps) {
           Hamısına bax <ArrowRight size={14} />
         </button>
       )}
-    </section>
+    </Card>
   );
 }

@@ -3,12 +3,13 @@ import { useTextsTab } from "../../hooks/useTextsTab";
 import { TextGroupNav } from "./TextGroupNav";
 import { TextInput } from "./TextInput";
 import { TextsSaveBar } from "./TextsSaveBar";
+import { Card } from "@/shared/components/Card";
 
 // Saytın bütün sabit mətnləri, səhifələrə görə. Dəyişikliklər bütün qruplar üzrə yığılır, bir düymə ilə saxlanır.
 export function TextsTab() {
   const t = useTextsTab();
 
-  if (!t.loaded) return <div className="card muted">Yüklənir...</div>;
+  if (!t.loaded) return <Card className="muted">Yüklənir...</Card>;
 
   return (
     <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
@@ -17,7 +18,7 @@ export function TextsTab() {
       <div className="min-w-0 space-y-4 pb-24">
         {t.current.hint && <p className="muted text-sm">{t.current.hint}</p>}
         {t.current.sections.map((s) => (
-          <section key={s.title} className="card">
+          <Card as="section" key={s.title} >
             <h2 className="card-title">{s.title}</h2>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {s.fields.map((f) => (
@@ -25,7 +26,7 @@ export function TextsTab() {
                   onChange={(v) => t.setValue(f.key, v)} onReset={() => t.resetKey(f.key)} />
               ))}
             </div>
-          </section>
+          </Card>
         ))}
       </div>
 

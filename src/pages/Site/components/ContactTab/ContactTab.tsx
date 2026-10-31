@@ -4,12 +4,13 @@ import { fetchSettings } from "@/services/site/fetchSite";
 import type { ContactEditorProps, ContactValues } from "@/types/site";
 import { ContactForm } from "./ContactForm";
 import { ContactPreview } from "./ContactPreview";
+import { Card } from "@/shared/components/Card";
 
 // Əlaqə məlumatları: header, footer, ana səhifə, Əlaqə və xidmət səhifələrində göstərilir
 export function ContactTab() {
   const settings = useData("site-settings-contact", fetchSettings);
 
-  if (!settings) return <div className="card muted">Yüklənir...</div>;
+  if (!settings) return <Card className="muted">Yüklənir...</Card>;
   // key: saxlandıqdan sonra sahələr bazadakı yeni dəyərlərlə yenilənsin
   return <ContactEditor key={settings.updated_at} settings={settings} />;
 }

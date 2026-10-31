@@ -2,11 +2,12 @@ import { CalendarDays, Users } from "lucide-react";
 import type { MastersCardProps } from "@/types/dashboard";
 import { EmptyState } from "../EmptyState";
 import { MasterTile } from "./MasterTile";
+import { Card } from "@/shared/components/Card";
 
 // Ustalar bu gün: ən çox iş görən yuxarıda; qrupla işləyənlər bir kartdadır
 export function MastersCard({ d, onOpenLogs }: MastersCardProps) {
   return (
-    <section className="card">
+    <Card as="section">
       <div className="flex items-center justify-between gap-3">
         <h2 className="card-title flex items-center gap-2"><CalendarDays size={18} className="text-primary" /> Ustalar bu gün</h2>
         {d && (
@@ -22,6 +23,6 @@ export function MastersCard({ d, onOpenLogs }: MastersCardProps) {
       ) : (
         d && <EmptyState icon={Users} title="Aktiv usta yoxdur" text="Ustalar bölməsindən usta əlavə edin." />
       )}
-    </section>
+    </Card>
   );
 }

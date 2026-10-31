@@ -5,13 +5,14 @@ import { AboutSection } from "./AboutSection";
 import { HeroFormCard } from "./HeroFormCard";
 import { HeroImageCard } from "./HeroImageCard";
 import { LogoCard } from "./LogoCard";
+import { Card } from "@/shared/components/Card";
 
 // Ana səhifənin və saytın idarə olunan hissələri: loqo, hero şəkli, sürətli forma və "Haqqımızda" bölməsi.
 // Hər bölmənin yanında saytdakı görünüşünün kiçik önizləməsi var.
 export function HomeTab() {
   const data = useData("site-home", () => fetchHomeData(HOME_TEXT_KEYS));
 
-  if (!data?.settings) return <div className="card muted">Yüklənir...</div>;
+  if (!data?.settings) return <Card className="muted">Yüklənir...</Card>;
   const { settings, t } = data;
 
   return (

@@ -3,6 +3,7 @@ import { Page } from "@/components/Page";
 import { AddEmployeeButton } from "./components/AddEmployeeButton";
 import { EmployeeList } from "./components/EmployeeList";
 import { useEmployeesData } from "./queries/useEmployeesData";
+import { Card } from "@/shared/components/Card";
 
 export default function EmployeesPage() {
   const { admin } = useAuth();
@@ -11,7 +12,7 @@ export default function EmployeesPage() {
   return (
     <Page title="Ustalar" subtitle="Ustaların ixtisası, təcrübəsi və əlaqə məlumatı" actions={admin ? <AddEmployeeButton /> : undefined}>
       {!data ? (
-        <div className="card muted">Yüklənir...</div>
+        <Card className="muted">Yüklənir...</Card>
       ) : (
         <EmployeeList
           employees={data.employees}

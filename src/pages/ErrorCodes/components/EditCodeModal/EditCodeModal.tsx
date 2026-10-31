@@ -1,11 +1,12 @@
 import { useActionState, useState } from "react";
 import { X } from "lucide-react";
-import { Buttons, Field, SaveConfirmForm, useOnSuccess } from "@/components/forms";
+import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { updateErrorCode } from "@/services/errorCodes/codes";
 import type { EditCodeModalProps } from "@/types/errorCodes";
 import { CodeFields } from "../CodeFields";
 import { ModelSelect } from "../ModelSelect";
+import { FormField } from "@/shared/components/FormField";
 
 export function EditCodeModal({ item, models, onClose }: EditCodeModalProps) {
   const [state, action, pending] = useActionState(updateErrorCode.bind(null, item.id), null);
@@ -19,7 +20,7 @@ export function EditCodeModal({ item, models, onClose }: EditCodeModalProps) {
         <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
       </div>
       <SaveConfirmForm action={action} className="space-y-4">
-        <Field label="Kondisioner modeli"><ModelSelect models={models} value={modelId} onChange={setModelId} /></Field>
+        <FormField label="Kondisioner modeli"><ModelSelect models={models} value={modelId} onChange={setModelId} /></FormField>
         <CodeFields item={item} />
         <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
       </SaveConfirmForm>

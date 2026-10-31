@@ -4,6 +4,7 @@ import { CONTACT_FALLBACK } from "../../constants/contactFields";
 import { formatPhone } from "../../utils/contactFormat";
 import { PreviewInfoPanel } from "./PreviewInfoPanel";
 import { PreviewMap } from "./PreviewMap";
+import { Card } from "@/shared/components/Card";
 
 // Canlı önizləmə: saytdakı Əlaqə səhifəsinin görünüşü (2026-10-20 yeni dizayn)
 export function ContactPreview({ values }: ContactPreviewProps) {
@@ -13,7 +14,7 @@ export function ContactPreview({ values }: ContactPreviewProps) {
   const hasWhatsApp = values.phone.replace(/\D/g, "").length >= 11;
 
   return (
-    <div className="card !p-4">
+    <Card className="!p-4">
       <p className="mb-3 flex items-center gap-2 px-1 text-xs font-semibold text-muted">
         <span className="h-2 w-2 animate-pulse rounded-full bg-ok" /> Saytda belə görünəcək
       </p>
@@ -36,6 +37,6 @@ export function ContactPreview({ values }: ContactPreviewProps) {
 
         <PreviewMap address={address} />
       </div>
-    </div>
+    </Card>
   );
 }

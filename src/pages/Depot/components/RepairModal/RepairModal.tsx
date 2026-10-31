@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Wrench } from "lucide-react";
 import { sendRepair } from "@/services/depot/repairs";
-import { ActionForm, Buttons, Field } from "@/components/forms";
+import { ActionForm, Buttons } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { toast } from "@/lib/toast";
 import { DHead } from "../DHead";
 import { parseQty, withUnit } from "../../utils/quantity";
 import type { RepairModalProps } from "@/types/depot";
 import { Input } from "@/shared/components/Input";
+import { FormField } from "@/shared/components/FormField";
 
 // Təmirə göndər: göndərilən say depoda boş sayılmır; qayıdanda "Düzəldi" və ya "Bərpa olunmadı" (silinmə aktı)
 export function RepairModal({ tool, onClose }: RepairModalProps) {
@@ -36,12 +37,12 @@ export function RepairModal({ tool, onClose }: RepairModalProps) {
       ) : (
         <ActionForm action={submit} className="space-y-4">
           <div className="grid grid-cols-[7rem_1fr] gap-3">
-            <Field label="Say">
+            <FormField label="Say">
               <Input inputMode="numeric" value={qtyText} onChange={(e) => setQtyText(e.target.value)} required />
-            </Field>
-            <Field label="Harada">
+            </FormField>
+            <FormField label="Harada">
               <Input value={place} onChange={(e) => setPlace(e.target.value)} placeholder="istəyə görə" />
-            </Field>
+            </FormField>
           </div>
           <Input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Nasazlıq (istəyə görə)" aria-label="Nasazlıq" />
           <Buttons pending={pending} label="Təmirə göndər" onCancel={onClose} />

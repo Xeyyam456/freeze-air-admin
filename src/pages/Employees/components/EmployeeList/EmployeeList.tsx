@@ -3,6 +3,7 @@ import type { EmployeeListProps } from "@/types/employees";
 import { useEmployeeFilter } from "../../hooks/useEmployeeFilter";
 import { EmployeeCard } from "../EmployeeCard";
 import { EmptyEmployees } from "./EmptyEmployees";
+import { Card } from "@/shared/components/Card";
 
 // Ustalar: yapışan axtarış və profil kartları
 export function EmployeeList({ employees, todayWork, monthWork, status, partners, accounts, admin }: EmployeeListProps) {
@@ -15,7 +16,7 @@ export function EmployeeList({ employees, todayWork, monthWork, status, partners
       <SearchBar value={query} onChange={setQuery} placeholder="Ad, ixtisas, növ və ya telefon ilə axtar..." label="Usta axtarışı" />
 
       {filtered.length === 0 ? (
-        <div className="card muted py-10 text-center text-sm">Bu axtarışa uyğun usta tapılmadı.</div>
+        <Card className="muted py-10 text-center text-sm">Bu axtarışa uyğun usta tapılmadı.</Card>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]">
           {filtered.map((e) => (

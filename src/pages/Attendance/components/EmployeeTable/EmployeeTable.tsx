@@ -2,11 +2,12 @@ import type { EmployeeListProps } from "@/types/attendance";
 import { employeeView } from "../../utils/employeeView";
 import { EmployeeRow } from "../EmployeeRow";
 import { TodayCell } from "../TodayCell";
+import { Card } from "@/shared/components/Card";
 
 // ≥ 1280: bütün ustaların cədvəli (iş günü, işdə, icazə, icazəsiz, cəmi, bazar, bu gün)
 export function EmployeeTable({ rows, att, isCurrent, meId, canMark, busyId, onOpen, onMark }: EmployeeListProps) {
   return (
-    <div className="card overflow-x-auto !p-0 max-xl:hidden">
+    <Card className="overflow-x-auto !p-0 max-xl:hidden">
       <table className="w-full min-w-[900px] text-sm">
         <thead>
           <tr className="border-b border-line bg-[#f8f9fc] text-left text-xs font-semibold text-muted">
@@ -34,6 +35,6 @@ export function EmployeeTable({ rows, att, isCurrent, meId, canMark, busyId, onO
           })}
         </tbody>
       </table>
-    </div>
+    </Card>
   );
 }

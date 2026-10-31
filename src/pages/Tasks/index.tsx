@@ -10,6 +10,7 @@ import { TeamTasks } from "./components/TeamTasks";
 import { WithdrawGroupModal } from "./components/WithdrawGroupModal";
 import { WithdrawModal } from "./components/WithdrawModal";
 import { useTasksPage } from "./hooks/useTasksPage";
+import { Card } from "@/shared/components/Card";
 
 // Admin və rəhbərlik ustaya gün üçün iş təyin edir (usta, yer, səbəb), lazım olsa geri alır (başqa ustaya verir).
 // "Görüldü" işarəsini yalnız usta qoyur (usta panelində): burada qutu yalnız vəziyyəti göstərir. Silmək yoxdur (0057).
@@ -27,7 +28,7 @@ export default function TasksPage() {
           <DayBar day={p.day} today={p.today} past={p.past} total={p.total} doneCount={p.doneCount} onDay={p.setDay} />
           <div className="min-h-0 flex-1 space-y-4 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {data === null ? (
-              <div className="card muted py-12 text-center text-sm">Yüklənir...</div>
+              <Card className="muted py-12 text-center text-sm">Yüklənir...</Card>
             ) : p.groups.length === 0 && p.teams.length === 0 ? <EmptyTasks /> : (
               <>
                 {p.crewsView.length > 0 && <TeamTasks crews={p.crewsView} liveCount={p.liveTeams.length} employees={data.employees} actions={p.actions} />}

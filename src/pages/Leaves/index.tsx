@@ -5,6 +5,7 @@ import { PendingSection } from "./components/PendingSection";
 import { SoonSection } from "./components/SoonSection";
 import { useLeaveActions } from "./queries/useLeaveActions";
 import { useLeavesPage } from "./hooks/useLeavesPage";
+import { Card } from "@/shared/components/Card";
 
 // İcazələr (migrasiya 0059): usta usta panelindən icazə istəyir ("İcazələrim"), admin/rəhbərlik burada təsdiqləyir və ya rədd edir; köhnələri silir (0067).
 // Düzülüş (2026-10-23): tünd xülasə → gözləyən sorğular (iri kartlar, ustanın bu ilki icazə günü ilə) → bu gün və qarşıdakı icazələr →
@@ -16,7 +17,7 @@ export default function LeavesPage() {
   return (
     <Page title="İcazələr" subtitle="Ustaların icazə sorğuları: təsdiqlə və ya rədd et">
       {!p.loaded ? (
-        <div className="card muted py-12 text-center text-sm">Yüklənir...</div>
+        <Card className="muted py-12 text-center text-sm">Yüklənir...</Card>
       ) : (
         <div className="space-y-6">
           <LeavesSummary view={p.view} />

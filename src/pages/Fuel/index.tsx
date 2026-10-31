@@ -5,6 +5,7 @@ import { NoCars } from "./components/NoCars";
 import { PayModal } from "./components/PayModal";
 import { PricesBar } from "./components/PricesBar";
 import { useFuelPage } from "./hooks/useFuelPage";
+import { Card } from "@/shared/components/Card";
 
 // Yanacaq (0077-0079): maşını olan ustaların gündəlik yürüşü (səhər/axşam spidometr şəkli + km).
 // Başlıq seçilmiş ustanı göstərir: həmişə BU GÜNÜN hesabatı + seçilmiş dövrün (gün / həftə / ay) yanacaq pulu ayrıca.
@@ -15,7 +16,7 @@ export default function FuelPage() {
     <Page title="Yanacaq" subtitle="Maşını olan ustaların yürüşü və yanacaq pulu">
       {f.paying && <PayModal name={f.paying.name} employeeId={f.paying.id} today={f.today} suggest={f.paying.suggest} onClose={f.closePay} />}
       {!f.data ? (
-        <div className="card muted">Yüklənir...</div>
+        <Card className="muted">Yüklənir...</Card>
       ) : (
         <div className="space-y-4">
           <FuelHeader sel={f.sel} today={f.today} period={f.period} range={f.range} monthR={f.monthR} atEnd={f.atEnd}
