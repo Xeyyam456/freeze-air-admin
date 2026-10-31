@@ -4,6 +4,7 @@ import { Avatar } from "@/shared/components/Avatar";
 import { norm } from "@/shared/utils/norm";
 import type { CrewEditorProps } from "@/types/tasks";
 import { Button } from "@/shared/components/Button";
+import { Input } from "@/shared/components/Input";
 
 // Yeni / redaktə olunan briqada: ad (istəyə görə) + üzvlər (axtarışlı 2 sütunlu seçim; başqa briqadadakı usta bağlıdır)
 export function CrewEditor({ edit, onEdit, employees, taken, conflicts, pending, onSave, onCancel }: CrewEditorProps) {
@@ -14,8 +15,8 @@ export function CrewEditor({ edit, onEdit, employees, taken, conflicts, pending,
     <div className="space-y-4">
       <label className="block">
         <span className="label">Adı <span className="muted font-normal">(istəyə görə; yazılmasa üzvlərin adları göstərilir)</span></span>
-        <input autoFocus value={edit.name} onChange={(e) => onEdit({ ...edit, name: e.target.value })}
-          placeholder="məs. Qaz briqadası" className="field" />
+        <Input autoFocus value={edit.name} onChange={(e) => onEdit({ ...edit, name: e.target.value })}
+          placeholder="məs. Qaz briqadası" />
       </label>
       <div>
         <div className="mb-1.5 flex items-center justify-between gap-3">

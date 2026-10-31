@@ -1,7 +1,7 @@
 export type { ActionFormProps } from "./ActionFormProps";
 export type { ButtonProps } from "./ButtonProps";
-export type { ButtonVariant } from "./ButtonVariant";
 export type { ButtonsProps } from "./ButtonsProps";
+export type { ButtonVariant } from "./ButtonVariant";
 export type { CalendarProps } from "./CalendarProps";
 export type { CalendarView } from "./CalendarView";
 export type { ConfirmButtonProps } from "./ConfirmButtonProps";
@@ -24,6 +24,7 @@ export type { PickerButtonProps } from "./PickerButtonProps";
 export type { PickerItem } from "./PickerItem";
 export type { PickerOptionProps } from "./PickerOptionProps";
 export type { QuantityInputProps } from "./QuantityInputProps";
+export type { SelectProps } from "./SelectProps";
 export type { StoreCardProps } from "./StoreCardProps";
 export type { TextareaProps } from "./TextareaProps";
 export type { Toast } from "./Toast";

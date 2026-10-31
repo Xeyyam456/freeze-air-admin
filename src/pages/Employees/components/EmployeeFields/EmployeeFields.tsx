@@ -4,6 +4,7 @@ import type { EmployeeFieldsProps } from "@/types/employees";
 import { SPECIALTIES } from "../../constants/specialties";
 import { CarFields } from "../CarFields";
 import { WorkerTypeField } from "../WorkerTypeField";
+import { Input } from "@/shared/components/Input";
 
 // Yeni usta və redaktə formasının ortaq sahələri
 export function EmployeeFields({ e }: EmployeeFieldsProps) {
@@ -11,10 +12,10 @@ export function EmployeeFields({ e }: EmployeeFieldsProps) {
     <>
       <WorkerTypeField defaultValue={e?.worker_type} />
       <Field label="Soyad və ad">
-        <input name="full_name" defaultValue={e?.full_name} placeholder="Məmmədov Əli" required className="field" />
+        <Input name="full_name" defaultValue={e?.full_name} placeholder="Məmmədov Əli" required />
       </Field>
       <Field label="İxtisas">
-        <input name="specialty" defaultValue={e?.specialty ?? ""} placeholder="Kondisioner ustası" className="field" list="specialties" />
+        <Input name="specialty" defaultValue={e?.specialty ?? ""} placeholder="Kondisioner ustası" list="specialties" />
       </Field>
       <datalist id="specialties">
         {SPECIALTIES.map((s) => <option key={s} value={s} />)}
@@ -24,7 +25,7 @@ export function EmployeeFields({ e }: EmployeeFieldsProps) {
           <DatePicker name="start_date" defaultValue={e?.start_date} placeholder="Seçilməyib" />
         </Field>
         <Field label="Telefon">
-          <input name="phone" defaultValue={e?.phone ?? ""} placeholder="+994 50 000 00 00" className="field" />
+          <Input name="phone" defaultValue={e?.phone ?? ""} placeholder="+994 50 000 00 00" />
         </Field>
       </div>
       <CarFields e={e} />

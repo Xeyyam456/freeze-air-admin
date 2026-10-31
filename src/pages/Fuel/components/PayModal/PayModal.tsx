@@ -6,6 +6,7 @@ import { Modal } from "@/shared/components/Modal";
 import type { PayModalProps } from "@/types/fuel";
 import { addPayment } from "../../queries/mutations";
 import { Button } from "@/shared/components/Button";
+import { Input } from "@/shared/components/Input";
 
 // "Pul ver": istənilən tarix və məbləğ (məs. həftəlik bir dəfəyə); standart məbləğ = seçilmiş dövrün borcu
 export function PayModal({ name, employeeId, today, suggest, onClose }: PayModalProps) {
@@ -37,12 +38,12 @@ export function PayModal({ name, employeeId, today, suggest, onClose }: PayModal
           </div>
           <label className="block">
             <span className="label">Məbləğ (₼)</span>
-            <input autoFocus value={amount} onChange={(e) => setAmount(e.target.value.replace(/[^\d.,]/g, ""))} inputMode="decimal" placeholder="250" className="field tabular-nums" />
+            <Input autoFocus value={amount} onChange={(e) => setAmount(e.target.value.replace(/[^\d.,]/g, ""))} inputMode="decimal" placeholder="250" className="tabular-nums" />
           </label>
         </div>
         <label className="block">
           <span className="label">Qeyd <span className="muted font-normal">(istəyə görə)</span></span>
-          <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="məs. həftəlik, nağd, karta" className="field" />
+          <Input value={note} onChange={(e) => setNote(e.target.value)} placeholder="məs. həftəlik, nağd, karta" />
         </label>
         <div className="flex justify-end gap-2">
           <Button type="button" onClick={onClose} variant="soft">Ləğv et</Button>

@@ -8,6 +8,7 @@ import { PlacePicker } from "../PlacePicker";
 import { ExistingFilesEditor } from "./components/ExistingFilesEditor";
 import { NewFiles } from "./components/NewFiles";
 import { useWorkLogForm } from "./hooks/useWorkLogForm";
+import { Textarea } from "@/shared/components/Textarea";
 
 function today() {
   const d = new Date();
@@ -39,7 +40,7 @@ export function WorkLogForm(props: WorkLogFormProps) {
         </div>
 
         <Field label="Görülən iş">
-          <textarea name="description" rows={3} required className="field resize-none" defaultValue={existing?.description}
+          <Textarea name="description" rows={3} required className="resize-none" defaultValue={existing?.description}
             placeholder="Məs. 2 ədəd split kondisionerin profilaktikası, freon dolduruldu" />
         </Field>
 

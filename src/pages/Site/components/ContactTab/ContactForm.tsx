@@ -4,6 +4,7 @@ import { updateSiteSettings } from "@/services/site/settings";
 import type { ContactFormProps } from "@/types/site";
 import { CONTACT_FIELDS, CONTACT_PLACES } from "../../constants/contactFields";
 import { formatTime } from "@/shared/utils/formatDateTime";
+import { Input } from "@/shared/components/Input";
 
 // Əlaqə formu: sahələr + saytda harada göründüyü; "Yadda saxla" təsdiqlə
 export function ContactForm({ settings, values, onChange }: ContactFormProps) {
@@ -27,8 +28,8 @@ export function ContactForm({ settings, values, onChange }: ContactFormProps) {
               <span className="label">{label}</span>
               <span className="relative block">
                 <Icon size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
-                <input name={name} type={type} value={values[name]} placeholder={placeholder} maxLength={max}
-                  onChange={(e) => onChange(name, e.target.value)} className="field !pl-10" />
+                <Input name={name} type={type} value={values[name]} placeholder={placeholder} maxLength={max}
+                  onChange={(e) => onChange(name, e.target.value)} className="!pl-10" />
               </span>
             </label>
           ))}

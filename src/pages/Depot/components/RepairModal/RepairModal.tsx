@@ -7,6 +7,7 @@ import { toast } from "@/lib/toast";
 import { DHead } from "../DHead";
 import { parseQty, withUnit } from "../../utils/quantity";
 import type { RepairModalProps } from "@/types/depot";
+import { Input } from "@/shared/components/Input";
 
 // Təmirə göndər: göndərilən say depoda boş sayılmır; qayıdanda "Düzəldi" və ya "Bərpa olunmadı" (silinmə aktı)
 export function RepairModal({ tool, onClose }: RepairModalProps) {
@@ -36,13 +37,13 @@ export function RepairModal({ tool, onClose }: RepairModalProps) {
         <ActionForm action={submit} className="space-y-4">
           <div className="grid grid-cols-[7rem_1fr] gap-3">
             <Field label="Say">
-              <input inputMode="numeric" value={qtyText} onChange={(e) => setQtyText(e.target.value)} className="field" required />
+              <Input inputMode="numeric" value={qtyText} onChange={(e) => setQtyText(e.target.value)} required />
             </Field>
             <Field label="Harada">
-              <input value={place} onChange={(e) => setPlace(e.target.value)} placeholder="istəyə görə" className="field" />
+              <Input value={place} onChange={(e) => setPlace(e.target.value)} placeholder="istəyə görə" />
             </Field>
           </div>
-          <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Nasazlıq (istəyə görə)" aria-label="Nasazlıq" className="field" />
+          <Input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Nasazlıq (istəyə görə)" aria-label="Nasazlıq" />
           <Buttons pending={pending} label="Təmirə göndər" onCancel={onClose} />
         </ActionForm>
       )}

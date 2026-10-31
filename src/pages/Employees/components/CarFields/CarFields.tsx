@@ -3,6 +3,7 @@ import { Field } from "@/components/forms";
 import type { EmployeeFieldsProps, FuelKind } from "@/types/employees";
 import { CarOption } from "./CarOption";
 import { FuelTypeField } from "./FuelTypeField";
+import { Input } from "@/shared/components/Input";
 
 // Maşın (0076): "Yoxdur / Var"; var olanda nömrə (məcburi) və marka/model (istəyə görə, gələcəkdə benzin hesabı üçün)
 export function CarFields({ e }: EmployeeFieldsProps) {
@@ -20,14 +21,14 @@ export function CarFields({ e }: EmployeeFieldsProps) {
       {hasCar && (
         <div className="grid grid-cols-2 gap-3">
           <Field label="Maşın nömrəsi">
-            <input name="car_plate" defaultValue={e?.car_plate ?? ""} placeholder="10-AB-123" required className="field uppercase" />
+            <Input name="car_plate" defaultValue={e?.car_plate ?? ""} placeholder="10-AB-123" required className="uppercase" />
           </Field>
           <Field label="Marka, model">
-            <input name="car_model" defaultValue={e?.car_model ?? ""} placeholder="Toyota Prius" className="field" />
+            <Input name="car_model" defaultValue={e?.car_model ?? ""} placeholder="Toyota Prius" />
           </Field>
           <FuelTypeField value={fuel} onChange={setFuel} />
           <Field label="100 km-ə sərf (litr)">
-            <input name="fuel_per_100" defaultValue={e?.fuel_per_100 ?? ""} inputMode="decimal" placeholder="8" className="field" />
+            <Input name="fuel_per_100" defaultValue={e?.fuel_per_100 ?? ""} inputMode="decimal" placeholder="8" />
           </Field>
         </div>
       )}

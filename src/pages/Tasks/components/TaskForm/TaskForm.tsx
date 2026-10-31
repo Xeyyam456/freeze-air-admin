@@ -5,6 +5,7 @@ import type { TaskFormProps } from "@/types/tasks";
 import { useTaskForm } from "../../hooks/useTaskForm";
 import { TeamPicker } from "../TeamPicker";
 import { Button } from "@/shared/components/Button";
+import { Textarea } from "@/shared/components/Textarea";
 
 // Yan panel: "Yeni tapşırıq" (kimə, tarix, yer, səbəb)
 export function TaskForm({ data, day, today, onDay }: TaskFormProps) {
@@ -35,7 +36,7 @@ export function TaskForm({ data, day, today, onDay }: TaskFormProps) {
       </div>
       <label className="block">
         <span className="label">Səbəb</span>
-        <textarea value={f.reason} onChange={(e) => f.setReason(e.target.value)} rows={3} required className="field resize-none"
+        <Textarea value={f.reason} onChange={(e) => f.setReason(e.target.value)} rows={3} required className="resize-none"
           placeholder="Məs. qaz qaçağı, detallı yuyulma" />
       </label>
       <Button type="submit" disabled={f.pending} className="w-full"><Plus size={16} /> {f.pending ? "..." : "Tapşırıq ver"}</Button>

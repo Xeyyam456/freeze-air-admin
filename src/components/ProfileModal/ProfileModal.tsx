@@ -6,6 +6,7 @@ import { Buttons, Field } from "@/components/forms";
 import { Modal } from "@/shared/components/Modal";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
+import { Input } from "@/shared/components/Input";
 
 // Profil: hesabın adı. Əməkdaşa bağlı hesabda ad əməkdaş kartından gəlir və orada dəyişdirilir.
 export function ProfileModal({ onClose }: { onClose: () => void }) {
@@ -50,7 +51,7 @@ export function ProfileModal({ onClose }: { onClose: () => void }) {
       ) : (
         <form onSubmit={onSubmit} className="space-y-4">
           <Field label="Ad və soyad">
-            <input name="full_name" defaultValue={name ?? ""} placeholder="Məs. Məmmədov Əli" required autoFocus className="field" />
+            <Input name="full_name" defaultValue={name ?? ""} placeholder="Məs. Məmmədov Əli" required autoFocus />
           </Field>
           <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
         </form>

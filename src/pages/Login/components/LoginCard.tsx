@@ -3,6 +3,7 @@ import { ActionForm } from "@/components/forms";
 import { useLogin } from "../hooks/useLogin";
 import { PasswordField } from "./PasswordField";
 import { Button } from "@/shared/components/Button";
+import { Input } from "@/shared/components/Input";
 
 // Sağ: giriş kartı; dar ekranda sol hissə gizlidir, marka burada görünür
 export function LoginCard() {
@@ -26,7 +27,7 @@ export function LoginCard() {
             <span className="label">E-poçt</span>
             <span className="relative block">
               <Mail size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
-              <input name="email" type="email" required autoComplete="email" placeholder="ad@example.com" className="field !h-12 !pl-11" />
+              <Input name="email" type="email" required autoComplete="email" placeholder="ad@example.com" className="!h-12 !pl-11" />
             </span>
           </label>
 

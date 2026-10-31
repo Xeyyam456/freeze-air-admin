@@ -4,6 +4,7 @@ import { AvatarUpload } from "@/shared/components/AvatarUpload";
 import { Modal } from "@/shared/components/Modal";
 import type { ManagerModalProps } from "@/types/management";
 import { useSavePhone } from "./useSavePhone";
+import { Input } from "@/shared/components/Input";
 
 // Müdir olmayan rəhbər (və müdir öz kartında): yalnız telefon və şəkil
 export function ContactModal(props: ManagerModalProps) {
@@ -22,7 +23,7 @@ export function ContactModal(props: ManagerModalProps) {
       <div className="mb-4"><AvatarUpload employee={manager} /></div>
       <form onSubmit={save} className="space-y-4">
         <Field label="Telefon">
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+994 50 000 00 00" className="field" />
+          <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+994 50 000 00 00" />
         </Field>
         <p className="muted text-xs">Ad, vəzifə və hesabı yalnız müdir dəyişir.</p>
         <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />

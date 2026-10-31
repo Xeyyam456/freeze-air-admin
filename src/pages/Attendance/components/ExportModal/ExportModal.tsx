@@ -7,6 +7,7 @@ import { MONTHS_AZ } from "@/shared/utils/monthsAz";
 import type { ExportModalProps } from "@/types/attendance";
 import { exportAttendanceAll } from "../../utils/excel/exportAll";
 import { exportAttendanceEmployee } from "../../utils/excel/exportEmployee";
+import { Select } from "@/shared/components/Select";
 
 // Excel ixracı: bütün ustalar (Xülasə + Gün-gün) və ya seçilmiş bir usta (gün-gün saatlarla); seçilmiş ay üzrə
 export function ExportModal({ month, emps, onClose }: ExportModalProps) {
@@ -39,10 +40,10 @@ export function ExportModal({ month, emps, onClose }: ExportModalProps) {
       </div>
       <label className="block">
         <span className="label">Kimin davamiyyəti</span>
-        <select value={who} onChange={(e) => setWho(e.target.value)} className="field cursor-pointer">
+        <Select value={who} onChange={(e) => setWho(e.target.value)} className="cursor-pointer">
           <option value="all">Bütün ustalar (tam siyahı)</option>
           {emps.map((e) => <option key={e.id} value={e.id}>{e.full_name}</option>)}
-        </select>
+        </Select>
       </label>
       <p className="muted mt-2 text-xs">
         {who === "all"

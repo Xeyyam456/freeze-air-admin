@@ -5,6 +5,7 @@ import { ActionForm, useOnSuccess } from "@/components/forms";
 import type { AccountActiveProps } from "@/types/employees";
 import { AccountBox } from "./AccountBox";
 import { Button } from "@/shared/components/Button";
+import { Input } from "@/shared/components/Input";
 
 // Hesab açılıb: e-poçt, parolu dəyiş, hesabı sil
 export function AccountActive({ employeeId, email }: AccountActiveProps) {
@@ -17,8 +18,8 @@ export function AccountActive({ employeeId, email }: AccountActiveProps) {
       <p className="mt-1 truncate text-sm font-semibold">{email ?? "—"}</p>
       {mode === "password" ? (
         <ActionForm action={pwAction} className="mt-2 flex gap-2">
-          <input name="password" type="password" minLength={8} required placeholder="Yeni parol (ən azı 8 simvol)"
-            autoComplete="new-password" className="field !h-9 flex-1 !text-[13px]" />
+          <Input name="password" type="password" minLength={8} required placeholder="Yeni parol (ən azı 8 simvol)"
+            autoComplete="new-password" className="!h-9 flex-1 !text-[13px]" />
           <Button type="submit" disabled={changing} size="sm" className="!h-9">{changing ? "..." : "Saxla"}</Button>
           <Button type="button" onClick={() => setMode("view")} variant="cancel" size="sm" className="!h-9">Ləğv et</Button>
         </ActionForm>

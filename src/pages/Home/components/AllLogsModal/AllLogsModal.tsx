@@ -5,6 +5,7 @@ import { Modal } from "@/shared/components/Modal";
 import type { AllLogsModalProps } from "@/types/dashboard";
 import { useAllLogs } from "../../hooks/useAllLogs";
 import { AllLogRow } from "../AllLogRow";
+import { Input } from "@/shared/components/Input";
 
 // Bütün iş qeydləri: günlərə görə qruplu, axtarışlı; klik → ətraflı pəncərə
 export function AllLogsModal({ onClose, initialQuery = "" }: AllLogsModalProps) {
@@ -26,8 +27,8 @@ export function AllLogsModal({ onClose, initialQuery = "" }: AllLogsModalProps) 
         <div className="px-6 pt-4">
           <label className="relative block">
             <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} autoFocus placeholder="Usta, iş yeri və ya görülən iş..."
-              className="field !pl-10" aria-label="İş qeydi axtar" />
+            <Input value={query} onChange={(e) => setQuery(e.target.value)} autoFocus placeholder="Usta, iş yeri və ya görülən iş..."
+              className="!pl-10" aria-label="İş qeydi axtar" />
           </label>
         </div>
 

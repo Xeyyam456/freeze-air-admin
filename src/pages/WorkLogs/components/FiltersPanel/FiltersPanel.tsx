@@ -6,6 +6,7 @@ import { LOGS_LIMIT } from "@/services/workLogs/fetchLogs";
 import type { FiltersPanelProps } from "@/types/workLogs";
 import { exportXlsx } from "../../utils/exportXlsx";
 import { Button } from "@/shared/components/Button";
+import { Input } from "@/shared/components/Input";
 
 // Yan panel: tarix aralığı (+ hazır aralıqlar), usta, şirkət/market, axtarış, Excel-ə ixrac
 export function FiltersPanel({ from, to, onFrom, onTo, onRange, filters, employeeId, onEmployee, companyId, onCompany, query, onQuery, list, tooMany }: FiltersPanelProps) {
@@ -43,7 +44,7 @@ export function FiltersPanel({ from, to, onFrom, onTo, onRange, filters, employe
 
       <label className="block">
         <span className="mb-1.5 block text-xs font-semibold text-muted">Axtarış</span>
-        <input value={query} onChange={(e) => onQuery(e.target.value)} placeholder="Usta, yer və ya görülən iş..." className="field" />
+        <Input value={query} onChange={(e) => onQuery(e.target.value)} placeholder="Usta, yer və ya görülən iş..." />
       </label>
 
       <Button type="button" disabled={list.length === 0} onClick={() => exportXlsx(list, {

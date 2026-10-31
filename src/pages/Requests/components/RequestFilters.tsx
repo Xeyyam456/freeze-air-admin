@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import type { RequestFiltersProps } from "@/types/requests";
+import { Input } from "@/shared/components/Input";
 
 const TABS = [["new", "Yeni"], ["handled", "Baxılıb"], ["all", "Hamısı"]] as const;
 
@@ -20,8 +21,8 @@ export function RequestFilters({ filter, onFilter, counts, query, onQuery }: Req
       </div>
       <label className="relative w-full max-w-sm sm:w-auto sm:min-w-[12rem] sm:flex-1">
         <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
-        <input value={query} onChange={(e) => onQuery(e.target.value)} placeholder="Ad, telefon, e-poçt və ya mesaj..."
-          className="field !pl-10" aria-label="Müraciət axtar" />
+        <Input value={query} onChange={(e) => onQuery(e.target.value)} placeholder="Ad, telefon, e-poçt və ya mesaj..."
+          className="!pl-10" aria-label="Müraciət axtar" />
       </label>
     </div>
   );
