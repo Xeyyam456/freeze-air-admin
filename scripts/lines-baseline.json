@@ -1,9 +1,6 @@
 {
   "actions/errorCodes.ts": 141,
   "actions/siteContent.ts": 136,
-  "components/clients/ClientForms.tsx": 205,
-  "components/clients/ClientList.tsx": 125,
-  "components/clients/LocationLog.tsx": 121,
   "components/CommandPalette.tsx": 135,
   "components/DatePicker.tsx": 193,
   "components/errors/ErrorCodeForms.tsx": 377,
@@ -18,8 +15,6 @@
   "components/site/textFields.ts": 282,
   "components/site/TextsTab.tsx": 115,
   "components/site/TrustTab.tsx": 187,
-  "components/stores/StoreForms.tsx": 123,
-  "components/stores/StoreImport.tsx": 157,
   "components/ToolPicker.tsx": 119,
   "pages/Home.tsx": 324,
   "pages/Login.tsx": 117,

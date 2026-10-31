@@ -61,7 +61,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - `pages/`: Home (iş paneli, aşağıda ətraflı), Clients, Employees, Management, Depot (aşağıda), Requests (müraciətlər: solda axtarışlı siyahı, sağda seçilmiş müraciət; zəng/WhatsApp/e-poçt, baxıldı, sil), Site, Login.
 - `components/`:
   - ümumi: Page, AppLayout (Sidebar + CommandPalette), AppHeader (axtarış, profil + ProfileModal + LogoutButton), SidePanel (`WithSidePanel`), Modal (`useEscapeLayer`: Esc yalnız ən üst qatı bağlayır), ConfirmModal/ConfirmButton, forms (`ActionForm`, `SaveConfirmForm`, `Buttons`, `Field`, `useOnSuccess`), DatePicker (az dilli təqvim), ToolPicker (axtarışlı seçim: alət və ya əməkdaş; `name`, `icon`, `hint` prop-ları), MapButton, StoreCard, Toaster, ContactRequestsListener;
-  - qovluqlar: `clients/`, `stores/` (StoreForms, StoreImport: Excel), `shared/components/` (Avatar, AvatarUpload, EmployeeSelect, PersonCard, AccountSection; Ustalar `pages/Employees/`, Rəhbərlik `pages/Management/`), `depot/` (DepotForms), `work/` (WorkTab, WorkLogForm, PlacePicker), `site/` (saytın məzmunu).
+  - qovluqlar: `shared/components/` (Avatar, AvatarUpload, EmployeeSelect, PersonCard, AccountSection; Ustalar `pages/Employees/`, Rəhbərlik `pages/Management/`), `depot/` (DepotForms), `work/` (WorkTab, WorkLogForm, PlacePicker), `site/` (saytın məzmunu).
 
 ### Panel (`/`, `pages/Home.tsx`)
 - Başlıq "Salam, <ad>" + bugünkü tarix (az dilində), sağda "Saytı aç".
