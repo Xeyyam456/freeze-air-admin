@@ -1,4 +1,4 @@
-import { getQueryClient } from "./queryClient";
+import { getQueryClient } from "../queryClient";
 
 // Next-dəki refresh() əvəzi: məlumat dəyişəndə keş etibarsız olur, açıq səhifədəki siyahılar yenidən yüklənir
 // (bağlı səhifələr açılanda təzələnir). TanStack Query keşi (lib/queryClient.ts).
