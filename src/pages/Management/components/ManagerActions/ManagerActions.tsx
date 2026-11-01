@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { Pencil, Trash2 } from "lucide-react";
 import { deleteEmployee } from "@/actions/employees";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -5,7 +6,7 @@ import type { ManagerActionsProps } from "@/types/management";
 
 // Kartın düymələri: müdir redaktə edir və silir; digər admin yalnız telefon və şəkli dəyişir (0069)
 export function ManagerActions({ manager, canEdit, canContact, onEdit, onContact, light = false }: ManagerActionsProps) {
-  const btn = `icon-btn !h-8 !w-8${light ? " !text-white/75 hover:!bg-white/15 hover:!text-white" : ""}`;
+  const btn = `${iconBtnClass()} !h-8 !w-8${light ? " !text-white/75 hover:!bg-white/15 hover:!text-white" : ""}`;
   if (canEdit) {
     return (
       <>

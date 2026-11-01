@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { useState } from "react";
 import { ClipboardList, Search, X } from "lucide-react";
 import { WorkLogModal } from "@/components/work/WorkLogModal";
@@ -21,7 +22,7 @@ export function AllLogsModal({ onClose, initialQuery = "" }: AllLogsModalProps) 
             <h2 id="all-logs-title" className="flex items-center gap-2 text-lg font-bold"><ClipboardList size={18} className="text-primary" /> Bütün iş qeydləri</h2>
             <p className="muted text-xs">{logs ? `${list.length} iş${q ? " tapıldı" : ""}` : "Yüklənir..."}</p>
           </div>
-          <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+          <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
         </div>
 
         <div className="px-6 pt-4">

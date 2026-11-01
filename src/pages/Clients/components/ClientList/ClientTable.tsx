@@ -1,3 +1,4 @@
+import { iconTileClass } from "@/shared/components/IconTile";
 import s from "../../styles/ClientTable.module.css";
 import { useNavigate } from "react-router";
 import { KIND } from "@/lib/kinds";
@@ -26,7 +27,7 @@ export function ClientTable({ clients, kind }: ClientTableProps) {
               <tr key={c.id} onClick={() => navigate(`${KIND[kind].route}/${c.id}`)} className="max-sm:grid max-sm:grid-cols-2 max-sm:gap-x-3 max-sm:gap-y-0.5 max-sm:border-t max-sm:border-line max-sm:px-3 max-sm:py-2 max-sm:first:border-t-0">
                 <td className="font-semibold whitespace-nowrap max-sm:col-span-2 max-sm:!border-0 max-sm:!p-0 max-sm:text-[13px]">
                   <span className="flex items-center gap-3 max-sm:gap-2">
-                    <span className="icon-tile !h-8 !w-8 text-sm font-extrabold max-sm:!h-6 max-sm:!w-6 max-sm:!text-[11px]">{c.name.charAt(0)}</span>
+                    <span className={iconTileClass("!h-8 !w-8 text-sm font-extrabold max-sm:!h-6 max-sm:!w-6 max-sm:!text-[11px]")}>{c.name.charAt(0)}</span>
                     {c.name}
                   </span>
                 </td>

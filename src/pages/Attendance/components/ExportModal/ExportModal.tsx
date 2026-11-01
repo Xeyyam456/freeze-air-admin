@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { labelClass } from "@/shared/components/FormField";
 import { useState } from "react";
 import { FileSpreadsheet, X } from "lucide-react";
@@ -37,7 +38,7 @@ export function ExportModal({ month, emps, onClose }: ExportModalProps) {
           <h2 id="att-export-title" className="flex items-center gap-2 text-lg font-bold"><FileSpreadsheet size={18} className="text-ok" /> Davamiyyəti Excel-ə çıxar</h2>
           <p className="muted text-sm">{MONTHS_AZ[m - 1]} {y}</p>
         </div>
-        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+        <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
       </div>
       <label className="block">
         <span className={labelClass()}>Kimin davamiyyəti</span>

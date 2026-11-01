@@ -144,55 +144,6 @@ html {
     }
   }
 
-  .icon-tile {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: var(--color-primary-soft);
-    color: var(--color-primary);
-    flex-shrink: 0;
-  }
-
-  .stat-value {
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    font-variant-numeric: tabular-nums;
-  }
-
-
-  @keyframes modal-fade {
-    from { opacity: 0; }
-  }
-  .toast-in {
-    animation: toast-in 180ms ease-out;
-  }
-  @keyframes toast-in {
-    from { opacity: 0; transform: translateY(10px); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .toast-in { animation: none; }
-  }
-
-  .icon-btn {
-    display: inline-grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    color: var(--color-muted);
-    transition: background-color 150ms ease, color 150ms ease;
-  }
-  .icon-btn:hover {
-    background: var(--color-bg);
-    color: var(--color-ink);
-  }
-  .icon-btn-danger:hover {
-    background: var(--color-danger-soft);
-    color: var(--color-danger);
-  }
 
   .link {
     color: var(--color-primary);
@@ -205,61 +156,6 @@ html {
   .muted {
     color: var(--color-muted);
   }
-
-  .alert-error {
-    color: #b42318;
-    background: var(--color-danger-soft);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 13px;
-    font-weight: 500;
-  }
-  .alert-ok {
-    color: #087443;
-    background: var(--color-ok-soft);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 13px;
-    font-weight: 500;
-  }
-
-  .code-badge {
-    display: inline-flex;
-    align-items: center;
-    height: 24px;
-    padding: 0 8px;
-    border-radius: 6px;
-    background: var(--color-navy);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-  }
-
-  .table-wrap {
-    border: 1px solid var(--color-line);
-    border-radius: 12px;
-    overflow: auto;
-  }
-  .table-wrap table {
-    width: 100%;
-    font-size: 13px;
-    text-align: left;
-  }
-  .table-wrap th {
-    position: sticky;
-    top: 0;
-    background: #f8f9fc;
-    padding: 10px 12px;
-    font-weight: 600;
-    color: var(--color-muted);
-  }
-  .table-wrap td {
-    padding: 10px 12px;
-    border-top: 1px solid var(--color-line);
-  }
-
 }
 
 /* ---------- Ölçü dəyişənləri (komponent modulları bunları oxuyur) ---------- */

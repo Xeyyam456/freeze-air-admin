@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { useActionState } from "react";
 import { X } from "lucide-react";
 import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
@@ -15,7 +16,7 @@ export function RenameModal({ model, onClose }: RenameModalProps) {
     <Modal onClose={onClose} labelledBy="rename-model-title" className="!max-w-sm">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 id="rename-model-title" className="text-lg font-bold">Modelin adını dəyiş</h2>
-        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+        <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
       </div>
       <ActionForm action={action} className="space-y-4">
         <FormField label="Model adı"><Input name="name" defaultValue={model.name} required autoFocus autoComplete="off" /></FormField>

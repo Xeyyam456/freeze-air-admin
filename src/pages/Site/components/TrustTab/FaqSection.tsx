@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { useState } from "react";
 import { EyeOff, HelpCircle, Pencil, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -32,8 +33,8 @@ export function FaqSection() {
                 <p className={`text-sm font-semibold ${f.is_active ? "" : "text-muted"}`}>{f.question}{!f.is_active && <span className="ml-2 inline-flex items-center gap-1 text-[11px] font-semibold text-danger"><EyeOff size={11} /> gizlidir</span>}</p>
                 <p className="muted mt-0.5 line-clamp-2 text-[13px]">{f.answer}</p>
               </div>
-              <button type="button" onClick={() => setEditing(f)} className="icon-btn !h-7 !w-7" title="Redaktə et" aria-label="Redaktə et"><Pencil size={14} /></button>
-              <ConfirmButton onConfirm={() => deleteFaq(f.id)} title="Sual silinsin" className="icon-btn icon-btn-danger !h-7 !w-7" question="Bu sual saytdan silinəcək. Müvəqqəti gizlətmək üçün redaktədə “Saytda göstər”i götür.">
+              <button type="button" onClick={() => setEditing(f)} className={iconBtnClass("!h-7 !w-7")} title="Redaktə et" aria-label="Redaktə et"><Pencil size={14} /></button>
+              <ConfirmButton onConfirm={() => deleteFaq(f.id)} title="Sual silinsin" className={iconBtnClass("!h-7 !w-7", true)} question="Bu sual saytdan silinəcək. Müvəqqəti gizlətmək üçün redaktədə “Saytda göstər”i götür.">
                 <Trash2 size={14} />
               </ConfirmButton>
             </li>

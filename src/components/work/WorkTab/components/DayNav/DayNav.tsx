@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
 import type { DayNavProps } from "@/types/workLogs";
@@ -14,14 +15,14 @@ export function DayNav({ day, today, yesterday, canAdd, onDay, onAdd }: DayNavPr
       <button type="button" onClick={() => onDay(today)} className={chip(day === today)}>Bu gün</button>
       <button type="button" onClick={() => onDay(yesterday)} className={chip(day === yesterday)}>Dünən</button>
       <div className="flex flex-1 items-center gap-1">
-        <button type="button" onClick={() => onDay(dayIso(-1, day))} className="icon-btn !h-9 !w-9" aria-label="Əvvəlki gün">
+        <button type="button" onClick={() => onDay(dayIso(-1, day))} className={iconBtnClass("!h-9 !w-9")} aria-label="Əvvəlki gün">
           <ChevronLeft size={18} />
         </button>
         <div className="min-w-0 flex-1">
           <DatePicker value={day} onChange={onDay} max={today} small />
         </div>
         <button type="button" onClick={() => onDay(dayIso(1, day))} disabled={day >= today}
-          className="icon-btn !h-9 !w-9 disabled:opacity-30" aria-label="Növbəti gün">
+          className={iconBtnClass("!h-9 !w-9 disabled:opacity-30")} aria-label="Növbəti gün">
           <ChevronRight size={18} />
         </button>
       </div>

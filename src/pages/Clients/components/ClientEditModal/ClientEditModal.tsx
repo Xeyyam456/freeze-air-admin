@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { useActionState } from "react";
 import { X } from "lucide-react";
 import { updateCompany } from "@/actions/companies";
@@ -24,7 +25,7 @@ export function ClientEditModal({ company, kind, onClose }: ClientEditModalProps
             <p className="muted text-sm">{company.name}</p>
           </div>
         </div>
-        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla">
+        <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla">
           <X size={18} />
         </button>
       </div>

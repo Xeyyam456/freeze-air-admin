@@ -1,3 +1,4 @@
+import { codeBadgeClass } from "@/shared/components/CodeBadge";
 import { ArrowRight, Crosshair, ExternalLink, PenLine } from "lucide-react";
 import { mapSearchUrl } from "@/lib/navigation";
 import type { LocationLogItemProps } from "@/types/clients";
@@ -14,7 +15,7 @@ export function LocationLogItem({ log: l, unit: u }: LocationLogItemProps) {
     <li className="rounded-xl border border-line p-3 text-sm">
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
         <p className="min-w-0 font-semibold">
-          {u ? <><span className="code-badge mr-1.5">{u.code}</span>{u.name}</> : "Şirkətin özü (sabit məkan)"}
+          {u ? <><span className={codeBadgeClass("mr-1.5")}>{u.code}</span>{u.name}</> : "Şirkətin özü (sabit məkan)"}
         </p>
         <p className="muted shrink-0 text-xs tabular-nums">{when(l.created_at)}</p>
       </div>

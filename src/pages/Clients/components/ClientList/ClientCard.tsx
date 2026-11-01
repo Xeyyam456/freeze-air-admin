@@ -1,3 +1,4 @@
+import { iconTileClass } from "@/shared/components/IconTile";
 import { cardLinkClass, cardTitleClass } from "@/shared/components/Card";
 import { Link } from "react-router";
 import { ChevronRight, Phone, User } from "lucide-react";
@@ -8,7 +9,7 @@ import { unitLabel } from "../../utils/unitLabel";
 export function ClientCard({ client: c, kind }: ClientCardProps) {
   return (
     <Link to={`${KIND[kind].route}/${c.id}`} className={cardLinkClass("flex items-center gap-4")}>
-      <span className="icon-tile text-lg font-extrabold">{c.name.charAt(0)}</span>
+      <span className={iconTileClass("text-lg font-extrabold")}>{c.name.charAt(0)}</span>
       <div className="min-w-0 flex-1">
         <h3 className={cardTitleClass("truncate")}>{c.name}</h3>
         <p className="muted truncate text-sm">{unitLabel(kind, c.stores[0]?.count ?? 0, c.address)}</p>

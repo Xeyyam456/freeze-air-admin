@@ -1,3 +1,4 @@
+import s from "./styles/Toaster.module.css";
 import { CircleAlert, CircleCheck, X } from "lucide-react";
 import { dismissToast, useToasts } from "@/lib/toast";
 
@@ -10,7 +11,7 @@ export function Toaster() {
     <div className="pointer-events-none fixed bottom-5 right-5 z-[200] flex w-[min(380px,calc(100vw-40px))] flex-col gap-2" aria-live="polite">
       {toasts.map((t) => (
         <div key={t.id} role={t.kind === "error" ? "alert" : "status"}
-          className="toast-in pointer-events-auto flex items-start gap-3 rounded-xl border border-line bg-surface p-3.5 shadow-[0_12px_32px_rgba(16,24,40,0.16)]">
+          className={`${s.toast} pointer-events-auto flex items-start gap-3 rounded-xl border border-line bg-surface p-3.5 shadow-[0_12px_32px_rgba(16,24,40,0.16)]`}>
           <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full ${t.kind === "error" ? "bg-danger-soft text-danger" : "bg-ok-soft text-ok"}`}>
             {t.kind === "error" ? <CircleAlert size={17} /> : <CircleCheck size={17} />}
           </span>

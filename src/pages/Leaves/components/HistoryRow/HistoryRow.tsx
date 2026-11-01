@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Avatar } from "@/shared/components/Avatar";
@@ -26,7 +27,7 @@ export function HistoryRow({ leave: l, onRemove }: HistoryRowProps) {
         </div>
         <div className="flex shrink-0 items-center gap-3 max-sm:flex-col max-sm:items-end max-sm:gap-1">
           <span className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold max-sm:px-2 max-sm:py-0.5 max-sm:text-[11px] ${st.cls}`}>{st.text}</span>
-          <ConfirmButton onConfirm={() => onRemove([l.id])} success={false} className="icon-btn icon-btn-danger !h-8 !w-8 shrink-0" title="Sorğunu sil"
+          <ConfirmButton onConfirm={() => onRemove([l.id])} success={false} className={iconBtnClass("!h-8 !w-8 shrink-0", true)} title="Sorğunu sil"
             question={l.status === "approved"
               ? `${l.employees?.full_name ?? "Usta"}: ${leaveRange(l)} təsdiqlənmiş icazəsi silinəcək. Bu günlər davamiyyətdə "gəlmədi" sayılacaq.`
               : "Sorğu silinəcək. Davamiyyətə təsir etmir."}>

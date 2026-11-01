@@ -1,4 +1,6 @@
 
+import { iconBtnClass } from "@/shared/components/IconButton";
+import { codeBadgeClass } from "@/shared/components/CodeBadge";
 import { buttonClass } from "@/shared/components/Button";
 import { useState } from "react";
 import { ExternalLink, Map as MapIcon, MapPin, X } from "lucide-react";
@@ -23,7 +25,7 @@ export function MapButton({ place }: MapButtonProps) {
           <div className="flex items-center justify-between gap-4 px-6 py-4">
             <div className="min-w-0">
               <h2 id="map-title" className="flex items-center gap-2 text-lg font-bold">
-                {place.code && <span className="code-badge">{place.code}</span>}
+                {place.code && <span className={codeBadgeClass()}>{place.code}</span>}
                 <span className="truncate">{place.name}</span>
               </h2>
               <p className="muted mt-0.5 flex items-center gap-1.5 text-sm">
@@ -34,7 +36,7 @@ export function MapButton({ place }: MapButtonProps) {
               <a href={mapSearchUrl(place)} target="_blank" rel="noopener noreferrer" className={buttonClass("secondary", "sm")}>
                 <ExternalLink size={14} /> Google Maps-də aç
               </a>
-              <button type="button" onClick={() => setOpen(false)} className="icon-btn" aria-label="Bağla">
+              <button type="button" onClick={() => setOpen(false)} className={iconBtnClass()} aria-label="Bağla">
                 <X size={18} />
               </button>
             </div>

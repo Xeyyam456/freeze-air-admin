@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { Home, MapPin, X } from "lucide-react";
 import type { SelectedPlaceProps } from "@/types/workLogs";
 
@@ -10,7 +11,7 @@ export function SelectedPlace({ value, onClear }: SelectedPlaceProps) {
         <span className="block truncate text-sm font-semibold">{value.label}</span>
         {value.sub && <span className="muted block truncate text-xs">{value.sub}</span>}
       </span>
-      <button type="button" onClick={onClear} className="icon-btn !h-7 !w-7" aria-label="Yeri dəyiş" title="Yeri dəyiş"><X size={14} /></button>
+      <button type="button" onClick={onClear} className={iconBtnClass("!h-7 !w-7")} aria-label="Yeri dəyiş" title="Yeri dəyiş"><X size={14} /></button>
     </div>
   );
 }

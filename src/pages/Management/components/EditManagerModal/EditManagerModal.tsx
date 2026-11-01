@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { useActionState } from "react";
 import { X } from "lucide-react";
 import { updateEmployee } from "@/actions/employees";
@@ -22,7 +23,7 @@ export function EditManagerModal({ manager, onClose }: ManagerModalProps) {
             <p className="muted text-sm">{manager.full_name}</p>
           </div>
         </div>
-        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+        <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
       </div>
       <div className="mb-4"><AvatarUpload employee={manager} /></div>
       <SaveConfirmForm action={action} className="space-y-4">

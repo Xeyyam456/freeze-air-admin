@@ -1,3 +1,4 @@
+import s from "./styles/Stat.module.css";
 import { cardLinkClass } from "@/shared/components/Card";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
@@ -12,7 +13,7 @@ export function Stat({ to, icon: Icon, label, value, sub, tone }: StatProps) {
           <Icon size={22} />
         </span>
         <div className="min-w-0">
-          <div className="stat-value leading-none max-sm:!text-2xl sm:max-xl:!text-2xl">{value == null ? "–" : <CountUp value={value} />}</div>
+          <div className={`${s.value} leading-none max-sm:!text-2xl sm:max-xl:!text-2xl`}>{value == null ? "–" : <CountUp value={value} />}</div>
           <div className="muted mt-1 text-sm font-medium">{label}</div>
         </div>
         <ArrowRight size={18} className="ml-auto text-muted opacity-0 transition-opacity group-hover:opacity-100 sm:max-xl:hidden" />

@@ -1,3 +1,4 @@
+import { iconTileClass } from "@/shared/components/IconTile";
 import { heroActionClass } from "@/shared/components/HeroAction";
 import { cardTitleClass } from "@/shared/components/Card";
 import { useState } from "react";
@@ -16,7 +17,7 @@ export function AddEmployeeButton() {
       {open && (
         <Modal onClose={() => setOpen(false)} labelledBy="add-employee-title" className="!max-w-lg">
           <div className="mb-5 flex items-center gap-3">
-            <span className="icon-tile !h-10 !w-10"><Plus size={18} /></span>
+            <span className={iconTileClass("!h-10 !w-10")}><Plus size={18} /></span>
             <h2 id="add-employee-title" className={cardTitleClass()}>Yeni usta</h2>
           </div>
           <AddEmployeeForm onDone={() => setOpen(false)} />

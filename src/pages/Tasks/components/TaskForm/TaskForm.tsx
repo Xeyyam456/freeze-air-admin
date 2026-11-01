@@ -1,3 +1,4 @@
+import { iconTileClass } from "@/shared/components/IconTile";
 import { cardClass, cardTitleClass } from "@/shared/components/Card";
 import { labelClass } from "@/shared/components/FormField";
 import { Plus } from "lucide-react";
@@ -15,7 +16,7 @@ export function TaskForm({ data, day, today, onDay }: TaskFormProps) {
   return (
     <form onSubmit={f.submit} className={cardClass("space-y-4")}>
       <div className="flex items-center gap-3">
-        <span className="icon-tile !h-9 !w-9"><Plus size={18} /></span>
+        <span className={iconTileClass("!h-9 !w-9")}><Plus size={18} /></span>
         <h2 className={cardTitleClass()}>Yeni tapşırıq</h2>
       </div>
       <div>

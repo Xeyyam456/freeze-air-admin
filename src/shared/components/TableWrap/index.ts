@@ -1,0 +1,1 @@
+export { tableWrapClass } from "./tableWrapClass";

@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { Check, FileText, Pencil, ShieldAlert, Undo2, X } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Button } from "@/shared/components/Button";
@@ -16,7 +17,7 @@ export function RequestRow(props: RequestRowProps) {
   const d = useRequestDecision(props);
   const { t, u, can, editing, pending } = d;
   const cancelButton = (
-    <ConfirmButton onConfirm={d.cancel} success={false} className="icon-btn !h-8 !w-8" title="Sənədi ləğv et" question="Sənəd ləğv olunacaq." confirmLabel="Bəli, ləğv et">
+    <ConfirmButton onConfirm={d.cancel} success={false} className={iconBtnClass("!h-8 !w-8")} title="Sənədi ləğv et" question="Sənəd ləğv olunacaq." confirmLabel="Bəli, ləğv et">
       <Undo2 size={14} />
     </ConfirmButton>
   );
@@ -43,7 +44,7 @@ export function RequestRow(props: RequestRowProps) {
         )}
         <span className="ml-auto flex items-center gap-1.5 max-sm:w-full">
           {r.photo_path && (
-            <button type="button" onClick={d.openFile} className="icon-btn !h-8 !w-8" title="Fayla bax" aria-label="Fayla bax"><FileText size={14} /></button>
+            <button type="button" onClick={d.openFile} className={iconBtnClass("!h-8 !w-8")} title="Fayla bax" aria-label="Fayla bax"><FileText size={14} /></button>
           )}
           {d.blocked ? (
             <>
@@ -56,9 +57,9 @@ export function RequestRow(props: RequestRowProps) {
                 title={can === false && !editing ? "Depoda çatmır: ✎ ilə az ver və ya rədd et" : "Qəbul et"}><Check size={14} /> Qəbul</Button>
               {d.editable && (
                 <button type="button" onClick={() => d.setEditing((v) => !v)} aria-pressed={editing} title="Miqdarı düzəlt" aria-label="Miqdarı düzəlt"
-                  className={`icon-btn !h-8 !w-8 border border-line ${editing ? "!bg-primary-soft !text-primary" : ""}`}><Pencil size={14} /></button>
+                  className={`${iconBtnClass()} !h-8 !w-8 border border-line ${editing ? "!bg-primary-soft !text-primary" : ""}`}><Pencil size={14} /></button>
               )}
-              <button type="button" onClick={() => d.setRejecting((v) => !v)} className="icon-btn icon-btn-danger !h-8 !w-8 border border-line" title="Rədd et" aria-label="Rədd et"><X size={15} /></button>
+              <button type="button" onClick={() => d.setRejecting((v) => !v)} className={iconBtnClass("!h-8 !w-8 border border-line", true)} title="Rədd et" aria-label="Rədd et"><X size={15} /></button>
               {d.mine && r.type !== "return" && r.type !== "request" && cancelButton}
             </>
           )}

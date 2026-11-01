@@ -1,3 +1,5 @@
+import { codeBadgeClass } from "@/shared/components/CodeBadge";
+import { iconTileClass } from "@/shared/components/IconTile";
 import { Home, MapPin } from "lucide-react";
 import { MapButton } from "@/components/MapButton";
 import type { LogPartProps, LogPlace } from "@/types/workLogs";
@@ -13,11 +15,11 @@ export function LogPlaceCard({ log }: LogPartProps) {
       : null;
   return (
     <div className="flex flex-wrap items-center gap-3 rounded-xl border border-line p-4">
-      <span className="icon-tile !h-10 !w-10 shrink-0">{log.place_text ? <Home size={18} /> : <MapPin size={18} />}</span>
+      <span className={iconTileClass("!h-10 !w-10 shrink-0")}>{log.place_text ? <Home size={18} /> : <MapPin size={18} />}</span>
       <div className="min-w-0 flex-1">
         {owner && <p className="muted text-xs font-semibold">{owner}</p>}
         <p className="font-bold text-primary">
-          {log.stores?.code && <span className="code-badge mr-1.5">{log.stores.code}</span>}
+          {log.stores?.code && <span className={codeBadgeClass("mr-1.5")}>{log.stores.code}</span>}
           {placeName}
         </p>
         {place?.address && <p className="muted mt-0.5 text-sm">{place.address}</p>}

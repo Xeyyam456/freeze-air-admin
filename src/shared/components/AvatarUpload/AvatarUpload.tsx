@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { ImagePlus, Trash2 } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { Avatar } from "@/shared/components/Avatar";
@@ -27,7 +28,7 @@ export function AvatarUpload(props: AvatarUploadProps) {
         <ImagePlus size={14} /> {pending ? "..." : photoUrl ? "Dəyiş" : "Yüklə"}
       </Button>
       {photoUrl && (
-        <button type="button" onClick={onRemove} disabled={pending} className="icon-btn icon-btn-danger" title="Şəkli sil" aria-label="Şəkli sil">
+        <button type="button" onClick={onRemove} disabled={pending} className={iconBtnClass("", true)} title="Şəkli sil" aria-label="Şəkli sil">
           <Trash2 size={16} />
         </button>
       )}

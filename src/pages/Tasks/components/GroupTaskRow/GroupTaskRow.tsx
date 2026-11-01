@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { Undo2, UserPlus } from "lucide-react";
 import type { GroupTaskRowProps } from "@/types/tasks";
 import { hasVideo, placeOf } from "../../utils/labels";
@@ -26,11 +27,11 @@ export function GroupTaskRow({ g, actions }: GroupTaskRowProps) {
         {files > 0 && <FilesBadge files={files} video={hasVideo(g.rows)} />}
         {!done && !cancelled && !actions.past && (
           <span className="flex shrink-0 items-center gap-0.5">
-            <button type="button" onClick={() => actions.onAdd({ task: t, members: g.live.map((x) => x.employee_id) })} className="icon-btn !h-8 !w-8"
+            <button type="button" onClick={() => actions.onAdd({ task: t, members: g.live.map((x) => x.employee_id) })} className={iconBtnClass("!h-8 !w-8")}
               title="Qrupa usta əlavə et" aria-label="Qrupa usta əlavə et">
               <UserPlus size={15} />
             </button>
-            <button type="button" onClick={() => actions.onWithdrawGroup(g.live)} className="icon-btn !h-8 !w-8"
+            <button type="button" onClick={() => actions.onWithdrawGroup(g.live)} className={iconBtnClass("!h-8 !w-8")}
               title="Görülməyib: geri al" aria-label="Tapşırığı geri al">
               <Undo2 size={15} />
             </button>

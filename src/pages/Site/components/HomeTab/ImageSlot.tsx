@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { ImagePlus, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import type { ImageSlotProps } from "@/types/site";
@@ -23,7 +24,7 @@ export function ImageSlot({ field, url, folder, hint, small = false, compact = f
           <ImagePlus size={14} /> {uploading ? "Yüklənir..." : url ? "Dəyiş" : "Yüklə"}
         </Button>
         {url && !uploading && (
-          <ConfirmButton onConfirm={onRemove} title="Şəkli sil" success={false} className="icon-btn icon-btn-danger !h-8"
+          <ConfirmButton onConfirm={onRemove} title="Şəkli sil" success={false} className={iconBtnClass("!h-8", true)}
             question="Şəkil silinəcək, saytda yenidən ikon və ya illüstrasiya göstəriləcək.">
             <Trash2 size={15} />
           </ConfirmButton>

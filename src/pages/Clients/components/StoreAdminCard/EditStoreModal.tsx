@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { storeCodeClass } from "@/components/StoreCard";
 import { useActionState } from "react";
 import { X } from "lucide-react";
@@ -24,7 +25,7 @@ export function EditStoreModal({ store, kind, onClose }: EditStoreModalProps) {
             <p className="muted text-sm">{store.name}</p>
           </div>
         </div>
-        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla">
+        <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla">
           <X size={18} />
         </button>
       </div>

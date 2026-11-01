@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { deleteStore } from "@/actions/stores";
@@ -15,10 +16,10 @@ export function StoreAdminCard({ store, kind }: StoreAdminCardProps) {
     <>
       <StoreCard store={store} action={
         <div className="flex shrink-0 items-center gap-1">
-          <button type="button" onClick={() => setEditing(true)} className="icon-btn" title="Redaktə et" aria-label="Redaktə et">
+          <button type="button" onClick={() => setEditing(true)} className={iconBtnClass()} title="Redaktə et" aria-label="Redaktə et">
             <Pencil size={16} />
           </button>
-          <ConfirmButton onConfirm={() => deleteStore(store.id)} className="icon-btn icon-btn-danger" title={`${KIND[kind].UnitAcc} sil`}>
+          <ConfirmButton onConfirm={() => deleteStore(store.id)} className={iconBtnClass("", true)} title={`${KIND[kind].UnitAcc} sil`}>
             <Trash2 size={16} />
           </ConfirmButton>
         </div>

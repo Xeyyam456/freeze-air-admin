@@ -1,0 +1,1 @@
+export { iconTileClass } from "./iconTileClass";

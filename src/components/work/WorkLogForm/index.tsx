@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { labelClass } from "@/shared/components/FormField";
 import { X } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
@@ -28,7 +29,7 @@ export function WorkLogForm(props: WorkLogFormProps) {
           <h2 id="work-form-title" className="text-lg font-bold">{existing ? "İşi redaktə et" : "Yeni iş"}</h2>
           <p className="muted text-sm">{employeeName}</p>
         </div>
-        <button type="button" onClick={onClose} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+        <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
       </div>
 
       <form onSubmit={f.onSubmit} className="space-y-4">

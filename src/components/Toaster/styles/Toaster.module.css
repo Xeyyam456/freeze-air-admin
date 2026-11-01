@@ -1,0 +1,14 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .toast {
+    animation: in 180ms ease-out;
+  }
+  @keyframes in {
+    from { opacity: 0; transform: translateY(10px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .toast { animation: none; }
+  }
+
+}

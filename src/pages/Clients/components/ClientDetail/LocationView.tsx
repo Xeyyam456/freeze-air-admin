@@ -1,3 +1,4 @@
+import { iconTileClass } from "@/shared/components/IconTile";
 import { MapPin } from "lucide-react";
 import { mapEmbedUrl } from "@/lib/navigation";
 import type { LocationViewProps } from "@/types/clients";
@@ -10,7 +11,7 @@ export function LocationView({ company }: LocationViewProps) {
   if (!hasLocation) {
     return (
       <Card className="flex h-full flex-col items-center justify-center text-center">
-        <span className="icon-tile"><MapPin size={20} /></span>
+        <span className={iconTileClass()}><MapPin size={20} /></span>
         <p className="mt-3 font-semibold">Ünvan yazılmayıb</p>
         <p className="muted text-sm">Sağ paneldəki redaktə düyməsi ilə şirkətin ünvanını və koordinatını daxil et.</p>
       </Card>

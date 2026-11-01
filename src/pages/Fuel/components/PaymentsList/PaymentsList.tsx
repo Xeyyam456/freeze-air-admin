@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { ChevronDown, HandCoins, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import type { PaymentsListProps } from "@/types/fuel";
@@ -28,7 +29,7 @@ export function PaymentsList({ payments, paid, open, onToggle }: PaymentsListPro
               <span className="muted min-w-0 flex-1 truncate text-xs">{p.note}</span>
               <span className="flex shrink-0 items-center gap-3 max-sm:justify-end max-sm:gap-2">
                 <PayStatus p={p} />
-                <ConfirmButton onConfirm={() => deletePayment(p.id)} success={false} className="icon-btn icon-btn-danger !h-7 !w-7" title="Ödənişi sil"
+                <ConfirmButton onConfirm={() => deletePayment(p.id)} success={false} className={iconBtnClass("!h-7 !w-7", true)} title="Ödənişi sil"
                   question={`${dayName(p.day)}: ${azn(Number(p.amount))} ödəniş silinəcək, balans dəyişəcək.`}>
                   <Trash2 size={13} />
                 </ConfirmButton>

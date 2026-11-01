@@ -1,3 +1,4 @@
+import { iconBtnClass } from "@/shared/components/IconButton";
 import { X } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
 import type { EquipmentEditorProps } from "@/types/site";
@@ -16,7 +17,7 @@ export function EquipmentEditor({ item, nextSort, onClose }: EquipmentEditorProp
     <Modal onClose={f.cancel} labelledBy="equipment-editor-title" className="!max-w-3xl !p-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 id="equipment-editor-title" className="text-lg font-bold">{item ? "Avadanlığı redaktə et" : "Yeni avadanlıq"}</h2>
-        <button type="button" onClick={f.cancel} className="icon-btn" aria-label="Bağla"><X size={18} /></button>
+        <button type="button" onClick={f.cancel} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
       </div>
 
       <form onSubmit={f.submit} className="grid gap-5 md:grid-cols-[280px_1fr]">
