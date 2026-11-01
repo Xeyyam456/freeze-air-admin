@@ -1,3 +1,4 @@
+import { buttonClass } from "@/shared/components/Button";
 import { History, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
@@ -19,7 +20,7 @@ export function HistorySection({ people, filter, who, counts, total, byMonth, cl
           {CHIPS.map(([value, label]) => <FilterChip key={value} active={filter === value} label={label} count={counts[value]} onClick={() => onFilter(value)} />)}
         </div>
         {closed.length > 0 && (
-          <ConfirmButton onConfirm={() => onRemove(closed.map((l) => l.id))} success={false} className="btn btn-soft btn-sm text-danger max-sm:w-full max-sm:justify-center"
+          <ConfirmButton onConfirm={() => onRemove(closed.map((l) => l.id))} success={false} className={buttonClass("soft", "sm", "text-danger max-sm:w-full max-sm:justify-center")}
             title="Rədd və ləğv edilən sorğuları sil" confirmLabel="Bəli, sil"
             question={`${closed.length} rədd və ya ləğv edilmiş sorğu silinəcək. Davamiyyətə təsir etmir.`}>
             <Trash2 size={14} /> Rədd və ləğv edilənləri sil ({closed.length})

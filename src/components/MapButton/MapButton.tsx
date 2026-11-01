@@ -1,4 +1,5 @@
 
+import { buttonClass } from "@/shared/components/Button";
 import { useState } from "react";
 import { ExternalLink, Map as MapIcon, MapPin, X } from "lucide-react";
 import { mapEmbedUrl, mapSearchUrl } from "@/lib/navigation";
@@ -30,7 +31,7 @@ export function MapButton({ place }: MapButtonProps) {
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-2">
-              <a href={mapSearchUrl(place)} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm">
+              <a href={mapSearchUrl(place)} target="_blank" rel="noopener noreferrer" className={buttonClass("secondary", "sm")}>
                 <ExternalLink size={14} /> Google Maps-də aç
               </a>
               <button type="button" onClick={() => setOpen(false)} className="icon-btn" aria-label="Bağla">

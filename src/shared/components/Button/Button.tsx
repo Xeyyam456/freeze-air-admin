@@ -1,8 +1,7 @@
 import type { ButtonProps } from "@/types/shared";
+import { buttonClass } from "./buttonClass";
 
-// Hələlik qlobal .btn class-ları (index.css). Xam <button>-ların hamısı bura keçəndən sonra
-// stil Button.module.css-ə köçəcək (REFACTOR-PLAN.md → "CSS bölünməsi").
+// Ortaq düymə; stil shared/styles/Button.module.css-dədir
 export function Button({ variant = "primary", size = "md", type = "button", className = "", ...rest }: ButtonProps) {
-  const cls = ["btn", `btn-${variant}`, size === "sm" && "btn-sm", className].filter(Boolean).join(" ");
-  return <button type={type} className={cls} {...rest} />;
+  return <button type={type} className={buttonClass(variant, size, className)} {...rest} />;
 }

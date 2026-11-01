@@ -1,3 +1,4 @@
+import { buttonClass } from "@/shared/components/Button";
 import { Briefcase, Phone } from "lucide-react";
 import { experience } from "@/lib/experience";
 import type { EmployeeProps } from "@/types/employees";
@@ -12,7 +13,7 @@ export function PersonContact({ employee }: EmployeeProps) {
         <span className={`truncate ${exp ? "" : "muted"}`}>{exp ?? "Təcrübə yazılmayıb"}</span>
       </span>
       {employee.phone ? (
-        <a href={`tel:${employee.phone}`} onClick={(e) => e.stopPropagation()} className="btn btn-soft btn-sm shrink-0" title={employee.phone}>
+        <a href={`tel:${employee.phone}`} onClick={(e) => e.stopPropagation()} className={buttonClass("soft", "sm", "shrink-0")} title={employee.phone}>
           <Phone size={14} /> Zəng et
         </a>
       ) : (

@@ -1,3 +1,4 @@
+import { buttonClass } from "@/shared/components/Button";
 import { useState } from "react";
 import { Check, Clock, Hand } from "lucide-react";
 import { decideRequest } from "@/services/depot/documents";
@@ -48,7 +49,7 @@ export function PendingBlock({ requests, holdings, tools, myUid, owner }: Pendin
         <Modal onClose={() => setOpen(false)} labelledBy="pending-title" className="flex !max-w-3xl flex-col">
           <DHead id="pending-title" icon={Clock} tone="amber" title={`Təsdiq gözləyir (${total})`} sub="Təsdiqlənməyən heç nə depoya düşmür və depodan çıxmır" onClose={() => setOpen(false)}>
             {approvable.length > 1 && (
-              <ConfirmButton onConfirm={() => approveAll()} success={false} className="btn btn-primary btn-sm !h-9" title="Hamısını qəbul et" confirmLabel="Bəli, qəbul et"
+              <ConfirmButton onConfirm={() => approveAll()} success={false} className={buttonClass("primary", "sm", "!h-9")} title="Hamısını qəbul et" confirmLabel="Bəli, qəbul et"
                 question={`${approvable.length} sənəd olduğu kimi qəbul ediləcək (say dərhal dəyişir). Depoda çatmayan istəklər qəbul edilmir.`}>
                 <Check size={14} /> {bulk ? "Gözləyin..." : `Hamısını qəbul et (${approvable.length})`}
               </ConfirmButton>
@@ -70,7 +71,7 @@ export function PendingBlock({ requests, holdings, tools, myUid, owner }: Pendin
                     <span className="text-xs font-semibold text-[#15803d]">{ok.length} verilə bilər</span>
                     {group.length - ok.length > 0 && <span className="text-xs font-semibold text-[#dc2626]">· {group.length - ok.length} depoda çatmır</span>}
                     {ok.length > 0 && (
-                      <ConfirmButton onConfirm={() => approveAll(ok.filter((x) => !needsOtherApprover(x, myUid, owner)))} success={false} className="btn btn-primary btn-sm ml-auto !h-8"
+                      <ConfirmButton onConfirm={() => approveAll(ok.filter((x) => !needsOtherApprover(x, myUid, owner)))} success={false} className={buttonClass("primary", "sm", "ml-auto !h-8")}
                         title="Verilə bilənləri qəbul et" confirmLabel="Bəli, ver" question={`${ok.length} istək qəbul ediləcək və ustaya veriləcək. Çatmayanlar gözləməyə qalır (rədd edə bilərsən).`}>
                         <Check size={14} /> Verilə bilənləri ver ({ok.length})
                       </ConfirmButton>

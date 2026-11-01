@@ -1,4 +1,5 @@
 
+import { buttonClass } from "@/shared/components/Button";
 import s from "@/shared/styles/Modal.module.css";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -41,7 +42,7 @@ export function ConfirmModal({ open, title, message, confirmLabel, tone = "prima
             Ləğv et
           </Button>
           <button ref={confirmRef} type="button" onClick={onConfirm} disabled={pending}
-            className={`btn flex-1 ${tone === "danger" ? "btn-danger" : "btn-primary"}`}>
+            className={buttonClass(tone === "danger" ? "danger" : "primary", "md", "flex-1")}>
             {pending ? "Gözləyin..." : confirmLabel}
           </button>
         </div>

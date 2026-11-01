@@ -1,0 +1,83 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .root {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid transparent;
+    transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .root:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .primary {
+    background: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  .primary:hover:not(:disabled) {
+    background: var(--color-primary-dark);
+  }
+  .secondary {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    border-color: var(--color-line);
+  }
+  .secondary:hover:not(:disabled) {
+    border-color: #cfd5e1;
+    background: #fafbfd;
+  }
+  .soft {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+  }
+  .soft:hover:not(:disabled) {
+    background: #dbe8fd;
+  }
+  .danger {
+    background: var(--color-danger);
+    color: #fff;
+  }
+  .danger:hover:not(:disabled) {
+    background: #cc3a3f;
+  }
+  /* Ləğv et: qırmızı tonlarda, amma silmə düyməsindən yumşaq */
+  .cancel {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+    border-color: #f8cfd0;
+  }
+  .cancel:hover:not(:disabled) {
+    background: #fbdcdd;
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+  .glass:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+  .sm {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+  /* Alçaq ekranda yan paneldə düymələr yığcamdır */
+  @media (max-height: 820px) {
+    :global(.side-panel) .root {
+      height: 38px;
+    }
+  }
+}

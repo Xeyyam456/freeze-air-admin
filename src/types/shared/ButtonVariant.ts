@@ -1,2 +1,2 @@
-// index.css-dəki .btn-<variant> class-ları; "plain" = yalnız .btn (rəngi yerli class-lar verir)
+// Button.module.css variantları; "plain" = yalnız baza (rəngi yerli class-lar verir)
 export type ButtonVariant = "primary" | "secondary" | "soft" | "danger" | "cancel" | "glass" | "plain";
