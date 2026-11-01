@@ -1,3 +1,4 @@
+import s from "./styles/AppHeader.module.css";
 import { useState } from "react";
 import { Menu } from "lucide-react";
 import { useNavDrawer } from "@/lib/navDrawer";
@@ -15,7 +16,7 @@ function UserChip() {
   const role = admin ? (position ?? "Administrator") : fullName ? "Usta" : "İstifadəçi";
 
   return (
-    <div className="user-chip !pl-1">
+    <div className={`${s.chip} !pl-1`}>
       {editing && <ProfileModal onClose={() => setEditing(false)} />}
       <button type="button" onClick={() => setEditing(true)} title={`${email} — profili aç`}
         className="flex items-center gap-2.5 rounded-full py-0.5 pl-3 pr-0.5 hover:bg-white/10">
@@ -24,8 +25,8 @@ function UserChip() {
           <span className="block text-[11px] text-white/60">{role}</span>
         </span>
         {photoUrl
-          ? <img src={photoUrl} alt="" className="avatar object-cover" />
-          : <span className="avatar">{initials(name)}</span>}
+          ? <img src={photoUrl} alt="" className={`${s.avatar} object-cover`} />
+          : <span className={s.avatar}>{initials(name)}</span>}
       </button>
       <LogoutButton />
     </div>
@@ -36,9 +37,9 @@ function UserChip() {
 export function AppHeader({ children, actions }: { children: React.ReactNode; actions?: React.ReactNode }) {
   const { setOpen } = useNavDrawer();
   return (
-    <header className="app-header">
-      <div className="app-shell relative flex w-full items-center gap-4">
-        <button type="button" onClick={() => setOpen(true)} className="nav-burger" aria-label="Menyunu aç"><Menu size={20} /></button>
+    <header className={s.header}>
+      <div className="relative flex w-full items-center gap-4 px-[var(--gutter)] max-sm:gap-2.5">
+        <button type="button" onClick={() => setOpen(true)} className={s.burger} aria-label="Menyunu aç"><Menu size={20} /></button>
         <div className="min-w-0 flex-1">{children}</div>
         {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         <UserChip />

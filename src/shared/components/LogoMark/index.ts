@@ -1,0 +1,1 @@
+export { logoMarkClass } from "./logoMarkClass";

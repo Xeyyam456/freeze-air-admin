@@ -1,3 +1,4 @@
+import s from "./styles/Page.module.css";
 import { Link } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import { AppHeader } from "../AppHeader";
@@ -8,9 +9,9 @@ export function Page({ title, subtitle, back, actions, children }: PageProps) {
   return (
     <>
       <AppHeader actions={actions}>
-        <div className="page-hero flex min-w-0 items-center gap-4">
+        <div className={`${s.hero} flex min-w-0 items-center gap-4`}>
           {back && (
-            <Link to={back.href} className="hero-back" title={back.label} aria-label={`${back.label} siyahısına qayıt`}>
+            <Link to={back.href} className={s.back} title={back.label} aria-label={`${back.label} siyahısına qayıt`}>
               <ChevronLeft size={18} />
             </Link>
           )}
@@ -20,7 +21,7 @@ export function Page({ title, subtitle, back, actions, children }: PageProps) {
           </div>
         </div>
       </AppHeader>
-      <main className="app-shell app-main">{children}</main>
+      <main className={`${s.main} px-[var(--gutter)]`}>{children}</main>
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { sideLinkClass } from "@/components/Sidebar/sideLinkClass";
 import { useState, useTransition } from "react";
 import { useNavigate } from "react-router";
 import { LogOut } from "lucide-react";
@@ -14,7 +15,7 @@ export function LogoutButton({ menu = false }: { menu?: boolean }) {
   return (
     <>
       {menu ? (
-        <button type="button" onClick={() => setOpen(true)} className="side-link">
+        <button type="button" onClick={() => setOpen(true)} className={sideLinkClass()}>
           <LogOut size={18} strokeWidth={2.1} /> <span className="flex-1 text-left">Çıxış</span>
         </button>
       ) : (

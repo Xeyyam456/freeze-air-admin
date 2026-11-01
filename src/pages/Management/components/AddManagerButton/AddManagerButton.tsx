@@ -1,3 +1,4 @@
+import { heroActionClass } from "@/shared/components/HeroAction";
 import { cardTitleClass } from "@/shared/components/Card";
 import { useState } from "react";
 import { Plus } from "lucide-react";
@@ -9,7 +10,7 @@ export function AddManagerButton() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="hero-action">
+      <button type="button" onClick={() => setOpen(true)} className={heroActionClass()}>
         <Plus size={17} /> Yeni rəhbər
       </button>
       {open && (

@@ -1,3 +1,6 @@
+import { logoMarkClass } from "@/shared/components/LogoMark";
+import { sideLinkClass } from "./sideLinkClass";
+import s from "./styles/Sidebar.module.css";
 import { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router";
 import { PanelLeftClose, PanelLeftOpen, Snowflake, X } from "lucide-react";
@@ -24,23 +27,23 @@ export function Sidebar({ collapsed, narrow, open, onToggle, onClose }: SidebarP
   }, [narrow]);
 
   return (
-    <aside ref={asideRef} className="app-sidebar" data-collapsed={collapsed || undefined} data-open={open || undefined}>
-      <Link to="/" className="sidebar-brand" title="Freeze Air Service — Panel">
-        <span className="logo-mark"><Snowflake size={22} strokeWidth={2.4} /></span>
-        <span className="sidebar-text leading-tight">
+    <aside ref={asideRef} className={s.sidebar} data-collapsed={collapsed || undefined} data-open={open || undefined}>
+      <Link to="/" className={s.brand} title="Freeze Air Service — Panel">
+        <span className={logoMarkClass("shrink-0")}><Snowflake size={22} strokeWidth={2.4} /></span>
+        <span className={`${s.text} leading-tight`}>
           <span className="block text-[15px] font-extrabold">Freeze Air Service</span>
           <span className="block text-xs text-white/55">İdarəetmə paneli</span>
         </span>
       </Link>
-      {narrow && <button type="button" onClick={onClose} className="sidebar-close" aria-label="Menyunu bağla"><X size={18} /></button>}
+      {narrow && <button type="button" onClick={onClose} className={s.close} aria-label="Menyunu bağla"><X size={18} /></button>}
 
       <SidebarNav collapsed={collapsed} owner={owner} pathname={pathname} badges={badges} />
 
       {narrow && <div className="shrink-0 px-3 pb-3 sm:hidden"><LogoutButton menu /></div>}
-      {!narrow && <button type="button" onClick={onToggle} className="side-link sidebar-toggle"
+      {!narrow && <button type="button" onClick={onToggle} className={sideLinkClass(s.toggle)}
         title={collapsed ? "Menyunu aç" : "Menyunu yığ"} aria-label={collapsed ? "Menyunu aç" : "Menyunu yığ"}>
         {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-        <span className="sidebar-text">Menyunu yığ</span>
+        <span className={s.text}>Menyunu yığ</span>
       </button>}
     </aside>
   );

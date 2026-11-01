@@ -1,0 +1,87 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  /* Bir sətir: səhifə başlığı + əməliyyatlar + profil; sürüşəndə yuxarıda qalır */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    height: var(--header-h);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(11, 19, 36, 0.14);
+    /* Soldakı menyunun yuxarı hissəsi ilə eyni rəng: menyu və başlıq vahid tünd çərçivə kimi görünür */
+    background: linear-gradient(90deg, #0b1324 0%, #0c1830 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+  }
+  /* İncə şəbəkə naxışı: kondisioner barmaqlığını xatırladır */
+  .header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 28px
+    );
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+    pointer-events: none;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 4px 4px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .chip > * {
+    flex-shrink: 0;
+  }
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--color-frost), var(--color-primary));
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+  /* Menyu düyməsi yalnız dar ekranda görünür */
+  .burger {
+    display: none;
+  }
+  @media (width < 1024px) {
+    .burger {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+  }
+  @media (width < 640px) {
+    .burger {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+    .chip {
+      padding: 3px;
+    }
+    .chip .avatar {
+      width: 26px;
+      height: 26px;
+      font-size: 11px;
+    }
+  }
+}

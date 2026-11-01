@@ -1,0 +1,1 @@
+export { heroActionClass } from "./heroActionClass";

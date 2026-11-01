@@ -1,3 +1,4 @@
+import { logoMarkClass } from "@/shared/components/LogoMark";
 import { Snowflake } from "lucide-react";
 import { FEATURES } from "../constants/features";
 
@@ -10,7 +11,7 @@ export function LoginBrand() {
       <Snowflake size={420} strokeWidth={0.6} className="pointer-events-none absolute -bottom-24 -right-20 text-white/[0.05]" aria-hidden="true" />
 
       <div className="relative flex items-center gap-3">
-        <span className="logo-mark"><Snowflake size={22} strokeWidth={2.4} /></span>
+        <span className={logoMarkClass()}><Snowflake size={22} strokeWidth={2.4} /></span>
         <span className="text-lg font-extrabold">Freeze Air Service</span>
       </div>
 

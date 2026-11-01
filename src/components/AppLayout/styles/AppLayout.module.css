@@ -1,0 +1,30 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  /* Çərçivə: solda menyu, sağda səhifə */
+  .frame {
+    --nav: var(--nav-w);
+    padding-left: var(--nav);
+    min-height: calc(100vh / var(--zoom));
+    transition: padding-left 200ms ease;
+  }
+  .frame[data-collapsed] {
+    --nav: var(--nav-w-collapsed);
+  }
+  @media (width < 1024px) {
+    .frame,
+    .frame[data-collapsed] {
+      padding-left: 0;
+    }
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 55;
+      background: rgba(11, 19, 36, 0.55);
+      animation: fade 160ms ease-out;
+    }
+  }
+  @keyframes fade {
+    from { opacity: 0; }
+  }
+}

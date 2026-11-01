@@ -1,3 +1,4 @@
+import s from "./styles/AppLayout.module.css";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { usePref } from "@/lib/usePref";
@@ -39,9 +40,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const wide = !narrow && (compact ? !expandedCompact : collapsed);
   return (
     <NavDrawerContext.Provider value={{ open: drawer, setOpen: setDrawer }}>
-      <div className="app-frame" data-collapsed={wide || undefined}>
+      <div className={s.frame} data-collapsed={wide || undefined}>
         <Sidebar collapsed={wide} narrow={narrow} open={drawer} onToggle={() => (compact ? setExpandedCompact(!expandedCompact) : setCollapsed(!collapsed))} onClose={() => setDrawer(false)} />
-        {narrow && drawer && <div className="nav-backdrop" onClick={() => setDrawer(false)} aria-hidden />}
+        {narrow && drawer && <div className={s.backdrop} onClick={() => setDrawer(false)} aria-hidden />}
         {children}
         {search && <CommandPalette onClose={() => setSearch(false)} />}
       </div>

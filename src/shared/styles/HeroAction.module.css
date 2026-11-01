@@ -1,0 +1,41 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  /* Başlıqdakı əsas əməliyyat düyməsi ("+ Yeni şirkət") */
+  .action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--color-navy);
+    background: linear-gradient(135deg, #ffffff, #dcf7f2);
+    box-shadow: 0 6px 18px rgba(45, 212, 191, 0.25);
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+  .action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(45, 212, 191, 0.35);
+  }
+  @media (width < 640px) {
+    .action {
+      height: 32px;
+      padding: 0 10px;
+      font-size: 12px;
+    }
+  }
+  /* Çox dar ekranda yalnız ikondur: səhifə adına yer qalsın */
+  @media (width < 380px) {
+    .action {
+      width: 32px;
+      padding: 0;
+      gap: 0;
+      justify-content: center;
+      font-size: 0;
+    }
+  }
+}

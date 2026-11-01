@@ -1,0 +1,181 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    width: var(--nav);
+    color: #fff;
+    background:
+      radial-gradient(320px 220px at 0% 100%, rgba(10, 126, 164, 0.28), transparent 70%),
+      linear-gradient(180deg, #0b1324 0%, #0d2448 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    /* En dəyişəndə (yığ/aç) yazılar menyudan kənara daşmasın: kəsilir, en açıldıqca görünür */
+    overflow: hidden;
+    overscroll-behavior: contain;
+    transition: width 200ms ease;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: var(--header-h);
+    padding: 0 18px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  /* Menyu sürüşmür: bəndlərin hündürlüyü ekranın hündürlüyünə görə yığcamlaşır (--nav-item: index.css) */
+  .nav {
+    flex: 1;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    padding: 14px 12px;
+    scrollbar-gutter: auto;
+    scrollbar-width: none;
+    overscroll-behavior: contain;
+  }
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+  .group + .group {
+    margin-top: 14px;
+  }
+  .groupTitle {
+    padding: 0 12px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.38);
+    white-space: nowrap;
+  }
+  .link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: var(--nav-item);
+    padding: 0 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.7);
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .link > svg {
+    flex-shrink: 0;
+  }
+  .link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .link[aria-current="page"] {
+    color: #fff;
+    background: linear-gradient(90deg, rgba(45, 212, 191, 0.22), rgba(10, 126, 164, 0.12));
+    box-shadow: inset 0 0 0 1px rgba(45, 212, 191, 0.22);
+  }
+  /* Aktiv bəndin solunda parlayan zolaq */
+  .link[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 7px;
+    bottom: 7px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--color-frost);
+    box-shadow: 0 0 12px var(--color-frost);
+  }
+  .badge {
+    display: grid;
+    place-items: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .toggle {
+    width: calc(100% - 24px);
+    margin: 0 12px 14px;
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .close {
+    display: none;
+  }
+  /* Yığılmış menyu: yalnız ikonlar; nişan ikonun küncündə nöqtəyə çevrilir */
+  .sidebar[data-collapsed] .text,
+  .sidebar[data-collapsed] .groupTitle {
+    display: none;
+  }
+  .sidebar[data-collapsed] .brand {
+    justify-content: center;
+    padding: 0;
+  }
+  .sidebar[data-collapsed] .link {
+    justify-content: center;
+    padding: 0;
+  }
+  .sidebar[data-collapsed] .group + .group {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .sidebar[data-collapsed] .badge {
+    position: absolute;
+    top: 3px;
+    right: 6px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    font-size: 10px;
+  }
+  /* Alçaq ekranda qrup başlıqları gizlənir, qruplar nazik xətlə ayrılır */
+  @media (max-height: 780px) {
+    .groupTitle {
+      display: none;
+    }
+    .group + .group {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  }
+  /* Dar ekran (< 1024px): menyu sürüşən siyirtmədir; telefonda siyirtmə toxunma ilə sürüşə bilər */
+  @media (width < 1024px) {
+    .sidebar {
+      width: min(300px, 86vw);
+      transform: translateX(-100%);
+      transition: transform 220ms ease;
+      box-shadow: none;
+    }
+    .sidebar[data-open] {
+      transform: none;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+    }
+    .nav {
+      overflow-y: auto;
+    }
+    .close {
+      position: absolute;
+      top: calc((var(--header-h) - 36px) / 2);
+      right: 12px;
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+}

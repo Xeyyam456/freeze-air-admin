@@ -1,3 +1,4 @@
+import { logoMarkClass } from "@/shared/components/LogoMark";
 import { labelClass } from "@/shared/components/FormField";
 import { ArrowRight, Mail, Snowflake } from "lucide-react";
 import { ActionForm } from "@/components/forms";
@@ -13,7 +14,7 @@ export function LoginCard() {
   return (
     <section className="relative flex flex-col items-center justify-center px-6 py-10">
       <div className="mb-8 flex items-center gap-3 lg:hidden">
-        <span className="logo-mark"><Snowflake size={22} strokeWidth={2.4} /></span>
+        <span className={logoMarkClass()}><Snowflake size={22} strokeWidth={2.4} /></span>
         <span className="text-lg font-extrabold">Freeze Air Service</span>
       </div>
 

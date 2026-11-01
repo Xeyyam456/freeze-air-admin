@@ -1,0 +1,13 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .logo {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--color-frost), var(--color-primary));
+    box-shadow: 0 6px 20px rgba(45, 212, 191, 0.35);
+  }
+}
