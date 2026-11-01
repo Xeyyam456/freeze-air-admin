@@ -1,7 +1,7 @@
 import { logoMarkClass } from "@/shared/components/LogoMark";
 import { labelClass } from "@/shared/components/FormField";
 import { ArrowRight, Mail, Snowflake } from "lucide-react";
-import { ActionForm } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
 import { useLogin } from "../hooks/useLogin";
 import { PasswordField } from "./PasswordField";
 import { Button } from "@/shared/components/Button";

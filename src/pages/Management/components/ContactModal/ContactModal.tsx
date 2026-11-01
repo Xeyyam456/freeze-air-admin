@@ -1,6 +1,6 @@
 import { iconBtnClass } from "@/shared/components/IconButton";
 import { X } from "lucide-react";
-import { Buttons } from "@/components/forms";
+import { FormActions } from "@/shared/components/FormActions";
 import { AvatarUpload } from "@/shared/components/AvatarUpload";
 import { Modal } from "@/shared/components/Modal";
 import type { ManagerModalProps } from "@/types/management";
@@ -28,7 +28,7 @@ export function ContactModal(props: ManagerModalProps) {
           <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+994 50 000 00 00" />
         </FormField>
         <p className="muted text-xs">Ad, vəzifə və hesabı yalnız müdir dəyişir.</p>
-        <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
+        <FormActions pending={pending} label="Yadda saxla" onCancel={onClose} />
       </form>
     </Modal>
   );

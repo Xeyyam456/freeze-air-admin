@@ -1,6 +1,8 @@
 import { useActionState } from "react";
 import { addCompany } from "@/actions/companies";
-import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { FormActions } from "@/shared/components/FormActions";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { KIND } from "@/lib/kinds";
 import type { AddClientProps } from "@/types/clients";
 import { ClientFields } from "../ClientFields";
@@ -12,7 +14,7 @@ export function AddClientForm({ kind, onDone }: AddClientProps) {
   return (
     <ActionForm action={action} className="space-y-4">
       <ClientFields kind={kind} />
-      <Buttons pending={pending} label={`${KIND[kind].One}i əlavə et`} />
+      <FormActions pending={pending} label={`${KIND[kind].One}i əlavə et`} />
     </ActionForm>
   );
 }

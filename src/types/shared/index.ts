@@ -1,6 +1,6 @@
 export type { ActionFormProps } from "./ActionFormProps";
 export type { ButtonProps } from "./ButtonProps";
-export type { ButtonsProps } from "./ButtonsProps";
+export type { FormActionsProps } from "./FormActionsProps";
 export type { ButtonVariant } from "./ButtonVariant";
 export type { CalendarProps } from "./CalendarProps";
 export type { CalendarView } from "./CalendarView";

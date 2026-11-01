@@ -2,7 +2,9 @@ import { useActionState } from "react";
 import { Pencil } from "lucide-react";
 import { updateTool } from "@/services/depot/tools";
 import { ToolFields } from "../ToolFields";
-import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
+import { FormActions } from "@/shared/components/FormActions";
+import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { Modal } from "@/shared/components/Modal";
 import { DHead } from "../DHead";
 import { TEXT } from "../../constants/text";
@@ -18,7 +20,7 @@ export function EditToolModal({ tool, onClose }: EditToolModalProps) {
       <DHead id="edit-tool-title" icon={Pencil} tone={kind === "material" ? "teal" : "blue"} title={TEXT[kind].editTitle} sub={tool.name} onClose={onClose} />
       <SaveConfirmForm action={action} className="space-y-4">
         <ToolFields t={tool} kind={kind} />
-        <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
+        <FormActions pending={pending} label="Yadda saxla" onCancel={onClose} />
       </SaveConfirmForm>
     </Modal>
   );

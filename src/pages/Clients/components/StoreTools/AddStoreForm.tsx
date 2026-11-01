@@ -1,6 +1,8 @@
 import { useActionState, useRef } from "react";
 import { addStore } from "@/actions/stores";
-import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { FormActions } from "@/shared/components/FormActions";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { KIND } from "@/lib/kinds";
 import type { StoreScopeProps } from "@/types/clients";
 import { StoreFields } from "../StoreFields";
@@ -13,7 +15,7 @@ export function AddStoreForm({ companyId, kind }: StoreScopeProps) {
   return (
     <ActionForm ref={ref} action={action} className="space-y-3">
       <StoreFields companyId={companyId} kind={kind} />
-      <Buttons pending={pending} label={`${KIND[kind].UnitAcc} əlavə et`} />
+      <FormActions pending={pending} label={`${KIND[kind].UnitAcc} əlavə et`} />
     </ActionForm>
   );
 }

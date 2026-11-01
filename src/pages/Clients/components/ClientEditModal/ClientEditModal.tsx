@@ -2,7 +2,9 @@ import { iconBtnClass } from "@/shared/components/IconButton";
 import { useActionState } from "react";
 import { X } from "lucide-react";
 import { updateCompany } from "@/actions/companies";
-import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
+import { FormActions } from "@/shared/components/FormActions";
+import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { KIND } from "@/lib/kinds";
 import { Modal } from "@/shared/components/Modal";
 import type { ClientEditModalProps } from "@/types/clients";
@@ -31,7 +33,7 @@ export function ClientEditModal({ company, kind, onClose }: ClientEditModalProps
       </div>
       <SaveConfirmForm action={action} className="space-y-4">
         <ClientFields c={company} kind={kind} />
-        <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
+        <FormActions pending={pending} label="Yadda saxla" onCancel={onClose} />
       </SaveConfirmForm>
     </Modal>
   );

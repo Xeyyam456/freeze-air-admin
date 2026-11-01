@@ -3,7 +3,9 @@ import { useActionState, useState } from "react";
 import { PackagePlus } from "lucide-react";
 import { addTool } from "@/services/depot/tools";
 import { createReceipt } from "@/services/depot/documents";
-import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { FormActions } from "@/shared/components/FormActions";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { Modal } from "@/shared/components/Modal";
 import { ToolPicker } from "@/shared/components/ToolPicker";
 import { toast } from "@/lib/toast";
@@ -67,7 +69,7 @@ export function ReceiptModal({ tools, initialKind, initialToolId = null, onClose
           {list.length > 0 && (
             <button type="button" onClick={() => setMode("existing")} className="text-[13px] font-semibold text-primary hover:underline">← Siyahıdan seç</button>
           )}
-          <Buttons pending={newPending} label="Əlavə et" onCancel={onClose} />
+          <FormActions pending={newPending} label="Əlavə et" onCancel={onClose} />
         </ActionForm>
       ) : (
         <ActionForm action={submitExisting} className="space-y-4">
@@ -79,7 +81,7 @@ export function ReceiptModal({ tools, initialKind, initialToolId = null, onClose
           </div>
           <AmountInput tool={tool} text={qtyText} onText={setQtyText} byPack={byPack} onByPack={setByPack} />
           <NoteRow note={note} onNote={setNote} file={file} onFile={setFile} />
-          <Buttons pending={pending} label="Mədaxil yaz" onCancel={onClose} />
+          <FormActions pending={pending} label="Mədaxil yaz" onCancel={onClose} />
         </ActionForm>
       )}
     </Modal>

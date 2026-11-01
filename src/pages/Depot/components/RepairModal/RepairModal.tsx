@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Wrench } from "lucide-react";
 import { sendRepair } from "@/services/depot/repairs";
-import { ActionForm, Buttons } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { FormActions } from "@/shared/components/FormActions";
 import { Modal } from "@/shared/components/Modal";
 import { toast } from "@/lib/toast";
 import { DHead } from "../DHead";
@@ -45,7 +46,7 @@ export function RepairModal({ tool, onClose }: RepairModalProps) {
             </FormField>
           </div>
           <Input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Nasazlıq (istəyə görə)" aria-label="Nasazlıq" />
-          <Buttons pending={pending} label="Təmirə göndər" onCancel={onClose} />
+          <FormActions pending={pending} label="Təmirə göndər" onCancel={onClose} />
         </ActionForm>
       )}
     </Modal>

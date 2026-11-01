@@ -1,7 +1,9 @@
 import { iconBtnClass } from "@/shared/components/IconButton";
 import { useActionState, useState } from "react";
 import { X } from "lucide-react";
-import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
+import { FormActions } from "@/shared/components/FormActions";
+import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { Modal } from "@/shared/components/Modal";
 import { updateErrorCode } from "@/services/errorCodes/codes";
 import type { EditCodeModalProps } from "@/types/errorCodes";
@@ -23,7 +25,7 @@ export function EditCodeModal({ item, models, onClose }: EditCodeModalProps) {
       <SaveConfirmForm action={action} className="space-y-4">
         <FormField label="Kondisioner modeli"><ModelSelect models={models} value={modelId} onChange={setModelId} /></FormField>
         <CodeFields item={item} />
-        <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
+        <FormActions pending={pending} label="Yadda saxla" onCancel={onClose} />
       </SaveConfirmForm>
     </Modal>
   );

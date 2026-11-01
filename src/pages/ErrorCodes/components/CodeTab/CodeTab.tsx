@@ -1,6 +1,8 @@
 import { useActionState, useRef, useState } from "react";
 import { Box } from "lucide-react";
-import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { FormActions } from "@/shared/components/FormActions";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { addErrorCode } from "@/services/errorCodes/codes";
 import type { CodeTabProps } from "@/types/errorCodes";
 import { CodeFields } from "../CodeFields";
@@ -32,7 +34,7 @@ export function CodeTab({ models, goModels }: CodeTabProps) {
     <ActionForm ref={ref} action={action} className="space-y-4">
       <FormField label="Kondisioner modeli"><ModelSelect models={models} value={modelId} onChange={setModelId} /></FormField>
       <CodeFields key={formKey} />
-      <Buttons pending={pending} label="Əlavə et" />
+      <FormActions pending={pending} label="Əlavə et" />
     </ActionForm>
   );
 }

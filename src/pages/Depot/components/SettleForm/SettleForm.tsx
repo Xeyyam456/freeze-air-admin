@@ -1,4 +1,4 @@
-import { ActionForm } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
 import type { SettleFormProps } from "@/types/depot";

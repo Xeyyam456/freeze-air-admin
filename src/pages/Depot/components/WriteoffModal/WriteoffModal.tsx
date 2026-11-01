@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { createWriteoff } from "@/services/depot/documents";
 import type { WriteoffReason, WriteoffModalProps } from "@/types/depot";
-import { ActionForm, Buttons } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { FormActions } from "@/shared/components/FormActions";
 import { Modal } from "@/shared/components/Modal";
 import { toast } from "@/lib/toast";
 import { DHead } from "../DHead";
@@ -70,7 +71,7 @@ export function WriteoffModal({ tool, source, onClose }: WriteoffModalProps) {
           </div>
           <NoteRow note={note} onNote={setNote} file={file} onFile={setFile} required={reason === "other"}
             placeholder={reason === "other" ? "Nə olub? (vacib)" : "Nə olub? (istəyə görə)"} />
-          <Buttons pending={pending} label="Silinmə aktını yaz" onCancel={onClose} />
+          <FormActions pending={pending} label="Silinmə aktını yaz" onCancel={onClose} />
         </ActionForm>
       )}
     </Modal>

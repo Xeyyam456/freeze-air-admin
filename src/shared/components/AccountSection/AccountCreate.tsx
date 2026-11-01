@@ -1,6 +1,7 @@
 import { useActionState } from "react";
 import { createEmployeeAccount } from "@/actions/accounts";
-import { ActionForm, useOnSuccess } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import type { AccountCreateProps } from "@/types/employees";
 import { AccountBox } from "./AccountBox";
 import { Button } from "@/shared/components/Button";

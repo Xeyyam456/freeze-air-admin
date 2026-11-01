@@ -1,6 +1,7 @@
 import { useActionState, useRef, useState } from "react";
 import { Plus } from "lucide-react";
-import { ActionForm, useOnSuccess } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { addModel } from "@/services/errorCodes/models";
 import type { Model, ModelsTabProps } from "@/types/errorCodes";
 import { ModelRow } from "./ModelRow";

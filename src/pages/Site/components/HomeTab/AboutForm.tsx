@@ -1,5 +1,7 @@
 import { useActionState, useState } from "react";
-import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
+import { FormActions } from "@/shared/components/FormActions";
+import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { updateAbout } from "@/services/site/settings";
 import type { AboutFormProps } from "@/types/site";
 import { CARD_COLORS } from "../../constants/homeConstants";
@@ -43,7 +45,7 @@ export function AboutForm({ settings }: AboutFormProps) {
         <CardColorPicker color={color} onColor={setColor} />
         <AboutCardPreview title={cardTitle} text={cardText} color={CARD_COLORS.find((x) => x.id === color) ?? CARD_COLORS[0]} />
         <div className="mt-auto">
-          <Buttons pending={pending} label="Yadda saxla" />
+          <FormActions pending={pending} label="Yadda saxla" />
         </div>
       </div>
     </SaveConfirmForm>

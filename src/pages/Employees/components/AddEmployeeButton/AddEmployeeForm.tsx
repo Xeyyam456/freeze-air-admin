@@ -1,6 +1,8 @@
 import { useActionState } from "react";
 import { addEmployee } from "@/actions/employees";
-import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { FormActions } from "@/shared/components/FormActions";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import type { AddEmployeeFormProps } from "@/types/employees";
 import { EmployeeFields } from "../EmployeeFields";
 
@@ -10,7 +12,7 @@ export function AddEmployeeForm({ onDone }: AddEmployeeFormProps) {
   return (
     <ActionForm action={action} className="space-y-4">
       <EmployeeFields />
-      <Buttons pending={pending} label="Ustanı əlavə et" />
+      <FormActions pending={pending} label="Ustanı əlavə et" />
     </ActionForm>
   );
 }

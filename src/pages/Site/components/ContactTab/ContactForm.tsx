@@ -1,7 +1,9 @@
 import { cardTitleClass } from "@/shared/components/Card";
 import { labelClass } from "@/shared/components/FormField";
 import { useActionState } from "react";
-import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
+import { FormActions } from "@/shared/components/FormActions";
+import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { updateSiteSettings } from "@/services/site/settings";
 import type { ContactFormProps } from "@/types/site";
 import { CONTACT_FIELDS, CONTACT_PLACES } from "../../constants/contactFields";
@@ -49,7 +51,7 @@ export function ContactForm({ settings, values, onChange }: ContactFormProps) {
         </div>
 
         <div className="mt-auto pt-6">
-          <Buttons pending={pending} label="Yadda saxla" />
+          <FormActions pending={pending} label="Yadda saxla" />
         </div>
       </SaveConfirmForm>
     </Card>

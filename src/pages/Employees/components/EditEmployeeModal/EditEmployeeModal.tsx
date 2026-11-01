@@ -2,7 +2,9 @@ import { iconBtnClass } from "@/shared/components/IconButton";
 import { useActionState } from "react";
 import { X } from "lucide-react";
 import { updateEmployee } from "@/actions/employees";
-import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
+import { FormActions } from "@/shared/components/FormActions";
+import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { Avatar } from "@/shared/components/Avatar";
 import { AvatarUpload } from "@/shared/components/AvatarUpload";
 import { Modal } from "@/shared/components/Modal";
@@ -30,7 +32,7 @@ export function EditEmployeeModal({ employee, onClose }: EmployeeModalProps) {
       <div className="mb-4"><AvatarUpload employee={employee} /></div>
       <SaveConfirmForm action={action} className="space-y-4">
         <EmployeeFields e={employee} />
-        <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
+        <FormActions pending={pending} label="Yadda saxla" onCancel={onClose} />
       </SaveConfirmForm>
     </Modal>
   );

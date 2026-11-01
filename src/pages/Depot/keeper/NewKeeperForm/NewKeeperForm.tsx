@@ -1,6 +1,8 @@
 import { useActionState } from "react";
 import { addStorekeeper } from "@/services/storekeeper/storekeeper";
-import { ActionForm, Buttons, useOnSuccess } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { FormActions } from "@/shared/components/FormActions";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import type { NewKeeperFormProps } from "@/types/storekeeper";
 import { Input } from "@/shared/components/Input";
 import { FormField } from "@/shared/components/FormField";
@@ -25,7 +27,7 @@ export function NewKeeperForm({ onDone }: NewKeeperFormProps) {
           <Input name="password" type="password" minLength={8} required autoComplete="new-password" />
         </FormField>
       </div>
-      <Buttons pending={pending} label="Yarat" onCancel={onDone} />
+      <FormActions pending={pending} label="Yarat" onCancel={onDone} />
     </ActionForm>
   );
 }

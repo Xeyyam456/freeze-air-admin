@@ -4,7 +4,7 @@ import { Trash2, Wrench } from "lucide-react";
 import { WriteoffModal } from "../WriteoffModal";
 import type { WriteoffSource } from "@/types/depot/WriteoffSource";
 import { Avatar } from "@/shared/components/Avatar";
-import { ActionForm } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
 import { QuantityInput } from "@/components/QuantityInput";
 import { Button } from "@/shared/components/Button";
 import type { HolderRowProps } from "@/types/depot";

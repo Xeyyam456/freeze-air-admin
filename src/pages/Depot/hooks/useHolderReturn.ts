@@ -1,7 +1,7 @@
 import { useActionState, useState } from "react";
 import { returnTool, settleMaterial } from "@/services/depot/assignments";
 import { useLoggedUse } from "./useLoggedUse";
-import { useOnSuccess } from "@/components/forms";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import type { Holding, PackInfo, Tool } from "@/types/depot";
 import { PIECE_MAX } from "../constants/limits";
 import { fmt, isPacked, parseQty, pieceWord, round2, showQty } from "../utils/quantity";

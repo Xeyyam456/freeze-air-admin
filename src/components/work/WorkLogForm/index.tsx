@@ -2,7 +2,7 @@ import { iconBtnClass } from "@/shared/components/IconButton";
 import { labelClass } from "@/shared/components/FormField";
 import { X } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
-import { Buttons } from "@/components/forms";
+import { FormActions } from "@/shared/components/FormActions";
 import { ConfirmModal } from "@/shared/components/ConfirmModal";
 import { Modal } from "@/shared/components/Modal";
 import type { WorkLogFormProps } from "@/types/workLogs";
@@ -50,7 +50,7 @@ export function WorkLogForm(props: WorkLogFormProps) {
         {existing && existing.files.length > 0 && <ExistingFilesEditor files={existing.files} removed={f.removed} onToggle={f.toggleRemove} />}
         <NewFiles act={f.act} hasAct={f.hasAct} photos={f.photos} onAct={f.setAct} onPhotos={f.setPhotos} />
 
-        <Buttons pending={f.pending} label={existing ? "Yadda saxla" : "İşi yadda saxla"} onCancel={onClose} />
+        <FormActions pending={f.pending} label={existing ? "Yadda saxla" : "İşi yadda saxla"} onCancel={onClose} />
         <ConfirmModal
           open={!!f.confirmData}
           title="Məlumatların doğruluğunu təsdiq edirsinizmi?"

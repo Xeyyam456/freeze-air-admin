@@ -4,7 +4,7 @@ import { useState } from "react";
 import { UserRound, X } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { AvatarUpload } from "@/shared/components/AvatarUpload";
-import { Buttons } from "@/components/forms";
+import { FormActions } from "@/shared/components/FormActions";
 import { Modal } from "@/shared/components/Modal";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/lib/toast";
@@ -56,7 +56,7 @@ export function ProfileModal({ onClose }: { onClose: () => void }) {
           <FormField label="Ad və soyad">
             <Input name="full_name" defaultValue={name ?? ""} placeholder="Məs. Məmmədov Əli" required autoFocus />
           </FormField>
-          <Buttons pending={pending} label="Yadda saxla" onCancel={onClose} />
+          <FormActions pending={pending} label="Yadda saxla" onCancel={onClose} />
         </form>
       )}
     </Modal>

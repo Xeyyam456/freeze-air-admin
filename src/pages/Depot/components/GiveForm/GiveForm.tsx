@@ -1,7 +1,8 @@
 import { useActionState, useState } from "react";
 import { Users } from "lucide-react";
 import { giveTool } from "@/services/depot/assignments";
-import { ActionForm, useOnSuccess } from "@/components/forms";
+import { ActionForm } from "@/shared/components/ActionForm";
+import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { QuantityInput } from "@/components/QuantityInput";
 import { ToolPicker } from "@/shared/components/ToolPicker";
 import { toast } from "@/lib/toast";
