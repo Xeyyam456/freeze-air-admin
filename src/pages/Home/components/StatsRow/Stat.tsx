@@ -1,4 +1,4 @@
-import s from "./styles/Stat.module.css";
+import s from "./Stat.module.css";
 import { cardLinkClass } from "@/shared/components/Card";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";

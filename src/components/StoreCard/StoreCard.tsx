@@ -1,4 +1,4 @@
-import s from "./styles/StoreCard.module.css";
+import s from "./StoreCard.module.css";
 import { MapPin, Phone } from "lucide-react";
 import { MapButton } from "../MapButton";
 import { storeCodeClass } from "./storeCodeClass";

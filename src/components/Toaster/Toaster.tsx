@@ -1,4 +1,4 @@
-import s from "./styles/Toaster.module.css";
+import s from "./Toaster.module.css";
 import { CircleAlert, CircleCheck, X } from "lucide-react";
 import { dismissToast, useToasts } from "@/lib/toast";
 

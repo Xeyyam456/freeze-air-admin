@@ -1,4 +1,4 @@
-import s from "./styles/AppHeader.module.css";
+import s from "./AppHeader.module.css";
 import { useState } from "react";
 import { Menu } from "lucide-react";
 import { useNavDrawer } from "@/lib/navDrawer";

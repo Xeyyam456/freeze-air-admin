@@ -1,4 +1,4 @@
-import s from "./styles/AppLayout.module.css";
+import s from "./AppLayout.module.css";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { usePref } from "@/lib/usePref";

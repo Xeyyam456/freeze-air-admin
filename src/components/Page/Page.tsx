@@ -1,4 +1,4 @@
-import s from "./styles/Page.module.css";
+import s from "./Page.module.css";
 import { Link } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import { AppHeader } from "../AppHeader";

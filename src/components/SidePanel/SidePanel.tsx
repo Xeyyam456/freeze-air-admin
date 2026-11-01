@@ -1,4 +1,4 @@
-import s from "./styles/SidePanel.module.css";
+import s from "./SidePanel.module.css";
 import { useEffect, useState } from "react";
 import { Plus, X, type LucideIcon } from "lucide-react";
 import { useNarrow } from "@/lib/navDrawer";
