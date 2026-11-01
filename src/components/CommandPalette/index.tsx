@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import type { CommandPaletteProps } from "@/types/layout";
 import s from "./styles/CommandPalette.module.css";
+import m from "@/shared/styles/Modal.module.css";
 import { PaletteRow } from "./components/PaletteRow";
 import { useCommandPalette } from "./hooks/useCommandPalette";
 
@@ -13,7 +14,7 @@ export function CommandPalette({ onClose }: CommandPaletteProps) {
 
   let lastGroup = "";
   return createPortal(
-    <div className="modal-backdrop !items-start pt-[12vh]" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={`${m.backdrop} !items-start pt-[12vh]`} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className={s.root} role="dialog" aria-modal="true" aria-label="Axtarış">
         <label className={s.input}>
           <Search size={19} />

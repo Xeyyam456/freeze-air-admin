@@ -1,4 +1,5 @@
 
+import s from "@/shared/styles/Modal.module.css";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { CircleCheck, TriangleAlert } from "lucide-react";
@@ -26,8 +27,8 @@ export function ConfirmModal({ open, title, message, confirmLabel, tone = "prima
   const Icon = icon ?? (tone === "danger" ? TriangleAlert : CircleCheck);
 
   return createPortal(
-    <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && !pending && onCancel()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div className={s.backdrop} onMouseDown={(e) => e.target === e.currentTarget && !pending && onCancel()}>
+      <div className={s.modal} role="dialog" aria-modal="true" aria-labelledby="confirm-title">
         <span className={`grid h-12 w-12 place-items-center rounded-full ${
           tone === "danger" ? "bg-danger-soft text-danger" : "bg-primary-soft text-primary"
         }`}>

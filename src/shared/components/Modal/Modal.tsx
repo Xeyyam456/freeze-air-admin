@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import s from "@/shared/styles/Modal.module.css";
 import { useEscapeLayer } from "@/shared/hooks/useEscapeLayer";
 import type { ModalProps } from "@/types/shared";
 
@@ -7,8 +8,8 @@ export function Modal({ onClose, labelledBy, className = "", children }: ModalPr
   useEscapeLayer(onClose);
 
   return createPortal(
-    <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className={`modal ${className}`} role="dialog" aria-modal="true" aria-labelledby={labelledBy}>
+    <div className={s.backdrop} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+      <div className={`${s.modal} ${className}`} role="dialog" aria-modal="true" aria-labelledby={labelledBy}>
         {children}
       </div>
     </div>,
