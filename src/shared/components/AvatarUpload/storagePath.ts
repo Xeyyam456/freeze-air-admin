@@ -1,4 +1,4 @@
-import { AVATAR_BUCKET } from "./constants";
+import { AVATAR_BUCKET } from "@/services/avatars/avatarBucket";
 
 // Köhnə şəkil bizim bucket-dədirsə, yolu (DiceBear kimi xarici linklər üçün null)
 export function storagePath(url: string | null) {

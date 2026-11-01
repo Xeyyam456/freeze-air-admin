@@ -1,6 +1,6 @@
 import { useActionState, useState } from "react";
 import { useNavigate } from "react-router";
-import { createClient } from "@/lib/supabase/client";
+import { signIn } from "@/services/auth/signIn";
 import { toast } from "@/lib/toast";
 
 // Giriş: e-poçt + parol; uğurda panelə, səhvdə tost
@@ -8,11 +8,8 @@ export function useLogin() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [, formAction, pending] = useActionState(async (_prev: null, formData: FormData) => {
-    const { error } = await createClient().auth.signInWithPassword({
-      email: String(formData.get("email")),
-      password: String(formData.get("password")),
-    });
-    if (error) {
+    const ok = await signIn(String(formData.get("email")), String(formData.get("password")));
+    if (!ok) {
       toast.error("E-poçt və ya parol səhvdir.");
       return null;
     }

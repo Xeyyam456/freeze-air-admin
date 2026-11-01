@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { revalidate } from "@/lib/revalidate";
-import { createClient } from "@/lib/supabase/client";
+import { updateEmployeePhone } from "@/services/employees/updateEmployeePhone";
 import { toast } from "@/lib/toast";
 import type { ManagerModalProps } from "@/types/management";
 
@@ -12,9 +12,9 @@ export function useSavePhone({ manager, onClose }: ManagerModalProps) {
   async function save(e: React.FormEvent) {
     e.preventDefault();
     setPending(true);
-    const { error } = await createClient().from("employees").update({ phone: phone.trim() || null }).eq("id", manager.id);
+    const error = await updateEmployeePhone(manager.id, phone.trim() || null);
     setPending(false);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(error);
     toast.success("Telefon yadda saxlanıldı");
     revalidate();
     onClose();

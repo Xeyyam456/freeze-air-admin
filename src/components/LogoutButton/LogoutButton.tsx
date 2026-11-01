@@ -2,7 +2,7 @@ import { SideLink } from "@/components/Sidebar/components/SideLink";
 import { useState, useTransition } from "react";
 import { useNavigate } from "react-router";
 import { LogOut } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { signOut } from "@/services/auth/signOut";
 import { ConfirmModal } from "@/shared/components/ConfirmModal";
 
 // Çıxış: təsadüfi klikdən qorunmaq üçün əvvəlcə təsdiq soruşulur
@@ -34,7 +34,7 @@ export function LogoutButton({ menu = false }: { menu?: boolean }) {
         pending={pending}
         onCancel={() => setOpen(false)}
         onConfirm={() => startTransition(async () => {
-          await createClient().auth.signOut();
+          await signOut();
           navigate("/login", { replace: true });
         })}
       />

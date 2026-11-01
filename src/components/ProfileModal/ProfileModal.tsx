@@ -6,7 +6,7 @@ import { useAuth } from "@/auth/AuthProvider";
 import { AvatarUpload } from "@/shared/components/AvatarUpload";
 import { FormActions } from "@/shared/components/FormActions";
 import { Modal } from "@/shared/components/Modal";
-import { createClient } from "@/lib/supabase/client";
+import { updateProfileName } from "@/services/profile/updateProfileName";
 import { toast } from "@/lib/toast";
 import { Input } from "@/shared/components/Input";
 import { FormField } from "@/shared/components/FormField";
@@ -22,9 +22,9 @@ export function ProfileModal({ onClose }: { onClose: () => void }) {
     if (!fullName) return toast.error("Ad vacibdir.");
     if (!session) return;
     setPending(true);
-    const { error: upErr } = await createClient().from("profiles").update({ full_name: fullName }).eq("id", session.user.id);
+    const upErr = await updateProfileName(session.user.id, fullName);
     setPending(false);
-    if (upErr) return toast.error(upErr.message);
+    if (upErr) return toast.error(upErr);
     await reload();
     onClose();
   }

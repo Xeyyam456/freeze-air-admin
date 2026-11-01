@@ -1,15 +1,12 @@
 import { History } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { fetchRecentMovements } from "@/services/depot/fetchRecentMovements";
 import { useData } from "@/lib/useData";
-import type { Movement, RecentMovementsProps } from "@/types/depot";
+import type { RecentMovementsProps } from "@/types/depot";
 import { localDate, dayOf, timeOf, dayLabel, KINDS, amount } from "../../utils/journal";
 
 // Son hərəkətlər (Depo səhifəsinin sağ sütunu): hər iki növ, son 12; Realtime ilə yenilənir (revalidate)
 export function RecentMovements({ onOpenAll, limit = 12 }: RecentMovementsProps) {
-  const rows = useData("depot-tool-history", async () => {
-    const { data } = await createClient().from("stock_movements").select("*, employees(full_name)").order("at", { ascending: false }).limit(limit);
-    return (data ?? []) as Movement[];
-  }, [limit]);
+  const rows = useData("depot-tool-history", () => fetchRecentMovements(limit), [limit]);
   // Zaman xətti: solda rəngli ikonlar şaquli xətlə bağlanır; ad + miqdar çipi, növ nişanı və kim, sağda vaxt
   return (
     <section className="flex h-full flex-col rounded-3xl border border-line bg-surface p-5">

@@ -83,3 +83,4 @@ export type { ToolsTableProps } from "./ToolsTableProps";
 export type { WriteoffModalProps } from "./WriteoffModalProps";
 export type { WriteoffReason } from "./WriteoffReason";
 export type { WriteoffSource } from "./WriteoffSource";
+export type { ToolBrief } from "./ToolBrief";

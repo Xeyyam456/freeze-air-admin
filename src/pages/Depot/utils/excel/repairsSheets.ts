@@ -1,12 +1,11 @@
-import { createClient } from "@/lib/supabase/client";
+import { fetchRepairs } from "@/services/depot/fetchRepairs";
 import { daysSince } from "../dates";
 import { txt, num, date, pill, MUTED, INK } from "./style";
 import { sheet } from "./sheet";
 import type { Hue, Col, Kpi, Ctx } from "@/types/depot";
 
 export async function repairsSheets({ tools, stamp }: Ctx) {
-  const { data } = await createClient().from("tool_repairs").select("*").order("sent_at", { ascending: false });
-  const all = data ?? [];
+  const all = await fetchRepairs();
   const name = new Map(tools.map((t) => [t.id, t.name]));
   const cols: Col[] = [{ label: "№", width: 5 }, { label: "Alət", width: 28, align: "left" }, { label: "Say", width: 7 }, { label: "Harada", width: 22, align: "left" },
     { label: "Nasazlıq", width: 34, align: "left" }, { label: "Göndərilib", width: 12 }, { label: "Qayıdıb", width: 12 }, { label: "Gün", width: 7 },

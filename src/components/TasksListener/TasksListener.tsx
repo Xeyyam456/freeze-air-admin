@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { leaveRange } from "@/shared/utils/attendance/leaveRange";
 import { LIVE, revalidate } from "@/lib/revalidate";
 import { isSoundReady, playNotify } from "@/lib/sound";
-import { createClient } from "@/lib/supabase/client";
+import { fetchEmployeeName } from "@/services/employees/fetchEmployeeName";
+import { fetchGroupNames } from "@/services/tasks/fetchGroupNames";
+import { openChannel } from "@/services/realtime/openChannel";
 import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 
@@ -15,9 +17,7 @@ const lastGroupToast = new Map<string, number>();
 
 export function TasksListener() {
   useEffect(() => {
-    const supabase = createClient();
-    const channel = supabase
-      .channel("tasks")
+    return openChannel("tasks", (channel) => channel
       .on("postgres_changes", { event: "*", schema: "public", table: "tasks" }, async (payload) => {
         revalidate(...LIVE.tasks);
         if (payload.eventType !== "UPDATE") return;
@@ -30,14 +30,13 @@ export function TasksListener() {
           const last = lastGroupToast.get(t.group_id) ?? 0;
           if (Date.now() - last < GROUP_TOAST_MS) return; // bu qrup üçün artıq bildiriş verilib
           lastGroupToast.set(t.group_id, Date.now());
-          const { data: rows } = await supabase.from("tasks").select("employees(full_name)").eq("group_id", t.group_id);
-          const names = (rows ?? []).map((x) => (x.employees as { full_name: string } | null)?.full_name.split(" ").slice(-1)[0]).filter(Boolean);
+          const names = await fetchGroupNames(t.group_id);
           toast.success(`Qrup tapşırığı görüldü: ${names.join(" + ") || "qrup"}`, `Qrup işi · ${t.reason}${hint}`);
           playNotify();
           return;
         }
-        const { data: e } = await supabase.from("employees").select("full_name").eq("id", t.employee_id).maybeSingle();
-        toast.success(`Tapşırıq görüldü: ${e?.full_name ?? "usta"}`, `${t.reason}${hint}`);
+        const who = await fetchEmployeeName(t.employee_id);
+        toast.success(`Tapşırıq görüldü: ${who ?? "usta"}`, `${t.reason}${hint}`);
         playNotify();
       })
       // Davamiyyət (0059): usta icazə istəyəndə tost + səs; "İşə gəldim" və qərarlar siyahıları yeniləyir
@@ -48,14 +47,14 @@ export function TasksListener() {
         if (payload.eventType === "UPDATE") {
           const o = payload.old as Partial<Tables<"leave_requests">>;
           if ((l.status === "cancelled" && o.status !== "cancelled") || (o.date_to && l.date_to < o.date_to)) {
-            const { data: e } = await supabase.from("employees").select("full_name").eq("id", l.employee_id).maybeSingle();
-            toast.success(`İcazədən imtina: ${e?.full_name ?? "usta"}`, `${leaveRange(o.date_from && o.date_to ? { date_from: o.date_from, date_to: o.date_to } : l)} · icazəyə ehtiyac qalmadı`);
+            const who = await fetchEmployeeName(l.employee_id);
+            toast.success(`İcazədən imtina: ${who ?? "usta"}`, `${leaveRange(o.date_from && o.date_to ? { date_from: o.date_from, date_to: o.date_to } : l)} · icazəyə ehtiyac qalmadı`);
           }
           return;
         }
         if (payload.eventType !== "INSERT") return;
-        const { data: e } = await supabase.from("employees").select("full_name").eq("id", l.employee_id).maybeSingle();
-        toast.success(`İcazə sorğusu: ${e?.full_name ?? "usta"}`, `${leaveRange(l)} · ${l.reason ?? "səbəb yazılmayıb"}`);
+        const who = await fetchEmployeeName(l.employee_id);
+        toast.success(`İcazə sorğusu: ${who ?? "usta"}`, `${leaveRange(l)} · ${l.reason ?? "səbəb yazılmayıb"}`);
         playNotify();
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "attendance" }, () => revalidate(...LIVE.attendance))
@@ -67,16 +66,13 @@ export function TasksListener() {
         const p = payload.new as Tables<"fuel_payments">;
         const o = payload.old as Partial<Tables<"fuel_payments">>;
         if (p.status === o.status || p.status === "pending") return; // yalnız ustanın cavabı (aldım / almadım)
-        const { data: e } = await supabase.from("employees").select("full_name").eq("id", p.employee_id).maybeSingle();
+        const who = await fetchEmployeeName(p.employee_id);
         const sum = `${Number(p.amount).toFixed(2)} ₼`;
-        if (p.status === "received") toast.success(`Yanacaq pulunu aldı: ${e?.full_name ?? "usta"}`, sum);
-        else toast.error(`Yanacaq pulunu almadığını deyir: ${e?.full_name ?? "usta"}`, `${sum} · yoxla`);
+        if (p.status === "received") toast.success(`Yanacaq pulunu aldı: ${who ?? "usta"}`, sum);
+        else toast.error(`Yanacaq pulunu almadığını deyir: ${who ?? "usta"}`, `${sum} · yoxla`);
         playNotify();
       })
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    );
   }, []);
 
   return null;

@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { LIVE, revalidate } from "@/lib/revalidate";
 import { isSelfAction } from "@/lib/selfAction";
 import { isSoundReady, playNotify } from "@/lib/sound";
-import { createClient } from "@/lib/supabase/client";
+import { fetchEmployeeName } from "@/services/employees/fetchEmployeeName";
+import { fetchToolBrief } from "@/services/depot/fetchToolBrief";
+import { openChannel } from "@/services/realtime/openChannel";
 import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 import { requestLabel } from "@/pages/Depot/utils/requests";
@@ -11,9 +13,7 @@ import { requestLabel } from "@/pages/Depot/utils/requests";
 // alət/material ustaya veriləndə (başqa admin/depo məsulu verəndə) və usta "Aldım" / "Almadım" deyəndə tost. Hər dəyişiklikdə Depo səhifəsi və menyu nişanı yenilənir. Ekranda heç nə çəkmir.
 export function DepotListener() {
   useEffect(() => {
-    const supabase = createClient();
-    const channel = supabase
-      .channel("depot")
+    return openChannel("depot", (channel) => channel
       .on("postgres_changes", { event: "*", schema: "public", table: "depot_requests" }, (payload) => {
         revalidate(...LIVE.depot);
         if (payload.eventType !== "INSERT") return;
@@ -33,24 +33,18 @@ export function DepotListener() {
         const disputed = payload.eventType === "UPDATE" && a.disputed_at && !o.disputed_at;
         if (!gave && !received && !disputed) return; // başqa dəyişikliklər (qaytarma və s.) bildiriş vermir
         if (gave && isSelfAction()) return;
-        const [{ data: e }, { data: t }] = await Promise.all([
-          supabase.from("employees").select("full_name").eq("id", a.employee_id).maybeSingle(),
-          supabase.from("tools").select("name, kind, unit").eq("id", a.tool_id).maybeSingle(),
-        ]);
+        const [who, t] = await Promise.all([fetchEmployeeName(a.employee_id), fetchToolBrief(a.tool_id)]);
         const u = t?.kind === "material" ? t.unit : "ədəd";
         if (gave) {
-          toast.success(`Verildi: ${e?.full_name ?? "usta"}`, `${t?.name ?? ""} · ${gave} ${u}`);
+          toast.success(`Verildi: ${who ?? "usta"}`, `${t?.name ?? ""} · ${gave} ${u}`);
           playNotify();
-        } else if (received) toast.success(`Aldı: ${e?.full_name ?? "usta"}`, `${t?.name ?? ""} · ${a.quantity} ${u}`);
+        } else if (received) toast.success(`Aldı: ${who ?? "usta"}`, `${t?.name ?? ""} · ${a.quantity} ${u}`);
         else {
-          toast.error(`Almadığını deyir: ${e?.full_name ?? "usta"}`, `${t?.name ?? ""} · ${a.quantity} ${u} · Depo səhifəsində yoxla`);
+          toast.error(`Almadığını deyir: ${who ?? "usta"}`, `${t?.name ?? ""} · ${a.quantity} ${u} · Depo səhifəsində yoxla`);
           playNotify();
         }
       })
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    );
   }, []);
 
   return null;

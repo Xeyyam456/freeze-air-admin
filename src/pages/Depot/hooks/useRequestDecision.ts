@@ -2,7 +2,7 @@ import { useState } from "react";
 import { decideRequest } from "@/services/depot/documents";
 import { depotFileUrl } from "@/services/depot/files";
 import { revalidate } from "@/lib/revalidate";
-import { createClient } from "@/lib/supabase/client";
+import { cancelRequest } from "@/services/depot/cancelRequest";
 import { toast } from "@/lib/toast";
 import type { RequestRowProps } from "@/types/depot";
 import { REQUEST_TYPES } from "../constants/requests";
@@ -37,8 +37,8 @@ export function useRequestDecision({ r, holding, tool, myUid, owner }: RequestRo
   }
 
   async function cancel() {
-    const { error } = await createClient().rpc("depot_request_cancel", { p_id: r.id });
-    if (error) return toast.error(error.message);
+    const error = await cancelRequest(r.id);
+    if (error) return toast.error(error);
     toast.success("Sənəd ləğv edildi");
     revalidate();
   }

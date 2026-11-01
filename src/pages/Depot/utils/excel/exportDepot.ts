@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/supabase/client";
+import { fetchLosses } from "@/services/depot/fetchLosses";
 import { toast } from "@/lib/toast";
-import type { DepotEmployee, Holding, Tool, LossRow, Ctx, ReportKind } from "@/types/depot";
+import type { DepotEmployee, Holding, Tool, Ctx, ReportKind } from "@/types/depot";
 import { toolsSheet } from "./toolsSheet";
 import { materialsSheet } from "./materialsSheet";
 import { peopleSheet } from "./peopleSheet";
@@ -19,10 +19,8 @@ export async function exportDepot(kind: ReportKind, ctx: { tools: Tool[]; holdin
   const now = new Date();
   const p = (x: number) => String(x).padStart(2, "0");
   const stamp = `Tarix: ${p(now.getDate())}.${p(now.getMonth() + 1)}.${now.getFullYear()} ${p(now.getHours())}:${p(now.getMinutes())}`;
-  const { data: lossData } = await createClient().from("depot_requests")
-    .select("tool_id, tool_name, tool_kind, unit, quantity, reason, note, employee_id, created_by_name, decided_by_name, decided_at")
-    .eq("type", "writeoff").eq("status", "approved").order("decided_at", { ascending: false });
-  const c: Ctx = { ...ctx, stamp, losses: (lossData ?? []) as LossRow[] };
+  const losses = await fetchLosses();
+  const c: Ctx = { ...ctx, stamp, losses };
   const sheets =
     kind === "all" ? [summarySheet(c), toolsSheet(c), materialsSheet(c), peopleSheet(c, null), lossesSheet(c), ...(await repairsSheets(c))]
     : kind === "tools" ? [toolsSheet(c)]

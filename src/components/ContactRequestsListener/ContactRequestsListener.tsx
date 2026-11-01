@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { LIVE, revalidate } from "@/lib/revalidate";
 import { isSoundReady, playNotify } from "@/lib/sound";
-import { createClient } from "@/lib/supabase/client";
+import { openChannel } from "@/services/realtime/openChannel";
 import type { Tables } from "@/types/database";
 import { toast } from "@/lib/toast";
 
@@ -27,9 +27,7 @@ if (typeof document !== "undefined") {
 // Ekranda heç nə çəkmir; giriş edən admin üçün bütün səhifələrdə işləyir.
 export function ContactRequestsListener() {
   useEffect(() => {
-    const supabase = createClient();
-    const channel = supabase
-      .channel("contact-requests")
+    return openChannel("contact-requests", (channel) => channel
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "contact_requests" }, (payload) => {
         const r = payload.new as Tables<"contact_requests">;
         // Səhifə yenilənəndən sonra heç klik olmayıbsa brauzer səsə icazə vermir: bunu tostda de və tab başlığında göstər
@@ -39,10 +37,7 @@ export function ContactRequestsListener() {
         markTitle();
         revalidate(...LIVE.requests);
       })
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    );
   }, []);
 
   return null;
