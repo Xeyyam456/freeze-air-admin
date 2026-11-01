@@ -84,3 +84,5 @@ export type { WriteoffModalProps } from "./WriteoffModalProps";
 export type { WriteoffReason } from "./WriteoffReason";
 export type { WriteoffSource } from "./WriteoffSource";
 export type { ToolBrief } from "./ToolBrief";
+export type { NoteRowProps } from "./NoteRowProps";
+export type { PendingBannerProps } from "./PendingBannerProps";

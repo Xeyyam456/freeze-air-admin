@@ -1,3 +1,4 @@
+import type { LogoutButtonProps } from "@/types/layout";
 import { SideLink } from "@/components/Sidebar/components/SideLink";
 import { useState, useTransition } from "react";
 import { useNavigate } from "react-router";
@@ -7,7 +8,7 @@ import { ConfirmModal } from "@/shared/components/ConfirmModal";
 
 // Çıxış: təsadüfi klikdən qorunmaq üçün əvvəlcə təsdiq soruşulur
 // menu: telefon siyirtməsindəki "Çıxış" bəndi (başlıqda mobildə gizlədilir ki, səhifə adına yer qalsın)
-export function LogoutButton({ menu = false }: { menu?: boolean }) {
+export function LogoutButton({ menu = false }: LogoutButtonProps) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const navigate = useNavigate();

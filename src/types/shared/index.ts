@@ -37,3 +37,7 @@ export type { Toast } from "./Toast";
 export type { ToolPickerMenuProps } from "./ToolPickerMenuProps";
 export type { ToolPickerProps } from "./ToolPickerProps";
 export type { UnitSelectPos } from "./UnitSelectPos";
+export type { CountUpProps } from "./CountUpProps";
+export type { UnitSelectProps } from "./UnitSelectProps";
+export type { WhatsAppIconProps } from "./WhatsAppIconProps";
+export type { AccountBoxProps } from "./AccountBoxProps";

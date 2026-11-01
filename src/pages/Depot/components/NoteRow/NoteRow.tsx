@@ -1,11 +1,10 @@
+import type { NoteRowProps } from "@/types/depot";
 import { IconButton } from "@/shared/components/IconButton";
 import { Paperclip, X } from "lucide-react";
 import { Input } from "@/shared/components/Input";
 
 // Qeyd + 📎 (qaimə və ya şəkil, istəyə görə) bir sətirdə
-export function NoteRow({ note, onNote, file, onFile, placeholder = "Qeyd (istəyə görə)", required = false }: {
-  note?: string; onNote?: (v: string) => void; file: File | null; onFile: (f: File | null) => void; placeholder?: string; required?: boolean;
-}) {
+export function NoteRow({ note, onNote, file, onFile, placeholder = "Qeyd (istəyə görə)", required = false }: NoteRowProps) {
   return (
     <div>
       <div className="flex gap-2">

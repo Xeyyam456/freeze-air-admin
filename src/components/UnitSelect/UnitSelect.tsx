@@ -1,4 +1,5 @@
 
+import type { UnitSelectProps } from "@/types/shared";
 import { FieldButton } from "@/shared/components/FieldButton";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fitX, rectOf, viewport } from "@/lib/zoom";
@@ -20,12 +21,7 @@ const metaOf = (u: string) => META[u] ?? { icon: Package, hint: "Xüsusi vahid" 
 
 // Vahid seçimi: standart <select> əvəzinə ikonlu, izahlı açılan siyahı. Seçim gizli sahə (name, standart "unit") ilə formaya gedir.
 // Siyahı portal ilə body-yə çıxır ki, yan panelin və ya pəncərənin kənarında kəsilməsin; yer yoxdursa yuxarı açılır.
-export function UnitSelect({ value, onChange, options, name = "unit" }: {
-  value: string;
-  onChange: (v: string) => void;
-  options: string[];
-  name?: string;
-}) {
+export function UnitSelect({ value, onChange, options, name = "unit" }: UnitSelectProps) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<UnitSelectPos | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);

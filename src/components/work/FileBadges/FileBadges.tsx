@@ -1,9 +1,9 @@
+import type { FileBadgesProps } from "@/types/workLogs";
 import { FileText, Image as ImageIcon, Play } from "lucide-react";
-import type { FileCount } from "@/types/workLogs";
 
 // İşin faylları siyahıda nişan kimi: ▶ video, şəkil sayı, akt — işi açmadan görünsün (qrup işində qrupun bütün faylları, fetchFileCounts).
 // Web-də eyni fayl: components/work/FileBadges.tsx
-export function FileBadges({ files, className = "" }: { files?: FileCount; className?: string }) {
+export function FileBadges({ files, className = "" }: FileBadgesProps) {
   if (!files || files.act + files.photo + files.video === 0) return null;
   return (
     <span className={`flex shrink-0 items-center gap-1 ${className}`}>

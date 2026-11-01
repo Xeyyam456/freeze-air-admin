@@ -1,7 +1,8 @@
+import type { PendingBannerProps } from "@/types/depot";
 import { ArrowRight, Clock } from "lucide-react";
 
 // "Təsdiq gözləyir" zolağı (səhifədə): gradient kart, ikon kafeli, say, sənəd növləri çip kimi, "Bax" düyməsi; basanda pəncərə açılır
-export function PendingBanner({ total, parts, onOpen }: { total: number; parts: string[]; onOpen: () => void }) {
+export function PendingBanner({ total, parts, onOpen }: PendingBannerProps) {
   return (
     <button type="button" onClick={onOpen}
       className="group flex w-full items-center gap-3 rounded-2xl border border-[#fcd9a0] bg-[linear-gradient(135deg,#fff4dc,#fffdf8_70%)] p-3 text-left shadow-[0_8px_20px_-14px_rgba(180,83,9,0.6)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-12px_rgba(180,83,9,0.55)] max-sm:gap-2.5 max-sm:p-2.5">

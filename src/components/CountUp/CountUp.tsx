@@ -1,8 +1,9 @@
+import type { CountUpProps } from "@/types/shared";
 import { useEffect, useRef, useState } from "react";
 
 // Rəqəm sayılaraq açılır: əvvəl sürətli, sona doğru yavaşlayır (ease-out).
 // Dəyər dəyişəndə köhnə rəqəmdən yenisinə keçir. "Azaldılmış hərəkət" ayarında birbaşa göstərilir.
-export function CountUp({ value, duration = 2500 }: { value: number; duration?: number }) {
+export function CountUp({ value, duration = 2500 }: CountUpProps) {
   const [shown, setShown] = useState(0);
   const fromRef = useRef(0);
 

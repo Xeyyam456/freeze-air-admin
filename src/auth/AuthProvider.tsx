@@ -1,3 +1,4 @@
+import type { AuthProviderProps } from "@/types/layout";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
@@ -39,7 +40,7 @@ function loadOnce(session: Session | null, force = false): Promise<AuthState> {
   return cached.state.then((s) => (s.session ? { ...s, session } : s)); // token yenilənibsə təzə sessiya
 }
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>({ ...EMPTY, loading: true });
 
   useEffect(() => {

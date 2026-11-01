@@ -1,8 +1,8 @@
+import type { SiteTabsProps } from "@/types/site";
 import { SITE_TABS } from "../constants/siteTabs";
-import type { SiteTab } from "@/types/site";
 
 // Tab düymələri: dar ekranda iki sütun, ≥ 640 bir sətir
-export function SiteTabs({ tab, onTab }: { tab: SiteTab; onTab: (t: SiteTab) => void }) {
+export function SiteTabs({ tab, onTab }: SiteTabsProps) {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <div className="grid w-full grid-cols-2 gap-1 rounded-xl bg-line/60 p-1 sm:inline-flex sm:w-fit sm:max-w-full sm:flex-wrap" role="tablist">

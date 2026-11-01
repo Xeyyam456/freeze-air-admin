@@ -1,3 +1,4 @@
+import type { AppLayoutProps } from "@/types/layout";
 import s from "./AppLayout.module.css";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
@@ -8,7 +9,7 @@ import { Sidebar } from "../Sidebar";
 
 // Girişdən sonrakı bütün səhifələrin çərçivəsi: solda menyu, sağda səhifə; Ctrl+K hər yerdə axtarışı açır.
 // Dar ekranda (< 1024px) menyu sürüşən siyirtmədir.
-export function AppLayout({ children }: { children: React.ReactNode }) {
+export function AppLayout({ children }: AppLayoutProps) {
   const [collapsed, setCollapsed] = usePref<boolean>("sidebar-collapsed", false);
   const [expandedCompact, setExpandedCompact] = usePref<boolean>("sidebar-expanded-compact", false); // 1024–1279px: standart ikon zolağı, istəsən açılır
   const [search, setSearch] = useState(false);

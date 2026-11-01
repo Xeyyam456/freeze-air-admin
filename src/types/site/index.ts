@@ -65,3 +65,4 @@ export type { TextMap } from "./TextMap";
 export type { TextsSaveBarProps } from "./TextsSaveBarProps";
 export type { TitleSlug } from "./TitleSlug";
 export type { TrustHeaderProps } from "./TrustHeaderProps";
+export type { SiteTabsProps } from "./SiteTabsProps";

@@ -1,3 +1,4 @@
+import type { AppHeaderProps } from "@/types/layout";
 import s from "./AppHeader.module.css";
 import { useState } from "react";
 import { Menu } from "lucide-react";
@@ -34,7 +35,7 @@ function UserChip() {
 }
 
 // Səhifənin yuxarı zolağı (bir sətir): solda başlıq, sağda səhifənin əməliyyatları və profil
-export function AppHeader({ children, actions }: { children: React.ReactNode; actions?: React.ReactNode }) {
+export function AppHeader({ children, actions }: AppHeaderProps) {
   const { setOpen } = useNavDrawer();
   return (
     <header className={s.header}>

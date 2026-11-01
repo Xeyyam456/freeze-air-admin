@@ -1,3 +1,4 @@
+import type { ProfileModalProps } from "@/types/layout";
 import { IconTile } from "@/shared/components/IconTile";
 import { IconButton } from "@/shared/components/IconButton";
 import { useState } from "react";
@@ -12,7 +13,7 @@ import { Input } from "@/shared/components/Input";
 import { FormField } from "@/shared/components/FormField";
 
 // Profil: hesabın adı. Əməkdaşa bağlı hesabda ad əməkdaş kartından gəlir və orada dəyişdirilir.
-export function ProfileModal({ onClose }: { onClose: () => void }) {
+export function ProfileModal({ onClose }: ProfileModalProps) {
   const { session, email, name, linked, employeeId, photoUrl, reload } = useAuth();
   const [pending, setPending] = useState(false);
 

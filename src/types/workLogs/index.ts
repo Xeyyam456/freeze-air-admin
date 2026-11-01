@@ -35,3 +35,4 @@ export type { WorkLogFilters } from "./WorkLogFilters";
 export type { WorkLogFormProps } from "./WorkLogFormProps";
 export type { WorkLogModalProps } from "./WorkLogModalProps";
 export type { WorkTabProps } from "./WorkTabProps";
+export type { FileBadgesProps } from "./FileBadgesProps";

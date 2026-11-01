@@ -1,6 +1,7 @@
+import type { WithSidePanelProps } from "@/types/layout";
 import s from "./SidePanel.module.css";
 import { useEffect, useState } from "react";
-import { Plus, X, type LucideIcon } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useNarrow } from "@/lib/navDrawer";
 
 // Səhifə məzmunu + sağda sabit panel.
@@ -8,17 +9,7 @@ import { useNarrow } from "@/lib/navDrawer";
 // Səhifə sürüşmür; sol konteyner öz içində sürüşür. Panel boşdursa (məs. admin deyilsə), məzmun bütün eni tutur.
 // fill: məzmun (məs. xəritə) konteyneri tam doldurur — sürüşmə və aşağıdakı solğunlaşma olmur.
 // Dar ekranda (< 1024px) panel sağda yer tutmur: üzən düymə onu aşağıdan açılan pəncərədə göstərir.
-export function WithSidePanel({ panel, fill = false, stack = false, fabLabel = "Əlavə et", fabIcon: FabIcon = Plus, inline = false, narrowTop, narrowPanel, children }: {
-  panel: React.ReactNode | null;
-  fill?: boolean;
-  stack?: boolean; // üst hissə (axtarış, tablar) yerində qalır, məzmun öz bloku içində sürüşür: uşaq `flex h-full flex-col` olmalıdır
-  fabLabel?: string; // dar ekranda üzən düymənin yazısı və ikonu
-  fabIcon?: LucideIcon;
-  narrowTop?: React.ReactNode; // dar ekranda məzmunun ÜSTÜNDƏ adi kart kimi görünən hissə (məs. məlumat kartı); panel isə yalnız narrowPanel olur
-  narrowPanel?: React.ReactNode;
-  inline?: boolean; // dar ekranda panel üzən düymə əvəzinə məzmunun ÜSTÜNDƏ adi kart kimi görünür (yalnız məlumat kartı olan səhifələr)
-  children: React.ReactNode;
-}) {
+export function WithSidePanel({ panel, fill = false, stack = false, fabLabel = "Əlavə et", fabIcon: FabIcon = Plus, inline = false, narrowTop, narrowPanel, children }: WithSidePanelProps) {
   const narrow = useNarrow();
   const [sheet, setSheet] = useState(false);
   useEffect(() => setSheet(false), [narrow]);
