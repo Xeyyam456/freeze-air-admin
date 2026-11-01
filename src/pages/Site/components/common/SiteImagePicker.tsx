@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { ImagePlus, Trash2 } from "lucide-react";
 import type { SiteImagePickerProps } from "@/types/site";
 import { Button } from "@/shared/components/Button";
@@ -7,7 +8,7 @@ export function SiteImagePicker({ picker, label, empty, previewClass, imgClass, 
   const { imageUrl, setImageUrl, uploading, fileRef, onFile } = picker;
   return (
     <div>
-      <span className="label">{label}</span>
+      <span className={labelClass()}>{label}</span>
       <div className={`${previewClass} grid place-items-center overflow-hidden rounded-xl border border-dashed border-line bg-bg`}>
         {imageUrl
           ? <img src={imageUrl} alt="" className={`${imgClass} ${uploading ? "opacity-50" : ""}`} />

@@ -1,3 +1,4 @@
+import { fieldClass } from "@/shared/components/Input";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Plus, Settings2, UsersRound } from "lucide-react";
 import type { CrewSelectProps } from "@/types/tasks";
@@ -14,7 +15,7 @@ export function CrewSelect({ crews, peopleOf, selectedId, onPick, onManage }: Cr
   return (
     <>
       <button ref={btnRef} type="button" onClick={() => setOpen((o) => !o)} aria-haspopup="listbox" aria-expanded={open}
-        className={`field flex items-center gap-2.5 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
+        className={`${fieldClass()} flex items-center gap-2.5 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
         {current ? (
           <>
             <Faces people={peopleOf(current).slice(0, 3)} size="!h-6 !w-6 !text-[8px]" />

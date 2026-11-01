@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { ArrowRight, Mail, Snowflake } from "lucide-react";
 import { ActionForm } from "@/components/forms";
 import { useLogin } from "../hooks/useLogin";
@@ -24,7 +25,7 @@ export function LoginCard() {
           </div>
 
           <label className="block">
-            <span className="label">E-poçt</span>
+            <span className={labelClass()}>E-poçt</span>
             <span className="relative block">
               <Mail size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
               <Input name="email" type="email" required autoComplete="email" placeholder="ad@example.com" className="!h-12 !pl-11" />

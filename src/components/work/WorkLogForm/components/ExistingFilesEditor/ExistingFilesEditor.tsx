@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { FileText, X } from "lucide-react";
 import type { ExistingFilesEditorProps } from "@/types/workLogs";
 
@@ -5,7 +6,7 @@ import type { ExistingFilesEditorProps } from "@/types/workLogs";
 export function ExistingFilesEditor({ files, removed, onToggle }: ExistingFilesEditorProps) {
   return (
     <div>
-      <span className="label">Mövcud fayllar</span>
+      <span className={labelClass()}>Mövcud fayllar</span>
       <div className="flex flex-wrap gap-2">
         {files.map((f) => {
           const gone = removed.has(f.id);

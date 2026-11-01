@@ -1,4 +1,5 @@
 
+import { fieldClass } from "@/shared/components/Input";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
@@ -64,7 +65,7 @@ export function UnitSelect({ value, onChange, options, name = "unit" }: {
     <>
       <input type="hidden" name={name} value={value} />
       <button ref={btnRef} type="button" onClick={() => setOpen((o) => !o)} aria-haspopup="listbox" aria-expanded={open}
-        className={`field flex items-center gap-2 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
+        className={`${fieldClass()} flex items-center gap-2 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
         <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-primary-soft text-primary"><CurrentIcon size={13} /></span>
         <span className="min-w-0 flex-1 truncate font-semibold">{value}</span>
         <ChevronDown size={15} className={`muted shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />

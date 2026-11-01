@@ -1,3 +1,4 @@
+import { fieldClass } from "@/shared/components/Input";
 import { useMemo, useState } from "react";
 import { Search, Send } from "lucide-react";
 import { giveTools } from "@/services/depot/assignments";
@@ -70,7 +71,7 @@ export function BulkGiveModal({ emp, kind, tools, onClose }: BulkGiveModalProps)
                   <span className="flex shrink-0 items-center gap-1.5 max-sm:gap-1">
                     <input inputMode="decimal" autoComplete="off" value={qty[t.id]} aria-label={`${t.name} sayı`}
                       onChange={(e) => setQty((q) => ({ ...q, [t.id]: e.target.value }))}
-                      className={`field !h-8 !w-20 !px-2 !text-[13px] max-sm:!h-7 max-sm:!w-10 max-sm:!px-1 max-sm:text-center max-sm:!text-xs ${okQty(t) ? "" : "!border-danger"}`} />
+                      className={`${fieldClass()} !h-8 !w-20 !px-2 !text-[13px] max-sm:!h-7 max-sm:!w-10 max-sm:!px-1 max-sm:text-center max-sm:!text-xs ${okQty(t) ? "" : "!border-danger"}`} />
                     <span className="muted text-xs max-sm:w-8 max-sm:text-[10px]">{t.kind === "material" ? t.unit : "ədəd"}</span>
                   </span>
                 )}

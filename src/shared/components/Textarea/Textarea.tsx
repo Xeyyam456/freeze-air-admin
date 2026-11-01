@@ -1,6 +1,7 @@
+import { fieldClass } from "@/shared/components/Input";
 import type { TextareaProps } from "@/types/shared";
 
-// Çoxsətirli sahə (qlobal textarea.field; sonra Textarea.module.css-ə köçəcək).
+// Çoxsətirli sahə (stil Field.module.css-də).
 export function Textarea({ className = "", ...rest }: TextareaProps) {
-  return <textarea className={`field ${className}`.trim()} {...rest} />;
+  return <textarea className={fieldClass(className)} {...rest} />;
 }

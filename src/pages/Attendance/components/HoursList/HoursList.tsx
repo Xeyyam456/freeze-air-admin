@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { Clock } from "lucide-react";
 import type { HoursListProps } from "@/types/attendance";
 import { HoursRow } from "../HoursRow";
@@ -8,7 +9,7 @@ export function HoursList({ days }: HoursListProps) {
 
   return (
     <div className="flex min-h-0 flex-col">
-      <span className="label flex items-center gap-1.5"><Clock size={14} className="text-primary" /> Gəlmə və getmə saatları</span>
+      <span className={labelClass("flex items-center gap-1.5")}><Clock size={14} className="text-primary" /> Gəlmə və getmə saatları</span>
       {!worked ? (
         <div className="flex-1 rounded-xl bg-bg" />
       ) : worked.length === 0 ? (

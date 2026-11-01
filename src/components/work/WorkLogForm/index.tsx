@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { X } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
 import { Buttons } from "@/components/forms";
@@ -36,7 +37,7 @@ export function WorkLogForm(props: WorkLogFormProps) {
         </FormField>
 
         <div>
-          <span className="label">Yer</span>
+          <span className={labelClass()}>Yer</span>
           <PlacePicker places={f.places} value={f.place} onChange={f.setPlace} />
         </div>
 

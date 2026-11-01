@@ -1,3 +1,4 @@
+import { fieldClass } from "@/shared/components/Input";
 import { useState } from "react";
 import { toast } from "@/lib/toast";
 import { saveHeroForm } from "@/services/site/texts";
@@ -44,7 +45,7 @@ export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCard
           {QUICK_FIELDS.map((f) => (
             <FormField key={f.key} label={f.label}>
               <input value={values[f.key]} maxLength={f.max} disabled={!enabled} onChange={(e) => setValues((x) => ({ ...x, [f.key]: e.target.value }))}
-                className={`field ${f.key === "home.quick.note" ? "sm:col-span-2" : ""}`} />
+                className={`${fieldClass()} ${f.key === "home.quick.note" ? "sm:col-span-2" : ""}`} />
             </FormField>
           ))}
           <p className="muted text-xs sm:col-span-2">Sahəni boş qoysan, saytda standart yazı çıxır.</p>

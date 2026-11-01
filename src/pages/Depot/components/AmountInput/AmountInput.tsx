@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { fmt, isPacked, parseQty, round2, unitOf } from "../../utils/quantity";
 import type { AmountInputProps } from "@/types/depot";
 import { MiniSeg } from "../MiniSeg";
@@ -9,7 +10,7 @@ export function AmountInput({ tool, text, onText, byPack, onByPack, label = "Miq
   const n = parseQty(text);
   return (
     <div>
-      <span className="label">{label}</span>
+      <span className={labelClass()}>{label}</span>
       <div className="flex items-center gap-2">
         <Input value={text} onChange={(e) => onText(e.target.value)} inputMode="decimal" required autoComplete="off" aria-label={label} className="!w-32" />
         {packed ? (

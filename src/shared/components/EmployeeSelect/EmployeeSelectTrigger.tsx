@@ -1,3 +1,4 @@
+import { fieldClass } from "@/shared/components/Input";
 import { ChevronDown, UserRound } from "lucide-react";
 import { Avatar } from "@/shared/components/Avatar";
 import type { EmployeeSelectTriggerProps } from "@/types/employees";
@@ -6,7 +7,7 @@ import type { EmployeeSelectTriggerProps } from "@/types/employees";
 export function EmployeeSelectTrigger({ selected, value, placeholder, emptyLabel, open, btnRef, onToggle, onKey }: EmployeeSelectTriggerProps) {
   return (
     <button ref={btnRef} type="button" onClick={onToggle} onKeyDown={onKey} aria-haspopup="listbox" aria-expanded={open}
-      className={`field flex items-center gap-2.5 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
+      className={`${fieldClass()} flex items-center gap-2.5 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
       {selected ? (
         <>
           <Avatar employee={selected} className="!h-7 !w-7 !text-[10px] !shadow-none" />

@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { buttonClass } from "@/shared/components/Button";
 import { useState } from "react";
 import { CalendarDays, CircleCheck, Mail, MessageSquareText, Phone, RotateCcw, Trash2 } from "lucide-react";
@@ -54,7 +55,7 @@ export function RequestDetail({ r }: RequestDetailProps) {
 
       {/* Mesaj */}
       <div className="mt-5 min-h-0 flex-1">
-        <span className="label flex items-center gap-1.5"><MessageSquareText size={14} /> Mesaj</span>
+        <span className={labelClass("flex items-center gap-1.5")}><MessageSquareText size={14} /> Mesaj</span>
         <div className="nice-scroll max-h-full overflow-y-auto rounded-2xl rounded-tl-sm bg-bg p-5">
           {r.message
             ? <p className="whitespace-pre-line leading-relaxed">{r.message}</p>

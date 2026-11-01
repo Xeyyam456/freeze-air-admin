@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { Plus } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
 import { PlacePicker } from "@/components/work/PlacePicker";
@@ -17,7 +18,7 @@ export function TaskForm({ data, day, today, onDay }: TaskFormProps) {
         <h2 className="card-title">Yeni tapşırıq</h2>
       </div>
       <div>
-        <span className="label">Kimə (bir usta və ya qrup)</span>
+        <span className={labelClass()}>Kimə (bir usta və ya qrup)</span>
         {/* Tarix baxılan günlə eynidirsə, ustanın həmin gün neçə tapşırığı olduğu görünür (işi bərabər bölmək üçün) */}
         <TeamPicker value={f.employeeIds} onChange={f.setEmployeeIds} employees={data?.employees ?? []} crews={data?.crews ?? []}
           hint={(id) => {
@@ -27,15 +28,15 @@ export function TaskForm({ data, day, today, onDay }: TaskFormProps) {
           }} />
       </div>
       <div>
-        <span className="label">Tarix</span>
+        <span className={labelClass()}>Tarix</span>
         <DatePicker value={f.taskDate} min={today} required onChange={(v) => v && f.setTaskDate(v)} />
       </div>
       <div>
-        <span className="label">Yer</span>
+        <span className={labelClass()}>Yer</span>
         <PlacePicker places={f.places} value={f.place} onChange={f.setPlace} />
       </div>
       <label className="block">
-        <span className="label">Səbəb</span>
+        <span className={labelClass()}>Səbəb</span>
         <Textarea value={f.reason} onChange={(e) => f.setReason(e.target.value)} rows={3} required className="resize-none"
           placeholder="Məs. qaz qaçağı, detallı yuyulma" />
       </label>

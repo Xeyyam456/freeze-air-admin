@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { useState } from "react";
 import { HandCoins, X } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
@@ -33,16 +34,16 @@ export function PayModal({ name, employeeId, today, suggest, onClose }: PayModal
         <p className="muted -mt-2 text-sm">{name}</p>
         <div className="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
           <div>
-            <span className="label">Tarix</span>
+            <span className={labelClass()}>Tarix</span>
             <DatePicker value={day} max={today} required onChange={(v) => v && setDay(v)} />
           </div>
           <label className="block">
-            <span className="label">Məbləğ (₼)</span>
+            <span className={labelClass()}>Məbləğ (₼)</span>
             <Input autoFocus value={amount} onChange={(e) => setAmount(e.target.value.replace(/[^\d.,]/g, ""))} inputMode="decimal" placeholder="250" className="tabular-nums" />
           </label>
         </div>
         <label className="block">
-          <span className="label">Qeyd <span className="muted font-normal">(istəyə görə)</span></span>
+          <span className={labelClass()}>Qeyd <span className="muted font-normal">(istəyə görə)</span></span>
           <Input value={note} onChange={(e) => setNote(e.target.value)} placeholder="məs. həftəlik, nağd, karta" />
         </label>
         <div className="flex justify-end gap-2">

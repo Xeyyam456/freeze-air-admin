@@ -438,13 +438,6 @@ html {
     .side-panel .card {
       padding: 14px 20px;
     }
-    .side-panel .field {
-      height: 36px;
-    }
-    .side-panel .label {
-      margin-bottom: 3px;
-      font-size: 12px;
-    }
   }
   /* ---------- Mağaza / filial kartı ---------- */
   .store-card {
@@ -608,34 +601,6 @@ html {
     font-weight: 800;
     letter-spacing: -0.03em;
     font-variant-numeric: tabular-nums;
-  }
-
-  /* ---------- Form ---------- */
-  .field {
-    width: 100%;
-    height: 42px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-line);
-    border-radius: 10px;
-    padding: 0 12px;
-    font-size: 14px;
-    transition: border-color 150ms ease, box-shadow 150ms ease;
-  }
-  textarea.field {
-    height: auto;
-    padding: 10px 12px;
-    resize: none;
-  }
-  .field:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px var(--color-primary-soft);
-  }
-  .label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 13px;
-    font-weight: 600;
   }
 
   .search {
@@ -1111,20 +1076,6 @@ html {
       width: 26px;
       height: 26px;
       font-size: 11px;
-    }
-    .field {
-      height: 32px;
-      padding: 0 10px;
-      border-radius: 8px;
-      font-size: 12px;
-    }
-    textarea.field {
-      height: auto;
-      padding: 8px 10px;
-    }
-    .label {
-      margin-bottom: 4px;
-      font-size: 12px;
     }
   }
 }

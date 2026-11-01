@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { fmt, isPacked, parseQty, round2 } from "../../utils/quantity";
@@ -41,7 +42,7 @@ export function ToolFields({ t, kind, names = [] }: ToolFieldsProps) {
 
       {material && (
         <div>
-          <span className="label">Necə sayılır <span className="muted font-normal">(bir neçəsini seç)</span></span>
+          <span className={labelClass()}>Necə sayılır <span className="muted font-normal">(bir neçəsini seç)</span></span>
           <div className="flex flex-wrap gap-1.5 max-sm:gap-1" role="group" aria-label="Necə sayılır">
             {measures.map(([v, l]) => {
               const on = sel.includes(v);

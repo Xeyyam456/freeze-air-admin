@@ -1,3 +1,4 @@
+import { labelClass } from "@/shared/components/FormField";
 import { useState } from "react";
 import { UserPlus, X } from "lucide-react";
 import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
@@ -37,7 +38,7 @@ export function AddMemberModal({ task, members, employees, onClose }: AddMemberM
           </p>
         </TaskSummary>
         <div className="mt-4">
-          <span className="label">Əlavə olunan usta</span>
+          <span className={labelClass()}>Əlavə olunan usta</span>
           <EmployeeSelect value={who} onChange={setWho} employees={employees.filter((e) => !members.includes(e.id))} />
         </div>
         <p className="muted mt-2 text-xs">Eyni yer və səbəblə. Biri «görüldü» basanda hamı üçün görülür.</p>
