@@ -423,22 +423,6 @@ html {
   .side-panel::-webkit-scrollbar {
     display: none;
   }
-  .side-panel .card {
-    background: transparent;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-    padding: 20px 24px;
-  }
-  .side-panel .card + .card {
-    border-top: 1px solid var(--color-line);
-  }
-  /* Alçaq ekranda panel daha yığcam: sahələr və boşluqlar kiçilir */
-  @media (max-height: 820px) {
-    .side-panel .card {
-      padding: 14px 20px;
-    }
-  }
   /* ---------- Mağaza / filial kartı ---------- */
   .store-card {
     position: relative;
@@ -521,18 +505,6 @@ html {
     box-shadow: 0 6px 16px rgba(10, 126, 164, 0.25);
   }
 
-  /* ---------- Kartlar ---------- */
-  .card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-line);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
-  }
-  .card-title {
-    font-size: 16px;
-    font-weight: 700;
-  }
   /* İncə, yuvarlaq sürüşdürmə zolağı (siyahılar və modallar üçün; səhifənin öz scrollbar-ı gizlidir).
      Chrome/Edge: ::-webkit-scrollbar (Chrome 121+ scrollbar-color/width verilsə webkit qaydalarını yox sayır,
      ona görə standart xassələr yalnız webkit olmayan brauzerə (Firefox) verilir).
@@ -573,16 +545,6 @@ html {
       scrollbar-width: thin;
       scrollbar-color: rgba(10, 126, 164, 0.4) transparent;
     }
-  }
-
-  .card-link {
-    display: block;
-    transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
-  }
-  .card-link:hover {
-    transform: translateY(-2px);
-    border-color: #b5e3ee;
-    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.04), 0 16px 32px rgba(10, 126, 164, 0.12);
   }
 
   .icon-tile {
@@ -942,14 +904,6 @@ html {
       border-radius: 10px;
       color: var(--color-muted);
       background: var(--color-bg);
-    }
-  }
-}
-
-@layer components {
-  @media (width < 640px) {
-    .card {
-      padding: 16px;
     }
   }
 }

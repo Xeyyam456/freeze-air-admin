@@ -1,3 +1,4 @@
+import { cardTitleClass } from "@/shared/components/Card";
 import { labelClass } from "@/shared/components/FormField";
 import { useActionState } from "react";
 import { Buttons, SaveConfirmForm, useOnSuccess } from "@/components/forms";
@@ -17,7 +18,7 @@ export function ContactForm({ settings, values, onChange }: ContactFormProps) {
     <Card className="flex flex-col">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="card-title">Əlaqə məlumatları</h2>
+          <h2 className={cardTitleClass()}>Əlaqə məlumatları</h2>
           <p className="muted mt-1 text-sm">Boş qalan sahənin yerində saytda yer tutucu görünür. Sağda yazdıqca dəyişən önizləmə var.</p>
         </div>
         <span className="muted rounded-full max-sm:max-w-full max-sm:whitespace-normal sm:shrink-0 bg-bg px-3 py-1 text-xs">Son dəyişiklik: {formatTime(settings.updated_at)}</span>

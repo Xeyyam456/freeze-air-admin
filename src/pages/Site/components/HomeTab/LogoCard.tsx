@@ -1,3 +1,4 @@
+import { cardTitleClass } from "@/shared/components/Card";
 import { Snowflake } from "lucide-react";
 import type { HomeCardProps } from "@/types/site";
 import { ImageSlot } from "./ImageSlot";
@@ -7,7 +8,7 @@ import { Card } from "@/shared/components/Card";
 export function LogoCard({ settings, t }: HomeCardProps) {
   return (
     <Card as="section" className="flex flex-col">
-      <h2 className="card-title">Loqo</h2>
+      <h2 className={cardTitleClass()}>Loqo</h2>
       <p className="muted mt-1 text-sm">Saytın bütün səhifələrində: header-də şirkət adının solunda və footer-də.</p>
       {/* Saytın yeni header-i (2026-10-20): bir sətir, şüşə ağ fon; solda loqo, sağda tünd "Usta çağır" (menyu həbləri dar kartda sığmadığı üçün göstərilmir) */}
       <div className="mt-4 overflow-hidden rounded-xl border border-line">

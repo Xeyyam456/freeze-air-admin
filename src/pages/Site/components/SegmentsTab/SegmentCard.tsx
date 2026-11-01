@@ -1,3 +1,4 @@
+import { cardTitleClass } from "@/shared/components/Card";
 import { EyeOff, ImageOff, Pencil, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { deleteSegment } from "@/services/site/content";
@@ -38,7 +39,7 @@ export function SegmentCard({ segment: s, equipmentTitle, onEdit }: SegmentCardP
       </div>
 
       <div className="flex flex-1 flex-col p-4">
-        <h3 className="card-title truncate">{s.title}</h3>
+        <h3 className={cardTitleClass("truncate")}>{s.title}</h3>
         <span className="muted text-xs">/xidmetler/{s.slug}</span>
         <p className="muted mb-3 mt-2 line-clamp-2 text-sm">{s.summary || "Qısa mətn yoxdur"}</p>
         <div className="mt-auto flex flex-wrap gap-1.5 border-t border-dashed border-line pt-3 text-[11px] font-semibold">

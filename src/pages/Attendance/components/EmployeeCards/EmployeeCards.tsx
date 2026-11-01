@@ -1,3 +1,4 @@
+import { cardClass } from "@/shared/components/Card";
 import type { EmployeeListProps } from "@/types/attendance";
 import { employeeView } from "../../utils/employeeView";
 import { EmployeeCard } from "../EmployeeCard";
@@ -8,9 +9,9 @@ export function EmployeeCards({ rows, att, isCurrent, meId, canMark, busyId, onO
   return (
     <div className="flex flex-wrap gap-3 xl:hidden">
       {rows === null ? (
-        <p className="card muted w-full py-10 text-center text-sm">Yüklənir...</p>
+        <p className={cardClass("muted w-full py-10 text-center text-sm")}>Yüklənir...</p>
       ) : rows.length === 0 ? (
-        <p className="card muted w-full py-10 text-center text-sm">Usta tapılmadı.</p>
+        <p className={cardClass("muted w-full py-10 text-center text-sm")}>Usta tapılmadı.</p>
       ) : rows.map((e) => {
         const { summary, badge } = employeeView(e, att, isCurrent);
         return (

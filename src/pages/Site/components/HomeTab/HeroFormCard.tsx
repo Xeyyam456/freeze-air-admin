@@ -1,3 +1,4 @@
+import { cardTitleClass } from "@/shared/components/Card";
 import { fieldClass } from "@/shared/components/Input";
 import { useState } from "react";
 import { toast } from "@/lib/toast";
@@ -31,7 +32,7 @@ export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCard
     <Card as="section">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="card-title">Sürətli müraciət formu</h2>
+          <h2 className={cardTitleClass()}>Sürətli müraciət formu</h2>
           <p className="muted mt-1 text-sm">Hero-da başlığın altında: ad və telefon yazılır, müraciət “Müraciətlər” səhifəsinə düşür. Telefon nömrəsi “Əlaqə” tabından götürülür.</p>
         </div>
         <label className="flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm font-semibold">

@@ -57,7 +57,7 @@ src/
 - Skript hook/portal/hadisə işlədən `.tsx`-ə `"use client"` əlavə edir; qalanı (Button, Input) server komponentində də işləyir.
 
 ## Keçid dövrü (CSS)
-- `Button`, `Input`, `Textarea`, `Select`, `FormField` stilləri `shared/styles/*.module.css`-dədir. Düymə/sahə/etiket görünüşü başqa elementdə lazımdırsa `buttonClass()`, `fieldClass()`, `labelClass()` işlət (xam `btn`, `field`, `label` class-ı yazma). `Modal` stili `shared/styles/Modal.module.css`-dədir.
+- `Button`, `Input`, `Textarea`, `Select`, `FormField`, `Card` stilləri `shared/styles/*.module.css`-dədir. Düymə/sahə/etiket görünüşü başqa elementdə lazımdırsa `buttonClass()`, `fieldClass()`, `labelClass()`, `cardClass()`, `cardLinkClass()`, `cardTitleClass()` işlət (xam `btn`, `field`, `label`, `card` class-ı yazma). `Modal` stili `shared/styles/Modal.module.css`-dədir.
 - `.module.css`-ə köçəndə qaydaları `@layer components { ... }` içində yaz: qatsız CSS Tailwind utility-lərini (`className="w-full"`) üstələyir.
 - **Stil faylı yeri**: CSS komponentin yanında yox, feature-in `styles/` qovluğunda: `<Feature>/styles/<Komponent>.module.css` (ad komponentlə eyni, TikTak qəlibi). Ortaq komponentlər `shared/styles/`. İmport: `import s from "../../styles/X.module.css"`, `className={s.root}`.
 - **Hər modulun ilk sətri** `@layer theme, base, components, utilities;` olmalıdır (sonra `@layer components { ... }`). Bunsuz modul Tailwind-dən əvvəl yüklənəndə `components` qatı `base`-dən (preflight: `padding:0; border-radius:0`) əvvələ düşür və stil itir.

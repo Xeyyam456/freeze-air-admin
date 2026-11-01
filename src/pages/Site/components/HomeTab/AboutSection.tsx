@@ -1,3 +1,4 @@
+import { cardTitleClass } from "@/shared/components/Card";
 import { labelClass } from "@/shared/components/FormField";
 import type { AboutFormProps } from "@/types/site";
 import { AboutForm } from "./AboutForm";
@@ -10,7 +11,7 @@ export function AboutSection({ settings }: AboutFormProps) {
     <Card as="section">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="card-title">Haqqımızda</h2>
+          <h2 className={cardTitleClass()}>Haqqımızda</h2>
           <p className="muted mt-1 text-sm">Hero-dan sonrakı bölmə: saytda solda şəkillər və kart, sağda mətn.</p>
         </div>
         <span className="muted rounded-full bg-bg px-3 py-1 text-xs">Şəkillər yüklənən kimi saxlanır, mətnlər “Yadda saxla” ilə</span>

@@ -1,3 +1,4 @@
+import { cardLinkClass } from "@/shared/components/Card";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
 import { CountUp } from "@/components/CountUp";
@@ -5,7 +6,7 @@ import type { StatProps } from "@/types/dashboard";
 
 export function Stat({ to, icon: Icon, label, value, sub, tone }: StatProps) {
   return (
-    <Link to={to} className="card card-link group relative overflow-hidden max-sm:!p-3.5 sm:max-xl:!p-3.5">
+    <Link to={to} className={cardLinkClass("group relative overflow-hidden max-sm:!p-3.5 sm:max-xl:!p-3.5")}>
       <div className="relative flex items-center gap-4 max-sm:gap-3 sm:max-xl:gap-2.5">
         <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl max-sm:h-10 max-sm:w-10 max-sm:rounded-xl sm:max-xl:h-9 sm:max-xl:w-9 sm:max-xl:rounded-xl bg-gradient-to-br ${tone} text-white shadow-[0_8px_18px_rgba(10,126,164,0.22)]`}>
           <Icon size={22} />

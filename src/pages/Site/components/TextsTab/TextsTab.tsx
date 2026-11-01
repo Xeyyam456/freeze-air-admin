@@ -1,3 +1,4 @@
+import { cardTitleClass } from "@/shared/components/Card";
 import { TEXT_GROUPS } from "../../constants/textGroups";
 import { useTextsTab } from "../../hooks/useTextsTab";
 import { TextGroupNav } from "./TextGroupNav";
@@ -19,7 +20,7 @@ export function TextsTab() {
         {t.current.hint && <p className="muted text-sm">{t.current.hint}</p>}
         {t.current.sections.map((s) => (
           <Card as="section" key={s.title} >
-            <h2 className="card-title">{s.title}</h2>
+            <h2 className={cardTitleClass()}>{s.title}</h2>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {s.fields.map((f) => (
                 <TextInput key={f.key} field={f} value={t.valueOf(f.key)} dirty={t.changed.includes(f.key)}

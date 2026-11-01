@@ -1,3 +1,4 @@
+import { cardClass, cardTitleClass } from "@/shared/components/Card";
 import { labelClass } from "@/shared/components/FormField";
 import { Plus } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
@@ -12,10 +13,10 @@ import { Textarea } from "@/shared/components/Textarea";
 export function TaskForm({ data, day, today, onDay }: TaskFormProps) {
   const f = useTaskForm(day, today, onDay);
   return (
-    <form onSubmit={f.submit} className="card space-y-4">
+    <form onSubmit={f.submit} className={cardClass("space-y-4")}>
       <div className="flex items-center gap-3">
         <span className="icon-tile !h-9 !w-9"><Plus size={18} /></span>
-        <h2 className="card-title">Yeni tapşırıq</h2>
+        <h2 className={cardTitleClass()}>Yeni tapşırıq</h2>
       </div>
       <div>
         <span className={labelClass()}>Kimə (bir usta və ya qrup)</span>

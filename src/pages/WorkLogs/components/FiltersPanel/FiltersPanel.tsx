@@ -1,3 +1,4 @@
+import { cardTitleClass } from "@/shared/components/Card";
 import { Building2, Download, Search } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
 import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
@@ -15,7 +16,7 @@ export function FiltersPanel({ from, to, onFrom, onTo, onRange, filters, employe
     <Card className="space-y-4">
       <div className="flex items-center gap-3">
         <span className="icon-tile !h-9 !w-9"><Search size={18} /></span>
-        <h2 className="card-title">Filtrlər</h2>
+        <h2 className={cardTitleClass()}>Filtrlər</h2>
       </div>
 
       <div>

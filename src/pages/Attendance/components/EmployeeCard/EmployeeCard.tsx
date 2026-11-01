@@ -1,3 +1,4 @@
+import { cardClass } from "@/shared/components/Card";
 import type { EmployeeCardProps } from "@/types/attendance";
 import { PersonPhoto } from "../PersonPhoto";
 
@@ -12,7 +13,7 @@ export function EmployeeCard({ employee: e, summary: a, isMe, cell, onOpen }: Em
 
   return (
     <div role="button" tabIndex={0} onClick={() => onOpen(e)} onKeyDown={(ev) => ev.key === "Enter" && onOpen(e)}
-      className={`card grow basis-[250px] cursor-pointer !p-3.5 transition-colors min-[1000px]:basis-[300px] hover:bg-primary-soft/30 ${isMe ? "ring-2 ring-primary/30" : ""}`}>
+      className={`${cardClass()} grow basis-[250px] cursor-pointer !p-3.5 transition-colors min-[1000px]:basis-[300px] hover:bg-primary-soft/30 ${isMe ? "ring-2 ring-primary/30" : ""}`}>
       <div className="flex items-center gap-3">
         <PersonPhoto employee={e} className="h-10 w-10" />
         <span className="min-w-0 flex-1">
