@@ -1,4 +1,4 @@
-import { searchClass } from "@/shared/components/SearchBar";
+import { SearchField } from "@/shared/components/SearchField";
 import { Search } from "lucide-react";
 import { StoreCard } from "@/components/StoreCard";
 import { KIND } from "@/lib/kinds";
@@ -18,7 +18,7 @@ export function UnitList({ units, kind, admin }: UnitListProps) {
   return (
     <div className="flex h-full flex-col gap-4">
       {/* Axtarış və tablar yerində qalır; yalnız aşağıdakı siyahı bloku öz içində sürüşür (scrollbar gizli) */}
-      <div className={searchClass("shrink-0")}>
+      <SearchField className="shrink-0">
         <Search size={20} />
         <input
           value={query}
@@ -26,7 +26,7 @@ export function UnitList({ units, kind, admin }: UnitListProps) {
           placeholder={`${k.Unit} kodu, adı və ya ünvanı ilə axtar...`}
           aria-label={`${k.Unit} axtarışı`}
         />
-      </div>
+      </SearchField>
 
       {query && (
         <p className="muted shrink-0 text-sm font-medium">

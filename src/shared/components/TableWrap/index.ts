@@ -1,1 +1,1 @@
-export { tableWrapClass } from "./tableWrapClass";
+export { TableWrap } from "./TableWrap";

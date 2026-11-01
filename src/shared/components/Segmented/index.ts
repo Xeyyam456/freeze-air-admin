@@ -1,1 +1,1 @@
-export { segClass } from "./segClass";
+export { Segmented } from "./Segmented";

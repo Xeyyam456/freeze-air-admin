@@ -1,1 +1,1 @@
-export { heroActionClass } from "./heroActionClass";
+export { HeroAction } from "./HeroAction";

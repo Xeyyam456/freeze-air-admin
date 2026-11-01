@@ -1,10 +1,10 @@
-import { tableWrapClass } from "@/shared/components/TableWrap";
+import { TableWrap } from "@/shared/components/TableWrap";
 import type { ImportPreviewProps } from "@/types/clients";
 
 // Yüklənəcək sətirlərin önizləməsi: səhvli sətirlər qırmızı
 export function ImportPreview({ rows }: ImportPreviewProps) {
   return (
-    <div className={tableWrapClass("max-h-28")}>
+    <TableWrap className="max-h-28">
       <table>
         <thead>
           <tr><th>Sətir</th><th>Kod</th><th>Ad</th><th>Vəziyyət</th></tr>
@@ -20,6 +20,6 @@ export function ImportPreview({ rows }: ImportPreviewProps) {
           ))}
         </tbody>
       </table>
-    </div>
+    </TableWrap>
   );
 }

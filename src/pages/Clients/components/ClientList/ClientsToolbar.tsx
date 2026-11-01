@@ -1,4 +1,4 @@
-import { segClass } from "@/shared/components/Segmented";
+import { Segmented } from "@/shared/components/Segmented";
 import s from "../../styles/ClientsToolbar.module.css";
 import { LayoutGrid, List, Search } from "lucide-react";
 import type { ClientsToolbarProps } from "@/types/clients";
@@ -12,14 +12,14 @@ export function ClientsToolbar({ query, onQuery, shown, total, view, onView }: C
         <input value={query} onChange={(e) => onQuery(e.target.value)} placeholder="Ad, telefon, ünvan və ya əlaqəli şəxs" />
       </label>
       <span className="muted shrink-0 text-sm">{shown} / {total}</span>
-      <div className={segClass("max-sm:hidden")} role="tablist" aria-label="Görünüş">
+      <Segmented className="max-sm:hidden" role="tablist" aria-label="Görünüş">
         <button type="button" role="tab" aria-selected={view === "cards"} onClick={() => onView("cards")} title="Kart">
           <LayoutGrid size={16} />
         </button>
         <button type="button" role="tab" aria-selected={view === "table"} onClick={() => onView("table")} title="Cədvəl">
           <List size={16} />
         </button>
-      </div>
+      </Segmented>
     </div>
   );
 }

@@ -1,1 +1,1 @@
-export { codeBadgeClass } from "./codeBadgeClass";
+export { CodeBadge } from "./CodeBadge";

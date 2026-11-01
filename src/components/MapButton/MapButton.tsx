@@ -1,6 +1,6 @@
 
+import { CodeBadge } from "@/shared/components/CodeBadge";
 import { IconButton } from "@/shared/components/IconButton";
-import { codeBadgeClass } from "@/shared/components/CodeBadge";
 import { useState } from "react";
 import { ExternalLink, Map as MapIcon, MapPin, X } from "lucide-react";
 import { mapEmbedUrl, mapSearchUrl } from "@/lib/navigation";
@@ -24,7 +24,7 @@ export function MapButton({ place }: MapButtonProps) {
           <div className="flex items-center justify-between gap-4 px-6 py-4">
             <div className="min-w-0">
               <h2 id="map-title" className="flex items-center gap-2 text-lg font-bold">
-                {place.code && <span className={codeBadgeClass()}>{place.code}</span>}
+                {place.code && <CodeBadge >{place.code}</CodeBadge>}
                 <span className="truncate">{place.name}</span>
               </h2>
               <p className="muted mt-0.5 flex items-center gap-1.5 text-sm">

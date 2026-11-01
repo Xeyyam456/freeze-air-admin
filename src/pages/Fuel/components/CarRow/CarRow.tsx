@@ -1,4 +1,4 @@
-import { plateClass } from "@/shared/components/CarPlate";
+import { CarPlate } from "@/shared/components/CarPlate";
 import { ChevronDown } from "lucide-react";
 import { Avatar } from "@/shared/components/Avatar";
 import type { CarRowProps } from "@/types/fuel";
@@ -22,7 +22,7 @@ export function CarRow({ item, period, range, expanded, onPick, onToggle }: CarR
         <div className="min-w-0">
           <p className="truncate font-bold">{car.full_name}</p>
           <p className="muted flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs xl:flex-nowrap min-[471px]:max-sm:flex-nowrap max-sm:gap-x-1.5 max-sm:text-[11px] max-[340px]:text-[10.5px]">
-            <span className={plateClass()}>{car.car_plate ?? "Nömrəsiz"}</span>
+            <CarPlate >{car.car_plate ?? "Nömrəsiz"}</CarPlate>
             <span className="hidden h-0 basis-full max-[391px]:block" aria-hidden="true" />
             <span className="min-w-0 truncate min-[392px]:max-[470px]:order-last min-[392px]:max-[470px]:basis-full sm:max-xl:order-last sm:max-xl:basis-full">{car.car_model ?? "Model yazılmayıb"}</span>
             {/* Növ ustanın məlumatında seçilir (Ustalar → redaktə); burada yalnız göstərilir */}

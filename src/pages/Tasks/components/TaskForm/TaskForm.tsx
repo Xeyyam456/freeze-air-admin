@@ -1,5 +1,5 @@
+import { IconTile } from "@/shared/components/IconTile";
 import { Label } from "@/shared/components/Label";
-import { iconTileClass } from "@/shared/components/IconTile";
 import { Card, CardTitle } from "@/shared/components/Card";
 import { Plus } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
@@ -16,7 +16,7 @@ export function TaskForm({ data, day, today, onDay }: TaskFormProps) {
   return (
     <Card onSubmit={f.submit} as="form" className="space-y-4">
       <div className="flex items-center gap-3">
-        <span className={iconTileClass("!h-9 !w-9")}><Plus size={18} /></span>
+        <IconTile className="!h-9 !w-9"><Plus size={18} /></IconTile>
         <CardTitle >Yeni tapşırıq</CardTitle>
       </div>
       <div>

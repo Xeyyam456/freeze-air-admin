@@ -1,4 +1,4 @@
-import { plateClass } from "@/shared/components/CarPlate";
+import { CarPlate } from "@/shared/components/CarPlate";
 import { Car } from "lucide-react";
 import type { EmployeeProps } from "@/types/employees";
 import { fuelLabel } from "../../utils/fuelLabel";
@@ -10,7 +10,7 @@ export function CarBadge({ employee }: EmployeeProps) {
   return (
     <span className="flex items-center gap-1.5" title={employee.car_model ?? "Maşın"}>
       <Car size={13} className="text-primary" />
-      <span className={plateClass()}>{employee.car_plate ?? "Nömrəsiz"}</span>
+      <CarPlate >{employee.car_plate ?? "Nömrəsiz"}</CarPlate>
       <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${tone}`}>{fuelLabel(employee.fuel_type, "Yanacaq?")}</span>
     </span>
   );

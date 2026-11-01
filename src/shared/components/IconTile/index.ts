@@ -1,1 +1,1 @@
-export { iconTileClass } from "./iconTileClass";
+export { IconTile } from "./IconTile";

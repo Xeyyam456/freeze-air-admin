@@ -1,5 +1,5 @@
+import { IconTile } from "@/shared/components/IconTile";
 import { IconButton } from "@/shared/components/IconButton";
-import { iconTileClass } from "@/shared/components/IconTile";
 import { Pencil, Plus, Trash2, UsersRound } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import type { SelectableEmployee } from "@/types/employees";
@@ -17,7 +17,7 @@ export function CrewList({ crews, employees, onEdit }: CrewListProps) {
     <div className="space-y-4">
       {crews.length === 0 ? (
         <div className="flex h-[min(300px,42vh)] flex-col items-center justify-center rounded-2xl border border-dashed border-line px-6 text-center">
-          <span className={iconTileClass("mx-auto")}><UsersRound size={20} /></span>
+          <IconTile className="mx-auto"><UsersRound size={20} /></IconTile>
           <p className="mt-3 font-semibold">Hələ briqada yoxdur</p>
           <p className="muted text-sm">Tez-tez birlikdə işləyən ustaları (məs. usta + köməkçi) briqada kimi saxla: tapşırıq verəndə bir kliklə seçilir.</p>
           <Button type="button" onClick={() => onEdit({ name: "", members: [] })} size="sm" className="mt-4"><Plus size={15} /> İlk briqadanı yarat</Button>

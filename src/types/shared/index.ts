@@ -2,6 +2,7 @@ export type { ActionFormProps } from "./ActionFormProps";
 export type { ButtonProps } from "./ButtonProps";
 export type { IconButtonProps } from "./IconButtonProps";
 export type { PolymorphicProps } from "./PolymorphicProps";
+export type { StyledProps } from "./StyledProps";
 export type { FormActionsProps } from "./FormActionsProps";
 export type { ButtonVariant } from "./ButtonVariant";
 export type { CalendarProps } from "./CalendarProps";

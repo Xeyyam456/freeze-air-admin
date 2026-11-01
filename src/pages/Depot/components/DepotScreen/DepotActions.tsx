@@ -1,4 +1,4 @@
-import { heroActionClass } from "@/shared/components/HeroAction";
+import { HeroAction } from "@/shared/components/HeroAction";
 import { FileSpreadsheet, History, PackagePlus, ShoppingCart } from "lucide-react";
 import { MoreMenu } from "../MoreMenu";
 import { Button } from "@/shared/components/Button";
@@ -19,9 +19,9 @@ export function DepotActions({ hasData, low, canManage, variant, extraActions, e
         ]} />
       )}
       {admin && canManage && (
-        <button type="button" onClick={onReceipt} className={heroActionClass("max-sm:!h-8 max-sm:!w-8 max-sm:justify-center max-sm:!px-0")} aria-label="Mədaxil">
+        <HeroAction onClick={onReceipt} className="max-sm:!h-8 max-sm:!w-8 max-sm:justify-center max-sm:!px-0" aria-label="Mədaxil">
           <PackagePlus size={17} /> <span className="max-sm:hidden">Mədaxil</span>
-        </button>
+        </HeroAction>
       )}
       {!admin && <Button size="sm" onClick={onReceipt} className="!h-10 shrink-0"><PackagePlus size={16} /> Mədaxil</Button>}
     </span>

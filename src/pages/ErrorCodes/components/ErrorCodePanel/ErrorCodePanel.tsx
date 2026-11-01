@@ -1,4 +1,4 @@
-import { iconTileClass } from "@/shared/components/IconTile";
+import { IconTile } from "@/shared/components/IconTile";
 import { CardTitle, Card } from "@/shared/components/Card";
 import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
@@ -18,7 +18,7 @@ export function ErrorCodePanel({ models, codes }: ErrorCodePanelProps) {
   return (
     <Card className="space-y-4">
       <div className="flex items-center gap-3">
-        <span className={iconTileClass("!h-9 !w-9")}><Plus size={18} /></span>
+        <IconTile className="!h-9 !w-9"><Plus size={18} /></IconTile>
         <CardTitle >Əlavə et</CardTitle>
       </div>
       <PanelTabs tab={tab} onTab={setTab} />

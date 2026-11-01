@@ -1,4 +1,4 @@
-import { iconTileClass } from "@/shared/components/IconTile";
+import { IconTile } from "@/shared/components/IconTile";
 import { TriangleAlert } from "lucide-react";
 import type { ErrorCodeListProps } from "@/types/errorCodes";
 import { useErrorCodeList } from "../../hooks/useErrorCodeList";
@@ -20,7 +20,7 @@ export function ErrorCodeList({ codes, models }: ErrorCodeListProps) {
 
       {codes.length === 0 ? (
         <Card className="py-14 text-center">
-          <span className={iconTileClass("mx-auto")}><TriangleAlert size={20} /></span>
+          <IconTile className="mx-auto"><TriangleAlert size={20} /></IconTile>
           <p className="mt-3 font-semibold">Hələ xəta kodu yoxdur</p>
           <p className="muted text-sm">Əvvəl sağdan model əlavə et, sonra modeli seçib xəta kodu yaz.</p>
         </Card>

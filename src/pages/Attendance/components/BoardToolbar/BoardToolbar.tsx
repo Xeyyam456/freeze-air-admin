@@ -1,5 +1,5 @@
+import { SearchField } from "@/shared/components/SearchField";
 import { IconButton } from "@/shared/components/IconButton";
-import { searchClass } from "@/shared/components/SearchBar";
 import { ChevronLeft, ChevronRight, FileSpreadsheet, Search } from "lucide-react";
 import { Button } from "@/shared/components/Button";
 import { MONTHS_AZ } from "@/shared/utils/monthsAz";
@@ -19,10 +19,10 @@ export function BoardToolbar({ month, thisMonth, query, canExport, onMonth, onQu
         <IconButton onClick={() => onMonth(shiftMonth(month, 1))} disabled={isCurrent} className="disabled:opacity-30" aria-label="Sonrakı ay"><ChevronRight size={18} /></IconButton>
         {!isCurrent && <Button variant="soft" size="sm" onClick={() => onMonth(thisMonth)} className="ml-1">Bu ay</Button>}
       </div>
-      <div className={searchClass("min-w-56 flex-1 max-sm:order-last max-sm:min-w-0 max-sm:basis-full")}>
+      <SearchField className="min-w-56 flex-1 max-sm:order-last max-sm:min-w-0 max-sm:basis-full">
         <Search size={20} />
         <input value={query} onChange={(e) => onQuery(e.target.value)} placeholder="Usta adı ilə axtar..." aria-label="Usta axtarışı" />
-      </div>
+      </SearchField>
       <Button variant="soft" onClick={onExport} disabled={!canExport} className="!h-12 shrink-0" title="Davamiyyəti Excel fayla çıxar" aria-label="Excel">
         <FileSpreadsheet size={18} className="text-ok" /><span className="max-[400px]:hidden">Excel</span>
       </Button>

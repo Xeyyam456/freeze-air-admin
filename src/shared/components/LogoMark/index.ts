@@ -1,1 +1,1 @@
-export { logoMarkClass } from "./logoMarkClass";
+export { LogoMark } from "./LogoMark";

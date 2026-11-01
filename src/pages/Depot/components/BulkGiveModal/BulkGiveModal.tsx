@@ -1,5 +1,5 @@
+import { SearchField } from "@/shared/components/SearchField";
 import { Input } from "@/shared/components/Input";
-import { searchClass } from "@/shared/components/SearchBar";
 import { useMemo, useState } from "react";
 import { Search, Send } from "lucide-react";
 import { giveTools } from "@/services/depot/assignments";
@@ -47,11 +47,11 @@ export function BulkGiveModal({ emp, kind, tools, onClose }: BulkGiveModalProps)
     <Modal onClose={onClose} labelledBy="bulk-give-title" className="!max-w-lg">
       <DHead id="bulk-give-title" icon={Send} tone="blue" title={`${emp.full_name}: ${TEXT[kind].word} ver`} sub="İşarələ, sayını yaz, birdən ver" onClose={onClose} />
 
-      <div className={searchClass()}>
+      <SearchField >
         <Search size={16} className="!left-4" />
         <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={TEXT[kind].search.split(" və ")[0] + " axtar..."} aria-label="Axtarış" autoFocus
           className="!h-10 !pl-10 !text-sm max-sm:!h-8 max-sm:!text-xs" />
-      </div>
+      </SearchField>
 
       {available.length === 0 ? (
         <p className="muted py-6 text-center text-sm">Depoda verilə bilən boş {TEXT[kind].word} yoxdur.</p>

@@ -1,1 +1,1 @@
-export { plateClass } from "./plateClass";
+export { CarPlate } from "./CarPlate";

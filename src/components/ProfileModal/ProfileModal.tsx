@@ -1,5 +1,5 @@
+import { IconTile } from "@/shared/components/IconTile";
 import { IconButton } from "@/shared/components/IconButton";
-import { iconTileClass } from "@/shared/components/IconTile";
 import { useState } from "react";
 import { UserRound, X } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
@@ -33,7 +33,7 @@ export function ProfileModal({ onClose }: { onClose: () => void }) {
     <Modal onClose={onClose} labelledBy="profile-title" className="!max-w-md">
       <div className="mb-5 flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <span className={iconTileClass("!h-11 !w-11 shrink-0 max-sm:hidden")}><UserRound size={20} /></span>
+          <IconTile className="!h-11 !w-11 shrink-0 max-sm:hidden"><UserRound size={20} /></IconTile>
           <div className="min-w-0">
             <h2 id="profile-title" className="text-lg font-bold">Profil</h2>
             <p className="muted break-all text-sm leading-tight max-sm:text-[12px]">{email}</p>

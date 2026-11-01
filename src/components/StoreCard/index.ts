@@ -1,2 +1,2 @@
 export * from "./StoreCard";
-export { storeCodeClass } from "./storeCodeClass";
+export { StoreCode } from "./StoreCode";

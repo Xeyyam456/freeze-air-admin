@@ -1,4 +1,4 @@
-import { iconTileClass } from "@/shared/components/IconTile";
+import { IconTile } from "@/shared/components/IconTile";
 import { UserCog } from "lucide-react";
 import type { EmptyManagersProps } from "@/types/management";
 import { Card } from "@/shared/components/Card";
@@ -6,7 +6,7 @@ import { Card } from "@/shared/components/Card";
 export function EmptyManagers({ canEdit }: EmptyManagersProps) {
   return (
     <Card className="py-12 text-center">
-      <span className={iconTileClass("mx-auto")}><UserCog size={20} /></span>
+      <IconTile className="mx-auto"><UserCog size={20} /></IconTile>
       <p className="mt-3 font-semibold">Hələ rəhbər yoxdur</p>
       {canEdit && <p className="muted text-sm">Yuxarıdakı «Yeni rəhbər» düyməsi ilə müdir, servis müdiri və ya maliyyəçini əlavə et.</p>}
     </Card>

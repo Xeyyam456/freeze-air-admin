@@ -1,4 +1,4 @@
-import { iconTileClass } from "@/shared/components/IconTile";
+import { IconTile } from "@/shared/components/IconTile";
 import { CardTitle } from "@/shared/components/Card";
 import { Plus } from "lucide-react";
 import type { TrustHeaderProps } from "@/types/site";
@@ -9,7 +9,7 @@ export function TrustHeader({ icon: Icon, title, text, addLabel, onAdd }: TrustH
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div className="flex items-start gap-3">
-        <span className={iconTileClass("!h-9 !w-9")}><Icon size={18} /></span>
+        <IconTile className="!h-9 !w-9"><Icon size={18} /></IconTile>
         <div>
           <CardTitle >{title}</CardTitle>
           <p className="muted text-sm">{text}</p>
