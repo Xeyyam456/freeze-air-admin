@@ -1,4 +1,4 @@
-import { labelClass } from "@/shared/components/FormField";
+import { Label } from "@/shared/components/Label";
 import { useState } from "react";
 import { Check, Save, Search, UsersRound, X } from "lucide-react";
 import { Avatar } from "@/shared/components/Avatar";
@@ -15,13 +15,13 @@ export function CrewEditor({ edit, onEdit, employees, taken, conflicts, pending,
   return (
     <div className="space-y-4">
       <label className="block">
-        <span className={labelClass()}>Adı <span className="muted font-normal">(istəyə görə; yazılmasa üzvlərin adları göstərilir)</span></span>
+        <Label >Adı <span className="muted font-normal">(istəyə görə; yazılmasa üzvlərin adları göstərilir)</span></Label>
         <Input autoFocus value={edit.name} onChange={(e) => onEdit({ ...edit, name: e.target.value })}
           placeholder="məs. Qaz briqadası" />
       </label>
       <div>
         <div className="mb-1.5 flex items-center justify-between gap-3">
-          <span className={labelClass("!mb-0")}>Üzvlər <span className="muted font-normal">· {edit.members.length} seçilib</span></span>
+          <Label className="!mb-0">Üzvlər <span className="muted font-normal">· {edit.members.length} seçilib</span></Label>
           {employees.length > 6 && (
             <label className="flex h-8 w-44 items-center gap-1.5 rounded-lg bg-bg px-2.5">
               <Search size={13} className="muted shrink-0" />

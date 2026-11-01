@@ -1,4 +1,4 @@
-import { labelClass } from "@/shared/components/FormField";
+import { Label } from "@/shared/components/Label";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import type { PasswordFieldProps } from "@/types/login";
 import { Input } from "@/shared/components/Input";
@@ -7,7 +7,7 @@ import { Input } from "@/shared/components/Input";
 export function PasswordField({ show, onToggle }: PasswordFieldProps) {
   return (
     <label className="block">
-      <span className={labelClass()}>Parol</span>
+      <Label >Parol</Label>
       <span className="relative block">
         <Lock size={17} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
         <Input name="password" type={show ? "text" : "password"} required autoComplete="current-password" placeholder="••••••••" className="!h-12 !pl-11 !pr-12" />

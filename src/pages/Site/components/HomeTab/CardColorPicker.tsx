@@ -1,4 +1,4 @@
-import { labelClass } from "@/shared/components/FormField";
+import { Label } from "@/shared/components/Label";
 import type { CardColorPickerProps } from "@/types/site";
 import { CARD_COLORS } from "../../constants/homeConstants";
 
@@ -6,7 +6,7 @@ import { CARD_COLORS } from "../../constants/homeConstants";
 export function CardColorPicker({ color, onColor }: CardColorPickerProps) {
   return (
     <fieldset>
-      <legend className={labelClass()}>Kartın rəngi</legend>
+      <Label as="legend">Kartın rəngi</Label>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {CARD_COLORS.map((x) => (
           <label key={x.id} className="cursor-pointer">

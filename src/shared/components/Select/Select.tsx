@@ -1,4 +1,4 @@
-import { fieldClass } from "@/shared/components/Input";
+import { fieldClass } from "../Input/fieldClass";
 import type { SelectProps } from "@/types/shared";
 
 // Standart açılan siyahı (stil Field.module.css-də)

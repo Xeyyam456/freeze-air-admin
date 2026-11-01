@@ -1,5 +1,5 @@
+import { Label } from "@/shared/components/Label";
 import { IconButton } from "@/shared/components/IconButton";
-import { labelClass } from "@/shared/components/FormField";
 import { useState } from "react";
 import { Undo2, X } from "lucide-react";
 import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
@@ -34,7 +34,7 @@ export function WithdrawModal({ task, employees, onClose }: WithdrawModalProps) 
           <p className="muted mt-1.5 text-xs">Usta: <b className="text-ink">{current?.full_name ?? "—"}</b></p>
         </TaskSummary>
         <div className="mt-4">
-          <span className={labelClass()}>Başqa ustaya ver (istəyə görə)</span>
+          <Label >Başqa ustaya ver (istəyə görə)</Label>
           <EmployeeSelect value={to ? Number(to) : null} onChange={(id) => setTo(id ? String(id) : "")}
             employees={employees.filter((e) => e.id !== task.employee_id)} emptyLabel="Heç kimə, sadəcə geri al" />
         </div>

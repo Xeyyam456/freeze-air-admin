@@ -15,6 +15,8 @@ export type { DateTriggerProps } from "./DateTriggerProps";
 export type { EmployeeSelectArgs } from "./EmployeeSelectArgs";
 export type { FieldProps } from "./FieldProps";
 export type { FormFieldProps } from "./FormFieldProps";
+export type { LabelProps } from "./LabelProps";
+export type { FieldButtonProps } from "./FieldButtonProps";
 export type { FormProps } from "./FormProps";
 export type { FormState } from "./FormState";
 export type { InputProps } from "./InputProps";

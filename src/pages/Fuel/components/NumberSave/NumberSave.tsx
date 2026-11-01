@@ -1,4 +1,4 @@
-import { fieldClass } from "@/shared/components/Input";
+import { Input } from "@/shared/components/Input";
 import { Button } from "@/shared/components/Button";
 import { useState } from "react";
 import { Save } from "lucide-react";
@@ -21,9 +21,9 @@ export function NumberSave({ value, suffix, placeholder, onSave, compact = false
   return (
     <span className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
       <span className="relative">
-        <input value={text} onChange={(e) => setText(e.target.value.replace(/[^\d.,]/g, ""))} inputMode="decimal" placeholder={placeholder}
+        <Input value={text} onChange={(e) => setText(e.target.value.replace(/[^\d.,]/g, ""))} inputMode="decimal" placeholder={placeholder}
           onKeyDown={(e) => e.key === "Enter" && dirty && save()}
-          className={`${fieldClass()} text-right tabular-nums ${compact ? "!h-8 w-[72px] !pl-2 !pr-6 text-sm" : "!h-9 w-28 !pr-12"}`} />
+          className={`text-right tabular-nums ${compact ? "!h-8 w-[72px] !pl-2 !pr-6 text-sm" : "!h-9 w-28 !pr-12"}`} />
         <span className={`muted pointer-events-none absolute top-1/2 -translate-y-1/2 text-[11px] font-semibold ${compact ? "right-2" : "right-2.5"}`}>{suffix}</span>
       </span>
       {dirty && <Button onClick={save} disabled={pending} size="sm" className={compact ? "!h-8" : "!h-9"} title="Yadda saxla"><Save size={14} /></Button>}

@@ -1,4 +1,4 @@
-import { labelClass } from "@/shared/components/FormField";
+import { Label } from "@/shared/components/Label";
 import { useState } from "react";
 import type { EmployeeFieldsProps, FuelKind } from "@/types/employees";
 import { CarOption } from "./CarOption";
@@ -14,7 +14,7 @@ export function CarFields({ e }: EmployeeFieldsProps) {
     <div className="space-y-2">
       <input type="hidden" name="car_form" value="1" />
       <input type="hidden" name="has_car" value={hasCar ? "1" : "0"} />
-      <span className={labelClass()}>Maşın</span>
+      <Label >Maşın</Label>
       <div className="flex gap-1 rounded-xl bg-bg p-1">
         <CarOption on={false} hasCar={hasCar} label="Yoxdur" onPick={setHasCar} />
         <CarOption on hasCar={hasCar} label="Var" onPick={setHasCar} />

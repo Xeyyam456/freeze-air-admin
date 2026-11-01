@@ -1,4 +1,4 @@
-import { fieldClass } from "@/shared/components/Input";
+import { FieldButton } from "@/shared/components/FieldButton";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Plus, Settings2, UsersRound } from "lucide-react";
 import type { CrewSelectProps } from "@/types/tasks";
@@ -14,8 +14,8 @@ export function CrewSelect({ crews, peopleOf, selectedId, onPick, onManage }: Cr
 
   return (
     <>
-      <button ref={btnRef} type="button" onClick={() => setOpen((o) => !o)} aria-haspopup="listbox" aria-expanded={open}
-        className={`${fieldClass()} flex items-center gap-2.5 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
+      <FieldButton ref={btnRef} onClick={() => setOpen((o) => !o)} aria-haspopup="listbox" aria-expanded={open}
+        className={`flex items-center gap-2.5 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
         {current ? (
           <>
             <Faces people={peopleOf(current).slice(0, 3)} size="!h-6 !w-6 !text-[8px]" />
@@ -28,7 +28,7 @@ export function CrewSelect({ crews, peopleOf, selectedId, onPick, onManage }: Cr
           </>
         )}
         <ChevronDown size={15} className={`muted shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
+      </FieldButton>
 
       {open && pos && createPortal(
         <div ref={listRef}

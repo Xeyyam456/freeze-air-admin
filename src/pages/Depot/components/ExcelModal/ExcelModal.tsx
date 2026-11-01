@@ -1,4 +1,4 @@
-import { labelClass } from "@/shared/components/FormField";
+import { Label } from "@/shared/components/Label";
 import { useState } from "react";
 import { FileSpreadsheet, Users } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
@@ -50,7 +50,7 @@ export function ExcelModal({ tools, holdings, employees, onClose }: ExcelModalPr
       </div>
       {kind === "people" && (
         <div className="mt-4 max-sm:mt-3">
-          <span className={labelClass()}>Hansı usta</span>
+          <Label >Hansı usta</Label>
           <div className="flex gap-2">
             <ToolPicker items={masters.map((e) => ({ id: e.id, name: e.full_name }))} value={emp} onChange={setEmp} icon={Users}
               placeholder="Bütün ustalar" emptyLabel="Usta yoxdur" searchLabel="Usta axtar..." />

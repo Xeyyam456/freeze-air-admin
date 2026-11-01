@@ -1,5 +1,5 @@
+import { Label } from "@/shared/components/Label";
 import { IconButton } from "@/shared/components/IconButton";
-import { labelClass } from "@/shared/components/FormField";
 import { X } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
 import { FormActions } from "@/shared/components/FormActions";
@@ -38,7 +38,7 @@ export function WorkLogForm(props: WorkLogFormProps) {
         </FormField>
 
         <div>
-          <span className={labelClass()}>Yer</span>
+          <Label >Yer</Label>
           <PlacePicker places={f.places} value={f.place} onChange={f.setPlace} />
         </div>
 

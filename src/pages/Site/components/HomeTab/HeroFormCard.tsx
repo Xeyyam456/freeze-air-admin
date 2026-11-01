@@ -1,5 +1,5 @@
+import { Input } from "@/shared/components/Input";
 import { CardTitle, Card } from "@/shared/components/Card";
-import { fieldClass } from "@/shared/components/Input";
 import { useState } from "react";
 import { toast } from "@/lib/toast";
 import { saveHeroForm } from "@/services/site/texts";
@@ -44,8 +44,8 @@ export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCard
         <div className={`grid gap-4 sm:grid-cols-2 ${enabled ? "" : "opacity-50"}`}>
           {QUICK_FIELDS.map((f) => (
             <FormField key={f.key} label={f.label}>
-              <input value={values[f.key]} maxLength={f.max} disabled={!enabled} onChange={(e) => setValues((x) => ({ ...x, [f.key]: e.target.value }))}
-                className={`${fieldClass()} ${f.key === "home.quick.note" ? "sm:col-span-2" : ""}`} />
+              <Input value={values[f.key]} maxLength={f.max} disabled={!enabled} onChange={(e) => setValues((x) => ({ ...x, [f.key]: e.target.value }))}
+                className={`${f.key === "home.quick.note" ? "sm:col-span-2" : ""}`} />
             </FormField>
           ))}
           <p className="muted text-xs sm:col-span-2">Sahəni boş qoysan, saytda standart yazı çıxır.</p>

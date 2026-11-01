@@ -1,4 +1,4 @@
-import { fieldClass } from "@/shared/components/Input";
+import { FieldButton } from "@/shared/components/FieldButton";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fitX, rectOf, viewport } from "@/lib/zoom";
 import { createPortal } from "react-dom";
@@ -48,8 +48,8 @@ export function ModelDropdown({ value, onChange, options, name, placeholder = "M
   return (
     <>
       {name && <input type="hidden" name={name} value={value} />}
-      <button ref={btnRef} type="button" onClick={() => setOpen((o) => !o)} aria-haspopup="listbox" aria-expanded={open}
-        className={`${fieldClass()} flex items-center gap-2 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""} ${className}`}>
+      <FieldButton ref={btnRef} onClick={() => setOpen((o) => !o)} aria-haspopup="listbox" aria-expanded={open}
+        className={`flex items-center gap-2 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""} ${className}`}>
         {current ? (
           <>
             <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-primary-soft text-primary"><Icon size={13} /></span>
@@ -59,7 +59,7 @@ export function ModelDropdown({ value, onChange, options, name, placeholder = "M
           <span className="muted min-w-0 flex-1 truncate">{placeholder}</span>
         )}
         <ChevronDown size={15} className={`muted shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
+      </FieldButton>
 
       {open && pos && createPortal(
         <div ref={listRef} role="listbox"

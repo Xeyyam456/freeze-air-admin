@@ -1,5 +1,5 @@
+import { Label } from "@/shared/components/Label";
 import { IconButton } from "@/shared/components/IconButton";
-import { labelClass } from "@/shared/components/FormField";
 import { useState } from "react";
 import { FileSpreadsheet, X } from "lucide-react";
 import { toast } from "@/lib/toast";
@@ -41,7 +41,7 @@ export function ExportModal({ month, emps, onClose }: ExportModalProps) {
         <IconButton onClick={onClose} aria-label="Bağla"><X size={18} /></IconButton>
       </div>
       <label className="block">
-        <span className={labelClass()}>Kimin davamiyyəti</span>
+        <Label >Kimin davamiyyəti</Label>
         <Select value={who} onChange={(e) => setWho(e.target.value)} className="cursor-pointer">
           <option value="all">Bütün ustalar (tam siyahı)</option>
           {emps.map((e) => <option key={e.id} value={e.id}>{e.full_name}</option>)}

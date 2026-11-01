@@ -1,4 +1,4 @@
-import { fieldClass } from "@/shared/components/Input";
+import { FieldButton } from "@/shared/components/FieldButton";
 import { ChevronDown, UserRound } from "lucide-react";
 import { Avatar } from "@/shared/components/Avatar";
 import type { EmployeeSelectTriggerProps } from "@/types/employees";
@@ -6,8 +6,8 @@ import type { EmployeeSelectTriggerProps } from "@/types/employees";
 // Seçim düyməsi: seçilmiş usta (şəkil + ad) və ya yer tutan yazı
 export function EmployeeSelectTrigger({ selected, value, placeholder, emptyLabel, open, btnRef, onToggle, onKey }: EmployeeSelectTriggerProps) {
   return (
-    <button ref={btnRef} type="button" onClick={onToggle} onKeyDown={onKey} aria-haspopup="listbox" aria-expanded={open}
-      className={`${fieldClass()} flex items-center gap-2.5 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
+    <FieldButton ref={btnRef} onClick={onToggle} onKeyDown={onKey} aria-haspopup="listbox" aria-expanded={open}
+      className={`flex items-center gap-2.5 text-left ${open ? "!border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : ""}`}>
       {selected ? (
         <>
           <Avatar employee={selected} className="!h-7 !w-7 !text-[10px] !shadow-none" />
@@ -20,6 +20,6 @@ export function EmployeeSelectTrigger({ selected, value, placeholder, emptyLabel
         </>
       )}
       <ChevronDown size={15} className={`muted shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
-    </button>
+    </FieldButton>
   );
 }

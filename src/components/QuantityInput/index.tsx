@@ -1,4 +1,4 @@
-import { fieldClass } from "@/shared/components/Input";
+import { Input } from "@/shared/components/Input";
 import { useState } from "react";
 import { toast } from "@/lib/toast";
 import type { QuantityInputProps } from "@/types/shared";
@@ -10,9 +10,9 @@ export function QuantityInput({ limit, limitText, className = "", defaultValue =
   const [error, setError] = useState<string | null>(null);
   return (
     <span className="relative">
-      <input name="quantity" type="text" inputMode="decimal" defaultValue={defaultValue} required aria-label="Say" autoComplete="off"
+      <Input name="quantity" type="text" inputMode="decimal" defaultValue={defaultValue} required aria-label="Say" autoComplete="off"
         aria-invalid={!!error} data-min={min}
-        className={`${fieldClass()} !h-9 !w-20 !px-2 !text-[13px] ${error ? "!border-danger !shadow-[0_0_0_4px_var(--color-danger-soft)]" : ""} ${className}`}
+        className={`!h-9 !w-20 !px-2 !text-[13px] ${error ? "!border-danger !shadow-[0_0_0_4px_var(--color-danger-soft)]" : ""} ${className}`}
         onChange={(e) => {
           if (e.target.value.includes(",")) e.target.value = e.target.value.replace(",", ".");
           const wanted = e.target.value.trim() === "" ? NaN : Number(e.target.value);

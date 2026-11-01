@@ -1,5 +1,5 @@
+import { Label } from "@/shared/components/Label";
 import { CardTitle, Card } from "@/shared/components/Card";
-import { labelClass } from "@/shared/components/FormField";
 import type { AboutFormProps } from "@/types/site";
 import { AboutForm } from "./AboutForm";
 import { ImageSlot } from "./ImageSlot";
@@ -18,11 +18,11 @@ export function AboutSection({ settings }: AboutFormProps) {
       <div className="mt-5 grid gap-6 xl:grid-cols-[minmax(300px,1fr)_2fr]">
         <div className="space-y-4">
           <div>
-            <span className={labelClass()}>Böyük şəkil (yuxarıda)</span>
+            <Label >Böyük şəkil (yuxarıda)</Label>
             <ImageSlot field="about_image_main_url" url={settings.about_image_main_url} folder="about" hint="16:9, məs. 1600×900 px." />
           </div>
           <div>
-            <span className={labelClass()}>Kiçik şəkil (kartın yanında)</span>
+            <Label >Kiçik şəkil (kartın yanında)</Label>
             <ImageSlot field="about_image_side_url" url={settings.about_image_side_url} folder="about" hint="Kvadrat, məs. 800×800 px." small />
           </div>
         </div>

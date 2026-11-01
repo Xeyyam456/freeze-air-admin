@@ -1,5 +1,5 @@
+import { Label } from "@/shared/components/Label";
 import { CardTitle, Card } from "@/shared/components/Card";
-import { labelClass } from "@/shared/components/FormField";
 import { useActionState } from "react";
 import { FormActions } from "@/shared/components/FormActions";
 import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
@@ -29,7 +29,7 @@ export function ContactForm({ settings, values, onChange }: ContactFormProps) {
         <div className="grid gap-4 sm:grid-cols-2">
           {CONTACT_FIELDS.map(({ name, label, icon: Icon, placeholder, max, type, wide }) => (
             <label key={name} className={`block ${wide ? "sm:col-span-2" : ""}`}>
-              <span className={labelClass()}>{label}</span>
+              <Label >{label}</Label>
               <span className="relative block">
                 <Icon size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
                 <Input name={name} type={type} value={values[name]} placeholder={placeholder} maxLength={max}

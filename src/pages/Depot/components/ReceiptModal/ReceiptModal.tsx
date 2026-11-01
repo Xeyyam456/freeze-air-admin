@@ -1,4 +1,4 @@
-import { labelClass } from "@/shared/components/FormField";
+import { Label } from "@/shared/components/Label";
 import { useActionState, useState } from "react";
 import { PackagePlus } from "lucide-react";
 import { addTool } from "@/services/depot/tools";
@@ -74,7 +74,7 @@ export function ReceiptModal({ tools, initialKind, initialToolId = null, onClose
       ) : (
         <ActionForm action={submitExisting} className="space-y-4">
           <div>
-            <span className={labelClass()}>{TEXT[kind].col}</span>
+            <Label >{TEXT[kind].col}</Label>
             <ToolPicker items={list.map((t) => ({ id: t.id, name: t.name, hint: `depoda ${withUnit(t.available, t)}` }))} value={picked} onChange={setPicked}
               placeholder={`${TEXT[kind].col} seç...`} emptyLabel={`Hələ ${TEXT[kind].word} yoxdur`} searchLabel={`${TEXT[kind].col} axtar...`} />
             <button type="button" onClick={() => setMode("new")} className="mt-1.5 text-[13px] font-semibold text-primary hover:underline">+ Siyahıda yoxdur: yeni ad</button>

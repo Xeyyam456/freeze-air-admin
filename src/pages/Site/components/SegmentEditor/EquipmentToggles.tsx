@@ -1,11 +1,11 @@
-import { labelClass } from "@/shared/components/FormField";
+import { Label } from "@/shared/components/Label";
 import type { EquipmentTogglesProps } from "@/types/site";
 
 // Obyektə bağlı tipik avadanlıq: çiplərlə seçim
 export function EquipmentToggles({ options, selected, onToggle }: EquipmentTogglesProps) {
   return (
     <div>
-      <span className={labelClass()}>Tipik avadanlıq</span>
+      <Label >Tipik avadanlıq</Label>
       <div className="flex flex-wrap gap-1.5">
         {options.length === 0 && <span className="muted text-xs">Əvvəlcə “Avadanlıq” tabında avadanlıq əlavə edin.</span>}
         {options.map((o) => {

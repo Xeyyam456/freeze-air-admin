@@ -1,4 +1,4 @@
-import { labelClass } from "@/shared/components/FormField";
+import { Label } from "@/shared/components/Label";
 import { Fuel } from "lucide-react";
 import type { FuelTypeFieldProps } from "@/types/employees";
 
@@ -6,7 +6,7 @@ import type { FuelTypeFieldProps } from "@/types/employees";
 export function FuelTypeField({ value, onChange }: FuelTypeFieldProps) {
   return (
     <div>
-      <span className={labelClass()}>Yanacaq</span>
+      <Label >Yanacaq</Label>
       <input type="hidden" name="fuel_type" value={value} />
       <div className="flex h-[42px] gap-1 rounded-xl bg-bg p-1" role="radiogroup" aria-label="Yanacaq növü">
         {(["petrol", "diesel"] as const).map((k) => (
