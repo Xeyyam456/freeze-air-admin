@@ -1,3 +1,4 @@
+import s from "../../styles/ClientTable.module.css";
 import { useNavigate } from "react-router";
 import { KIND } from "@/lib/kinds";
 import type { ClientTableProps } from "@/types/clients";
@@ -9,7 +10,7 @@ export function ClientTable({ clients, kind }: ClientTableProps) {
   const navigate = useNavigate();
   return (
     <Card className="overflow-hidden !p-0">
-      <table className="data-table max-sm:block">
+      <table className={`${s.table} max-sm:block`}>
         <thead className="max-sm:hidden">
           <tr>
             <th>Ad</th>

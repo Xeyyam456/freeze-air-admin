@@ -1,0 +1,1 @@
+export { segClass } from "./segClass";

@@ -1,3 +1,4 @@
+import { searchClass } from "@/shared/components/SearchBar";
 import { ChevronLeft, ChevronRight, FileSpreadsheet, Search } from "lucide-react";
 import { Button } from "@/shared/components/Button";
 import { MONTHS_AZ } from "@/shared/utils/monthsAz";
@@ -17,7 +18,7 @@ export function BoardToolbar({ month, thisMonth, query, canExport, onMonth, onQu
         <button type="button" onClick={() => onMonth(shiftMonth(month, 1))} disabled={isCurrent} className="icon-btn disabled:opacity-30" aria-label="Sonrakı ay"><ChevronRight size={18} /></button>
         {!isCurrent && <Button variant="soft" size="sm" onClick={() => onMonth(thisMonth)} className="ml-1">Bu ay</Button>}
       </div>
-      <div className="search min-w-56 flex-1 max-sm:order-last max-sm:min-w-0 max-sm:basis-full">
+      <div className={searchClass("min-w-56 flex-1 max-sm:order-last max-sm:min-w-0 max-sm:basis-full")}>
         <Search size={20} />
         <input value={query} onChange={(e) => onQuery(e.target.value)} placeholder="Usta adı ilə axtar..." aria-label="Usta axtarışı" />
       </div>

@@ -1,0 +1,29 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .seg {
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 12px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    flex-shrink: 0;
+  }
+  .seg > button {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    color: var(--color-muted);
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .seg > button:hover {
+    color: var(--color-ink);
+  }
+  .seg > button[aria-selected="true"] {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+  }
+}

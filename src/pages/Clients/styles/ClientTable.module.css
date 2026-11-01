@@ -1,0 +1,48 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .table {
+    width: 100%;
+    font-size: 14px;
+    text-align: left;
+  }
+  .table th {
+    padding: 12px 20px;
+    background: #f8f9fc;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .table td {
+    padding: 12px 20px;
+    border-top: 1px solid var(--color-line);
+  }
+  .table tbody tr:first-child td {
+    border-top: 0;
+  }
+  .table tbody tr {
+    cursor: pointer;
+    transition: background-color 120ms ease;
+  }
+  .table tbody tr:hover {
+    background: var(--color-primary-soft);
+  }
+  /* Tabletdə cədvəl sıxlaşır: əlaqəli şəxs və nömrə bir sətirdə qalsın */
+  @media (width < 1280px) {
+    .table th,
+    .table td {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+  }
+  @media (width < 768px) {
+    .table th,
+    .table td {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+}

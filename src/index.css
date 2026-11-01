@@ -435,32 +435,6 @@ html {
     font-variant-numeric: tabular-nums;
   }
 
-  .search {
-    position: relative;
-  }
-  .search input {
-    width: 100%;
-    height: 56px;
-    padding: 0 20px 0 52px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-line);
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 500;
-    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
-  }
-  .search input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px var(--color-primary-soft), 0 8px 24px rgba(16, 24, 40, 0.08);
-  }
-  .search svg {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--color-muted);
-  }
 
   @keyframes modal-fade {
     from { opacity: 0; }
@@ -559,89 +533,6 @@ html {
     border-top: 1px solid var(--color-line);
   }
 
-  /* ---------- Siyahı alətləri: axtarış sahəsi, görünüş keçidi, cədvəl ---------- */
-  .search-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    height: 46px;
-    padding: 0 16px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-line);
-    border-radius: 14px;
-    color: var(--color-muted);
-    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
-    transition: border-color 150ms ease, box-shadow 150ms ease;
-  }
-  .search-box:focus-within {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px var(--color-primary-soft);
-  }
-  .search-box input {
-    flex: 1;
-    min-width: 0;
-    height: 100%;
-    background: transparent;
-    color: var(--color-ink);
-    font-weight: 500;
-    outline: none;
-  }
-
-  .seg {
-    display: inline-flex;
-    gap: 2px;
-    padding: 3px;
-    border-radius: 12px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-line);
-    flex-shrink: 0;
-  }
-  .seg > button {
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 9px;
-    color: var(--color-muted);
-    transition: background-color 150ms ease, color 150ms ease;
-  }
-  .seg > button:hover {
-    color: var(--color-ink);
-  }
-  .seg > button[aria-selected="true"] {
-    background: var(--color-primary-soft);
-    color: var(--color-primary);
-  }
-
-  .data-table {
-    width: 100%;
-    font-size: 14px;
-    text-align: left;
-  }
-  .data-table th {
-    padding: 12px 20px;
-    background: #f8f9fc;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-    border-bottom: 1px solid var(--color-line);
-  }
-  .data-table td {
-    padding: 12px 20px;
-    border-top: 1px solid var(--color-line);
-  }
-  .data-table tbody tr:first-child td {
-    border-top: 0;
-  }
-  .data-table tbody tr {
-    cursor: pointer;
-    transition: background-color 120ms ease;
-  }
-  .data-table tbody tr:hover {
-    background: var(--color-primary-soft);
-  }
 }
 
 /* ---------- Dar ekran (< 1024px): menyu sürüşən siyirtmədir ---------- */
@@ -760,17 +651,6 @@ html {
 }
 
 @layer components {
-  /* Tabletdə cədvəl sıxlaşır: əlaqəli şəxs və nömrə bir sətirdə qalsın */
-  @media (width < 1280px) {
-    .data-table th,
-    .data-table td {
-      padding-left: 14px;
-      padding-right: 14px;
-    }
-  }
-}
-
-@layer components {
   /* Mobil başlıq: yalnız başlıq (uzun izah gizlənir), düymələr yığcam */
   @media (width < 640px) {
     .page-hero p {
@@ -812,16 +692,6 @@ html {
   @media (width < 720px) {
     .page-hero p {
       display: none;
-    }
-  }
-}
-
-@layer components {
-  @media (width < 768px) {
-    .data-table th,
-    .data-table td {
-      padding-left: 10px;
-      padding-right: 10px;
     }
   }
 }
