@@ -59,6 +59,9 @@ src/
 ## Keçid dövrü (CSS)
 - `Button`, `Input`, `Textarea`, `FormField`, `Modal` hələlik qlobal class-ları (`.btn`, `.field`, `.label`, `.modal`) işlədir. Xam `<button className="btn ...">` yazma — `<Button variant="primary" size="sm">` işlət.
 - `.module.css`-ə köçəndə qaydaları `@layer components { ... }` içində yaz: qatsız CSS Tailwind utility-lərini (`className="w-full"`) üstələyir.
+- **Stil faylı yeri**: CSS komponentin yanında yox, feature-in `styles/` qovluğunda: `<Feature>/styles/<Komponent>.module.css` (ad komponentlə eyni, TikTak qəlibi). Ortaq komponentlər `shared/styles/`. İmport: `import s from "../../styles/X.module.css"`, `className={s.root}`.
+- **Hər modulun ilk sətri** `@layer theme, base, components, utilities;` olmalıdır (sonra `@layer components { ... }`). Bunsuz modul Tailwind-dən əvvəl yüklənəndə `components` qatı `base`-dən (preflight: `padding:0; border-radius:0`) əvvələ düşür və stil itir.
+- Animasiya adı modulda lokaldır: `@keyframes`-i həmin faylda yaz (`:global(...)` animation dəyərində işləmir).
 
 ## Ortaq UI komponentləri (2026-10-31)
 - Xam `<button className="btn ...">`, `<input|textarea|select className="field">`, `<div className="card">` yazma: `Button` (`variant`: primary, secondary, soft, danger, cancel, glass, plain; `size="sm"`), `Input`, `Textarea`, `Select`, `Card` (`as="section"`), `FormField` işlət (`@/shared/components/...`). Rəngi yerli class-lar verirsə `variant="plain"`.
