@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { X } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
 import type { ServiceEditorProps } from "@/types/site";
@@ -19,7 +19,7 @@ export function ServiceEditor({ service, nextSort, onClose }: ServiceEditorProps
           <h2 id="service-editor-title" className="text-lg font-bold">{service ? "Xidməti redaktə et" : "Yeni xidmət"}</h2>
           <p className="muted text-xs">Xidmətlər siyahısı, footer və saytda /xidmet/{f.ts.slug || "..."} səhifəsi</p>
         </div>
-        <button type="button" onClick={f.cancel} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+        <IconButton onClick={f.cancel} aria-label="Bağla"><X size={18} /></IconButton>
       </div>
 
       {/* Üç sütun: sürüşmə olmadan bir ekrana sığır */}

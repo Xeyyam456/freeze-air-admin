@@ -1,5 +1,5 @@
 
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { codeBadgeClass } from "@/shared/components/CodeBadge";
 import { buttonClass } from "@/shared/components/Button";
 import { useState } from "react";
@@ -36,9 +36,9 @@ export function MapButton({ place }: MapButtonProps) {
               <a href={mapSearchUrl(place)} target="_blank" rel="noopener noreferrer" className={buttonClass("secondary", "sm")}>
                 <ExternalLink size={14} /> Google Maps-də aç
               </a>
-              <button type="button" onClick={() => setOpen(false)} className={iconBtnClass()} aria-label="Bağla">
+              <IconButton onClick={() => setOpen(false)} aria-label="Bağla">
                 <X size={18} />
-              </button>
+              </IconButton>
             </div>
           </div>
           <iframe

@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { labelClass } from "@/shared/components/FormField";
 import { ImagePlus, Trash2 } from "lucide-react";
 import type { SiteImagePickerProps } from "@/types/site";
@@ -22,9 +22,9 @@ export function SiteImagePicker({ picker, label, empty, previewClass, imgClass, 
           <ImagePlus size={14} /> {uploading ? "Yüklənir..." : imageUrl ? "Dəyiş" : "Yüklə"}
         </Button>
         {imageUrl && (
-          <button type="button" onClick={() => setImageUrl(null)} className={iconBtnClass("!h-8", true)} title="Şəkli götür" aria-label="Şəkli götür">
+          <IconButton onClick={() => setImageUrl(null)} className="!h-8" danger title="Şəkli götür" aria-label="Şəkli götür">
             <Trash2 size={15} />
-          </button>
+          </IconButton>
         )}
       </div>
       {hint && <p className={`muted ${hintClass}`}>{hint}</p>}

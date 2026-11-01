@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { useEffect, useState } from "react";
 import { ImageIcon, X } from "lucide-react";
 import { mileagePhotoUrl } from "@/services/fuel/photos";
@@ -25,7 +25,7 @@ export function PhotoLink({ path, label }: PhotoLinkProps) {
         <Modal onClose={() => setOpen(false)} labelledBy="km-photo-title" className="!max-w-2xl">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 id="km-photo-title" className="flex items-center gap-2 text-lg font-bold"><ImageIcon size={18} className="text-primary" /> Spidometr · {label}</h2>
-            <button type="button" onClick={() => setOpen(false)} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+            <IconButton onClick={() => setOpen(false)} aria-label="Bağla"><X size={18} /></IconButton>
           </div>
           {url
             ? <img src={url} alt={`Spidometr: ${label}`} className="max-h-[70vh] w-full rounded-xl object-contain ring-1 ring-line" />

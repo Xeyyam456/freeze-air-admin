@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { ArrowRight, Undo2, UserPlus } from "lucide-react";
 import type { SingleTaskRowProps } from "@/types/tasks";
 import { hasVideo, placeOf } from "../../utils/labels";
@@ -30,12 +30,12 @@ export function SingleTaskRow({ t, actions }: SingleTaskRowProps) {
       {files > 0 && <FilesBadge files={files} video={hasVideo([t])} />}
       {!cancelled && !t.done && !actions.past && (
         <span className="flex shrink-0 items-center gap-0.5">
-          <button type="button" onClick={() => actions.onAdd({ task: t, members: [t.employee_id] })} className={iconBtnClass("!h-8 !w-8 max-sm:!h-7 max-sm:!w-7")} title="Usta əlavə et (qrup tapşırığı olur)" aria-label="Usta əlavə et">
+          <IconButton onClick={() => actions.onAdd({ task: t, members: [t.employee_id] })} className="!h-8 !w-8 max-sm:!h-7 max-sm:!w-7" title="Usta əlavə et (qrup tapşırığı olur)" aria-label="Usta əlavə et">
             <UserPlus size={15} />
-          </button>
-          <button type="button" onClick={() => actions.onWithdraw(t)} className={iconBtnClass("!h-8 !w-8")} title="Geri al (başqa ustaya ver)" aria-label="Tapşırığı geri al">
+          </IconButton>
+          <IconButton onClick={() => actions.onWithdraw(t)} className="!h-8 !w-8" title="Geri al (başqa ustaya ver)" aria-label="Tapşırığı geri al">
             <Undo2 size={15} />
-          </button>
+          </IconButton>
         </span>
       )}
       {t.note && <div className="basis-full sm:hidden"><span className="block rounded-lg bg-[#eef2ff] px-2.5 py-1.5 text-xs leading-snug text-[#4338ca]"><b>Təmir:</b> {t.note}</span></div>}

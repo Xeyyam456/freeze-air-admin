@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { labelClass } from "@/shared/components/FormField";
 import { useState } from "react";
 import { UserPlus, X } from "lucide-react";
@@ -30,7 +30,7 @@ export function AddMemberModal({ task, members, employees, onClose }: AddMemberM
       <form onSubmit={submit}>
         <div className="mb-4 flex items-start justify-between gap-3">
           <h2 id="add-member-title" className="flex items-center gap-2 text-lg font-bold"><UserPlus size={18} className="text-primary" /> Qrupa usta əlavə et</h2>
-          <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+          <IconButton onClick={onClose} aria-label="Bağla"><X size={18} /></IconButton>
         </div>
         <TaskSummary task={task}>
           <p className="muted mt-1.5 flex flex-wrap items-center gap-1.5 text-xs">

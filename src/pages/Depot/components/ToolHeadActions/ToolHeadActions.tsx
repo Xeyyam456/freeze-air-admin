@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
 import { Pencil, Trash2 } from "lucide-react";
 import { deleteTool } from "@/services/depot/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -12,18 +12,18 @@ import { withUnit } from "../../utils/quantity";
 export function ToolHeadActions({ tool, kind, holders, empty, onEdit }: ToolHeadActionsProps) {
   return (
     <>
-      <button type="button" onClick={onEdit} className={iconBtnClass()} title="Redaktə et" aria-label="Redaktə et"><Pencil size={16} /></button>
+      <IconButton onClick={onEdit} title="Redaktə et" aria-label="Redaktə et"><Pencil size={16} /></IconButton>
       {empty ? (
         <ConfirmButton onConfirm={() => deleteTool(tool.id, kind)} success={false} className={iconBtnClass("", true)} title={TEXT[kind].deleteTitle}>
           <Trash2 size={16} />
         </ConfirmButton>
       ) : (
-        <button type="button" className={iconBtnClass()} title={TEXT[kind].deleteTitle} aria-label={TEXT[kind].deleteTitle}
+        <IconButton title={TEXT[kind].deleteTitle} aria-label={TEXT[kind].deleteTitle}
           onClick={() => toast.error(holders.length
             ? `Ustalarda ${withUnit(tool.given_out, tool)} var: əvvəl geri alın.`
             : "Depoda qalıq var: silmək üçün əvvəl «Silinmə aktı» ilə sıfırla.")}>
           <Trash2 size={16} />
-        </button>
+        </IconButton>
       )}
     </>
   );

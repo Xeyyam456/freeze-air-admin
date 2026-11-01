@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { useState } from "react";
 import { Trash2, Wrench } from "lucide-react";
 import { WriteoffModal } from "../WriteoffModal";
@@ -65,9 +65,9 @@ export function HolderRow({ holding, canManage, tool, toolName, pendingReturn }:
           </ActionForm>
         )}
         {canManage && tool && (
-          <button type="button" onClick={() => setWriteoff(true)} className={iconBtnClass("!h-8 !w-8 max-sm:!h-6 max-sm:!w-6", true)} title="Silinmə aktı (itib, xarab)" aria-label="Silinmə aktı">
+          <IconButton onClick={() => setWriteoff(true)} className="!h-8 !w-8 max-sm:!h-6 max-sm:!w-6" danger title="Silinmə aktı (itib, xarab)" aria-label="Silinmə aktı">
             <Trash2 size={14} />
-          </button>
+          </IconButton>
         )}
         </span>
       </div>

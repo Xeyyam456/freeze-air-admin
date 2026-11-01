@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { X } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
 import type { SegmentEditorProps } from "@/types/site";
@@ -19,7 +19,7 @@ export function SegmentEditor({ segment, nextSort, equipmentOptions, onClose }: 
           <h2 id="segment-editor-title" className="text-lg font-bold">{segment ? "Obyekt növünü redaktə et" : "Yeni obyekt növü"}</h2>
           <p className="muted text-xs">Saytda ana səhifədəki kart və /xidmetler/{f.ts.slug || "..."} səhifəsi</p>
         </div>
-        <button type="button" onClick={f.cancel} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+        <IconButton onClick={f.cancel} aria-label="Bağla"><X size={18} /></IconButton>
       </div>
 
       {/* Üç sütun: sürüşmə olmadan bir ekrana sığır */}

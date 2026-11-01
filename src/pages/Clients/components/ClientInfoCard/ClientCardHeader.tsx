@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
 import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { deleteCompany } from "@/actions/companies";
@@ -26,9 +26,9 @@ export function ClientCardHeader({ company, kind, unitCount, admin, onEdit }: Cl
       </div>
       {admin && (
         <div className="flex items-center gap-1">
-          <button type="button" onClick={onEdit} className={iconBtnClass()} title="Redaktə et" aria-label="Redaktə et">
+          <IconButton onClick={onEdit} title="Redaktə et" aria-label="Redaktə et">
             <Pencil size={16} />
-          </button>
+          </IconButton>
           <ConfirmButton
             className={iconBtnClass("", true)}
             title={`${k.One}i sil`}

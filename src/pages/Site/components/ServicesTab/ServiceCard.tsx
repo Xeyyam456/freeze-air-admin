@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
 import { EyeOff, ListChecks, Pencil, Route, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { deleteService } from "@/services/site/content";
@@ -52,7 +52,7 @@ export function ServiceCard({ service: s, onEdit }: ServiceCardProps) {
 
       <div className="relative mt-auto flex items-center gap-2 px-5 py-4">
         <span className="muted mr-auto min-w-0 truncate text-xs">/xidmet/{s.slug}</span>
-        <button type="button" onClick={onEdit} className={iconBtnClass("z-10")} title="Redaktə et" aria-label="Redaktə et"><Pencil size={16} /></button>
+        <IconButton onClick={onEdit} className="z-10" title="Redaktə et" aria-label="Redaktə et"><Pencil size={16} /></IconButton>
         <ConfirmButton onConfirm={() => deleteService(s.id, s.image_url)} className={iconBtnClass("z-10", true)} title={`${s.title} silinsin`}>
           <Trash2 size={16} />
         </ConfirmButton>

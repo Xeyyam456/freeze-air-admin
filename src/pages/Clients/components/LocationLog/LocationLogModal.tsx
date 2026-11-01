@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { MapPinned, X } from "lucide-react";
 import { Modal } from "@/shared/components/Modal";
 import type { LocationLogModalProps } from "@/types/clients";
@@ -12,7 +12,7 @@ export function LocationLogModal({ logs, unitOf, onClose }: LocationLogModalProp
           <h2 id="loc-log-title" className="flex items-center gap-2 text-lg font-bold"><MapPinned size={18} className="text-primary" /> Konum dəyişiklikləri</h2>
           <p className="muted text-xs">Ustanın "Konumu düzəlt" ilə dəyişdiyi ünvan və koordinatlar · {logs.length} qeyd</p>
         </div>
-        <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+        <IconButton onClick={onClose} aria-label="Bağla"><X size={18} /></IconButton>
       </div>
       <ul className="nice-scroll -mr-2 max-h-[min(560px,calc(100dvh/var(--zoom)-200px))] space-y-2 overflow-y-auto pr-2">
         {logs.map((l) => (

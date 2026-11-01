@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { FileSpreadsheet, X } from "lucide-react";
 import { Button } from "@/shared/components/Button";
 import type { CalendarHeadProps } from "@/types/attendance";
@@ -16,7 +16,7 @@ export function CalendarHead({ month, name, employeeId, onClose }: CalendarHeadP
         <Button variant="soft" size="sm" onClick={() => void exportAttendanceEmployee(month, { id: employeeId, full_name: name })} title="Bu ayı Excel fayla çıxar">
           <FileSpreadsheet size={15} className="text-ok" /> Excel
         </Button>
-        <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+        <IconButton onClick={onClose} aria-label="Bağla"><X size={18} /></IconButton>
       </div>
     </div>
   );

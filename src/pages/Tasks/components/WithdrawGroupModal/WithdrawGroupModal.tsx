@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { useState } from "react";
 import { Undo2, X } from "lucide-react";
 import { revalidate } from "@/lib/revalidate";
@@ -30,7 +30,7 @@ export function WithdrawGroupModal({ rows, employees, onClose }: WithdrawGroupMo
       <form onSubmit={submit}>
         <div className="mb-4 flex items-start justify-between gap-3">
           <h2 id="withdraw-group-title" className="flex items-center gap-2 text-lg font-bold"><Undo2 size={18} className="text-primary" /> Qrup tapşırığını geri al</h2>
-          <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+          <IconButton onClick={onClose} aria-label="Bağla"><X size={18} /></IconButton>
         </div>
         <TaskSummary task={rows[0]}>
           <p className="muted mt-1.5 flex flex-wrap items-center gap-1.5 text-xs">

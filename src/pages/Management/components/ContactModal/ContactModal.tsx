@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { X } from "lucide-react";
 import { FormActions } from "@/shared/components/FormActions";
 import { AvatarUpload } from "@/shared/components/AvatarUpload";
@@ -20,7 +20,7 @@ export function ContactModal(props: ManagerModalProps) {
           <h2 id="contact-manager-title" className="text-lg font-bold">Telefon və şəkil</h2>
           <p className="muted text-sm">{manager.full_name}</p>
         </div>
-        <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+        <IconButton onClick={onClose} aria-label="Bağla"><X size={18} /></IconButton>
       </div>
       <div className="mb-4"><AvatarUpload employee={manager} /></div>
       <form onSubmit={save} className="space-y-4">

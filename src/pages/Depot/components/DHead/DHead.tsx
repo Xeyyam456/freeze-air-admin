@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { X } from "lucide-react";
 import type { DHeadProps } from "@/types/depot";
 import { IconTile } from "../IconTile";
@@ -16,7 +16,7 @@ export function DHead({ id, icon, tone, title, sub, onClose, children, flush = f
         {sub && <div className="muted mt-0.5 truncate text-[13px] max-sm:!whitespace-normal max-sm:line-clamp-2 max-sm:text-xs max-sm:leading-snug">{sub}</div>}
       </div>
       {children}
-      <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+      <IconButton onClick={onClose} aria-label="Bağla"><X size={18} /></IconButton>
     </div>
   );
 }

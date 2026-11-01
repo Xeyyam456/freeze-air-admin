@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { labelClass } from "@/shared/components/FormField";
 import { useState } from "react";
 import { HandCoins, X } from "lucide-react";
@@ -30,7 +30,7 @@ export function PayModal({ name, employeeId, today, suggest, onClose }: PayModal
       <form onSubmit={submit} className="space-y-4">
         <div className="flex items-start justify-between gap-3">
           <h2 id="pay-title" className="flex items-center gap-2 text-lg font-bold"><HandCoins size={18} className="text-primary" /> Yanacaq pulu ver</h2>
-          <button type="button" onClick={onClose} className={iconBtnClass()} aria-label="Bağla"><X size={18} /></button>
+          <IconButton onClick={onClose} aria-label="Bağla"><X size={18} /></IconButton>
         </div>
         <p className="muted -mt-2 text-sm">{name}</p>
         <div className="grid grid-cols-2 gap-3 max-sm:grid-cols-1">

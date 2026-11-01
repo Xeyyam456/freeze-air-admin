@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { searchClass } from "@/shared/components/SearchBar";
 import { ChevronLeft, ChevronRight, FileSpreadsheet, Search } from "lucide-react";
 import { Button } from "@/shared/components/Button";
@@ -14,9 +14,9 @@ export function BoardToolbar({ month, thisMonth, query, canExport, onMonth, onQu
   return (
     <div className="flex flex-wrap items-center gap-3">
       <div className="flex items-center gap-1 max-sm:flex-1">
-        <button type="button" onClick={() => onMonth(shiftMonth(month, -1))} className={iconBtnClass()} aria-label="Əvvəlki ay"><ChevronLeft size={18} /></button>
+        <IconButton onClick={() => onMonth(shiftMonth(month, -1))} aria-label="Əvvəlki ay"><ChevronLeft size={18} /></IconButton>
         <h2 className="min-w-40 text-center text-lg font-bold max-sm:min-w-0 max-sm:flex-1 max-sm:whitespace-nowrap">{MONTHS_AZ[m - 1]} {y}</h2>
-        <button type="button" onClick={() => onMonth(shiftMonth(month, 1))} disabled={isCurrent} className={iconBtnClass("disabled:opacity-30")} aria-label="Sonrakı ay"><ChevronRight size={18} /></button>
+        <IconButton onClick={() => onMonth(shiftMonth(month, 1))} disabled={isCurrent} className="disabled:opacity-30" aria-label="Sonrakı ay"><ChevronRight size={18} /></IconButton>
         {!isCurrent && <Button variant="soft" size="sm" onClick={() => onMonth(thisMonth)} className="ml-1">Bu ay</Button>}
       </div>
       <div className={searchClass("min-w-56 flex-1 max-sm:order-last max-sm:min-w-0 max-sm:basis-full")}>

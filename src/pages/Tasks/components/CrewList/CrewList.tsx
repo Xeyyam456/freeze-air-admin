@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
 import { iconTileClass } from "@/shared/components/IconTile";
 import { Pencil, Plus, Trash2, UsersRound } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -36,9 +36,9 @@ export function CrewList({ crews, employees, onEdit }: CrewListProps) {
                     {people.length ? <><b className="font-semibold text-ink">{people.length} nəfər</b> · {people.map((p) => p.full_name).join(", ")}</> : "Aktiv üzv qalmayıb"}
                   </p>
                 </div>
-                <button type="button" onClick={() => onEdit({ id: c.id, name: c.name ?? "", members: c.members })} className={iconBtnClass("!h-8 !w-8")} title="Redaktə et" aria-label="Redaktə et">
+                <IconButton onClick={() => onEdit({ id: c.id, name: c.name ?? "", members: c.members })} className="!h-8 !w-8" title="Redaktə et" aria-label="Redaktə et">
                   <Pencil size={14} />
-                </button>
+                </IconButton>
                 <ConfirmButton onConfirm={async () => { await deleteCrew(c.id); }} success={false} className={iconBtnClass("!h-8 !w-8", true)} title="Briqadanı sil"
                   question="Briqada silinəcək. Ona verilmiş köhnə tapşırıqlar dəyişmir.">
                   <Trash2 size={14} />

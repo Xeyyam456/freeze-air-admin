@@ -1,4 +1,4 @@
-import { iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { iconTileClass } from "@/shared/components/IconTile";
 import { useState } from "react";
 import { UserRound, X } from "lucide-react";
@@ -39,7 +39,7 @@ export function ProfileModal({ onClose }: { onClose: () => void }) {
             <p className="muted break-all text-sm leading-tight max-sm:text-[12px]">{email}</p>
           </div>
         </div>
-        <button type="button" onClick={onClose} className={iconBtnClass("shrink-0")} aria-label="Bağla"><X size={18} /></button>
+        <IconButton onClick={onClose} className="shrink-0" aria-label="Bağla"><X size={18} /></IconButton>
       </div>
 
       {linked && employeeId && (
