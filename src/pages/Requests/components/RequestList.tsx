@@ -1,4 +1,4 @@
-import { cardClass } from "@/shared/components/Card";
+import { Card } from "@/shared/components/Card";
 import { initials } from "@/lib/experience";
 import type { RequestListProps } from "@/types/requests";
 import { agoShort, toneOf } from "../utils/requestFormat";
@@ -6,7 +6,7 @@ import { agoShort, toneOf } from "../utils/requestFormat";
 // Solda siyahı: ad, yeni nöqtəsi, vaxt, mesajın əvvəli
 export function RequestList({ list, selectedId, onSelect }: RequestListProps) {
   return (
-    <ul className={cardClass("nice-scroll !p-2 lg:h-[calc(100dvh/var(--zoom)-300px)] lg:min-h-[380px] lg:overflow-y-auto")}>
+    <Card as="ul" className="nice-scroll !p-2 lg:h-[calc(100dvh/var(--zoom)-300px)] lg:min-h-[380px] lg:overflow-y-auto">
       {list.map((r) => (
         <li key={r.id}>
           <button type="button" onClick={() => onSelect(r.id)}
@@ -25,6 +25,6 @@ export function RequestList({ list, selectedId, onSelect }: RequestListProps) {
           </button>
         </li>
       ))}
-    </ul>
+    </Card>
   );
 }

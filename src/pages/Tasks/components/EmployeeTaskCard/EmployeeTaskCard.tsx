@@ -1,4 +1,4 @@
-import { cardClass } from "@/shared/components/Card";
+import { Card } from "@/shared/components/Card";
 import { Check } from "lucide-react";
 import { Avatar } from "@/shared/components/Avatar";
 import type { EmployeeTaskCardProps } from "@/types/tasks";
@@ -10,7 +10,7 @@ export function EmployeeTaskCard({ employee, items, actions }: EmployeeTaskCardP
   const done = live.filter((t) => t.done).length;
   const allDone = live.length > 0 && done === live.length;
   return (
-    <section className={`${cardClass()} flex min-w-0 grow basis-[420px] flex-col overflow-hidden !p-0 ${allDone ? "!border-[#bfe8cf]" : ""}`}>
+    <Card as="section" className={`flex min-w-0 grow basis-[420px] flex-col overflow-hidden !p-0 ${allDone ? "!border-[#bfe8cf]" : ""}`}>
       <header className="flex items-center gap-3 px-4 pt-4">
         <Avatar employee={employee} className="!h-10 !w-10 !text-xs !shadow-none" />
         <span className="min-w-0 flex-1">
@@ -28,6 +28,6 @@ export function EmployeeTaskCard({ employee, items, actions }: EmployeeTaskCardP
       <ul className="mt-3 flex-1 divide-y divide-line border-t border-line">
         {items.map((t) => <SingleTaskRow key={t.id} t={t} actions={actions} />)}
       </ul>
-    </section>
+    </Card>
   );
 }

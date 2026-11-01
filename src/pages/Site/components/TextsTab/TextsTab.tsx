@@ -1,10 +1,9 @@
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle, Card } from "@/shared/components/Card";
 import { TEXT_GROUPS } from "../../constants/textGroups";
 import { useTextsTab } from "../../hooks/useTextsTab";
 import { TextGroupNav } from "./TextGroupNav";
 import { TextInput } from "./TextInput";
 import { TextsSaveBar } from "./TextsSaveBar";
-import { Card } from "@/shared/components/Card";
 
 // Saytın bütün sabit mətnləri, səhifələrə görə. Dəyişikliklər bütün qruplar üzrə yığılır, bir düymə ilə saxlanır.
 export function TextsTab() {
@@ -20,7 +19,7 @@ export function TextsTab() {
         {t.current.hint && <p className="muted text-sm">{t.current.hint}</p>}
         {t.current.sections.map((s) => (
           <Card as="section" key={s.title} >
-            <h2 className={cardTitleClass()}>{s.title}</h2>
+            <CardTitle >{s.title}</CardTitle>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {s.fields.map((f) => (
                 <TextInput key={f.key} field={f} value={t.valueOf(f.key)} dirty={t.changed.includes(f.key)}

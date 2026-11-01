@@ -1,8 +1,7 @@
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle, Card } from "@/shared/components/Card";
 import { CircleCheck } from "lucide-react";
 import type { HomeCardProps } from "@/types/site";
 import { ImageSlot } from "./ImageSlot";
-import { Card } from "@/shared/components/Card";
 
 const NOTES = [
   "Şəkil bütün ekranı örtür; ekran nisbətinə görə aşağı hissəsi kəsilə bilər.",
@@ -17,7 +16,7 @@ export function HeroImageCard({ settings, t }: HomeCardProps) {
     <Card as="section">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className={cardTitleClass()}>Hero şəkli</h2>
+          <CardTitle >Hero şəkli</CardTitle>
           <p className="muted mt-1 text-sm">Saytın ən üstündə bütün ekranı tutan fon şəkli. Solda mətn və forma durur: kondisioner və vacib detal sağ yuxarıda olsun.</p>
         </div>
         <span className="muted rounded-full bg-bg px-3 py-1 text-xs">Tövsiyə: 16:9, 1920×1080 px</span>

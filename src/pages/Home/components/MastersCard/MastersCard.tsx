@@ -1,16 +1,15 @@
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle, Card } from "@/shared/components/Card";
 import { CalendarDays, Users } from "lucide-react";
 import type { MastersCardProps } from "@/types/dashboard";
 import { EmptyState } from "../EmptyState";
 import { MasterTile } from "./MasterTile";
-import { Card } from "@/shared/components/Card";
 
 // Ustalar bu gün: ən çox iş görən yuxarıda; qrupla işləyənlər bir kartdadır
 export function MastersCard({ d, onOpenLogs }: MastersCardProps) {
   return (
     <Card as="section">
       <div className="flex items-center justify-between gap-3">
-        <h2 className={cardTitleClass("flex items-center gap-2")}><CalendarDays size={18} className="text-primary" /> Ustalar bu gün</h2>
+        <CardTitle className="flex items-center gap-2"><CalendarDays size={18} className="text-primary" /> Ustalar bu gün</CardTitle>
         {d && (
           <span className="muted text-xs">
             <b className="text-ok">{d.masters.filter((m) => d.todayCount[m.id]).length}</b> / {d.masters.length} usta iş yazıb

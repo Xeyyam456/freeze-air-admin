@@ -1,4 +1,4 @@
-import { cardClass } from "@/shared/components/Card";
+import { Card } from "@/shared/components/Card";
 import type { EmployeeCardProps } from "@/types/attendance";
 import { PersonPhoto } from "../PersonPhoto";
 
@@ -12,8 +12,8 @@ export function EmployeeCard({ employee: e, summary: a, isMe, cell, onOpen }: Em
   ];
 
   return (
-    <div role="button" tabIndex={0} onClick={() => onOpen(e)} onKeyDown={(ev) => ev.key === "Enter" && onOpen(e)}
-      className={`${cardClass()} grow basis-[250px] cursor-pointer !p-3.5 transition-colors min-[1000px]:basis-[300px] hover:bg-primary-soft/30 ${isMe ? "ring-2 ring-primary/30" : ""}`}>
+    <Card role="button" tabIndex={0} onClick={() => onOpen(e)} onKeyDown={(ev) => ev.key === "Enter" && onOpen(e)}
+      className={`grow basis-[250px] cursor-pointer !p-3.5 transition-colors min-[1000px]:basis-[300px] hover:bg-primary-soft/30 ${isMe ? "ring-2 ring-primary/30" : ""}`}>
       <div className="flex items-center gap-3">
         <PersonPhoto employee={e} className="h-10 w-10" />
         <span className="min-w-0 flex-1">
@@ -33,6 +33,6 @@ export function EmployeeCard({ employee: e, summary: a, isMe, cell, onOpen }: Em
         ))}
       </div>
       {cell && <div className="mt-2.5 flex flex-wrap items-center justify-end gap-2 border-t border-line pt-2.5">{cell}</div>}
-    </div>
+    </Card>
   );
 }

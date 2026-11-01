@@ -1,4 +1,4 @@
-import { cardClass } from "@/shared/components/Card";
+import { Card } from "@/shared/components/Card";
 import { Check, X } from "lucide-react";
 import { Avatar } from "@/shared/components/Avatar";
 import { Button } from "@/shared/components/Button";
@@ -11,7 +11,7 @@ import { stamp } from "../../utils/stamp";
 // Gözləyən sorğu kartı: tarix, səbəb, ustanın bu il təsdiqlənmiş icazə günü, Təsdiqlə / Rədd et
 export function PendingCard({ leave: l, used, onDecide }: PendingCardProps) {
   return (
-    <li className={cardClass("flex min-w-0 grow basis-[420px] flex-col gap-3 !p-4")}>
+    <Card as="li" className="flex min-w-0 grow basis-[420px] flex-col gap-3 !p-4">
       <div className="flex items-center gap-3">
         <Avatar employee={personOf(l)} className="!h-12 !w-12 shrink-0 !text-sm" />
         <div className="min-w-0 flex-1">
@@ -36,6 +36,6 @@ export function PendingCard({ leave: l, used, onDecide }: PendingCardProps) {
         <Button variant="soft" size="sm" onClick={() => onDecide(l.id, false)}><X size={14} /> Rədd et</Button>
         <Button variant="primary" size="sm" onClick={() => onDecide(l.id, true)}><Check size={14} /> Təsdiqlə</Button>
       </div>
-    </li>
+    </Card>
   );
 }

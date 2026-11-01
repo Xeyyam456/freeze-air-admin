@@ -1,4 +1,4 @@
-import { cardClass } from "@/shared/components/Card";
+import { Card } from "@/shared/components/Card";
 import { Avatar } from "@/shared/components/Avatar";
 import type { PersonCardProps } from "@/types/employees";
 import { STATUS_TONE } from "./constants";
@@ -12,8 +12,8 @@ export function PersonCard({ person, subtitle, badge, highlight = false, status,
   const tone = status ? STATUS_TONE[status.kind] : null;
 
   return (
-    <div
-      className={`${cardClass()} flex min-w-0 cursor-pointer flex-col overflow-hidden !p-0 transition-[transform,box-shadow,border-color] duration-150 hover:-translate-y-0.5 hover:border-[#bfe9e3] hover:shadow-[0_16px_32px_rgba(13,148,136,0.12)] ${
+    <Card
+      className={`flex min-w-0 cursor-pointer flex-col overflow-hidden !p-0 transition-[transform,box-shadow,border-color] duration-150 hover:-translate-y-0.5 hover:border-[#bfe9e3] hover:shadow-[0_16px_32px_rgba(13,148,136,0.12)] ${
         highlight ? "!border-primary ring-2 ring-primary-soft" : ""}`}
       role="button"
       tabIndex={0}
@@ -37,6 +37,6 @@ export function PersonCard({ person, subtitle, badge, highlight = false, status,
         <PersonContact employee={person} />
         {footer && <div className="mt-2 w-full text-left text-xs font-semibold">{footer}</div>}
       </div>
-    </div>
+    </Card>
   );
 }

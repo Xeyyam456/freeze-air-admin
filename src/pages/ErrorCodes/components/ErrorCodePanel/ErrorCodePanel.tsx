@@ -1,5 +1,5 @@
 import { iconTileClass } from "@/shared/components/IconTile";
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle, Card } from "@/shared/components/Card";
 import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import type { ErrorCodePanelProps, PanelTab } from "@/types/errorCodes";
@@ -8,7 +8,6 @@ import { CodeTab } from "../CodeTab";
 import { ExcelTab } from "../ExcelTab";
 import { ModelsTab } from "../ModelsTab";
 import { PanelTabs } from "./PanelTabs";
-import { Card } from "@/shared/components/Card";
 
 // Sağ panel: modellər, xəta kodu, Excel
 export function ErrorCodePanel({ models, codes }: ErrorCodePanelProps) {
@@ -20,7 +19,7 @@ export function ErrorCodePanel({ models, codes }: ErrorCodePanelProps) {
     <Card className="space-y-4">
       <div className="flex items-center gap-3">
         <span className={iconTileClass("!h-9 !w-9")}><Plus size={18} /></span>
-        <h2 className={cardTitleClass()}>Əlavə et</h2>
+        <CardTitle >Əlavə et</CardTitle>
       </div>
       <PanelTabs tab={tab} onTab={setTab} />
       {tab === "models" && <ModelsTab models={models} counts={counts} />}

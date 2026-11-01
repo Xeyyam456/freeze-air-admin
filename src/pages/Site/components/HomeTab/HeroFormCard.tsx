@@ -1,4 +1,4 @@
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle, Card } from "@/shared/components/Card";
 import { fieldClass } from "@/shared/components/Input";
 import { useState } from "react";
 import { toast } from "@/lib/toast";
@@ -7,7 +7,6 @@ import type { HeroFormCardProps, QuickKey } from "@/types/site";
 import { QUICK_DEFAULTS, QUICK_FIELDS, SITE_DELAY } from "../../constants/homeConstants";
 import { HeroFormPreview } from "./HeroFormPreview";
 import { Button } from "@/shared/components/Button";
-import { Card } from "@/shared/components/Card";
 import { FormField } from "@/shared/components/FormField";
 
 // Hero-dakı sürətli müraciət: açıb-bağlamaq və mətnləri dəyişmək. Müraciətlər "Müraciətlər" səhifəsinə düşür.
@@ -32,7 +31,7 @@ export function HeroFormCard({ enabled: initialEnabled, phone, t }: HeroFormCard
     <Card as="section">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className={cardTitleClass()}>Sürətli müraciət formu</h2>
+          <CardTitle >Sürətli müraciət formu</CardTitle>
           <p className="muted mt-1 text-sm">Hero-da başlığın altında: ad və telefon yazılır, müraciət “Müraciətlər” səhifəsinə düşür. Telefon nömrəsi “Əlaqə” tabından götürülür.</p>
         </div>
         <label className="flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm font-semibold">

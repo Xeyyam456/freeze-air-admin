@@ -1,6 +1,6 @@
 import { iconTileClass } from "@/shared/components/IconTile";
 import { heroActionClass } from "@/shared/components/HeroAction";
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle } from "@/shared/components/Card";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { KIND } from "@/lib/kinds";
@@ -20,7 +20,7 @@ export function AddClientButton({ kind }: AddClientProps) {
         <Modal onClose={() => setOpen(false)} labelledBy="add-client-title" className="!max-w-lg">
           <div className="mb-5 flex items-center gap-3">
             <span className={iconTileClass("!h-10 !w-10")}><Plus size={18} /></span>
-            <h2 id="add-client-title" className={cardTitleClass()}>Yeni {KIND[kind].one}</h2>
+            <CardTitle id="add-client-title" >Yeni {KIND[kind].one}</CardTitle>
           </div>
           <AddClientForm kind={kind} onDone={() => setOpen(false)} />
         </Modal>

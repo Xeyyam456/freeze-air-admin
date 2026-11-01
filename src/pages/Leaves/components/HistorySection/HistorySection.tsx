@@ -1,4 +1,4 @@
-import { cardClass } from "@/shared/components/Card";
+import { Card } from "@/shared/components/Card";
 import { History, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
@@ -28,13 +28,13 @@ export function HistorySection({ people, filter, who, counts, total, byMonth, cl
         )}
       </div>
       {byMonth.length === 0 ? (
-        <p className={cardClass("muted py-8 text-center text-sm")}>{total ? "Bu süzgəcə uyğun sorğu yoxdur." : "Tarixçə hələ boşdur."}</p>
+        <Card as="p" className="muted py-8 text-center text-sm">{total ? "Bu süzgəcə uyğun sorğu yoxdur." : "Tarixçə hələ boşdur."}</Card>
       ) : (
         <div className="space-y-5">
           {byMonth.map(([k, list]) => (
             <div key={k}>
               <p className="muted mb-2 text-xs font-semibold uppercase tracking-wider">{MONTHS_AZ[Number(k.slice(5, 7)) - 1]} {k.slice(0, 4)} · {list.length}</p>
-              <ul className={cardClass("divide-y divide-line overflow-hidden !p-0")}>{list.map((l) => <HistoryRow key={l.id} leave={l} onRemove={onRemove} />)}</ul>
+              <Card as="ul" className="divide-y divide-line overflow-hidden !p-0">{list.map((l) => <HistoryRow key={l.id} leave={l} onRemove={onRemove} />)}</Card>
             </div>
           ))}
         </div>

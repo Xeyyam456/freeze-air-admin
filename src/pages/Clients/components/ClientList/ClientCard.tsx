@@ -1,5 +1,5 @@
 import { iconTileClass } from "@/shared/components/IconTile";
-import { cardLinkClass, cardTitleClass } from "@/shared/components/Card";
+import { Card, CardTitle } from "@/shared/components/Card";
 import { Link } from "react-router";
 import { ChevronRight, Phone, User } from "lucide-react";
 import { KIND } from "@/lib/kinds";
@@ -8,10 +8,10 @@ import { unitLabel } from "../../utils/unitLabel";
 
 export function ClientCard({ client: c, kind }: ClientCardProps) {
   return (
-    <Link to={`${KIND[kind].route}/${c.id}`} className={cardLinkClass("flex items-center gap-4")}>
+    <Card to={`${KIND[kind].route}/${c.id}`} as={Link} link className="flex items-center gap-4">
       <span className={iconTileClass("text-lg font-extrabold")}>{c.name.charAt(0)}</span>
       <div className="min-w-0 flex-1">
-        <h3 className={cardTitleClass("truncate")}>{c.name}</h3>
+        <CardTitle as="h3" className="truncate">{c.name}</CardTitle>
         <p className="muted truncate text-sm">{unitLabel(kind, c.stores[0]?.count ?? 0, c.address)}</p>
         {(c.phone || c.contact_person) && (
           <p className="muted mt-0.5 flex items-center gap-3 text-xs">
@@ -21,6 +21,6 @@ export function ClientCard({ client: c, kind }: ClientCardProps) {
         )}
       </div>
       <ChevronRight size={18} className="muted" />
-    </Link>
+    </Card>
   );
 }

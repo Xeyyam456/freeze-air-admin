@@ -1,7 +1,6 @@
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle, Card } from "@/shared/components/Card";
 import { Link } from "react-router";
 import { FileSpreadsheet, Globe, Plus, UserPlus } from "lucide-react";
-import { Card } from "@/shared/components/Card";
 
 const LINKS = [
   { to: "/sirketler", icon: Plus, label: "Yeni şirkət" },
@@ -14,7 +13,7 @@ const LINKS = [
 export function QuickLinks() {
   return (
     <Card as="section">
-      <h2 className={cardTitleClass()}>Sürətli keçidlər</h2>
+      <CardTitle >Sürətli keçidlər</CardTitle>
       <div className="mt-4 grid grid-cols-2 gap-2">
         {LINKS.map(({ to, icon: Icon, label }) => (
           <Link key={label} to={to}

@@ -1,5 +1,5 @@
 import { iconTileClass } from "@/shared/components/IconTile";
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle, Card } from "@/shared/components/Card";
 import { Building2, Download, Search } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
 import { EmployeeSelect } from "@/shared/components/EmployeeSelect";
@@ -9,7 +9,6 @@ import type { FiltersPanelProps } from "@/types/workLogs";
 import { exportXlsx } from "../../utils/exportXlsx";
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
-import { Card } from "@/shared/components/Card";
 
 // Yan panel: tarix aralığı (+ hazır aralıqlar), usta, şirkət/market, axtarış, Excel-ə ixrac
 export function FiltersPanel({ from, to, onFrom, onTo, onRange, filters, employeeId, onEmployee, companyId, onCompany, query, onQuery, list, tooMany }: FiltersPanelProps) {
@@ -17,7 +16,7 @@ export function FiltersPanel({ from, to, onFrom, onTo, onRange, filters, employe
     <Card className="space-y-4">
       <div className="flex items-center gap-3">
         <span className={iconTileClass("!h-9 !w-9")}><Search size={18} /></span>
-        <h2 className={cardTitleClass()}>Filtrlər</h2>
+        <CardTitle >Filtrlər</CardTitle>
       </div>
 
       <div>

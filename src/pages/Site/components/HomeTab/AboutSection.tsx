@@ -1,9 +1,8 @@
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle, Card } from "@/shared/components/Card";
 import { labelClass } from "@/shared/components/FormField";
 import type { AboutFormProps } from "@/types/site";
 import { AboutForm } from "./AboutForm";
 import { ImageSlot } from "./ImageSlot";
-import { Card } from "@/shared/components/Card";
 
 // Haqqımızda: şəkillər | mətn | siyahı + kart
 export function AboutSection({ settings }: AboutFormProps) {
@@ -11,7 +10,7 @@ export function AboutSection({ settings }: AboutFormProps) {
     <Card as="section">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className={cardTitleClass()}>Haqqımızda</h2>
+          <CardTitle >Haqqımızda</CardTitle>
           <p className="muted mt-1 text-sm">Hero-dan sonrakı bölmə: saytda solda şəkillər və kart, sağda mətn.</p>
         </div>
         <span className="muted rounded-full bg-bg px-3 py-1 text-xs">Şəkillər yüklənən kimi saxlanır, mətnlər “Yadda saxla” ilə</span>

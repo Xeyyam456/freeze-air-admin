@@ -1,4 +1,4 @@
-import { cardTitleClass } from "@/shared/components/Card";
+import { CardTitle, Card } from "@/shared/components/Card";
 import { labelClass } from "@/shared/components/FormField";
 import { useActionState } from "react";
 import { FormActions } from "@/shared/components/FormActions";
@@ -9,7 +9,6 @@ import type { ContactFormProps } from "@/types/site";
 import { CONTACT_FIELDS, CONTACT_PLACES } from "../../constants/contactFields";
 import { formatTime } from "@/shared/utils/formatDateTime";
 import { Input } from "@/shared/components/Input";
-import { Card } from "@/shared/components/Card";
 
 // Əlaqə formu: sahələr + saytda harada göründüyü; "Yadda saxla" təsdiqlə
 export function ContactForm({ settings, values, onChange }: ContactFormProps) {
@@ -20,7 +19,7 @@ export function ContactForm({ settings, values, onChange }: ContactFormProps) {
     <Card className="flex flex-col">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className={cardTitleClass()}>Əlaqə məlumatları</h2>
+          <CardTitle >Əlaqə məlumatları</CardTitle>
           <p className="muted mt-1 text-sm">Boş qalan sahənin yerində saytda yer tutucu görünür. Sağda yazdıqca dəyişən önizləmə var.</p>
         </div>
         <span className="muted rounded-full max-sm:max-w-full max-sm:whitespace-normal sm:shrink-0 bg-bg px-3 py-1 text-xs">Son dəyişiklik: {formatTime(settings.updated_at)}</span>

@@ -1,2 +1,2 @@
-export * from "./Card";
-export { cardClass, cardLinkClass, cardTitleClass } from "./cardClass";
+export { Card } from "./Card";
+export { CardTitle } from "./CardTitle";

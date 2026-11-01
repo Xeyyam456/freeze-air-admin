@@ -1,5 +1,5 @@
 import { iconTileClass } from "@/shared/components/IconTile";
-import { cardClass, cardTitleClass } from "@/shared/components/Card";
+import { Card, CardTitle } from "@/shared/components/Card";
 import { labelClass } from "@/shared/components/FormField";
 import { Plus } from "lucide-react";
 import { DatePicker } from "@/shared/components/DatePicker";
@@ -14,10 +14,10 @@ import { Textarea } from "@/shared/components/Textarea";
 export function TaskForm({ data, day, today, onDay }: TaskFormProps) {
   const f = useTaskForm(day, today, onDay);
   return (
-    <form onSubmit={f.submit} className={cardClass("space-y-4")}>
+    <Card onSubmit={f.submit} as="form" className="space-y-4">
       <div className="flex items-center gap-3">
         <span className={iconTileClass("!h-9 !w-9")}><Plus size={18} /></span>
-        <h2 className={cardTitleClass()}>Yeni tapşırıq</h2>
+        <CardTitle >Yeni tapşırıq</CardTitle>
       </div>
       <div>
         <span className={labelClass()}>Kimə (bir usta və ya qrup)</span>
@@ -43,6 +43,6 @@ export function TaskForm({ data, day, today, onDay }: TaskFormProps) {
           placeholder="Məs. qaz qaçağı, detallı yuyulma" />
       </label>
       <Button type="submit" disabled={f.pending} className="w-full"><Plus size={16} /> {f.pending ? "..." : "Tapşırıq ver"}</Button>
-    </form>
+    </Card>
   );
 }
