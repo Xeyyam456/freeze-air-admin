@@ -1,3 +1,4 @@
+import { storeCodeClass } from "@/components/StoreCard";
 import { useActionState } from "react";
 import { X } from "lucide-react";
 import { updateStore } from "@/actions/stores";
@@ -17,7 +18,7 @@ export function EditStoreModal({ store, kind, onClose }: EditStoreModalProps) {
     <Modal onClose={onClose} labelledBy={titleId} className="!max-w-lg">
       <div className="mb-5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="store-code !h-11 !w-11 !rounded-xl !text-sm">{store.code}</span>
+          <span className={storeCodeClass("!h-11 !w-11 !rounded-xl !text-sm")}>{store.code}</span>
           <div>
             <h2 id={titleId} className="text-lg font-bold">{KIND[kind].UnitAcc} redaktə et</h2>
             <p className="muted text-sm">{store.name}</p>

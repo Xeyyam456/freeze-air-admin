@@ -1,0 +1,1 @@
+export { plateClass } from "./plateClass";

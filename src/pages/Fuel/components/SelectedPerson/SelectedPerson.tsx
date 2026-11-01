@@ -1,3 +1,4 @@
+import { plateClass } from "@/shared/components/CarPlate";
 import { Avatar } from "@/shared/components/Avatar";
 import type { SelectedPersonProps } from "@/types/fuel";
 import { fuelLabel } from "../../shared/fuelTypes";
@@ -10,7 +11,7 @@ export function SelectedPerson({ car }: SelectedPersonProps) {
       <div className="min-w-0 max-sm:contents">
         <p className="truncate text-lg font-extrabold max-sm:min-w-0 max-sm:flex-1">{car.full_name}</p>
         <p className="flex items-center gap-2 text-xs text-white/60 max-sm:basis-full max-sm:text-[11.5px] max-[400px]:flex-wrap max-[400px]:gap-y-0.5 min-[401px]:max-sm:whitespace-nowrap">
-          <span className="plate !text-[10px]">{car.car_plate ?? "Nömrəsiz"}</span>
+          <span className={plateClass("!text-[10px]")}>{car.car_plate ?? "Nömrəsiz"}</span>
           {car.car_model ?? "Maşın"} · {fuelLabel(car.fuel_type) ?? "yanacaq seçilməyib"} · {car.fuel_per_100 ? `${car.fuel_per_100} L / 100 km` : "sərf yazılmayıb"}
         </p>
       </div>

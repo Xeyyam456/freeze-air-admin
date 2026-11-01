@@ -1,15 +1,17 @@
+import s from "./styles/StoreCard.module.css";
 import { MapPin, Phone } from "lucide-react";
 import { MapButton } from "../MapButton";
+import { storeCodeClass } from "./storeCodeClass";
 import type { StoreCardProps } from "@/types/shared";
 
 export function StoreCard({ store, companyName, action }: StoreCardProps) {
   const hasCoords = store.lat != null && store.lng != null;
 
   return (
-    <div className="store-card">
+    <div className={s.card}>
       <div className="flex gap-3">
         {/* Kod: kartın ən çox axtarılan məlumatı, ona görə ən gözə çarpan yer */}
-        <span className="store-code">{store.code}</span>
+        <span className={storeCodeClass()}>{store.code}</span>
 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
