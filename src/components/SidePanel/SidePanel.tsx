@@ -1,3 +1,4 @@
+import s from "./styles/SidePanel.module.css";
 import { useEffect, useState } from "react";
 import { Plus, X, type LucideIcon } from "lucide-react";
 import { useNarrow } from "@/lib/navDrawer";
@@ -37,7 +38,7 @@ export function WithSidePanel({ panel, fill = false, stack = false, fabLabel = "
       {inlinePanel && <div className="mb-4">{panel}</div>}
       {split && <div className="mb-4">{narrowTop}</div>}
       {/* Xarici qutu: çərçivə və ölçü. Sağda panelin eni + boşluq; hündürlük: ekran − header − yuxarı/aşağı boşluqlar */}
-      <div data-fill={fill || undefined} data-compact={inlinePanel || undefined} className="side-box mr-[calc(var(--panel-w)+var(--gap))] h-[calc(100vh/var(--zoom)-var(--header-h)-2*var(--gap))] overflow-hidden rounded-[18px] border border-line bg-[#f8f9fc]">
+      <div data-fill={fill || undefined} data-compact={inlinePanel || undefined} className={`${s.box} mr-[calc(var(--panel-w)+var(--gap))] h-[calc(100vh/var(--zoom)-var(--header-h)-2*var(--gap))] overflow-hidden rounded-[18px] border border-line bg-[#f8f9fc]`}>
         {stack ? (
           <div className="h-full px-5 py-5 max-sm:px-2.5 max-sm:py-3">{children}</div>
         ) : fill ? (
@@ -51,12 +52,12 @@ export function WithSidePanel({ panel, fill = false, stack = false, fabLabel = "
       </div>
       {narrow && !inline && !!sheetPanel && (
         <>
-          <button type="button" className="panel-fab" onClick={() => setSheet(true)}><FabIcon size={18} strokeWidth={2.4} /> {fabLabel}</button>
-          {sheet && <div className="panel-backdrop" onClick={() => setSheet(false)} aria-hidden />}
+          <button type="button" className={s.fab} onClick={() => setSheet(true)}><FabIcon size={18} strokeWidth={2.4} /> {fabLabel}</button>
+          {sheet && <div className={s.backdrop} onClick={() => setSheet(false)} aria-hidden />}
         </>
       )}
-      {!inlinePanel && !!sheetPanel && <aside className="side-panel" data-open={sheet || undefined}>
-        {narrow && <button type="button" className="panel-close" onClick={() => setSheet(false)} aria-label="Bağla"><X size={18} /></button>}
+      {!inlinePanel && !!sheetPanel && <aside className={`${s.panel} side-panel`} data-open={sheet || undefined}>
+        {narrow && <button type="button" className={s.close} onClick={() => setSheet(false)} aria-label="Bağla"><X size={18} /></button>}
         {sheetPanel}
       </aside>}
     </>

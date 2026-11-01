@@ -60,6 +60,7 @@ src/
 - `Button`, `Input`, `Textarea`, `Select`, `FormField`, `Card` stilləri `shared/styles/*.module.css`-dədir. Düymə/sahə/etiket görünüşü başqa elementdə lazımdırsa `buttonClass()`, `fieldClass()`, `labelClass()`, `cardClass()`, `cardLinkClass()`, `cardTitleClass()` işlət (xam `btn`, `field`, `label`, `card` class-ı yazma). `Modal` stili `shared/styles/Modal.module.css`-dədir.
 - `.module.css`-ə köçəndə qaydaları `@layer components { ... }` içində yaz: qatsız CSS Tailwind utility-lərini (`className="w-full"`) üstələyir.
 - **Stil faylı yeri**: CSS komponentin yanında yox, feature-in `styles/` qovluğunda: `<Feature>/styles/<Komponent>.module.css` (ad komponentlə eyni, TikTak qəlibi). Ortaq komponentlər `shared/styles/`. İmport: `import s from "../../styles/X.module.css"`, `className={s.root}`.
+- **Qlobal marker class**: `side-panel` qlobal qalır (`SidePanel` modulundakı `panel` ilə yanaşı), çünki `Card`, `Field`, `Button` modulları `:global(.side-panel)` ilə yan paneldəki görünüşü dəyişir.
 - **Hər modulun ilk sətri** `@layer theme, base, components, utilities;` olmalıdır (sonra `@layer components { ... }`). Bunsuz modul Tailwind-dən əvvəl yüklənəndə `components` qatı `base`-dən (preflight: `padding:0; border-radius:0`) əvvələ düşür və stil itir.
 - Animasiya adı modulda lokaldır: `@keyframes`-i həmin faylda yaz (`:global(...)` animation dəyərində işləmir).
 
