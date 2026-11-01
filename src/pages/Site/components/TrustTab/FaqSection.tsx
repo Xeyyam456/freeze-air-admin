@@ -1,4 +1,4 @@
-import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { useState } from "react";
 import { EyeOff, HelpCircle, Pencil, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -34,7 +34,7 @@ export function FaqSection() {
                 <p className="muted mt-0.5 line-clamp-2 text-[13px]">{f.answer}</p>
               </div>
               <IconButton onClick={() => setEditing(f)} className="!h-7 !w-7" title="Redaktə et" aria-label="Redaktə et"><Pencil size={14} /></IconButton>
-              <ConfirmButton onConfirm={() => deleteFaq(f.id)} title="Sual silinsin" className={iconBtnClass("!h-7 !w-7", true)} question="Bu sual saytdan silinəcək. Müvəqqəti gizlətmək üçün redaktədə “Saytda göstər”i götür.">
+              <ConfirmButton onConfirm={() => deleteFaq(f.id)} title="Sual silinsin" icon danger className="!h-7 !w-7" question="Bu sual saytdan silinəcək. Müvəqqəti gizlətmək üçün redaktədə “Saytda göstər”i götür.">
                 <Trash2 size={14} />
               </ConfirmButton>
             </li>

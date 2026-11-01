@@ -1,11 +1,10 @@
 
-import { buttonClass } from "@/shared/components/Button";
+import { Button } from "@/shared/components/Button";
 import s from "@/shared/styles/Modal.module.css";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { CircleCheck, TriangleAlert } from "lucide-react";
 import type { ConfirmModalProps } from "@/types/shared";
-import { Button } from "@/shared/components/Button";
 
 export function ConfirmModal({ open, title, message, confirmLabel, tone = "primary", pending, icon, onConfirm, onCancel }: ConfirmModalProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
@@ -41,10 +40,10 @@ export function ConfirmModal({ open, title, message, confirmLabel, tone = "prima
           <Button type="button" onClick={onCancel} disabled={pending} variant="cancel" className="flex-1">
             Ləğv et
           </Button>
-          <button ref={confirmRef} type="button" onClick={onConfirm} disabled={pending}
-            className={buttonClass(tone === "danger" ? "danger" : "primary", "md", "flex-1")}>
+          <Button ref={confirmRef} onClick={onConfirm} disabled={pending}
+            variant={tone === "danger" ? "danger" : "primary"} className="flex-1">
             {pending ? "Gözləyin..." : confirmLabel}
-          </button>
+          </Button>
         </div>
       </div>
     </div>,

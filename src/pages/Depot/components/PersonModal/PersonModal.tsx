@@ -1,4 +1,3 @@
-import { buttonClass } from "@/shared/components/Button";
 import { useState } from "react";
 import { Package, Plus, Undo2, Wrench } from "lucide-react";
 import { returnAllTools } from "@/services/depot/assignments";
@@ -42,7 +41,7 @@ export function PersonModal({ emp, kind: initialKind, holds: allHolds, toolInfo,
           <span className="ml-auto flex gap-2 max-sm:w-full max-sm:justify-end">
             {/* Yalnız alətdə: materialda "nə qədər işlədi" deyilməlidir, ona görə tək-tək təhvil alınır */}
             {kind === "tool" && holds.length > 1 && (
-              <ConfirmButton className={buttonClass("secondary", "sm", "!h-9 max-sm:!h-7 max-sm:!px-2.5 max-sm:!text-xs")} title="Hamısını geri al" confirmLabel="Bəli, geri al" success={false}
+              <ConfirmButton variant="secondary" size="sm" className="!h-9 max-sm:!h-7 max-sm:!px-2.5 max-sm:!text-xs" title="Hamısını geri al" confirmLabel="Bəli, geri al" success={false}
                 question={`${emp.full_name} üzərindəki ${toolsN} ədəd alət depoya qaytarılacaq.`}
                 onConfirm={async () => {
                   const r = await returnAllTools(holds.map((h) => ({ id: h.id, quantity: h.quantity })));

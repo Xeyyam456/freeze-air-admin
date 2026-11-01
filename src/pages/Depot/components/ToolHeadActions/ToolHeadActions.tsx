@@ -1,4 +1,4 @@
-import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { Pencil, Trash2 } from "lucide-react";
 import { deleteTool } from "@/services/depot/tools";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -14,7 +14,7 @@ export function ToolHeadActions({ tool, kind, holders, empty, onEdit }: ToolHead
     <>
       <IconButton onClick={onEdit} title="Redaktə et" aria-label="Redaktə et"><Pencil size={16} /></IconButton>
       {empty ? (
-        <ConfirmButton onConfirm={() => deleteTool(tool.id, kind)} success={false} className={iconBtnClass("", true)} title={TEXT[kind].deleteTitle}>
+        <ConfirmButton onConfirm={() => deleteTool(tool.id, kind)} success={false} icon danger title={TEXT[kind].deleteTitle}>
           <Trash2 size={16} />
         </ConfirmButton>
       ) : (

@@ -1,4 +1,4 @@
-import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { Box, Pencil, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { deleteModel } from "@/services/errorCodes/models";
@@ -12,7 +12,7 @@ export function ModelRow({ model: m, count, onRename }: ModelRowProps) {
       <span className="min-w-0 flex-1 truncate text-sm font-semibold">{m.name}</span>
       <span className="muted shrink-0 text-xs">{count} kod</span>
       <IconButton onClick={onRename} className="!h-7 !w-7" title="Adını dəyiş" aria-label="Adını dəyiş"><Pencil size={14} /></IconButton>
-      <ConfirmButton onConfirm={() => deleteModel(m.id)} success={false} className={iconBtnClass("!h-7 !w-7", true)} title="Modeli sil"
+      <ConfirmButton onConfirm={() => deleteModel(m.id)} success={false} icon danger className="!h-7 !w-7" title="Modeli sil"
         question={count > 0 ? `"${m.name}" modeli və onun ${count} xəta kodu silinəcək.` : `"${m.name}" modeli silinəcək.`}>
         <Trash2 size={14} />
       </ConfirmButton>

@@ -1,4 +1,4 @@
-import { buttonClass } from "@/shared/components/Button";
+import { Button } from "@/shared/components/Button";
 import { Briefcase, Crown, Phone, ShieldCheck } from "lucide-react";
 import { experience } from "@/lib/experience";
 import { Avatar } from "@/shared/components/Avatar";
@@ -39,7 +39,7 @@ export function LeadCard(props: ManagerCardProps) {
         </div>
         <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
           {manager.phone ? (
-            <a href={`tel:${manager.phone}`} className={buttonClass("plain", "md", "!bg-white !text-[#0b1324] hover:!bg-frost")}><Phone size={16} /> {manager.phone}</a>
+            <Button href={`tel:${manager.phone}`} as="a" variant="plain" className="!bg-white !text-[#0b1324] hover:!bg-frost"><Phone size={16} /> {manager.phone}</Button>
           ) : (
             <span className="flex items-center gap-1.5 text-sm text-white/50"><Phone size={15} /> Telefon yazılmayıb</span>
           )}

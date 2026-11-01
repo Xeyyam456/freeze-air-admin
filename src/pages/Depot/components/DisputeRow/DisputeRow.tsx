@@ -1,4 +1,3 @@
-import { buttonClass } from "@/shared/components/Button";
 import { Undo2 } from "lucide-react";
 import { returnTool } from "@/services/depot/assignments";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -17,7 +16,7 @@ export function DisputeRow({ h, tool }: DisputeRowProps) {
         <span className="block truncate text-sm"><b className="font-semibold">{tool?.name ?? "—"}</b> <span className="text-ink/70">· {fmt(h.quantity)} {u}</span></span>
         <span className="muted block truncate text-xs">{h.employees?.full_name ?? "usta"} almadığını deyir · verilib {dateAz(h.taken_at)}</span>
       </span>
-      <ConfirmButton className={buttonClass("secondary", "sm", "!h-8")} title="Depoya qaytar" confirmLabel="Bəli, qaytar" success={false}
+      <ConfirmButton variant="secondary" size="sm" className="!h-8" title="Depoya qaytar" confirmLabel="Bəli, qaytar" success={false}
         question={`${tool?.name ?? "Alət"} (${fmt(h.quantity)} ${u}) ${h.employees?.full_name ?? "usta"} üzərindən götürülüb depoya qaytarılacaq.`}
         onConfirm={async () => {
           const r = await returnTool(h.id, h.quantity);

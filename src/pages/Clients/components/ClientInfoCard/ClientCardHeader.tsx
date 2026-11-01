@@ -1,4 +1,4 @@
-import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { deleteCompany } from "@/actions/companies";
@@ -30,7 +30,7 @@ export function ClientCardHeader({ company, kind, unitCount, admin, onEdit }: Cl
             <Pencil size={16} />
           </IconButton>
           <ConfirmButton
-            className={iconBtnClass("", true)}
+            icon danger
             title={`${k.One}i sil`}
             question={unitCount > 0
               ? `${k.One}lə birlikdə onun ${unitCount} ${k.unit}${kind === "market" ? "sı" : "ı"} da silinəcək. Bu əməliyyatı geri qaytarmaq olmur.`

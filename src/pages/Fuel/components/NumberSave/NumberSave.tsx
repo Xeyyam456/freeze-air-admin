@@ -1,5 +1,5 @@
 import { fieldClass } from "@/shared/components/Input";
-import { buttonClass } from "@/shared/components/Button";
+import { Button } from "@/shared/components/Button";
 import { useState } from "react";
 import { Save } from "lucide-react";
 import { toast } from "@/lib/toast";
@@ -26,7 +26,7 @@ export function NumberSave({ value, suffix, placeholder, onSave, compact = false
           className={`${fieldClass()} text-right tabular-nums ${compact ? "!h-8 w-[72px] !pl-2 !pr-6 text-sm" : "!h-9 w-28 !pr-12"}`} />
         <span className={`muted pointer-events-none absolute top-1/2 -translate-y-1/2 text-[11px] font-semibold ${compact ? "right-2" : "right-2.5"}`}>{suffix}</span>
       </span>
-      {dirty && <button type="button" onClick={save} disabled={pending} className={buttonClass("primary", "sm", compact ? "!h-8" : "!h-9")} title="Yadda saxla"><Save size={14} /></button>}
+      {dirty && <Button onClick={save} disabled={pending} size="sm" className={compact ? "!h-8" : "!h-9"} title="Yadda saxla"><Save size={14} /></Button>}
     </span>
   );
 }

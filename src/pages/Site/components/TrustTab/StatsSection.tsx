@@ -1,4 +1,4 @@
-import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { useState } from "react";
 import { EyeOff, Hash, Pencil, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -33,7 +33,7 @@ export function StatsSection() {
               <p className="muted mt-2 flex items-center gap-1.5 text-[11px]">#{s.sort}{!s.is_active && <span className="inline-flex items-center gap-1 text-danger"><EyeOff size={11} /> gizlidir</span>}</p>
               <div className="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
                 <IconButton onClick={() => setEditing(s)} className="!h-7 !w-7" title="Redaktə et" aria-label="Redaktə et"><Pencil size={14} /></IconButton>
-                <ConfirmButton onConfirm={() => deleteStat(s.id)} title={`${s.value} ${s.label} silinsin`} className={iconBtnClass("!h-7 !w-7", true)} question="Bu rəqəm saytdan silinəcək. Müvəqqəti gizlətmək üçün redaktədə “Saytda göstər”i götür.">
+                <ConfirmButton onConfirm={() => deleteStat(s.id)} title={`${s.value} ${s.label} silinsin`} icon danger className="!h-7 !w-7" question="Bu rəqəm saytdan silinəcək. Müvəqqəti gizlətmək üçün redaktədə “Saytda göstər”i götür.">
                   <Trash2 size={14} />
                 </ConfirmButton>
               </div>

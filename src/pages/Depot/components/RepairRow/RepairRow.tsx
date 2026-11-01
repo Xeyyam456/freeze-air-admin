@@ -1,4 +1,3 @@
-import { buttonClass } from "@/shared/components/Button";
 import { useState } from "react";
 import { finishRepair } from "@/services/depot/repairs";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -26,7 +25,7 @@ export function RepairRow({ r, unit, canManage }: RepairRowProps) {
       {canManage && (
         <span className="flex gap-1.5">
           <Button type="button" disabled={pending} onClick={() => finish(true)} variant="secondary" size="sm" className="!h-8">Düzəldi</Button>
-          <ConfirmButton onConfirm={() => finish(false)} success={false} className={buttonClass("cancel", "sm", "!h-8")} title="Bərpa olunmadı"
+          <ConfirmButton onConfirm={() => finish(false)} success={false} variant="cancel" size="sm" className="!h-8" title="Bərpa olunmadı"
             question="Depoya qayıdır və silinmə aktı (xarab) yazılır; başqası təsdiqləyəndə depodan silinir." confirmLabel="Bəli">
             Bərpa olunmadı
           </ConfirmButton>

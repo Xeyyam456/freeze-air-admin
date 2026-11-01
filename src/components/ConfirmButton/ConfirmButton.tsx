@@ -2,6 +2,8 @@
 import { useState, useTransition } from "react";
 import { ConfirmModal } from "@/shared/components/ConfirmModal";
 import { toast } from "@/lib/toast";
+import { Button } from "@/shared/components/Button";
+import { IconButton } from "@/shared/components/IconButton";
 import type { ConfirmButtonProps } from "@/types/shared";
 
 // Silmə düyməsi: basanda təsdiq modalı açılır, sonra nəticə tostla bildirilir.
@@ -10,15 +12,17 @@ export function ConfirmButton({
   question = "Bu əməliyyatı geri qaytarmaq olmur.",
   confirmLabel = "Bəli, sil",
   success = "Silindi",
+  variant, size, icon = false, danger = false,
 }: ConfirmButtonProps) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+  const trigger = { onClick: () => setOpen(true), title, "aria-label": title, children };
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className={className} title={title} aria-label={title}>
-        {children}
-      </button>
+      {icon ? <IconButton danger={danger} className={className} {...trigger} />
+        : variant ? <Button variant={variant} size={size} className={className} {...trigger} />
+        : <button type="button" className={className} {...trigger} />}
       <ConfirmModal
         open={open}
         tone="danger"

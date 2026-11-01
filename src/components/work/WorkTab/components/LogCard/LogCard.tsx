@@ -1,4 +1,4 @@
-import { IconButton, iconBtnClass } from "@/shared/components/IconButton";
+import { IconButton } from "@/shared/components/IconButton";
 import { Clock, Home, MapPin, Pencil, Trash2 } from "lucide-react";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import type { LogCardProps } from "@/types/workLogs";
@@ -27,7 +27,7 @@ export function LogCard({ log, canDelete, canEdit, onEdit, onDelete, onOpenGroup
           )}
           <ConfirmButton
             onConfirm={onDelete}
-            className={iconBtnClass("!h-7 !w-7 shrink-0", true)}
+            icon danger className="!h-7 !w-7 shrink-0"
             title="İşi sil"
             question="İş qeydi, aktı və şəkilləri silinəcək. Bu əməliyyatı geri qaytarmaq olmur."
           >

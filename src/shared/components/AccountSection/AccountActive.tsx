@@ -1,4 +1,3 @@
-import { buttonClass } from "@/shared/components/Button";
 import { useActionState, useState } from "react";
 import { deleteEmployeeAccount, resetEmployeePassword } from "@/actions/accounts";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -28,7 +27,7 @@ export function AccountActive({ employeeId, email }: AccountActiveProps) {
       ) : (
         <div className="mt-2 flex items-center gap-2">
           <Button type="button" onClick={() => setMode("password")} variant="secondary" size="sm">Parolu dəyiş</Button>
-          <ConfirmButton onConfirm={() => deleteEmployeeAccount(employeeId)} className={buttonClass("cancel", "sm")}
+          <ConfirmButton onConfirm={() => deleteEmployeeAccount(employeeId)} variant="cancel" size="sm"
             title="Hesabı sil" question="Usta artıq sistemə daxil ola bilməyəcək. İşləri və alət tarixçəsi silinmir.">
             Hesabı sil
           </ConfirmButton>

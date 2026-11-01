@@ -1,4 +1,3 @@
-import { buttonClass } from "@/shared/components/Button";
 import { Download, Upload } from "lucide-react";
 import { KIND } from "@/lib/kinds";
 import type { StoreScopeProps } from "@/types/clients";
@@ -17,9 +16,9 @@ export function StoreImport(props: StoreScopeProps) {
         Sütunlar: <b>Kod</b>, <b>Ad</b>, Ünvan, Koordinat, Telefon. Eyni kodlu {k.unit} varsa, yenilənir.
         Kod sütununu Excel-də &quot;Mətn&quot; formatında saxla ki, 015-dəki sıfır itməsin.
       </p>
-      <a href="/magaza-sablon.xlsx" download className={buttonClass("soft", "sm", "w-full")}>
+      <Button href="/magaza-sablon.xlsx" download as="a" variant="soft" size="sm" className="w-full">
         <Download size={14} /> Şablonu yüklə
-      </a>
+      </Button>
 
       <label className="flex cursor-pointer flex-col items-center gap-1 rounded-xl border-2 border-dashed border-line px-4 py-4 text-center hover:border-primary hover:bg-primary-soft/40">
         <Upload size={20} className="text-primary" />
