@@ -32,6 +32,16 @@ export async function withdrawTask(id: number, newEmployeeId: number | null, qui
   return true;
 }
 
+// Qrup tapşırığını bütövlükdə geri al (0100): bir əməliyyat — ustalara yalnız "geri alındı" bildirişi gedir
+export async function withdrawTaskGroup(ids: number[]): Promise<boolean> {
+  const { error } = await createClient().rpc("task_withdraw_group", { p_task_ids: ids });
+  if (error) {
+    toast.error(error.message);
+    return false;
+  }
+  return true;
+}
+
 // Qrupa sonradan usta əlavə et (0073): tək tapşırıq qrupa çevrilir; keçmiş, görülmüş tapşırıqda və təkrar usta bazada bloklanır
 export async function addTaskMember(taskId: number, employeeId: number): Promise<boolean> {
   const { error } = await createClient().rpc("task_add_member", { p_task_id: taskId, p_employee_id: employeeId });

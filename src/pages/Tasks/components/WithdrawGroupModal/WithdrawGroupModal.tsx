@@ -3,22 +3,21 @@ import { useState } from "react";
 import { Undo2, X } from "lucide-react";
 import { revalidate } from "@/lib/revalidate";
 import { toast } from "@/lib/toast";
-import { withdrawTask } from "@/services/tasks/tasks";
+import { withdrawTaskGroup } from "@/services/tasks/tasks";
 import { Modal } from "@/shared/components/Modal";
 import type { WithdrawGroupModalProps } from "@/types/tasks";
 import { MemberFaces } from "../MemberFaces";
 import { TaskSummary } from "../TaskSummary";
 import { Button } from "@/shared/components/Button";
 
-// Qrup tapşırığını bütövlükdə geri al: görülməmiş bütün üzvlərdən (hər üzvün sətri ayrıca geri alınır, 0057)
+// Qrup tapşırığını bütövlükdə geri al: görülməmiş bütün üzvlərdən, bir əməliyyatla (0100; hər üzvün sətri geri alınmış qalır)
 export function WithdrawGroupModal({ rows, employees, onClose }: WithdrawGroupModalProps) {
   const [pending, setPending] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setPending(true);
-    let ok = true;
-    for (const r of rows) ok = (await withdrawTask(r.id, null, true)) && ok;
+    const ok = await withdrawTaskGroup(rows.map((r) => r.id));
     setPending(false);
     revalidate();
     if (ok) toast.success("Qrup tapşırığı geri alındı");

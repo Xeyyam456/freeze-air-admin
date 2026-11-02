@@ -44,6 +44,7 @@ export type PublicFunctions = {
   task_set_done: import("./task_set_done").Fn
   task_set_note: import("./task_set_note").Fn
   task_withdraw: import("./task_withdraw").Fn
+  task_withdraw_group: import("./task_withdraw_group").Fn
   tool_repair_finish: import("./tool_repair_finish").Fn
   tool_repair_send: import("./tool_repair_send").Fn
   work_file_counts: import("./work_file_counts").Fn
