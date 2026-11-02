@@ -1,19 +1,8 @@
 import { Route, Routes } from "react-router";
-import { ClientPage, ClientsPage } from "@/pages/Clients";
-import DepotPage from "@/pages/Depot";
-import EmployeesPage from "@/pages/Employees";
-import ErrorCodesPage from "@/pages/ErrorCodes";
-import FuelPage from "@/pages/Fuel";
-import Home from "@/pages/Home";
-import AttendancePage from "@/pages/Attendance";
-import LeavesPage from "@/pages/Leaves";
-import LoginPage from "@/pages/Login";
-import ManagementPage from "@/pages/Management";
-import NotFoundPage from "@/pages/NotFound";
-import RequestsPage from "@/pages/Requests";
-import SitePage from "@/pages/Site";
-import TasksPage from "@/pages/Tasks";
-import WorkLogsPage from "@/pages/WorkLogs";
+import {
+  AttendancePage, ClientPage, ClientsPage, DepotPage, EmployeesPage, ErrorCodesPage, FuelPage, Home,
+  LeavesPage, LoginPage, ManagementPage, NotFoundPage, RequestsPage, SitePage, TasksPage, WorkLogsPage,
+} from "./pages";
 import { OwnerOnly } from "../OwnerOnly";
 import { RequireAuth } from "../RequireAuth";
 
