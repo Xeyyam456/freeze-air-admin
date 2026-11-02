@@ -1,4 +1,4 @@
-import { fetchFileCounts } from "@/lib/jobs";
+import { fetchFileCounts } from "@/services/jobs/fetchFileCounts";
 import { createClient } from "@/lib/supabase/client";
 import type { EmployeeLog } from "@/types/workLogs";
 

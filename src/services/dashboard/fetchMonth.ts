@@ -1,5 +1,6 @@
 import { fetchAll } from "@/lib/fetchAll";
-import { countJobs, fetchGroupMap } from "@/lib/jobs";
+import { countJobs } from "@/lib/jobs";
+import { fetchGroupMap } from "@/services/jobs/fetchGroupMap";
 import { createClient } from "@/lib/supabase/client";
 import type { MonthData, MonthLogRow } from "@/types/dashboard";
 

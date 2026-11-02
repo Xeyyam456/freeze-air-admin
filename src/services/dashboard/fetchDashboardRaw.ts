@@ -1,4 +1,5 @@
-import { fetchFileCounts, fetchGroupMap } from "@/lib/jobs";
+import { fetchFileCounts } from "@/services/jobs/fetchFileCounts";
+import { fetchGroupMap } from "@/services/jobs/fetchGroupMap";
 import { createClient } from "@/lib/supabase/client";
 import { localDate } from "@/shared/utils/localDate";
 

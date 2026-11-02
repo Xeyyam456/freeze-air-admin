@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
+import { mergeGroupLogs } from "@/lib/jobs";
+import { fetchGroupMap } from "@/services/jobs/fetchGroupMap";
 import { useData } from "@/lib/useData";
 import { fetchFilters, fetchLogs } from "@/services/workLogs/fetchLogs";
 import { norm } from "@/shared/utils/norm";

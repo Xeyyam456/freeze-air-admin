@@ -1,5 +1,7 @@
 import { formatDateAz } from "@/shared/utils/formatDateAz";
-import { fetchFileCounts, fetchGroupMap, mergeGroupLogs } from "@/lib/jobs";
+import { mergeGroupLogs } from "@/lib/jobs";
+import { fetchFileCounts } from "@/services/jobs/fetchFileCounts";
+import { fetchGroupMap } from "@/services/jobs/fetchGroupMap";
 import { useData } from "@/lib/useData";
 import { fetchAllLogs } from "@/services/dashboard/fetchAllLogs";
 import { norm } from "@/shared/utils/norm";

@@ -1,6 +1,6 @@
 import { listAccountEmails } from "@/services/accounts/accountActions";
 import { fetchAll } from "@/lib/fetchAll";
-import { fetchGroupMap } from "@/lib/jobs";
+import { fetchGroupMap } from "@/services/jobs/fetchGroupMap";
 import { createClient } from "@/lib/supabase/client";
 import { todayBaku } from "@/shared/utils/todayBaku";
 import type { EmployeesRaw } from "@/types/employees";
