@@ -32,7 +32,7 @@ export function GroupTaskRow({ g, actions }: GroupTaskRowProps) {
               <UserPlus size={15} />
             </IconButton>
             <IconButton onClick={() => actions.onWithdrawGroup(g.live)} className="!h-8 !w-8"
-              title="Görülməyib: geri al" aria-label="Tapşırığı geri al">
+              title="Geri al: işi və ya bir ustanı" aria-label="Tapşırığı geri al">
               <Undo2 size={15} />
             </IconButton>
           </span>
