@@ -3,6 +3,7 @@ export type PublicTables = {
   ac_brands: import("./ac_brands").Table
   ac_error_codes: import("./ac_error_codes").Table
   ac_models: import("./ac_models").Table
+  announcements: import("./announcements").Table
   attendance: import("./attendance").Table
   attendance_absences: import("./attendance_absences").Table
   companies: import("./companies").Table
@@ -16,8 +17,10 @@ export type PublicTables = {
   leave_requests: import("./leave_requests").Table
   material_pieces: import("./material_pieces").Table
   mileage_logs: import("./mileage_logs").Table
+  notifications: import("./notifications").Table
   place_location_log: import("./place_location_log").Table
   profiles: import("./profiles").Table
+  push_subscriptions: import("./push_subscriptions").Table
   site_equipment: import("./site_equipment").Table
   site_faq: import("./site_faq").Table
   site_segments: import("./site_segments").Table

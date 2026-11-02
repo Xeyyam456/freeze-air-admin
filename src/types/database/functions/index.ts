@@ -23,16 +23,19 @@ export type PublicFunctions = {
   give_piece: import("./give_piece").Fn
   give_tool: import("./give_tool").Fn
   is_admin: import("./is_admin").Fn
+  is_management: import("./is_management").Fn
   is_owner: import("./is_owner").Fn
   is_storekeeper: import("./is_storekeeper").Fn
   leave_cancel: import("./leave_cancel").Fn
-  place_set_location: import("./place_set_location").Fn
   leave_decide: import("./leave_decide").Fn
   material_small_to_pieces: import("./material_small_to_pieces").Fn
   mileage_fill_missing: import("./mileage_fill_missing").Fn
   my_employee_id: import("./my_employee_id").Fn
+  place_set_location: import("./place_set_location").Fn
   public_employees: import("./public_employees").Fn
   public_management: import("./public_management").Fn
+  push_subscribe: import("./push_subscribe").Fn
+  push_unsubscribe: import("./push_unsubscribe").Fn
   return_tool: import("./return_tool").Fn
   set_employee_photo: import("./set_employee_photo").Fn
   settle_material: import("./settle_material").Fn
