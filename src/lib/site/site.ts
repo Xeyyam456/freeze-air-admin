@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 export const SITE_URL = import.meta.env.VITE_SITE_URL ?? "http://localhost:3000";
 
 // Saytın məzmunu dəyişəndən sonra: admin siyahıları yenilənir və açıq saytın keşi dərhal təmizlənir
-// (web `/api/revalidate`: admin sessiyası ilə təsdiqlənir). Alınmasa sayt ən gec ~5 saniyəyə özü yenilənir.
+// (web `/api/revalidate`: admin sessiyası ilə təsdiqlənir). Alınmasa sayt ən gec ~1 dəqiqəyə özü yenilənir (web SITE_CACHE).
 export function revalidateSite() {
   revalidate();
   void createClient().auth.getSession().then(({ data }) => {
