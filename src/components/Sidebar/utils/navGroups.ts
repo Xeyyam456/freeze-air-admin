@@ -1,5 +1,5 @@
 import {
-  Building2, CalendarCheck, CalendarOff, ClipboardList, Fuel, Globe, Inbox, LayoutGrid, ListChecks, Store, TriangleAlert, UserCog, Users, Warehouse,
+  Building2, CalendarCheck, CalendarOff, ClipboardList, Fuel, Globe, Inbox, LayoutGrid, ListChecks, Megaphone, Store, TriangleAlert, UserCog, Users, Warehouse,
 } from "lucide-react";
 import type { NavBadge, NavGroup } from "@/types/layout";
 
@@ -29,6 +29,7 @@ export const GROUPS: NavGroup[] = [
       { href: "/icazeler", label: "İcazələr", icon: CalendarOff, badge: "leave" },
       { href: "/yanacaq", label: "Yanacaq", icon: Fuel },
       { href: "/rehberlik", label: "Rəhbərlik", icon: UserCog },
+      { href: "/elanlar", label: "Elanlar", icon: Megaphone },
     ],
   },
   {

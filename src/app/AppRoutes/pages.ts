@@ -6,6 +6,7 @@ export { default as LoginPage } from "@/pages/Login";
 
 // Qalan səhifələr ayrıca chunk: ilk açılışda yalnız lazım olan yüklənir
 const loaders = {
+  announcements: () => import("@/pages/Announcements"),
   clients: () => import("@/pages/Clients"),
   depot: () => import("@/pages/Depot"),
   employees: () => import("@/pages/Employees"),
@@ -21,6 +22,7 @@ const loaders = {
   workLogs: () => import("@/pages/WorkLogs"),
 };
 
+export const AnnouncementsPage = lazy(loaders.announcements);
 export const ClientsPage = lazy(() => loaders.clients().then((m) => ({ default: m.ClientsPage })));
 export const ClientPage = lazy(() => loaders.clients().then((m) => ({ default: m.ClientPage })));
 export const DepotPage = lazy(loaders.depot);

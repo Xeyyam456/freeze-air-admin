@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/auth/AuthProvider";
 import { Page } from "@/components/Page";
+import { PushPrompt } from "@/components/PushPrompt";
 import { WorkLogModal } from "@/components/work/WorkLogModal";
 import { AllLogsModal } from "./components/AllLogsModal";
 import { LogsCard } from "./components/LogsCard";
@@ -25,6 +26,7 @@ export default function Home() {
       {openLog && <WorkLogModal logId={openLog} onClose={() => setOpenLog(null)} />}
       {allLogs !== null && <AllLogsModal initialQuery={allLogs} onClose={() => setAllLogs(null)} />}
 
+      <div className="mb-5"><PushPrompt /></div>
       <StatsRow d={d} />
       <LowStockBanner items={d?.lowStock ?? []} />
 
