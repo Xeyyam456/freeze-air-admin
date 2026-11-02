@@ -40,6 +40,7 @@ Kondisioner servis şirkəti **Freeze Air Service** üçün sistem: ustalar, mü
 ## Komandalar
 Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 - `npm run dev` (port 5173), `npx tsc -b` (tip yoxlaması), `npm run build`. ESLint qoşulmayıb.
+- **Bundle limiti** (2026-11-02): `npm run build` sonunda `postbuild` → `scripts/check-bundle.mjs` (ilk yükləmə JS gzip ≤ 205 KB, ən böyük lazy chunk ≤ 55 KB). Keçilsə build uğursuz olur, Vercel deploy etmir. Səbəb adətən pozulmuş lazy-loading (səhifəni statik import) və ya ağır kitabxanadır; limiti qaldırmazdan əvvəl səbəbi tap.
 - Vercel: `vercel.json` bütün ünvanları `/index.html`-ə yönləndirir (SPA; yoxsa `/depo` kimi səhifə yenilənəndə 404 olur).
 - Dev serveri Claude özü fonda işlədir və Chrome-da ayrı tabı açıq saxlayır (yuxarıda "Layihə strukturu, git və iş qaydaları"). Server ölərsə, yenidən başladıb tabı yenilə.
 - Brauzer testi: Claude in Chrome; admin hesabı (Anar) brauzerdə artıq daxil olub. Parol yazma.
