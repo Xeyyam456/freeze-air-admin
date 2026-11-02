@@ -12,7 +12,7 @@ export function RequireAuth() {
   const { session, loading, admin, canManageTools } = useAuth();
   // Səhifə chunk-ları arxada yüklənir: menyudan keçid gözləmədən açılır
   useEffect(() => {
-    if (session) prefetchPages();
+    if (session) return prefetchPages();
   }, [session]);
   if (loading) return null;
   if (!session) return <Navigate to="/login" replace />;
