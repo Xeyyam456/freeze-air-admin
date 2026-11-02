@@ -1,7 +1,7 @@
 import { IconButton } from "@/shared/components/IconButton";
 import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router";
-import { deleteCompany } from "@/actions/companies";
+import { deleteCompany } from "@/services/clients/companyMutations";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { KIND } from "@/lib/kinds";
 import type { ClientCardHeaderProps } from "@/types/clients";

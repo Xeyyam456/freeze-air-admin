@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { addCompany } from "@/actions/companies";
+import { addCompany } from "@/services/clients/companyMutations";
 import { ActionForm } from "@/shared/components/ActionForm";
 import { FormActions } from "@/shared/components/FormActions";
 import { useOnSuccess } from "@/shared/hooks/useOnSuccess";

@@ -1,5 +1,5 @@
 import { useActionState, useRef } from "react";
-import { addStore } from "@/actions/stores";
+import { addStore } from "@/services/clients/storeMutations";
 import { ActionForm } from "@/shared/components/ActionForm";
 import { FormActions } from "@/shared/components/FormActions";
 import { useOnSuccess } from "@/shared/hooks/useOnSuccess";

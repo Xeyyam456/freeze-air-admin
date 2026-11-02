@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { addEmployee } from "@/actions/employees";
+import { addEmployee } from "@/services/employees/employeeMutations";
 import { ActionForm } from "@/shared/components/ActionForm";
 import { FormActions } from "@/shared/components/FormActions";
 import { useOnSuccess } from "@/shared/hooks/useOnSuccess";

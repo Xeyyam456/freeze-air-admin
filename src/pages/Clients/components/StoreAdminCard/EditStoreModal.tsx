@@ -2,7 +2,7 @@ import { StoreCode } from "@/components/StoreCard";
 import { IconButton } from "@/shared/components/IconButton";
 import { useActionState } from "react";
 import { X } from "lucide-react";
-import { updateStore } from "@/actions/stores";
+import { updateStore } from "@/services/clients/storeMutations";
 import { FormActions } from "@/shared/components/FormActions";
 import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
 import { useOnSuccess } from "@/shared/hooks/useOnSuccess";

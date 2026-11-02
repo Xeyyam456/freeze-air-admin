@@ -1,5 +1,5 @@
 import { useActionState, useState } from "react";
-import { deleteEmployeeAccount, resetEmployeePassword } from "@/actions/accounts";
+import { deleteEmployeeAccount, resetEmployeePassword } from "@/services/accounts/accountActions";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { ActionForm } from "@/shared/components/ActionForm";
 import { useOnSuccess } from "@/shared/hooks/useOnSuccess";

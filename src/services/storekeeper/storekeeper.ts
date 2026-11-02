@@ -1,4 +1,4 @@
-import { createEmployeeAccount } from "@/actions/accounts";
+import { createEmployeeAccount } from "@/services/accounts/accountActions";
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
 import { text } from "@/lib/form-state";

@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { createEmployeeAccount } from "@/actions/accounts";
+import { createEmployeeAccount } from "@/services/accounts/accountActions";
 import { ActionForm } from "@/shared/components/ActionForm";
 import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import type { AccountCreateProps } from "@/types/employees";

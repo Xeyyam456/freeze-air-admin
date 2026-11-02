@@ -1,6 +1,6 @@
 import { useState, useTransition } from "react";
 import { readSheet } from "read-excel-file/browser";
-import { importStores } from "@/actions/stores";
+import { importStores } from "@/services/clients/storeMutations";
 import { KIND } from "@/lib/kinds";
 import { toast } from "@/lib/toast";
 import type { ImportRow, StoreScopeProps } from "@/types/clients";

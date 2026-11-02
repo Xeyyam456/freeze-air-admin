@@ -16,7 +16,7 @@
   - `kinds.ts`: şirkət/market mətnləri (`KIND`);
   - `navigation.ts`: koordinat parse, xəritə linkləri;
   - `form-state.ts`, `experience.ts`.
-- `actions/`: Supabase çağırışları (companies, stores, employees, tools, accounts → Edge Function, requests, site, siteContent).
+- `services/<domen>/`: Supabase çağırışları (company/store/employeeMutations, accountActions → Edge Function, requestMutations və s.); köhnə `actions/` qovluğu silinib.
 - `pages/`: Home (iş paneli, aşağıda ətraflı), Clients, Employees, Management, Depot (aşağıda), Requests (müraciətlər: solda axtarışlı siyahı, sağda seçilmiş müraciət; zəng/WhatsApp/e-poçt, baxıldı, sil), Site, Login.
 - `components/`:
   - ümumi: Page, AppLayout (Sidebar + CommandPalette), AppHeader (axtarış, profil + ProfileModal + LogoutButton), SidePanel (`WithSidePanel`), Modal (`useEscapeLayer`: Esc yalnız ən üst qatı bağlayır), ConfirmModal/ConfirmButton, `shared/components/{ActionForm, SaveConfirmForm, FormActions}` + `shared/hooks/useOnSuccess`, `shared/components/DatePicker` (az dilli təqvim), `shared/components/ToolPicker` (axtarışlı seçim: alət və ya əməkdaş; `name`, `icon`, `hint` prop-ları), MapButton, StoreCard, Toaster, ContactRequestsListener;

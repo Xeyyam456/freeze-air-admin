@@ -1,6 +1,6 @@
 # Arxitektura — Admin paneli (Vite + React)
 
-Qəlib: `github.com/Xeyyam456/TikTak-Project-Admin-Panel`. Köçürmə domen-domen gedir (irəliləyiş: kökdə `REFACTOR-PLAN.md`); köhnə qovluqlar (`components/`, `actions/`, `lib/`) boşalana qədər yeni ilə yanaşı yaşayır.
+Qəlib: `github.com/Xeyyam456/TikTak-Project-Admin-Panel`. Köçürmə domen-domen gedir (irəliləyiş: kökdə `REFACTOR-PLAN.md`); köhnə qovluqlar (`components/`, `lib/`) boşalana qədər yeni ilə yanaşı yaşayır.
 
 ## Əsas qaydalar
 1. **Hər kod faylı ən çox 100 sətir** (`.ts`, `.tsx`, `.mjs`). CSS faylları istisnadır. Yoxlama: `npm run check:lines`.

@@ -1,7 +1,7 @@
 import { IconButton } from "@/shared/components/IconButton";
 import { useActionState } from "react";
 import { X } from "lucide-react";
-import { updateCompany } from "@/actions/companies";
+import { updateCompany } from "@/services/clients/companyMutations";
 import { FormActions } from "@/shared/components/FormActions";
 import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
 import { useOnSuccess } from "@/shared/hooks/useOnSuccess";

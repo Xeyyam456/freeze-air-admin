@@ -1,4 +1,4 @@
-import { listAccountEmails } from "@/actions/accounts";
+import { listAccountEmails } from "@/services/accounts/accountActions";
 import { createClient } from "@/lib/supabase/client";
 import type { ManagersData } from "@/types/management";
 

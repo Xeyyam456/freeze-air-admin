@@ -1,7 +1,7 @@
 import { IconButton } from "@/shared/components/IconButton";
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import { deleteStore } from "@/actions/stores";
+import { deleteStore } from "@/services/clients/storeMutations";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { StoreCard } from "@/components/StoreCard";
 import { KIND } from "@/lib/kinds";

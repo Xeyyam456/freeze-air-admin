@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Settings2 } from "lucide-react";
-import { listAccountEmails } from "@/actions/accounts";
+import { listAccountEmails } from "@/services/accounts/accountActions";
 import { useAuth } from "@/auth/AuthProvider";
 import { KeeperModal } from "./keeper/KeeperModal";
 import { useMedia } from "@/lib/navDrawer";

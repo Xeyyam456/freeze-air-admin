@@ -1,4 +1,4 @@
-import { listAccountEmails } from "@/actions/accounts";
+import { listAccountEmails } from "@/services/accounts/accountActions";
 import { fetchAll } from "@/lib/fetchAll";
 import { fetchGroupMap } from "@/lib/jobs";
 import { createClient } from "@/lib/supabase/client";

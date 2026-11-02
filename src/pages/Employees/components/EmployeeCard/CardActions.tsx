@@ -1,6 +1,6 @@
 import { IconButton } from "@/shared/components/IconButton";
 import { Pencil, Trash2 } from "lucide-react";
-import { deleteEmployee } from "@/actions/employees";
+import { deleteEmployee } from "@/services/employees/employeeMutations";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import type { CardActionsProps } from "@/types/employees";
 

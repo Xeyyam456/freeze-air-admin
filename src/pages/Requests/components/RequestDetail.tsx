@@ -2,7 +2,7 @@ import { Label } from "@/shared/components/Label";
 import { Button } from "@/shared/components/Button";
 import { useState } from "react";
 import { CalendarDays, CircleCheck, Mail, MessageSquareText, Phone, RotateCcw, Trash2 } from "lucide-react";
-import { deleteRequest, setRequestHandled } from "@/actions/requests";
+import { deleteRequest, setRequestHandled } from "@/services/requests/requestMutations";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { initials } from "@/lib/experience";
