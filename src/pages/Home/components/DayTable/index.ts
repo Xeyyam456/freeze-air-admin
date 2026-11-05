@@ -1,1 +1,0 @@
-export { DayTable } from "./DayTable";

@@ -1,0 +1,26 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .value b {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--d-text);
+    font-variant-numeric: tabular-nums;
+  }
+  .label {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--d-muted);
+  }
+  .chart {
+    margin-top: auto;
+    padding-top: 16px;
+  }
+}

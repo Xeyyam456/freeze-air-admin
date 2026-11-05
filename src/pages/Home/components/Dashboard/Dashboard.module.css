@@ -1,0 +1,71 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  /* Panel səhifəsi tünd: başlıq və menyu onsuz da tünddür, məzmun da onlarla bir olur */
+  :global(body):has(.dash) {
+    background: #0e1626;
+  }
+  .dash {
+    --d-page: #0e1626;
+    --d-card: #151e31;
+    --d-card-2: #1c2740;
+    --d-line: rgba(255, 255, 255, 0.07);
+    --d-line-strong: rgba(255, 255, 255, 0.12);
+    --d-text: #f0efec;
+    --d-text-2: #b4bccb;
+    --d-muted: #7d879b;
+    --d-good: #0ca30c;
+    --d-bad: #e66767;
+    /* Kateqoriya rəngləri (dataviz, tünd fon üçün yoxlanıb): mavi, narıncı, yaşılımtıl + "Digər" boz */
+    --s1: #3987e5;
+    --s2: #d95926;
+    --s3: #199e70;
+    --s-other: #4a5468;
+    display: grid;
+    gap: 20px;
+    color: var(--d-text);
+  }
+  .loading {
+    min-height: 520px;
+    border-radius: 14px;
+    background: #151e31;
+  }
+  /* Yuxarı: solda 2×2 göstərici, sağda iri qrafik (iki sıra hündürlüyündə) */
+  .top {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 2fr);
+    grid-template-rows: auto auto;
+    gap: 20px;
+  }
+  .big {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+  .bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px;
+  }
+  @media (width < 1280px) {
+    .top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .big { grid-column: 1 / -1; grid-row: auto; }
+  }
+  @media (width < 1024px) {
+    .bottom { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (width < 640px) {
+    .dash, .top, .bottom { gap: 12px; }
+    .top { grid-template-columns: minmax(0, 1fr); }
+  }
+}
+
+@layer components {
+  /* Bildiriş təklifi (ortaq PushPrompt kartı) tünd dashboard-da tünd kart kimi */
+  .notice:empty { display: none; }
+  .notice.notice > * {
+    color: var(--d-text);
+    background: var(--d-card);
+    border-color: transparent;
+    box-shadow: inset 0 0 0 1px var(--d-line);
+  }
+}

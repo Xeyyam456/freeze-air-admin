@@ -1,0 +1,23 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .up {
+    color: var(--d-good);
+    background: rgba(12, 163, 12, 0.16);
+  }
+  .down {
+    color: var(--d-bad);
+    background: rgba(208, 59, 59, 0.16);
+  }
+}

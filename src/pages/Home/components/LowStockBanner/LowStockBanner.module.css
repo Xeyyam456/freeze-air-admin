@@ -1,0 +1,42 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: var(--d-card);
+    box-shadow: inset 0 0 0 1px rgba(250, 178, 25, 0.35);
+    transition: background 120ms ease-out;
+  }
+  .banner:hover { background: var(--d-card-2); }
+  .icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    color: #fab219;
+    background: rgba(250, 178, 25, 0.14);
+  }
+  .title {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--d-text);
+  }
+  .text {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    color: var(--d-text-2);
+  }
+  .arrow {
+    flex: none;
+    margin-top: 10px;
+    color: #fab219;
+  }
+}

@@ -11,10 +11,10 @@ export function revalidate(...keys: string[]) {
 // yoxsa həmin səhifə canlı yenilənməz (formdan sonrakı revalidate() onsuz da hamısını yeniləyir).
 export const LIVE = {
   // tapşırıq "görüldü" → iş qeydi yaranır: işlər, Panel, ustaların iş sayı da dəyişir
-  tasks: ["tasks-day", "dashboard", "nav-badges", "month-dashboard", "worklogs", "group-map-range", "all-logs", "group-map-all", "file-counts-all", "work-log", "employees-page", "clients", "client-detail", "dashboard-flow"],
-  leaves: ["leaves", "nav-badges", "employees-page", "dashboard-flow"],
-  attendance: ["employees-page", "dashboard-flow"], // Davamiyyət səhifəsinin öz canlı dinləyicisi var (services/attendance/liveChannel.ts)
-  fuel: ["fuel", "dashboard-flow"],
-  depot: ["depot", "nav-badges", "dashboard", "depot-journal", "depot-tool-history", "dashboard-flow"],
-  requests: ["contact-requests", "nav-badges", "dashboard-flow"],
+  tasks: ["tasks-day", "dashboard", "nav-badges", "month-dashboard", "worklogs", "group-map-range", "all-logs", "group-map-all", "file-counts-all", "work-log", "employees-page", "clients", "client-detail", "panel-extras"],
+  leaves: ["leaves", "nav-badges", "employees-page", "panel-extras"],
+  attendance: ["employees-page", "panel-extras"], // Davamiyyət səhifəsinin öz canlı dinləyicisi var (services/attendance/liveChannel.ts)
+  fuel: ["fuel", "panel-extras"],
+  depot: ["depot", "nav-badges", "dashboard", "depot-journal", "depot-tool-history", "panel-extras"],
+  requests: ["contact-requests", "nav-badges", "panel-extras"],
 } as const;

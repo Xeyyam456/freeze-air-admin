@@ -1,1 +1,0 @@
-export { MastersCard } from "./MastersCard";

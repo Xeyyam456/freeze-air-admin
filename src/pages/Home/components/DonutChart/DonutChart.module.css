@@ -1,0 +1,59 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .root {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 16px;
+  }
+  .ring {
+    flex: none;
+    width: 92px;
+    height: 92px;
+    transform: rotate(-90deg);
+  }
+  .track {
+    fill: none;
+    stroke: var(--d-card-2);
+    stroke-width: 9;
+  }
+  .seg {
+    fill: none;
+    stroke-width: 9;
+    transition: stroke-width 120ms ease-out;
+  }
+  .seg:hover { stroke-width: 11; }
+  .legend {
+    display: grid;
+    min-width: 0;
+    flex: 1;
+    gap: 7px;
+    font-size: 12px;
+  }
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .legend i {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .legend span {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--d-text-2);
+  }
+  .legend b {
+    font-weight: 700;
+    color: var(--d-text);
+  }
+  .none { color: var(--d-muted); }
+}

@@ -1,0 +1,57 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .root {
+    position: relative;
+    width: 100%;
+  }
+  .root svg {
+    display: block;
+    overflow: visible;
+    touch-action: pan-y;
+  }
+  .grid {
+    stroke: var(--d-line);
+    stroke-dasharray: 3 4;
+  }
+  .yLabel,
+  .xLabel {
+    font-size: 10px;
+    font-weight: 500;
+    fill: var(--d-muted);
+  }
+  .yLabel { text-anchor: end; }
+  .xLabel { text-anchor: middle; }
+  .line {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .cross {
+    stroke: var(--d-text-2);
+    stroke-width: 1;
+    stroke-dasharray: 2 3;
+  }
+  .dot {
+    stroke: var(--d-card);
+    stroke-width: 2;
+  }
+  .tip {
+    position: absolute;
+    z-index: 2;
+    display: grid;
+    gap: 1px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transform: translate(-50%, -100%);
+    font-size: 11px;
+    white-space: nowrap;
+    color: var(--d-page);
+    background: var(--d-text);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+  }
+  .tip b { font-size: 13px; font-weight: 800; }
+  .tip span { color: #52514e; }
+}
