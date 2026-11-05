@@ -9,9 +9,10 @@ export const CELL: Record<DayStatus, string> = {
   leave: "bg-violet-500 text-white",
   absent: "bg-danger text-white",
   pending: "bg-primary-soft text-primary ring-2 ring-primary",
-  off: "bg-slate-500/30 text-slate-300",
-  future: "bg-bg text-muted",
-  before: "bg-bg text-muted/60",
+  off: "bg-slate-400/25 text-slate-200",
+  // Tünd temada boş günlər pəncərədən bir az açıq xana: rəqəm aydın oxunur (əvvəl bg-bg ilə "çökük" görünürdü)
+  future: "bg-white/[0.07] text-ink/85 ring-1 ring-inset ring-white/[0.06]",
+  before: "bg-white/[0.04] text-ink/45",
 };
 
 export const LEGEND: LegendItem[] = [
