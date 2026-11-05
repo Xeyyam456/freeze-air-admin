@@ -28,3 +28,6 @@ export type { CardMenuItem } from "./CardMenuItem";
 export type { CardMenuProps } from "./CardMenuProps";
 export type { ChartCardProps } from "./ChartCardProps";
 export type { SkeletonCardProps } from "./SkeletonCardProps";
+export type { Tone } from "./Tone";
+export type { KpiHeadProps } from "./KpiHeadProps";
+export type { ChartPeakProps } from "./ChartPeakProps";

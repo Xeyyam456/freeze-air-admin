@@ -161,12 +161,12 @@ html {
 /* ---------- Ölçü dəyişənləri (komponent modulları bunları oxuyur) ---------- */
 @layer components {
   :root {
-    /* 15 bənd + 5 qrup başlığı + boşluqlar + loqo + "Menyunu yığ": qalan yer bəndlər arasında bölünür */
-    --nav-item: clamp(28px, calc((100vh / var(--zoom) - 360px) / 15), 40px);
+    /* 15 bənd + 5 qrup başlığı + boşluqlar + loqo: qalan yer bəndlər arasında bölünür (yığ/aç düyməsi kənardadır, yer tutmur) */
+    --nav-item: clamp(28px, calc((100vh / var(--zoom) - 310px) / 15), 40px);
   }
   @media (max-height: 780px) {
     :root {
-      --nav-item: clamp(28px, calc((100vh / var(--zoom) - 230px) / 15), 40px);
+      --nav-item: clamp(28px, calc((100vh / var(--zoom) - 180px) / 15), 40px);
     }
   }
   @media (width < 1024px) {

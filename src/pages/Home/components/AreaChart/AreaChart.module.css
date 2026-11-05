@@ -106,3 +106,51 @@
     from { opacity: 0; transform: translate(-50%, calc(-100% + 6px)) scale(0.96); }
   }
 }
+
+@layer components {
+  /* Xəttin altında yumşaq parıltı (statik bulanıq kopya) */
+  .glowLine {
+    fill: none;
+    stroke-width: 6;
+    stroke-linecap: round;
+    opacity: 0.45;
+  }
+  /* Davamlı: xətt boyunca soldan sağa axan işıq zolağı (məlumat "canlıdır" hissi) */
+  .streak {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.85);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 60 940;
+    stroke-dashoffset: 1000;
+    animation: streak 6.5s cubic-bezier(0.45, 0, 0.55, 1) infinite 1.8s;
+    opacity: 0;
+  }
+  @keyframes streak {
+    0% { stroke-dashoffset: 60; opacity: 0; }
+    8% { opacity: 1; }
+    55% { opacity: 1; }
+    65%, 100% { stroke-dashoffset: -940; opacity: 0; }
+  }
+  /* Zirvə nişanı: xətt ora çatanda yuxarıdan düşüb açılır */
+  .peak { animation: fadeIn 300ms ease-out both 1100ms; }
+  .peakDot {
+    stroke: var(--d-card);
+    stroke-width: 2;
+  }
+  .peak > g {
+    transform-box: fill-box;
+    transform-origin: bottom center;
+    animation: peakIn 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both 1150ms;
+  }
+  .peakPill { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35)); }
+  .peakText {
+    font-size: 10.5px;
+    font-weight: 800;
+    text-anchor: middle;
+    fill: #fff;
+  }
+  @keyframes peakIn {
+    from { opacity: 0; transform: translateY(6px) scale(0.6); }
+  }
+}

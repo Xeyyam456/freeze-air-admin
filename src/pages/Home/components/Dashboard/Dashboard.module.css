@@ -45,8 +45,10 @@
     from { opacity: 0; transform: translateY(14px) scale(0.985); filter: blur(6px); }
     to { opacity: 1; transform: none; filter: none; }
   }
-  /* Azaldılmış hərəkət: bütün panel animasiyaları söndürülür, son vəziyyət dərhal görünür */
+  /* Azaldılmış hərəkət: bütün panel animasiyaları (davamlılar da) söndürülür, son vəziyyət dərhal görünür */
   @media (prefers-reduced-motion: reduce) {
+    .dash::before,
+    .dash::after,
     .dash *,
     .dash *::before,
     .dash *::after {
@@ -91,5 +93,42 @@
     background: var(--d-card);
     border-color: transparent;
     box-shadow: inset 0 0 0 1px var(--d-line);
+  }
+}
+
+@layer components {
+  /* Depo xəbərdarlığı geniş ekranda sidebar-ın altındadır (SidebarAlert); burada yalnız siyirtmə menyulu ekranda görünür */
+  .stockMobile:empty { display: none; }
+  @media (width >= 1024px) {
+    .stockMobile { display: none; }
+  }
+  /* Davamlı fon: arxada iki çox zəif işıq ləkəsi yavaş üzür (yalnız transform; mətnin oxunuşuna təsir etmir) */
+  .dash { position: relative; isolation: isolate; }
+  .dash::before,
+  .dash::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    width: 60vmax;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .dash::before {
+    top: -30vmax;
+    left: 10vw;
+    background: radial-gradient(circle, rgba(57, 135, 229, 0.09), transparent 62%);
+    animation: aurora 28s ease-in-out infinite alternate;
+  }
+  .dash::after {
+    right: -25vmax;
+    bottom: -35vmax;
+    background: radial-gradient(circle, rgba(31, 181, 127, 0.07), transparent 62%);
+    animation: aurora 34s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes aurora {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(-12vw, 10vh) scale(1.2); }
   }
 }

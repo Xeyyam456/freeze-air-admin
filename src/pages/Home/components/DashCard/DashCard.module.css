@@ -34,3 +34,67 @@
     .card { padding: 14px; }
   }
 }
+
+@layer components {
+  /* Vurğu rəngləri: kartın özü və içindəkilər (ikon plitəsi, sütunlar, zolaq) --tone-u oxuyur */
+  .card { position: relative; isolation: isolate; }
+  .card[data-tone="blue"] { --tone: #3987e5; --shine-delay: 2s; }
+  .card[data-tone="green"] { --tone: #1fb57f; --shine-delay: 3.2s; }
+  .card[data-tone="orange"] { --tone: #ea8a3a; --shine-delay: 4.4s; }
+  .card[data-tone="violet"] { --tone: #9b7bf2; --shine-delay: 5.6s; }
+  .card[data-tone] {
+    background:
+      linear-gradient(155deg, color-mix(in srgb, var(--tone) 13%, var(--d-card)) 0%, var(--d-card) 58%);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--tone) 20%, transparent),
+      0 24px 40px -34px color-mix(in srgb, var(--tone) 45%, transparent);
+  }
+  .card[data-tone]:hover {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--tone) 38%, transparent),
+      0 24px 48px -30px color-mix(in srgb, var(--tone) 60%, transparent);
+  }
+  /* Davamlı: kartın içində yavaş gəzən işıq ləkəsi (yalnız transform — GPU, yük yoxdur) */
+  .glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .glow::before {
+    content: "";
+    position: absolute;
+    top: -55%;
+    left: -25%;
+    width: 75%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, color-mix(in srgb, var(--tone) 30%, transparent) 0%, transparent 65%);
+    animation: drift 16s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  /* Davamlı: üst kənar boyunca arabir keçən incə işıq xətti */
+  .card[data-tone]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--tone) 85%, white), transparent) no-repeat;
+    background-size: 40% 100%;
+    opacity: 0.9;
+    animation: sheen 7s ease-in-out infinite var(--shine-delay);
+    background-position: -100% 0;
+    pointer-events: none;
+  }
+  @keyframes drift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(55%, 35%) scale(1.25); }
+  }
+  @keyframes sheen {
+    0% { background-position: -100% 0; }
+    35%, 100% { background-position: 200% 0; }
+  }
+}

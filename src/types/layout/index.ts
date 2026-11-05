@@ -14,3 +14,4 @@ export type { AppLayoutProps } from "./AppLayoutProps";
 export type { LogoutButtonProps } from "./LogoutButtonProps";
 export type { ProfileModalProps } from "./ProfileModalProps";
 export type { WithSidePanelProps } from "./WithSidePanelProps";
+export type { SidebarAlertProps } from "./SidebarAlertProps";

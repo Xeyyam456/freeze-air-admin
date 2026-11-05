@@ -21,7 +21,7 @@
   .bar {
     width: min(10px, 100%);
     border-radius: 4px 4px 0 0;
-    background: var(--s1);
+    background: linear-gradient(180deg, var(--tone, var(--s1)), color-mix(in srgb, var(--tone, var(--s1)) 45%, transparent));
     opacity: 0.55;
     transition: opacity 120ms ease-out;
   }
@@ -59,7 +59,7 @@
     animation-delay: calc(320ms + var(--i, 0) * 45ms);
     transition: opacity 160ms ease-out, height 500ms var(--ease-out);
   }
-  .today { box-shadow: 0 0 12px rgba(57, 135, 229, 0.45); }
+  .today { box-shadow: 0 0 14px color-mix(in srgb, var(--tone, var(--s1)) 70%, transparent); }
   .col::after {
     transform: translate(-50%, 4px);
     transition: opacity 160ms ease-out, transform 220ms var(--ease-out);

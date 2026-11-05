@@ -1,7 +1,9 @@
 import { Link } from "react-router";
+import { ListChecks } from "lucide-react";
 import type { KpiProps } from "@/types/dashboard";
 import { CountUp } from "@/components/CountUp";
 import { DashCard } from "../DashCard";
+import { KpiHead } from "./KpiHead";
 import s from "./KpiCards.module.css";
 
 // Bugünkü tapşırıqlar: neçəsi görülüb (qrup tapşırığı bir say)
@@ -10,7 +12,8 @@ export function KpiTasks({ d }: KpiProps) {
   const done = tasks.filter((t) => t.done).length;
   const pct = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
   return (
-    <DashCard>
+    <DashCard tone="orange">
+      <KpiHead icon={ListChecks} />
       <div className={s.value}><b><CountUp value={tasks.length} duration={1400} /></b></div>
       <p className={s.label}>Bugünkü tapşırıq</p>
       <Link to="/tapshiriqlar" className={s.progress}>

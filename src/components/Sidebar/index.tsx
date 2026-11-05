@@ -1,14 +1,14 @@
 import { LogoMark } from "@/shared/components/LogoMark";
-import { SideLink } from "./components/SideLink";
 import s from "./styles/Sidebar.module.css";
 import { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router";
-import { PanelLeftClose, PanelLeftOpen, Snowflake, X } from "lucide-react";
+import { ChevronsLeft, Snowflake, X } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { LogoutButton } from "@/components/LogoutButton";
 import { useData } from "@/lib/useData";
 import { fetchNavBadges } from "@/services/nav/fetchNavBadges";
 import type { SidebarProps } from "@/types/layout";
+import { SidebarAlert } from "./components/SidebarAlert";
 import { SidebarNav } from "./components/SidebarNav";
 
 export function Sidebar({ collapsed, narrow, open, onToggle, onClose }: SidebarProps) {
@@ -27,7 +27,7 @@ export function Sidebar({ collapsed, narrow, open, onToggle, onClose }: SidebarP
   }, [narrow]);
 
   return (
-    <aside ref={asideRef} className={s.sidebar} data-collapsed={collapsed || undefined} data-open={open || undefined}>
+    <aside ref={asideRef} className={s.sidebar} data-collapsed={collapsed || undefined} data-open={open || undefined} data-alert={badges?.stock ? "" : undefined}>
       <Link to="/" className={s.brand} title="Freeze Air Service — Panel">
         <LogoMark className="shrink-0"><Snowflake size={22} strokeWidth={2.4} /></LogoMark>
         <span className={`${s.text} leading-tight`}>
@@ -35,16 +35,17 @@ export function Sidebar({ collapsed, narrow, open, onToggle, onClose }: SidebarP
           <span className="block text-xs text-white/55">İdarəetmə paneli</span>
         </span>
       </Link>
+      {/* ≥ 1024: menyunu yığ / aç — sağ kənarda yumru düymə (usta paneli kimi; əvvəl ayaqda ayrıca sətir idi) */}
+      {!narrow && <button type="button" onClick={onToggle} className={s.edge}
+        title={collapsed ? "Menyunu aç" : "Menyunu yığ"} aria-label={collapsed ? "Menyunu aç" : "Menyunu yığ"}>
+        <ChevronsLeft size={14} strokeWidth={2.6} />
+      </button>}
       {narrow && <button type="button" onClick={onClose} className={s.close} aria-label="Menyunu bağla"><X size={18} /></button>}
 
       <SidebarNav collapsed={collapsed} owner={owner} pathname={pathname} badges={badges} />
+      <SidebarAlert count={badges?.stock ?? 0} title={badges?.stockTitle ?? ""} collapsed={collapsed} />
 
       {narrow && <div className="shrink-0 px-3 pb-3 sm:hidden"><LogoutButton menu /></div>}
-      {!narrow && <SideLink onClick={onToggle} className={s.toggle}
-        title={collapsed ? "Menyunu aç" : "Menyunu yığ"} aria-label={collapsed ? "Menyunu aç" : "Menyunu yığ"}>
-        {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-        <span className={s.text}>Menyunu yığ</span>
-      </SideLink>}
     </aside>
   );
 }

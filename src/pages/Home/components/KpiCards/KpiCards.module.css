@@ -51,7 +51,8 @@
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, rgba(25, 158, 112, 0.7), var(--s3));
+    background: linear-gradient(90deg, color-mix(in srgb, var(--tone, var(--s3)) 55%, transparent), var(--tone, var(--s3)));
+    box-shadow: 0 0 12px color-mix(in srgb, var(--tone, var(--s3)) 60%, transparent);
     transform-origin: left;
     animation: fill 1100ms var(--ease-out) both 420ms;
     transition: width 600ms var(--ease-out);
@@ -65,4 +66,43 @@
   }
   .progress:hover .progressText span,
   .duty:hover .dutyText { color: var(--d-text); }
+}
+
+@layer components {
+  /* Kartın başı: ikon plitəsi + faiz nişanı (StockPilot üslubu) */
+  .head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .tile {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 12px;
+    color: var(--tone, var(--s1));
+    background: color-mix(in srgb, var(--tone, var(--s1)) 16%, transparent);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--tone, var(--s1)) 32%, transparent),
+      0 6px 18px -8px color-mix(in srgb, var(--tone, var(--s1)) 70%, transparent);
+  }
+  /* Davamlı: plitənin üstündən arabir çəp işıq keçir */
+  .tile::after {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.22) 50%, transparent 58%);
+    transform: translateX(-70%);
+    animation: tileShine 6s ease-in-out infinite var(--shine-delay, 2s);
+  }
+  @keyframes tileShine {
+    0% { transform: translateX(-70%); }
+    25%, 100% { transform: translateX(70%); }
+  }
+  .value b { font-size: 30px; }
 }

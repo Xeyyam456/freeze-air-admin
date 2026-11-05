@@ -14,7 +14,7 @@ const RANGES = [7, 14, 30] as const;
 
 // Qrafik kartı: "…" menyusundan dövr (son 7 / 14 / 30 gün) seçilir, rəqəm və qrafik dərhal dəyişir; bölməyə keçid də menyudadır.
 // 7 və 14 gündə əvvəlki eyni dövrlə müqayisə faizi göstərilir (30 gün üçün əvvəlki dövr yüklənmir).
-export function ChartCard({ title, noun, note, values, days, color, href, hrefLabel, className }: ChartCardProps) {
+export function ChartCard({ title, noun, note, values, days, color, tone, href, hrefLabel, chartHeight, className }: ChartCardProps) {
   const navigate = useNavigate();
   const [range, setRange] = useState<(typeof RANGES)[number]>(30);
   const shown = values.slice(-range);
@@ -27,14 +27,14 @@ export function ChartCard({ title, noun, note, values, days, color, href, hrefLa
   ];
 
   return (
-    <DashCard title={title} subtitle={`Son ${range} gün`} menu={menu} className={className}>
+    <DashCard title={title} subtitle={`Son ${range} gün`} menu={menu} tone={tone} className={className}>
       <div className={s.value}>
         <b><CountUp value={total} duration={1400} /></b>
         {range < 30 && <DeltaBadge value={deltaPct(total, before)} />}
       </div>
       <p className={s.label}>{note ?? `Son ${range} gündə ${noun}`}</p>
       <div className={s.chart}>
-        <AreaChart values={shown} labels={days.slice(-range).map(dayLabel)} color={color} unit={noun} />
+        <AreaChart values={shown} labels={days.slice(-range).map(dayLabel)} color={color} unit={noun} height={chartHeight} />
       </div>
     </DashCard>
   );

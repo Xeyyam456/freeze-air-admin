@@ -121,12 +121,6 @@
     font-size: 11px;
     font-weight: 800;
   }
-  .toggle {
-    width: calc(100% - 24px);
-    margin: 0 12px 14px;
-    flex-shrink: 0;
-    color: var(--sb-muted);
-  }
   .close {
     display: none;
   }
@@ -171,7 +165,8 @@
   /* Dar ekran (< 1024px): menyu sürüşən siyirtmədir; telefonda siyirtmə toxunma ilə sürüşə bilər */
   @media (width < 1024px) {
     .sidebar {
-      width: min(300px, 86vw);
+      /* Telefonda dar: ekranın çoxunu örtməsin (320-də ~250px) */
+      width: min(264px, 82vw);
       transform: translateX(-100%);
       transition: transform 220ms ease;
       box-shadow: none;
@@ -196,4 +191,138 @@
       background: var(--sb-line);
     }
   }
+}
+
+@layer components {
+  /* Aktiv bənd: mavi parıltı + soldakı zolaq sakit "nəfəs alır" (davamlı) */
+  .link[aria-current="page"] {
+    box-shadow:
+      inset 0 0 0 1px rgba(57, 135, 229, 0.24),
+      0 8px 24px -12px rgba(57, 135, 229, 0.55);
+  }
+  .link[aria-current="page"]::before {
+    animation: barIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both, breathe 3.2s ease-in-out infinite 400ms;
+  }
+  @keyframes breathe {
+    50% { opacity: 0.55; box-shadow: 0 0 5px rgba(57, 135, 229, 0.5); }
+  }
+
+  /* Depo xəbərdarlığı kartı (StockPilot "Reorder needed" üslubu, yığcam: bəndlərə yer qalsın) */
+  .alert {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin: 0 12px 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(150deg, rgba(234, 138, 58, 0.16), rgba(234, 138, 58, 0.04) 70%);
+    box-shadow: inset 0 0 0 1px rgba(234, 138, 58, 0.28);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+  }
+  .alert:hover { box-shadow: inset 0 0 0 1px rgba(234, 138, 58, 0.5), 0 10px 24px -14px rgba(234, 138, 58, 0.7); }
+  .alertIcon {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    color: #f3a35b;
+    background: rgba(234, 138, 58, 0.16);
+  }
+  /* Davamlı: ikonun ətrafından yayılan halqa */
+  .alertIcon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    animation: alertRing 2.6s ease-out infinite;
+  }
+  @keyframes alertRing {
+    0% { box-shadow: 0 0 0 0 rgba(234, 138, 58, 0.5); }
+    70%, 100% { box-shadow: 0 0 0 9px rgba(234, 138, 58, 0); }
+  }
+  .alertBody {
+    display: grid;
+    min-width: 0;
+    flex: 1;
+  }
+  .alertBody b {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--sb-text);
+    white-space: nowrap;
+  }
+  .alertBody small {
+    overflow: hidden;
+    font-size: 11px;
+    color: #c9a27f;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .alertArrow {
+    flex: none;
+    color: #f3a35b;
+    transition: transform 200ms ease;
+  }
+  .alert:hover .alertArrow { transform: translateX(3px); }
+  .sidebar[data-collapsed] .alert {
+    justify-content: center;
+    padding: 8px 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  /* Kart göründükdə bəndlər ~60px yığcamlaşır (menyu sürüşmür, hamısı ekrana sığmalıdır) */
+  @media (width >= 1024px) {
+    .sidebar[data-alert] { --nav-item: clamp(26px, calc((100vh / var(--zoom) - 370px) / 15), 40px); }
+  }
+  @media (width >= 1024px) and (max-height: 780px) {
+    .sidebar[data-alert] { --nav-item: clamp(26px, calc((100vh / var(--zoom) - 240px) / 15), 40px); }
+  }
+  /* Çox alçaq ekran (≤ 660px): kart bir sətirə enir, bəndlər 24px-ə qədər yığcamlaşır — menyu kəsilməsin */
+  @media (width >= 1024px) and (max-height: 660px) {
+    .sidebar[data-alert] { --nav-item: clamp(24px, calc((100vh / var(--zoom) - 240px) / 15), 40px); }
+    .alert { padding: 6px 10px; margin-bottom: 8px; }
+    .alertIcon { width: 26px; height: 26px; border-radius: 8px; }
+    .alertBody small { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .link[aria-current="page"]::before,
+    .alertIcon::after { animation: none; }
+  }
+}
+
+@layer components {
+  /* Yığ / aç: sidebar-ın sağ kənarında, başlıq zolağının ortasında yumru düymə (usta paneli ilə eyni yer) */
+  @media (width >= 1024px) {
+    .sidebar { overflow: visible; }
+  }
+  .edge {
+    position: absolute;
+    top: calc(var(--header-h) / 2 - 12px);
+    right: -12px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    color: var(--sb-text-2);
+    background: #1c2740;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 4px 14px rgba(0, 0, 0, 0.45);
+    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1), background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  }
+  .edge:hover {
+    color: #fff;
+    background: var(--sb-accent);
+    box-shadow: 0 0 0 4px rgba(57, 135, 229, 0.18), 0 4px 16px rgba(57, 135, 229, 0.5);
+  }
+  .edge:focus-visible { outline: 2px solid var(--sb-accent); outline-offset: 2px; }
+  .sidebar[data-collapsed] .edge { transform: rotate(180deg); }
+  /* Menyunun aşağısı nəfəs alsın (əvvəl orada "Menyunu yığ" sətri vardı) */
+  .nav { padding-bottom: 10px; }
 }
