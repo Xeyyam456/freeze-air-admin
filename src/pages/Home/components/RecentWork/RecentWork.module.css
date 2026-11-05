@@ -95,3 +95,28 @@
     .place { grid-column: 1 / -1; grid-row: 2; padding-left: 36px; }
   }
 }
+
+@layer components {
+  /* Tablar: seçim rəngi yumşaq keçir */
+  .tab { transition: color 200ms ease, background-color 240ms var(--ease-out), box-shadow 240ms var(--ease-out); }
+  .tab svg { transition: transform 300ms var(--ease-out); }
+  .active svg { transform: scale(1.12); }
+  /* Sətirlər yuxarıdan aşağı ardıcıl gəlir (açılışda və tab dəyişəndə) */
+  .row {
+    animation: rowIn 460ms var(--ease-out) both;
+    animation-delay: calc(140ms + var(--i, 0) * 45ms);
+    transition: background-color 160ms ease;
+  }
+  /* Canlı gələn iş: yaşıl zolaq + fon 3 saniyəyə sönür */
+  .fresh {
+    animation: rowIn 460ms var(--ease-out) both, flash 3s ease-out 200ms backwards; /* "both" deyil: bitəndən sonra hover fonunu bağlamasın */
+  }
+  .empty { animation: rowIn 460ms var(--ease-out) both 120ms; }
+  @keyframes rowIn {
+    from { opacity: 0; transform: translateY(6px); }
+  }
+  @keyframes flash {
+    0%, 30% { background-color: rgba(25, 158, 112, 0.16); box-shadow: inset 3px 0 0 var(--s3); }
+    100% { background-color: transparent; box-shadow: inset 3px 0 0 transparent; }
+  }
+}

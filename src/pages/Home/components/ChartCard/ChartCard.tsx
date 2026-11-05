@@ -5,6 +5,7 @@ import type { ChartCardProps } from "@/types/dashboard";
 import { dayLabel } from "../../utils/dayLabel";
 import { deltaPct } from "../../utils/deltaPct";
 import { AreaChart } from "../AreaChart";
+import { CountUp } from "@/components/CountUp";
 import { DashCard } from "../DashCard";
 import { DeltaBadge } from "../DeltaBadge";
 import s from "./ChartCard.module.css";
@@ -28,7 +29,7 @@ export function ChartCard({ title, noun, note, values, days, color, href, hrefLa
   return (
     <DashCard title={title} subtitle={`Son ${range} gün`} menu={menu} className={className}>
       <div className={s.value}>
-        <b>{total}</b>
+        <b><CountUp value={total} duration={1400} /></b>
         {range < 30 && <DeltaBadge value={deltaPct(total, before)} />}
       </div>
       <p className={s.label}>{note ?? `Son ${range} gündə ${noun}`}</p>

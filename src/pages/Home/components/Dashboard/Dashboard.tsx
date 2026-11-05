@@ -7,6 +7,7 @@ import { ChartCard } from "../ChartCard";
 import { KpiAvg, KpiDuty, KpiMonth, KpiTasks } from "../KpiCards";
 import { LowStockBanner } from "../LowStockBanner";
 import { RecentWork } from "../RecentWork";
+import { SkeletonCard } from "../SkeletonCard";
 import s from "./Dashboard.module.css";
 
 // Panel: yuxarıda 4 göstərici + görülən işlər qrafiki, altında son işlər və depo hərəkətləri (tünd dashboard)
@@ -15,7 +16,15 @@ export function PanelDashboard({ onOpenLog, onAllLogs }: PanelDashboardProps) {
   const v = usePanel();
   const today = todayBaku();
 
-  if (!v) return <div className={`${s.dash} ${s.loading}`} aria-busy="true" />;
+  if (!v) return (
+    <div className={`${s.dash} ${s.skeleton}`} aria-busy="true" aria-label="Panel yüklənir">
+      <div className={s.top}>
+        {[0, 1, 2, 3].map((i) => <SkeletonCard key={i} kind="kpi" />)}
+        <SkeletonCard kind="chart" className={s.big} />
+      </div>
+      <div className={s.bottom}><SkeletonCard kind="list" /><SkeletonCard kind="chart" /></div>
+    </div>
+  );
   return (
     <div className={s.dash}>
       <div className={s.notice}><PushPrompt /></div>

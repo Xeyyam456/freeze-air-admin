@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { ArrowUpRight, CalendarClock, CalendarDays, List, Sun } from "lucide-react";
 import type { RecentTab, RecentWorkProps } from "@/types/dashboard";
+import { useFreshIds } from "../../hooks/useFreshIds";
 import { addDays } from "../../utils/addDays";
 import { DashCard } from "../DashCard";
 import { RecentRow } from "./RecentRow";
@@ -17,6 +18,7 @@ const TABS: { key: RecentTab; label: string; icon: typeof Sun }[] = [
 export function RecentWork({ rows, today, onOpen, onAll }: RecentWorkProps) {
   const navigate = useNavigate();
   const [tab, setTab] = useState<RecentTab>("today");
+  const fresh = useFreshIds(rows.map((r) => r.id));
   const menu = [
     { label: "Bütün işlər (axtarışla)", icon: List, onSelect: onAll },
     { label: "Görülən işlərə keç", icon: ArrowUpRight, onSelect: () => navigate("/isler") },
@@ -37,7 +39,7 @@ export function RecentWork({ rows, today, onOpen, onAll }: RecentWorkProps) {
       <div className={`${s.table} nice-scroll`}>
         <div className={s.headRow}><span>Usta</span><span>İş yeri</span><span>Vaxt</span></div>
         {shown.length === 0 && <p className={s.empty}>Bu dövrdə iş yazılmayıb.</p>}
-        {shown.slice(0, 8).map((r) => <RecentRow key={r.id} row={r} onOpen={onOpen} />)}
+        {shown.slice(0, 8).map((r, i) => <RecentRow key={`${tab}-${r.id}`} row={r} index={i} fresh={fresh.has(r.id)} onOpen={onOpen} />)}
       </div>
       {shown.length > 8 && <button type="button" className={s.all} onClick={onAll}>Hamısına bax ({shown.length})</button>}
     </DashCard>

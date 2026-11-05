@@ -21,14 +21,38 @@
     --s2: #d95926;
     --s3: #199e70;
     --s-other: #4a5468;
+    /* Hərəkət: hamısı bir əyri ilə (sürətli başlanğıc, yumşaq dayanma) */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     display: grid;
     gap: 20px;
     color: var(--d-text);
   }
-  .loading {
-    min-height: 520px;
-    border-radius: 14px;
-    background: #151e31;
+  /* Kartlar ardıcıl gəlir: solğun + bulanıq + bir az aşağıdan; sıra gözün oxuma yoluna görə */
+  .dash > :not(.top, .bottom),
+  .top > *,
+  .bottom > * {
+    animation: rise 640ms var(--ease-out) both;
+  }
+  .top > :nth-child(2) { animation-delay: 60ms; }
+  .top > :nth-child(3) { animation-delay: 120ms; }
+  .top > :nth-child(4) { animation-delay: 180ms; }
+  .top > :nth-child(5) { animation-delay: 90ms; }
+  .bottom > :nth-child(1) { animation-delay: 240ms; }
+  .bottom > :nth-child(2) { animation-delay: 300ms; }
+  .skeleton .top > *,
+  .skeleton .bottom > * { animation: none; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px) scale(0.985); filter: blur(6px); }
+    to { opacity: 1; transform: none; filter: none; }
+  }
+  /* Azaldılmış hərəkət: bütün panel animasiyaları söndürülür, son vəziyyət dərhal görünür */
+  @media (prefers-reduced-motion: reduce) {
+    .dash *,
+    .dash *::before,
+    .dash *::after {
+      animation: none !important;
+      transition: none !important;
+    }
   }
   /* Yuxarı: solda 2×2 göstərici, sağda iri qrafik (iki sıra hündürlüyündə) */
   .top {

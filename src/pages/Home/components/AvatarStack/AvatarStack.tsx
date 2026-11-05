@@ -8,12 +8,12 @@ export function AvatarStack({ people, max = 5 }: AvatarStackProps) {
   const shown = people.slice(0, max);
   return (
     <div className={s.root}>
-      {shown.map((p) => (
-        <span key={p.full_name} className={s.avatar} title={p.full_name}>
+      {shown.map((p, i) => (
+        <span key={p.full_name} className={s.avatar} title={p.full_name} style={{ "--i": i } as React.CSSProperties}>
           {p.photo_url ? <img src={p.photo_url} alt={p.full_name} /> : initials(p.full_name)}
         </span>
       ))}
-      {people.length > max && <span className={`${s.avatar} ${s.more}`}>+{people.length - max}</span>}
+      {people.length > max && <span className={`${s.avatar} ${s.more}`} style={{ "--i": max } as React.CSSProperties}>+{people.length - max}</span>}
     </div>
   );
 }

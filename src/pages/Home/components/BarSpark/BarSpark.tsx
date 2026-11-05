@@ -10,7 +10,7 @@ export function BarSpark({ bars }: BarSparkProps) {
     <div className={s.root} role="img" aria-label={bars.map((b) => `${b.day}: ${b.value}`).join(", ")}>
       {bars.map((b, i) => (
         <span key={b.day} className={s.col} data-tip={`${b.day.slice(8)}.${b.day.slice(5, 7)} · ${b.value} iş`}>
-          <span className={`${s.bar} ${i === bars.length - 1 ? s.today : ""}`} style={{ height: `${Math.max(4, (b.value / max) * 100)}%` }} />
+          <span className={`${s.bar} ${i === bars.length - 1 ? s.today : ""}`} style={{ height: `${Math.max(4, (b.value / max) * 100)}%`, "--i": i } as React.CSSProperties} />
           <small>{DAYS[new Date(`${b.day}T12:00:00Z`).getUTCDay()]}</small>
         </span>
       ))}

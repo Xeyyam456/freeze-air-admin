@@ -50,3 +50,22 @@
   }
   .col:hover::after { opacity: 1; }
 }
+
+@layer components {
+  /* Sütunlar aşağıdan ardıcıl böyüyür; ipucu yuxarıdan yumşaq düşür */
+  .bar {
+    transform-origin: bottom;
+    animation: grow 760ms var(--ease-out) both;
+    animation-delay: calc(320ms + var(--i, 0) * 45ms);
+    transition: opacity 160ms ease-out, height 500ms var(--ease-out);
+  }
+  .today { box-shadow: 0 0 12px rgba(57, 135, 229, 0.45); }
+  .col::after {
+    transform: translate(-50%, 4px);
+    transition: opacity 160ms ease-out, transform 220ms var(--ease-out);
+  }
+  .col:hover::after { transform: translate(-50%, 0); }
+  @keyframes grow {
+    from { transform: scaleY(0); }
+  }
+}

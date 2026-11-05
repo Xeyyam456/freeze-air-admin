@@ -27,3 +27,4 @@ export type { RecentRowProps } from "./RecentRowProps";
 export type { CardMenuItem } from "./CardMenuItem";
 export type { CardMenuProps } from "./CardMenuProps";
 export type { ChartCardProps } from "./ChartCardProps";
+export type { SkeletonCardProps } from "./SkeletonCardProps";

@@ -8,11 +8,18 @@
     display: flex;
     flex-direction: column;
     width: var(--nav);
-    color: #fff;
+    /* Dashboard palitrası (Dashboard.module.css: --d-*): səhifədən bir ton tünd, mavi vurğu */
+    --sb-bg: #0b1220;
+    --sb-line: rgba(255, 255, 255, 0.06);
+    --sb-text: #f0efec;
+    --sb-text-2: #9aa3b5;
+    --sb-muted: #5f6a80;
+    --sb-accent: #3987e5;
+    color: var(--sb-text);
     background:
-      radial-gradient(320px 220px at 0% 100%, rgba(10, 126, 164, 0.28), transparent 70%),
-      linear-gradient(180deg, #0b1324 0%, #0d2448 100%);
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+      radial-gradient(260px 180px at 0% 0%, rgba(57, 135, 229, 0.07), transparent 70%),
+      var(--sb-bg);
+    border-right: 1px solid var(--sb-line);
     /* En dəyişəndə (yığ/aç) yazılar menyudan kənara daşmasın: kəsilir, en açıldıqca görünür */
     overflow: hidden;
     overscroll-behavior: contain;
@@ -27,7 +34,7 @@
     flex-shrink: 0;
     white-space: nowrap;
     overflow: hidden;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--sb-line);
   }
   /* Menyu sürüşmür: bəndlərin hündürlüyü ekranın hündürlüyünə görə yığcamlaşır (--nav-item: index.css) */
   .nav {
@@ -49,9 +56,9 @@
     padding: 0 12px 6px;
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.38);
+    color: var(--sb-muted);
     white-space: nowrap;
   }
   .link {
@@ -66,21 +73,25 @@
     font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
-    color: rgba(255, 255, 255, 0.7);
-    transition: background-color 150ms ease, color 150ms ease;
+    color: var(--sb-text-2);
+    transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
   }
   .link > svg {
     flex-shrink: 0;
+    color: #7d879b;
+    transition: color 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
   }
   .link:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.07);
+    color: var(--sb-text);
+    background: rgba(255, 255, 255, 0.04);
   }
+  .link:hover > svg { color: #b4bccb; transform: translateX(1px); }
   .link[aria-current="page"] {
-    color: #fff;
-    background: linear-gradient(90deg, rgba(45, 212, 191, 0.22), rgba(10, 126, 164, 0.12));
-    box-shadow: inset 0 0 0 1px rgba(45, 212, 191, 0.22);
+    color: var(--sb-text);
+    background: linear-gradient(90deg, rgba(57, 135, 229, 0.18), rgba(57, 135, 229, 0.04));
+    box-shadow: inset 0 0 0 1px rgba(57, 135, 229, 0.2);
   }
+  .link[aria-current="page"] > svg { color: var(--sb-accent); }
   /* Aktiv bəndin solunda parlayan zolaq */
   .link[aria-current="page"]::before {
     content: "";
@@ -90,8 +101,15 @@
     bottom: 7px;
     width: 3px;
     border-radius: 0 3px 3px 0;
-    background: var(--color-frost);
-    box-shadow: 0 0 12px var(--color-frost);
+    background: var(--sb-accent);
+    box-shadow: 0 0 12px rgba(57, 135, 229, 0.8);
+    animation: barIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes barIn {
+    from { opacity: 0; transform: scaleY(0.2); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .link[aria-current="page"]::before { animation: none; }
   }
   .badge {
     display: grid;
@@ -107,7 +125,7 @@
     width: calc(100% - 24px);
     margin: 0 12px 14px;
     flex-shrink: 0;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--sb-muted);
   }
   .close {
     display: none;
@@ -128,7 +146,7 @@
   .sidebar[data-collapsed] .group + .group {
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--sb-line);
   }
   .sidebar[data-collapsed] .badge {
     position: absolute;
@@ -147,7 +165,7 @@
     .group + .group {
       margin-top: 8px;
       padding-top: 8px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid var(--sb-line);
     }
   }
   /* Dar ekran (< 1024px): menyu sürüşən siyirtmədir; telefonda siyirtmə toxunma ilə sürüşə bilər */
@@ -175,7 +193,7 @@
       height: 36px;
       border-radius: 10px;
       color: rgba(255, 255, 255, 0.8);
-      background: rgba(255, 255, 255, 0.08);
+      background: var(--sb-line);
     }
   }
 }

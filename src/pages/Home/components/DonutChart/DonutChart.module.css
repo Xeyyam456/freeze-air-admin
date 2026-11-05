@@ -57,3 +57,23 @@
   }
   .none { color: var(--d-muted); }
 }
+
+@layer components {
+  /* Dairə saat əqrəbi istiqamətində bir hərəkətlə dolur: hər seqment öz payı qədər vaxtda, əvvəlkinin bitdiyi anda başlayır */
+  .seg {
+    animation: sweep var(--t) linear both;
+    animation-delay: calc(360ms + var(--d));
+  }
+  .ring { transition: transform 600ms var(--ease-out); }
+  .root:hover .ring { transform: rotate(-90deg) scale(1.04); }
+  .legend li {
+    animation: legendIn 480ms var(--ease-out) both;
+    animation-delay: calc(520ms + var(--i, 0) * 80ms);
+  }
+  @keyframes sweep {
+    from { stroke-dasharray: 0 var(--c); }
+  }
+  @keyframes legendIn {
+    from { opacity: 0; transform: translateX(-6px); }
+  }
+}

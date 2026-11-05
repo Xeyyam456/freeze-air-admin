@@ -29,3 +29,14 @@
     background: var(--d-line-strong);
   }
 }
+
+@layer components {
+  /* Avatarlar soldan sağa bir-bir "açılır" (yüngül yaylı miqyas) */
+  .avatar {
+    animation: pop 480ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(380ms + var(--i, 0) * 70ms);
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.4); }
+  }
+}

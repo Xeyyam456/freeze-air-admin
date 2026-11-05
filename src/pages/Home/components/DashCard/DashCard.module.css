@@ -9,7 +9,10 @@
     border-radius: 14px;
     background: var(--d-card);
     box-shadow: inset 0 0 0 1px var(--d-line);
+    transition: box-shadow 240ms var(--ease-out);
   }
+  /* Üstünə gələndə çərçivə bir az aydınlaşır (yerindən oynamır: siyahı və qrafiklə işləyəndə göz yorulmasın) */
+  .card:hover { box-shadow: inset 0 0 0 1px var(--d-line-strong), 0 12px 32px -18px rgba(0, 0, 0, 0.6); }
   .head {
     display: flex;
     align-items: flex-start;

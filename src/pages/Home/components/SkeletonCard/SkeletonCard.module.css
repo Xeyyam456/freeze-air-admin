@@ -1,0 +1,39 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: 18px 20px;
+    border-radius: 14px;
+    background: var(--d-card);
+    box-shadow: inset 0 0 0 1px var(--d-line);
+  }
+  /* background-attachment: fixed — parıltı ekrana bağlıdır: bütün sümüklərdən bir zolaq kimi keçir */
+  .bone {
+    display: block;
+    border-radius: 6px;
+    background-color: var(--d-card-2);
+    background-image: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.055) 50%, transparent 60%);
+    background-size: 200vw 100%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    animation: shimmer 1.8s linear infinite;
+  }
+  .title { width: 34%; height: 14px; }
+  .num { width: 30%; height: 28px; margin-top: 4px; }
+  .label { width: 52%; height: 12px; }
+  .block { height: 92px; margin-top: auto; border-radius: 10px; }
+  .chart { flex: 1; min-height: 190px; margin-top: 8px; border-radius: 10px; }
+  .row { height: 34px; border-radius: 8px; }
+  .row:first-of-type { margin-top: 8px; }
+  @keyframes shimmer {
+    from { background-position: 100vw 0; }
+    to { background-position: -100vw 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bone { animation: none; background-image: none; }
+  }
+}

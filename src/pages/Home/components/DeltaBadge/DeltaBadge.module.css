@@ -21,3 +21,19 @@
     background: rgba(208, 59, 59, 0.16);
   }
 }
+
+@layer components {
+  /* Rəqəm sayılıb qurtaranda nişan görünür, ox bir dəfə istiqamətinə "itələnir" */
+  .badge { animation: badgeIn 420ms var(--ease-out) both 900ms; }
+  .up svg { animation: nudgeUp 700ms var(--ease-out) 1250ms; }
+  .down svg { animation: nudgeDown 700ms var(--ease-out) 1250ms; }
+  @keyframes badgeIn {
+    from { opacity: 0; transform: translateY(4px) scale(0.85); }
+  }
+  @keyframes nudgeUp {
+    40% { transform: translate(2px, -2px); }
+  }
+  @keyframes nudgeDown {
+    40% { transform: translate(2px, 2px); }
+  }
+}

@@ -7,7 +7,9 @@ import s from "./AreaChart.module.css";
 
 const PAD = { l: 34, r: 8, t: 10, b: 24 };
 
-// Sahə qrafiki (bir seriya): 2px xətt, altında solğun dolğu, 4 yumşaq şəbəkə xətti; üstünə gələndə şaquli xətt + ipucu
+// Sahə qrafiki (bir seriya): 2px xətt, altında solğun dolğu, 4 yumşaq şəbəkə xətti.
+// Açılanda (və dövr dəyişəndə) soldan sağa çəkilir, sonuncu nöqtə (bu gün) sakit "nəbz" vurur;
+// üstünə gələndə şaquli xətt + nöqtə + ipucu nöqtədən nöqtəyə sürüşür (tullanmır).
 export function AreaChart({ values, labels, color, unit, height = 210 }: AreaChartProps) {
   const { ref, width } = useWidth<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
@@ -21,6 +23,7 @@ export function AreaChart({ values, labels, color, unit, height = 210 }: AreaCha
   const area = values.length ? `${line} L${x(values.length - 1)},${PAD.t + h} L${x(0)},${PAD.t + h} Z` : "";
   const every = Math.max(1, Math.ceil(values.length / 6));
   const id = `area-${color.replace(/\W/g, "")}`;
+  const last = values.length - 1;
 
   const onMove = (e: React.PointerEvent<SVGSVGElement>) => {
     const px = e.clientX - e.currentTarget.getBoundingClientRect().left;
@@ -46,12 +49,20 @@ export function AreaChart({ values, labels, color, unit, height = 210 }: AreaCha
             </g>
           ))}
           {labels.map((l, i) => (i % every === 0 || i === labels.length - 1) && <text key={i} x={x(i)} y={height - 6} className={s.xLabel}>{l}</text>)}
-          <path d={area} fill={`url(#${id})`} />
-          <path d={line} className={s.line} stroke={color} />
+          <g key={values.length} className={s.reveal}>
+            <path d={area} fill={`url(#${id})`} className={s.area} />
+            <path d={line} className={s.line} stroke={color} />
+          </g>
+          {last >= 0 && (
+            <g key={`live-${values.length}`} transform={`translate(${x(last)},${y(values[last])})`} className={hover !== null ? s.liveDim : undefined}>
+              <circle r={4} fill={color} className={s.pulse} />
+              <circle r={3.5} fill={color} className={s.end} />
+            </g>
+          )}
           {hover !== null && (
-            <g>
-              <line x1={x(hover)} x2={x(hover)} y1={PAD.t} y2={PAD.t + h} className={s.cross} />
-              <circle cx={x(hover)} cy={y(values[hover])} r={5} fill={color} className={s.dot} />
+            <g className={s.cursor} style={{ transform: `translateX(${x(hover)}px)` }}>
+              <line x1={0} x2={0} y1={PAD.t} y2={PAD.t + h} className={s.cross} />
+              <circle r={5} fill={color} className={s.dot} style={{ transform: `translateY(${y(values[hover])}px)` }} />
             </g>
           )}
         </svg>

@@ -55,3 +55,54 @@
   .tip b { font-size: 13px; font-weight: 800; }
   .tip span { color: #52514e; }
 }
+
+@layer components {
+  /* Açılış: xətt və dolğu soldan sağa "çəkilir" (kəsmə pəncərəsi genişlənir; mənfi kənar xəttin qalınlığını kəsmir) */
+  .reveal { animation: reveal 1300ms var(--ease-out) both 260ms; }
+  .area { animation: areaIn 900ms ease-out both 520ms; }
+  @keyframes reveal {
+    from { clip-path: inset(-20px 100% -20px -20px); }
+    to { clip-path: inset(-20px -20px -20px -20px); }
+  }
+  @keyframes areaIn {
+    from { opacity: 0; }
+  }
+  /* Sonuncu nöqtə (bu gün): xətt çatanda görünür, sonra sakit nəbz */
+  .end {
+    stroke: var(--d-card);
+    stroke-width: 2;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: endIn 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both 1300ms;
+  }
+  .pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+    animation: pulse 2.6s ease-out infinite 1800ms;
+  }
+  .liveDim { opacity: 0.35; transition: opacity 160ms ease-out; }
+  @keyframes endIn {
+    from { opacity: 0; transform: scale(0); }
+  }
+  @keyframes pulse {
+    0% { opacity: 0.55; transform: scale(1); }
+    100% { opacity: 0; transform: scale(4); }
+  }
+  /* Kursor: şaquli xətt eninə, nöqtə hündürlüyə görə hamar sürüşür */
+  .cursor {
+    transition: transform 180ms var(--ease-out);
+    animation: fadeIn 160ms ease-out both;
+  }
+  .dot { transition: transform 180ms var(--ease-out); }
+  .tip {
+    transition: left 180ms var(--ease-out), top 180ms var(--ease-out);
+    animation: tipIn 200ms var(--ease-out) both;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+  }
+  @keyframes tipIn {
+    from { opacity: 0; transform: translate(-50%, calc(-100% + 6px)) scale(0.96); }
+  }
+}
