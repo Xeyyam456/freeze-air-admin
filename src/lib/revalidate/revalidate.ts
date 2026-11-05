@@ -17,4 +17,5 @@ export const LIVE = {
   fuel: ["fuel", "panel-extras"],
   depot: ["depot", "nav-badges", "dashboard", "depot-journal", "depot-tool-history", "panel-extras"],
   requests: ["contact-requests", "nav-badges", "panel-extras"],
+  announcements: ["announcements", "nav-badges"],
 } as const;

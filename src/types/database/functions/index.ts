@@ -28,6 +28,7 @@ export type PublicFunctions = {
   is_storekeeper: import("./is_storekeeper").Fn
   leave_cancel: import("./leave_cancel").Fn
   leave_decide: import("./leave_decide").Fn
+  mark_announcements_seen: import("./mark_announcements_seen").Fn
   material_small_to_pieces: import("./material_small_to_pieces").Fn
   mileage_fill_missing: import("./mileage_fill_missing").Fn
   my_employee_id: import("./my_employee_id").Fn
@@ -47,5 +48,6 @@ export type PublicFunctions = {
   task_withdraw_group: import("./task_withdraw_group").Fn
   tool_repair_finish: import("./tool_repair_finish").Fn
   tool_repair_send: import("./tool_repair_send").Fn
+  unread_announcements: import("./unread_announcements").Fn
   work_file_counts: import("./work_file_counts").Fn
 }

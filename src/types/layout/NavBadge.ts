@@ -1,1 +1,1 @@
-export type NavBadge = "requests" | "tasks" | "stock" | "leave";
+export type NavBadge = "requests" | "tasks" | "stock" | "leave" | "announce";

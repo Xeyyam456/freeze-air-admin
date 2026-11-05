@@ -18,3 +18,8 @@ export async function deleteAnnouncement(id: number): Promise<void> {
   const { error } = await createClient().from("announcements").delete().eq("id", id);
   if (error) throw error;
 }
+
+// Elanlar səhifəsi açılanda (0105): hamısı oxundu — menyudakı "Elanlar" nişanı sıfırlanır (usta paneli ilə eyni cədvəl)
+export async function markAnnouncementsSeen(): Promise<void> {
+  await createClient().rpc("mark_announcements_seen");
+}

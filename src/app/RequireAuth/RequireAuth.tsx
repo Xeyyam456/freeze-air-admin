@@ -2,6 +2,7 @@ import { Suspense, useEffect } from "react";
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "@/auth/AuthProvider";
 import { AppLayout } from "@/components/AppLayout";
+import { AnnouncementsListener } from "@/components/AnnouncementsListener";
 import { ContactRequestsListener } from "@/components/ContactRequestsListener";
 import { DepotListener } from "@/components/DepotListener";
 import { TasksListener } from "@/components/TasksListener";
@@ -18,6 +19,7 @@ export function RequireAuth() {
   if (!session) return <Navigate to="/login" replace />;
   return (
     <AppLayout>
+      <AnnouncementsListener />
       {admin && <ContactRequestsListener />}
       {admin && <TasksListener />}
       {canManageTools && <DepotListener />}
