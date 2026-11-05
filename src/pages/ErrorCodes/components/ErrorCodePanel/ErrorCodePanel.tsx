@@ -1,30 +1,23 @@
-import { IconTile } from "@/shared/components/IconTile";
-import { CardTitle, Card } from "@/shared/components/Card";
-import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
-import type { ErrorCodePanelProps, PanelTab } from "@/types/errorCodes";
+import { useMemo } from "react";
+import { Card } from "@/shared/components/Card";
+import type { ErrorCodePanelProps } from "@/types/errorCodes";
 import { countByModel } from "../../utils/countByModel";
-import { CodeTab } from "../CodeTab";
+import { CodeEditor } from "../CodeEditor";
 import { ExcelTab } from "../ExcelTab";
 import { ModelsTab } from "../ModelsTab";
 import { PanelTabs } from "./PanelTabs";
 
-// Sağ panel: modellər, xəta kodu, Excel
-export function ErrorCodePanel({ models, codes }: ErrorCodePanelProps) {
-  // Model yoxdursa əvvəl "Modellər" açılır: ilk addım modeli əlavə etməkdir
-  const [tab, setTab] = useState<PanelTab>(models.length === 0 ? "models" : "code");
-  const counts = useMemo(() => countByModel(codes), [codes]);
+// Sağ panel: pult redaktoru (kod), Excel-dən toplu yükləmə, modellər
+export function ErrorCodePanel({ data, map }: ErrorCodePanelProps) {
+  const counts = useMemo(() => countByModel(data.codes), [data.codes]);
 
   return (
     <Card className="space-y-4">
-      <div className="flex items-center gap-3">
-        <IconTile className="!h-9 !w-9"><Plus size={18} /></IconTile>
-        <CardTitle >Əlavə et</CardTitle>
-      </div>
-      <PanelTabs tab={tab} onTab={setTab} />
-      {tab === "models" && <ModelsTab models={models} counts={counts} />}
-      {tab === "code" && <CodeTab models={models} goModels={() => setTab("models")} />}
-      {tab === "excel" && <ExcelTab />}
+      {/* Dar ekranda pəncərənin X düyməsi sağ yuxarıdadır: tablar onun altına girməsin */}
+      <div className="max-lg:pr-9"><PanelTabs tab={map.tab} onTab={map.setTab} /></div>
+      {map.tab === "code" && <CodeEditor map={map} />}
+      {map.tab === "excel" && <ExcelTab />}
+      {map.tab === "models" && <ModelsTab models={data.models} counts={counts} />}
     </Card>
   );
 }

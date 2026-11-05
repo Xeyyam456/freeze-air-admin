@@ -1,6 +1,6 @@
 import type { PanelTab, PanelTabsProps } from "@/types/errorCodes";
 
-const TABS: readonly (readonly [PanelTab, string])[] = [["models", "Modellər"], ["code", "Xəta kodu"], ["excel", "Excel"]];
+const TABS: readonly (readonly [PanelTab, string])[] = [["code", "Kod"], ["excel", "Excel"], ["models", "Modellər"]];
 
 export function PanelTabs({ tab, onTab }: PanelTabsProps) {
   return (

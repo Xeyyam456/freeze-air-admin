@@ -1,0 +1,113 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  /* Pult korpusu: tünd, yuxarı kənarında plastik parıltı */
+  .root {
+    display: grid;
+    gap: 16px;
+    padding: 14px;
+    border-radius: 20px;
+    color: #fff;
+    background:
+      radial-gradient(140% 60% at 50% -10%, rgba(45, 212, 191, 0.2), transparent 60%),
+      linear-gradient(180deg, #13233c, var(--color-navy) 40%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 16px 36px rgba(11, 19, 36, 0.25);
+  }
+  .glass {
+    position: relative;
+    padding: 28px 22px 16px;
+    border-radius: 14px;
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(122, 240, 222, 0.07), transparent 60%),
+      linear-gradient(180deg, #0d1c30, #060d19);
+    box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(122, 240, 222, 0.08);
+  }
+  .glass > div > svg {
+    max-width: 78px;
+  }
+  .model,
+  .mode {
+    position: absolute;
+    top: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(122, 240, 222, 0.6);
+  }
+  .model { left: 14px; }
+  .mode { right: 14px; }
+  .fields {
+    display: grid;
+    gap: 12px;
+  }
+  .field {
+    display: grid;
+    gap: 6px;
+  }
+  .field span {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(200, 236, 230, 0.75);
+  }
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: 12px;
+    font: 500 14px/1.5 var(--font-sans);
+    color: #fff;
+    resize: none;
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: box-shadow 120ms ease-out;
+  }
+  .field input {
+    height: 40px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: rgba(200, 236, 230, 0.4);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 1.5px var(--color-frost), 0 0 0 4px rgba(45, 212, 191, 0.15);
+  }
+  .exists {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    margin-top: -4px;
+    font-size: 12px;
+    color: #ffd27a;
+  }
+  .exists button {
+    font-weight: 700;
+    color: var(--color-frost);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .actions {
+    display: flex;
+    gap: 8px;
+  }
+  .delete.delete {
+    color: #ff9a9d;
+  }
+  .empty {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding: 20px 16px;
+    border: 1px dashed var(--color-line);
+    border-radius: 14px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-muted);
+  }
+}

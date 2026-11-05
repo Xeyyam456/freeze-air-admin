@@ -9,9 +9,12 @@ import { useNarrow } from "@/lib/navDrawer";
 // Səhifə sürüşmür; sol konteyner öz içində sürüşür. Panel boşdursa (məs. admin deyilsə), məzmun bütün eni tutur.
 // fill: məzmun (məs. xəritə) konteyneri tam doldurur — sürüşmə və aşağıdakı solğunlaşma olmur.
 // Dar ekranda (< 1024px) panel sağda yer tutmur: üzən düymə onu aşağıdan açılan pəncərədə göstərir.
-export function WithSidePanel({ panel, fill = false, stack = false, fabLabel = "Əlavə et", fabIcon: FabIcon = Plus, inline = false, narrowTop, narrowPanel, children }: WithSidePanelProps) {
+export function WithSidePanel({ panel, fill = false, stack = false, fabLabel = "Əlavə et", fabIcon: FabIcon = Plus, inline = false, narrowTop, narrowPanel, sheetOpen, onSheet, children }: WithSidePanelProps) {
   const narrow = useNarrow();
-  const [sheet, setSheet] = useState(false);
+  const [ownSheet, setOwnSheet] = useState(false);
+  // Səhifə istəsə pəncərəni özü idarə edir (məs. xəritədə kod seçiləndə açılsın)
+  const sheet = sheetOpen ?? ownSheet;
+  const setSheet = onSheet ?? setOwnSheet;
   useEffect(() => setSheet(false), [narrow]);
   useEffect(() => {
     if (!sheet) return;

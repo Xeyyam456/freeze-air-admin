@@ -9,5 +9,7 @@ export type WithSidePanelProps = {
   narrowTop?: React.ReactNode; // dar ekranda məzmunun ÜSTÜNDƏ adi kart kimi görünən hissə (məs. məlumat kartı); panel isə yalnız narrowPanel olur
   narrowPanel?: React.ReactNode;
   inline?: boolean; // dar ekranda panel üzən düymə əvəzinə məzmunun ÜSTÜNDƏ adi kart kimi görünür (yalnız məlumat kartı olan səhifələr)
+  sheetOpen?: boolean; // dar ekranda pəncərənin vəziyyətini səhifə idarə edir (onSheet ilə birlikdə)
+  onSheet?: (open: boolean) => void;
   children: React.ReactNode;
 };
