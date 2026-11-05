@@ -43,8 +43,9 @@
   .active span {
     color: #7af0de;
   }
+  /* Mobildə tam adlar bir sətrə sığmır: alt-alta, tam endə, ad solda, say sağda */
   @media (width < 640px) {
-    .root { width: 100%; }
-    .tab { flex: 1 1 0; min-width: 0; padding: 0 8px; gap: 6px; }
+    .root { flex-direction: column; width: 100%; }
+    .tab { justify-content: space-between; }
   }
 }
