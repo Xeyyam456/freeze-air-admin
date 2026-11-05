@@ -13,7 +13,7 @@ export function FuelTypeField({ value, onChange }: FuelTypeFieldProps) {
           <button key={k} type="button" role="radio" aria-checked={value === k} onClick={() => onChange(k)}
             className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg text-sm font-semibold transition-colors ${
               value === k ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}>
-            <Fuel size={14} className={value === k ? (k === "diesel" ? "text-amber-600" : "text-primary") : ""} /> {k === "petrol" ? "Benzin" : "Dizel"}
+            <Fuel size={14} className={value === k ? (k === "diesel" ? "text-amber-400" : "text-primary") : ""} /> {k === "petrol" ? "Benzin" : "Dizel"}
           </button>
         ))}
       </div>

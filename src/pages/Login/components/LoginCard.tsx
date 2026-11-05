@@ -18,7 +18,7 @@ export function LoginCard() {
         <span className="text-lg font-extrabold">Freeze Air Service</span>
       </div>
 
-      <div className="w-full max-w-[420px] rounded-[28px] bg-white p-8 shadow-[0_30px_80px_rgba(15,36,71,0.12)] ring-1 ring-line sm:p-10">
+      <div className="w-full max-w-[420px] rounded-[28px] bg-surface p-8 shadow-[0_30px_80px_rgba(15,36,71,0.12)] ring-1 ring-line sm:p-10">
         <ActionForm action={formAction} className="space-y-5">
           <div>
             <h2 className="text-3xl font-extrabold tracking-tight">Xoş gəldin</h2>

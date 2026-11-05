@@ -16,7 +16,7 @@ export function LogDays({ days, filesOf, openCrews, onToggleCrew, onOpen }: LogD
       ) : (
         days.map((g) => (
           <section key={g.day}>
-            <h3 className="sticky top-0 z-[1] flex items-center justify-between border-b border-line bg-[#f8f9fc] px-5 py-2.5 text-xs font-bold text-muted">
+            <h3 className="sticky top-0 z-[1] flex items-center justify-between border-b border-line bg-surface-2 px-5 py-2.5 text-xs font-bold text-muted">
               <span>{formatDateAz(g.day)}, {WEEKDAYS[new Date(`${g.day}T00:00`).getDay()]}</span>
               <span className="rounded-full bg-surface px-2 py-0.5">{g.count} iş</span>
             </h3>

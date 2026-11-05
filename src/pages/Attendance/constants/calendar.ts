@@ -9,7 +9,7 @@ export const CELL: Record<DayStatus, string> = {
   leave: "bg-violet-500 text-white",
   absent: "bg-danger text-white",
   pending: "bg-primary-soft text-primary ring-2 ring-primary",
-  off: "bg-slate-300 text-slate-600",
+  off: "bg-slate-500/30 text-slate-300",
   future: "bg-bg text-muted",
   before: "bg-bg text-muted/60",
 };

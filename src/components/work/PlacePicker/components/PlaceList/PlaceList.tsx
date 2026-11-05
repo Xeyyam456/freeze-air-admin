@@ -13,7 +13,7 @@ export function PlaceList({ loading, groups, trimmed, empty, customIndex, active
 
         {groups.map(([group, items], gi) => (
           <div key={group} className="pb-1">
-            <p className="sticky top-0 z-10 -mx-1.5 flex items-center gap-1.5 border-b border-line bg-[#f8f9fc] px-4 py-1.5 text-[11px] font-bold text-muted">
+            <p className="sticky top-0 z-10 -mx-1.5 flex items-center gap-1.5 border-b border-line bg-surface-2 px-4 py-1.5 text-[11px] font-bold text-muted">
               {group === FIXED_GROUP ? <Building2 size={13} /> : <Store size={13} />} {group}
               <span className="ml-auto font-medium">{items.length}</span>
             </p>

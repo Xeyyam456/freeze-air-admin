@@ -32,7 +32,7 @@ export function WithSidePanel({ panel, fill = false, stack = false, fabLabel = "
       {inlinePanel && <div className="mb-4">{panel}</div>}
       {split && <div className="mb-4">{narrowTop}</div>}
       {/* Xarici qutu: çərçivə və ölçü. Sağda panelin eni + boşluq; hündürlük: ekran − header − yuxarı/aşağı boşluqlar */}
-      <div data-fill={fill || undefined} data-compact={inlinePanel || undefined} className={`${s.box} mr-[calc(var(--panel-w)+var(--gap))] h-[calc(100vh/var(--zoom)-var(--header-h)-2*var(--gap))] overflow-hidden rounded-[18px] border border-line bg-[#f8f9fc]`}>
+      <div data-fill={fill || undefined} data-compact={inlinePanel || undefined} className={`${s.box} mr-[calc(var(--panel-w)+var(--gap))] h-[calc(100vh/var(--zoom)-var(--header-h)-2*var(--gap))] overflow-hidden rounded-[18px] border border-line bg-surface-2`}>
         {stack ? (
           <div className="h-full px-5 py-5 max-sm:px-2.5 max-sm:py-3">{children}</div>
         ) : fill ? (

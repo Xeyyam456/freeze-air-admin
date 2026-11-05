@@ -6,7 +6,7 @@ export function PeopleTable({ b }: PeopleTableProps) {
   if (b.people.length === 0) return <p className="muted border-t border-line py-10 text-center text-sm">Heç kim tapılmadı.</p>;
   return (
     <table className="w-full border-t border-line text-sm">
-      <thead className="sticky top-[var(--header-h)] z-10 bg-[#f8fafc] text-left text-xs font-semibold text-muted">
+      <thead className="sticky top-[var(--header-h)] z-10 bg-surface-2 text-left text-xs font-semibold text-muted">
         <tr>
           <th className="py-3 pl-5 pr-3 max-sm:pl-3">Usta</th>
           <th className="w-44 px-3 py-3 max-sm:hidden">Alətlər</th>

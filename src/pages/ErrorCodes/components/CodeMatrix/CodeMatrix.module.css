@@ -47,14 +47,14 @@
     color: var(--color-muted);
     background: transparent;
     box-shadow: none;
-    border: 1px dashed #c9d1dd;
+    border: 1px dashed rgba(255, 255, 255, 0.14);
   }
   /* Bu modeldə olmayan kod: kiçik nöqtə; üstünə gələndə "+" (bu kodu əlavə et) */
   .void {
     display: grid;
     place-items: center;
     color: transparent;
-    background: radial-gradient(circle, #d6dce6 1.5px, transparent 2px);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 1.5px, transparent 2px);
     transition: background 120ms ease-out, color 120ms ease-out;
   }
   .void:hover,

@@ -10,7 +10,7 @@ export function EmployeeTable({ rows, att, isCurrent, meId, canMark, busyId, onO
     <Card className="overflow-x-auto !p-0 max-xl:hidden">
       <table className="w-full min-w-[900px] text-sm">
         <thead>
-          <tr className="border-b border-line bg-[#f8f9fc] text-left text-xs font-semibold text-muted">
+          <tr className="border-b border-line bg-surface-2 text-left text-xs font-semibold text-muted">
             <th className="px-4 py-2.5">Usta</th>
             <th className="px-2 py-2.5 text-center" title="Ayın bu günə qədər iş günləri (B.e.–Şənbə)">İş günü</th>
             <th className="px-2 py-2.5 text-center">İşdə olub</th>

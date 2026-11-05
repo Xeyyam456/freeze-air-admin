@@ -22,11 +22,11 @@ export function EmployeeRow({ employee: e, summary: a, isMe, cell, onOpen }: Emp
       <td className="px-2 py-2.5 text-center font-semibold tabular-nums">{a?.workdays ?? "…"}</td>
       <td className="px-2 py-2.5 text-center tabular-nums"><b className="text-ok">{a?.present ?? "…"}</b> <span className="muted text-xs">gün</span></td>
       <td className="px-2 py-2.5 text-center tabular-nums">
-        {a?.leaveTimes ? <><b className="text-violet-600">{a.leaveTimes}</b> <span className="muted text-xs">dəfə · {a.leave} gün</span></> : dash}
+        {a?.leaveTimes ? <><b className="text-violet-300">{a.leaveTimes}</b> <span className="muted text-xs">dəfə · {a.leave} gün</span></> : dash}
       </td>
       <td className="px-2 py-2.5 text-center tabular-nums">{a?.absent ? <><b className="text-danger">{a.absent}</b> <span className="muted text-xs">gün</span></> : dash}</td>
       <td className="px-2 py-2.5 text-center tabular-nums">{a && a.leave + a.absent ? <><b className="text-ink">{a.leave + a.absent}</b> <span className="muted text-xs">gün</span></> : dash}</td>
-      <td className="px-2 py-2.5 text-center tabular-nums">{a?.extra ? <><b className="text-slate-600">{a.extra}</b> <span className="muted text-xs">dəfə</span></> : dash}</td>
+      <td className="px-2 py-2.5 text-center tabular-nums">{a?.extra ? <><b className="text-slate-300">{a.extra}</b> <span className="muted text-xs">dəfə</span></> : dash}</td>
       <td className="px-4 py-2.5 text-right">{cell}</td>
     </tr>
   );

@@ -9,7 +9,7 @@ export function AttentionCard({ items }: AttentionCardProps) {
     <section className="flex h-full flex-col rounded-3xl border border-line bg-surface p-5">
       <div className="mb-3 flex items-center gap-2">
         <h2 className="flex-1 text-[15px] font-bold">Diqqət</h2>
-        {clear && <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#ecfbf1] px-3 text-xs font-semibold text-[#15803d]"><CheckCircle2 size={13} /> Hər şey qaydasındadır</span>}
+        {clear && <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#ecfbf1] px-3 text-xs font-semibold text-emerald-400"><CheckCircle2 size={13} /> Hər şey qaydasındadır</span>}
       </div>
       <ul className="grid flex-1 content-between gap-2">
         {items.map((i) => {

@@ -12,7 +12,7 @@ export function Trigger({ label, placeholder, open, onClick, buttonRef, small }:
       aria-expanded={open}
       className={`flex w-full items-center gap-2 rounded-[10px] border bg-surface px-3 text-left transition-colors ${
         small ? "h-9 text-[13px]" : "h-[42px] text-sm"
-      } ${open ? "border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : "border-line hover:border-[#cfd5e1]"}`}
+      } ${open ? "border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : "border-line hover:border-white/15"}`}
     >
       <CalendarDays size={15} className="shrink-0 text-primary" />
       {label ? <span className="truncate font-semibold">{label}</span> : <span className="muted truncate">{placeholder}</span>}

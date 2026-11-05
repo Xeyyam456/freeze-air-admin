@@ -63,10 +63,10 @@
     box-shadow: inset 0 0 0 1px var(--color-line);
   }
   .keyNone {
-    border: 1px dashed #c9d1dd;
+    border: 1px dashed rgba(255, 255, 255, 0.14);
   }
   .keyVoid {
-    background: radial-gradient(circle, #c4ccd8 1.5px, transparent 2px);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 1.5px, transparent 2px);
   }
   .scroll {
     min-height: 0;

@@ -64,11 +64,11 @@ export function PendingBlock({ requests, holdings, tools, myUid, owner }: Pendin
               const ok = group.filter((x) => giveable(x, toolOf.get(x.tool_id ?? 0)));
               return (
                 <li key={`b${r.batch}`} className="py-2.5">
-                  <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#f6f3ff] px-3 py-2.5">
-                    <Hand size={16} className="shrink-0 text-[#6d28d9]" />
+                  <div className="flex flex-wrap items-center gap-2 rounded-xl bg-violet-500/10 px-3 py-2.5">
+                    <Hand size={16} className="shrink-0 text-violet-300" />
                     <b className="text-sm">{r.created_by_name ?? "Usta"}: {group.length} şey istəyir</b>
-                    <span className="text-xs font-semibold text-[#15803d]">{ok.length} verilə bilər</span>
-                    {group.length - ok.length > 0 && <span className="text-xs font-semibold text-[#dc2626]">· {group.length - ok.length} depoda çatmır</span>}
+                    <span className="text-xs font-semibold text-emerald-400">{ok.length} verilə bilər</span>
+                    {group.length - ok.length > 0 && <span className="text-xs font-semibold text-red-400">· {group.length - ok.length} depoda çatmır</span>}
                     {ok.length > 0 && (
                       <ConfirmButton onConfirm={() => approveAll(ok.filter((x) => !needsOtherApprover(x, myUid, owner)))} success={false} variant="primary" size="sm" className="ml-auto !h-8"
                         title="Verilə bilənləri qəbul et" confirmLabel="Bəli, ver" question={`${ok.length} istək qəbul ediləcək və ustaya veriləcək. Çatmayanlar gözləməyə qalır (rədd edə bilərsən).`}>
@@ -76,7 +76,7 @@ export function PendingBlock({ requests, holdings, tools, myUid, owner }: Pendin
                       </ConfirmButton>
                     )}
                   </div>
-                  <ul className="ml-3 divide-y divide-line border-l-2 border-[#ddd6fe] pl-3">
+                  <ul className="ml-3 divide-y divide-line border-l-2 border-violet-500/40 pl-3">
                     {group.map((x) => <RequestRow key={x.id} r={x} holding={null} tool={toolOf.get(x.tool_id ?? 0)} myUid={myUid} owner={owner} />)}
                   </ul>
                 </li>

@@ -53,7 +53,7 @@ export function HoldMenu({ items, tone, word, onOpen }: HoldMenuProps) {
             ))}
           </ul>
           <button type="button" onClick={() => { setPos(null); onOpen(); }}
-            className="flex w-full items-center justify-center gap-1.5 border-t border-line bg-[#fafbfd] py-2.5 text-[13px] font-semibold text-primary hover:bg-bg">
+            className="flex w-full items-center justify-center gap-1.5 border-t border-line bg-surface-2 py-2.5 text-[13px] font-semibold text-primary hover:bg-bg">
             Pəncərədə aç <ArrowRight size={14} />
           </button>
         </div>,

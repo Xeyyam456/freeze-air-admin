@@ -52,7 +52,7 @@ export function ToolModal({ tool, holders, pieces, repairs, losses = [], request
       {losses.length > 0 && <ToolLosses losses={losses} unit={unit} />}
 
       {canManage && (
-        <div className="mt-4 rounded-2xl border border-[#dbe7ff] bg-[linear-gradient(135deg,#f4f8ff,#ffffff)] p-4">
+        <div className="mt-4 rounded-2xl border border-primary/40 bg-[linear-gradient(135deg,#f4f8ff,#ffffff)] p-4">
           <p className="mb-2.5 flex items-center gap-2 text-sm font-bold"><Send size={15} className="text-primary" /> Ustaya ver</p>
           <GiveForm tool={tool} employees={employees} />
         </div>

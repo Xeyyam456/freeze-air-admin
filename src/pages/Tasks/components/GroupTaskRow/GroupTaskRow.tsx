@@ -13,7 +13,7 @@ export function GroupTaskRow({ g, actions }: GroupTaskRowProps) {
   const files = g.rows.reduce((n, x) => n + (x.work_logs?.work_files.length ?? 0), 0);
   const logId = g.rows.find((x) => x.work_log_id)?.work_log_id ?? null;
   return (
-    <li className={cancelled ? "opacity-60" : done ? "bg-[#f6fcf8]" : ""}>
+    <li className={cancelled ? "opacity-60" : done ? "bg-emerald-500/8" : ""}>
       <div className="flex items-start gap-3 px-4 py-3 max-sm:gap-2 max-sm:px-3 max-sm:py-2">
         <TaskStatusIcon t={t} cancelled={cancelled} done={done} />
         <span role={logId ? "button" : undefined} tabIndex={logId ? 0 : undefined} title={logId ? "İşi aç: şəkillər və təfərrüat" : undefined}
@@ -22,7 +22,7 @@ export function GroupTaskRow({ g, actions }: GroupTaskRowProps) {
           className={`min-w-0 flex-1 ${logId ? "cursor-pointer rounded-lg transition-colors hover:bg-black/[0.03]" : ""}`}>
           <span className={`block truncate text-sm font-bold max-sm:text-[13px] ${cancelled ? "text-muted line-through" : done ? "text-ok" : "text-ink"}`}>{placeOf(t)}</span>
           <span className={`muted block text-[13px] max-sm:text-xs ${cancelled ? "line-through" : ""}`}>{t.reason}</span>
-          {t.note && <span className="mt-1.5 block rounded-lg bg-[#eef2ff] px-2.5 py-1 text-xs text-[#4338ca] max-sm:hidden"><b>Təmir:</b> {t.note}</span>}
+          {t.note && <span className="mt-1.5 block rounded-lg bg-indigo-500/15 px-2.5 py-1 text-xs text-indigo-300 max-sm:hidden"><b>Təmir:</b> {t.note}</span>}
         </span>
         {files > 0 && <FilesBadge files={files} video={hasVideo(g.rows)} />}
         {!done && !cancelled && !actions.past && (
@@ -38,7 +38,7 @@ export function GroupTaskRow({ g, actions }: GroupTaskRowProps) {
           </span>
         )}
       </div>
-      {t.note && <div className="px-3 pb-2 sm:hidden"><span className="block rounded-lg bg-[#eef2ff] px-2.5 py-1.5 text-xs leading-snug text-[#4338ca]"><b>Təmir:</b> {t.note}</span></div>}
+      {t.note && <div className="px-3 pb-2 sm:hidden"><span className="block rounded-lg bg-indigo-500/15 px-2.5 py-1.5 text-xs leading-snug text-indigo-300"><b>Təmir:</b> {t.note}</span></div>}
     </li>
   );
 }

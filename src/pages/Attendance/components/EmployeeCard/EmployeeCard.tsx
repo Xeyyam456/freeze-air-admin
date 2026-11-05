@@ -6,9 +6,9 @@ import { PersonPhoto } from "../PersonPhoto";
 export function EmployeeCard({ employee: e, summary: a, isMe, cell, onOpen }: EmployeeCardProps) {
   const cells: [string, React.ReactNode, string][] = [
     ["İşdə", a?.present ?? "…", "text-ok"],
-    ["İcazə", a?.leaveTimes ? a.leave : "—", "text-violet-600"],
+    ["İcazə", a?.leaveTimes ? a.leave : "—", "text-violet-300"],
     ["İcazəsiz", a?.absent || "—", a?.absent ? "text-danger" : "text-muted"],
-    ["Bazar", a?.extra || "—", "text-slate-600"],
+    ["Bazar", a?.extra || "—", "text-slate-300"],
   ];
 
   return (

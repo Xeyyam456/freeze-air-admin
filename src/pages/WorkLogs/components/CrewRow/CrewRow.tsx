@@ -16,14 +16,14 @@ export function CrewRow({ names, logs, open, onToggle, filesOf, onOpen }: CrewRo
           <span className="muted flex items-center gap-1.5 text-xs">Qrup işi · {logs.length} iş
             {/* Bağlı qrupda da videolu iş görünsün */}
             {logs.some((l) => (filesOf(l)?.video ?? 0) > 0) && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-1.5 py-px text-[10px] font-bold text-violet-700"><Play size={9} fill="currentColor" /> Video</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-violet-500/15 px-1.5 py-px text-[10px] font-bold text-violet-300"><Play size={9} fill="currentColor" /> Video</span>
             )}
           </span>
         </span>
         <ChevronDown size={18} className={`shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <ul className="border-t border-line bg-[#fbfcfe]">
+        <ul className="border-t border-line bg-surface-2">
           {logs.map((l) => (
             <li key={l.id} className="border-b border-line last:border-b-0">
               <button type="button" onClick={() => onOpen(l.id)}

@@ -34,7 +34,7 @@ export function LocationLogItem({ log: l, unit: u }: LocationLogItemProps) {
           <ArrowRight size={12} className="shrink-0 text-muted" />
           <span className="font-semibold">{coords(l.new_lat, l.new_lng)}</span>
           {moved != null && (
-            <span className={`rounded-full px-2 py-0.5 font-bold ${moved > 1000 ? "bg-[#fff0f0] text-[#dc2626]" : "bg-bg text-ink"}`} title="Köhnə və yeni nöqtə arasındakı məsafə">
+            <span className={`rounded-full px-2 py-0.5 font-bold ${moved > 1000 ? "bg-red-500/12 text-red-400" : "bg-bg text-ink"}`} title="Köhnə və yeni nöqtə arasındakı məsafə">
               {distText(moved)} yerdəyişmə
             </span>
           )}

@@ -7,8 +7,8 @@ import { fmt } from "../../utils/quantity";
 // Silinənlər: neçə ədəd, hansı səbəblə, nə vaxt (təsdiqlənmiş silinmə aktları)
 export function ToolLosses({ losses, unit }: ToolLossesProps) {
   return (
-    <div className="mt-3 rounded-2xl border border-[#fecaca] bg-[#fff5f5] px-4 py-3 max-sm:px-3 max-sm:py-2.5">
-      <p className="mb-1.5 flex items-center gap-2 text-sm font-bold text-[#b91c1c]"><Trash2 size={15} /> Silinib</p>
+    <div className="mt-3 rounded-2xl border border-red-500/40 bg-red-500/12 px-4 py-3 max-sm:px-3 max-sm:py-2.5">
+      <p className="mb-1.5 flex items-center gap-2 text-sm font-bold text-red-400"><Trash2 size={15} /> Silinib</p>
       <ul className="space-y-1 text-[13px] max-sm:space-y-2 max-sm:text-xs">
         {losses.map((l, i) => (
           // Mobildə: 1-ci sətir "say · səbəb ... tarix", 2-ci sətir qeyd

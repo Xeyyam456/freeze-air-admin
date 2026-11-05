@@ -20,15 +20,15 @@ export function PersonRow({ emp, holds, toolInfo, onOpen }: PersonRowProps) {
   const first: Kind = !tools.length && mats.length ? "material" : "tool";
   return (
     <tr tabIndex={0} onClick={() => onOpen(first)} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && e.target === e.currentTarget && onOpen(first)}
-      className="group cursor-pointer border-t border-line transition-colors hover:bg-[#faf8ff] focus-visible:outline-2 focus-visible:outline-primary">
+      className="group cursor-pointer border-t border-line transition-colors hover:bg-violet-500/10 focus-visible:outline-2 focus-visible:outline-primary">
       <td className="py-3 pl-5 pr-3 max-sm:pl-3 max-sm:pr-1">
         <span className="flex items-center gap-3 max-sm:gap-2.5">
           <span className="relative shrink-0">
-            <Avatar employee={emp} className="!h-10 !w-10 !text-xs ring-2 ring-[#ede9fe] max-sm:!h-9 max-sm:!w-9" />
+            <Avatar employee={emp} className="!h-10 !w-10 !text-xs ring-2 ring-violet-500/30 max-sm:!h-9 max-sm:!w-9" />
             {holds.length > 0 && <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-[#8b5cf6] ring-2 ring-surface" />}
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-[14.5px] font-semibold group-hover:text-[#6d28d9] max-sm:text-[13px]">{emp.full_name}</span>
+            <span className="block truncate text-[14.5px] font-semibold group-hover:text-violet-300 max-sm:text-[13px]">{emp.full_name}</span>
             <span className="muted block truncate text-xs max-sm:text-[11px]">{toolsN ? `${toolsN} ədəd alət` : "alət yoxdur"} · {mats.length ? `${mats.length} növ material` : "material yoxdur"}</span>
           </span>
         </span>

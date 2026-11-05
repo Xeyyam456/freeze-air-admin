@@ -23,7 +23,7 @@ export function RequestRow(props: RequestRowProps) {
   );
 
   return (
-    <li className="rounded-2xl border border-line bg-surface p-3 transition-colors hover:border-[#fcd9a0] max-sm:p-2.5">
+    <li className="rounded-2xl border border-line bg-surface p-3 transition-colors hover:border-amber-500/40 max-sm:p-2.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <span className="min-w-0 flex-1 basis-56">
           <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -37,7 +37,7 @@ export function RequestRow(props: RequestRowProps) {
           </span>
         </span>
         {can !== null && (
-          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${can ? "bg-[#ecfbf1] text-[#15803d]" : "bg-[#fff0f0] text-[#dc2626]"}`}
+          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${can ? "bg-[#ecfbf1] text-emerald-400" : "bg-red-500/12 text-red-400"}`}
             title={tool ? `depoda ${fmt(tool.available)} ${u}` : "alət silinib"}>
             {can ? `verilə bilər · depoda ${fmt(tool!.available)}` : `çatmır · depoda ${fmt(tool?.available ?? 0)}`}
           </span>

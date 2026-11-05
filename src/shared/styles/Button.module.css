@@ -34,15 +34,15 @@
     border-color: var(--color-line);
   }
   .secondary:hover:not(:disabled) {
-    border-color: #cfd5e1;
-    background: #fafbfd;
+    border-color: rgba(255, 255, 255, 0.18);
+    background: var(--color-surface-2);
   }
   .soft {
     background: var(--color-primary-soft);
     color: var(--color-primary);
   }
   .soft:hover:not(:disabled) {
-    background: #dbe8fd;
+    background: rgba(57, 135, 229, 0.26);
   }
   .danger {
     background: var(--color-danger);
@@ -55,10 +55,10 @@
   .cancel {
     background: var(--color-danger-soft);
     color: var(--color-danger);
-    border-color: #f8cfd0;
+    border-color: rgba(229, 72, 77, 0.35);
   }
   .cancel:hover:not(:disabled) {
-    background: #fbdcdd;
+    background: rgba(229, 72, 77, 0.26);
   }
   .glass {
     background: rgba(255, 255, 255, 0.08);

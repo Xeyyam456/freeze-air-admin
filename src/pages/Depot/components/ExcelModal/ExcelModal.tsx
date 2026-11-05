@@ -38,7 +38,7 @@ export function ExcelModal({ tools, holdings, employees, onClose }: ExcelModalPr
           const on = kind === o.id;
           return (
             <button key={o.id} type="button" role="radio" aria-checked={on} onClick={() => setKind(o.id)}
-              className={`flex items-start gap-3 rounded-2xl border p-3.5 text-left transition max-sm:items-center max-sm:gap-2.5 max-sm:rounded-xl max-sm:p-2 ${on ? "border-primary bg-[#f4f8ff] shadow-[0_0_0_3px_rgba(37,99,235,0.12)]" : "border-line hover:bg-bg"}`}>
+              className={`flex items-start gap-3 rounded-2xl border p-3.5 text-left transition max-sm:items-center max-sm:gap-2.5 max-sm:rounded-xl max-sm:p-2 ${on ? "border-primary bg-surface-2 shadow-[0_0_0_3px_rgba(37,99,235,0.12)]" : "border-line hover:bg-bg"}`}>
               <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl max-sm:h-8 max-sm:w-8 ${SOFT[o.tone]}`}><o.icon size={18} /></span>
               <span className="min-w-0">
                 <b className="block text-sm">{o.title}</b>

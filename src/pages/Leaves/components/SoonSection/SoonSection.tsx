@@ -21,7 +21,7 @@ export function SoonSection({ now, upcoming }: SoonSectionProps) {
               <p className="muted truncate text-xs">{l.reason || "Səbəb yazılmayıb"}</p>
             </div>
             {now.includes(l)
-              ? <span className="shrink-0 rounded-full bg-[#fff6e5] px-2.5 py-1 text-xs font-semibold text-amber-700">İndi icazədədir</span>
+              ? <span className="shrink-0 rounded-full bg-amber-500/15 px-2.5 py-1 text-xs font-semibold text-amber-300">İndi icazədədir</span>
               : <span className="shrink-0 rounded-full bg-ok-soft px-2.5 py-1 text-xs font-semibold text-ok">Təsdiqləndi</span>}
           </li>
         ))}

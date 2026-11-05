@@ -35,7 +35,7 @@ export function StoreCard({ store, companyName, action }: StoreCardProps) {
       </div>
 
       <div className="mt-2.5 flex items-center justify-between gap-3 border-t border-dashed border-line pt-2.5">
-        <span className={`flex items-center gap-1.5 text-xs font-semibold ${hasCoords ? "text-ok" : "text-amber-600"}`}>
+        <span className={`flex items-center gap-1.5 text-xs font-semibold ${hasCoords ? "text-ok" : "text-amber-400"}`}>
           <span className={`h-2 w-2 rounded-full ${hasCoords ? "bg-ok" : "bg-amber-500"}`} />
           {hasCoords ? "Koordinat var" : "Koordinat yoxdur"}
         </span>

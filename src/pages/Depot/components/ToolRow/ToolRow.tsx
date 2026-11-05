@@ -22,13 +22,13 @@ export function ToolRow({ t, losses, canManage, onOpen, onGive }: ToolRowProps) 
   const u = unitOf(t);
   return (
     <tr tabIndex={0} onClick={onOpen} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && e.target === e.currentTarget && onOpen()}
-      className="group cursor-pointer border-t border-line transition-colors hover:bg-[#f7f9fd] focus-visible:outline-2 focus-visible:outline-primary">
+      className="group cursor-pointer border-t border-line transition-colors hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-primary">
       <td className="py-2.5 pl-5 pr-3 max-sm:pl-3 max-sm:pr-1">
         <span className="flex items-center gap-3">
           <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg max-sm:hidden ${material ? SOFT.teal : SOFT.blue}`}><Icon size={15} /></span>
           <span className="min-w-0">
             <span className="block truncate text-[14.5px] font-semibold group-hover:text-primary max-sm:text-[12px]">{t.name}</span>
-            {losses.length > 0 && <span className="block truncate text-xs font-medium text-[#dc2626]">{lossText(losses, unitOf(t))}</span>}
+            {losses.length > 0 && <span className="block truncate text-xs font-medium text-red-400">{lossText(losses, unitOf(t))}</span>}
           </span>
         </span>
       </td>

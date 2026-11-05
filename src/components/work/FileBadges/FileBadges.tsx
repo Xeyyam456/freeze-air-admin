@@ -8,7 +8,7 @@ export function FileBadges({ files, className = "" }: FileBadgesProps) {
   return (
     <span className={`flex shrink-0 items-center gap-1 ${className}`}>
       {files.video > 0 && (
-        <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-bold text-violet-700" title="İşdə video var">
+        <span className="inline-flex items-center gap-1 rounded-full bg-violet-500/15 px-2 py-0.5 text-[11px] font-bold text-violet-300" title="İşdə video var">
           <Play size={10} fill="currentColor" /> Video{files.video > 1 && ` ${files.video}`}
         </span>
       )}

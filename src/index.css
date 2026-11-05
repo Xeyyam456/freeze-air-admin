@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
-/* Rəng və şrift tokenləri. Rəngi dəyişmək üçün yalnız buranı dəyiş. */
+/* Rəng və şrift tokenləri. Rəngi dəyişmək üçün yalnız buranı dəyiş.
+   Tətbiq yalnız tünd temadadır (istifadəçi, 2026-11-05: "light mod istəmirəm"); palitra Panel dashboard-u ilə eynidir. */
 @theme {
-  --color-bg: #f4f6fa;
-  --color-surface: #ffffff;
-  --color-ink: #0e1726;
-  --color-muted: #667085;
-  --color-line: #e6e9f0;
-  --color-primary: #0a7ea4;
-  --color-primary-dark: #086685;
-  --color-primary-soft: #e3f3f8;
+  --color-bg: #0e1626;
+  --color-surface: #151e31;
+  --color-surface-2: #1c2740;
+  --color-ink: #f0efec;
+  --color-muted: #8d97ab;
+  --color-line: #26324a;
+  --color-primary: #3987e5;
+  --color-primary-dark: #2f74c9;
+  --color-primary-soft: rgba(57, 135, 229, 0.16);
   --color-frost: #2dd4bf;
   --color-danger: #e5484d;
-  --color-danger-soft: #fdecec;
-  --color-ok: #12a150;
-  --color-ok-soft: #e7f6ee;
-  --color-navy: #0b1324;
+  --color-danger-soft: rgba(229, 72, 77, 0.16);
+  --color-ok: #22c06a;
+  --color-ok-soft: rgba(34, 192, 106, 0.16);
+  --color-navy: #2b3d63;
 
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
@@ -25,6 +27,10 @@
   --gutter: yanlardakı boşluq, --panel-w: sağ panelin eni, --nav-w: soldakı menyunun eni,
   --header-h: sabit başlıq zolağının hündürlüyü, --gap: konteynerlər arası boşluq.
 */
+:root {
+  /* Brauzerin öz elementləri (tarix seçici, select siyahısı, scrollbar) də tünd */
+  color-scheme: dark;
+}
 :root {
   --gutter: clamp(20px, 2.6vw, 56px);
   --panel-w: clamp(340px, 24vw, 420px);
@@ -97,7 +103,7 @@ html {
   }
 
   ::placeholder {
-    color: #98a2b3;
+    color: #6b7487;
   }
 }
 
@@ -117,14 +123,14 @@ html {
     background: transparent;
   }
   .nice-scroll::-webkit-scrollbar-thumb {
-    background: rgba(10, 126, 164, 0.28);
+    background: rgba(255, 255, 255, 0.14);
     background-clip: padding-box;
     border: 3px solid transparent;
     border-radius: 999px;
     transition: background-color 150ms ease;
   }
   .nice-scroll:hover::-webkit-scrollbar-thumb {
-    background-color: rgba(10, 126, 164, 0.45);
+    background-color: rgba(255, 255, 255, 0.24);
     background-clip: padding-box;
   }
   .nice-scroll::-webkit-scrollbar-thumb:hover {
@@ -140,7 +146,7 @@ html {
   @supports not selector(::-webkit-scrollbar) {
     .nice-scroll {
       scrollbar-width: thin;
-      scrollbar-color: rgba(10, 126, 164, 0.4) transparent;
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
     }
   }
 

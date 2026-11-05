@@ -25,10 +25,10 @@ export const KINDS: Record<string, { label: string; verb: string; icon: LucideIc
   receipt: { label: "Mədaxil", verb: "depoya gəldi", icon: PackagePlus, tone: "text-ok bg-ok-soft" },
   give: { label: "Verildi", verb: "götürdü", icon: ArrowUpFromLine, tone: "text-primary bg-primary-soft" },
   return: { label: "Qaytarıldı", verb: "qaytardı", icon: ArrowDownToLine, tone: "text-ok bg-ok-soft" },
-  used: { label: "Sərf", verb: "işlətdi", icon: Flame, tone: "text-[#b45309] bg-[#fff4e0]" },
+  used: { label: "Sərf", verb: "işlətdi", icon: Flame, tone: "text-amber-300 bg-amber-500/15" },
   writeoff: { label: "Silindi", verb: "silindi", icon: Trash2, tone: "text-danger bg-danger-soft" },
-  count: { label: "Sayım", verb: "sayımla düzəldi", icon: ClipboardCheck, tone: "text-[#6d28d9] bg-[#f1ebff]" },
-  repair_out: { label: "Təmirə", verb: "təmirə getdi", icon: Wrench, tone: "text-[#b45309] bg-[#fff4e0]" },
+  count: { label: "Sayım", verb: "sayımla düzəldi", icon: ClipboardCheck, tone: "text-violet-300 bg-[#f1ebff]" },
+  repair_out: { label: "Təmirə", verb: "təmirə getdi", icon: Wrench, tone: "text-amber-300 bg-amber-500/15" },
   repair_in: { label: "Təmirdən", verb: "təmirdən qayıtdı", icon: Wrench, tone: "text-ok bg-ok-soft" },
 };
 export const FILTERS = [

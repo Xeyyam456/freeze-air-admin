@@ -12,7 +12,7 @@ export function PickerButton({ selected, open, empty, icon: Icon, placeholder, e
       aria-haspopup="listbox"
       aria-expanded={open}
       className={`flex h-9 max-sm:h-7 w-full items-center gap-2 rounded-[10px] border bg-surface px-3 text-left text-[13px] transition-colors disabled:opacity-60 ${
-        open ? "border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : "border-line hover:border-[#cfd5e1]"
+        open ? "border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : "border-line hover:border-white/15"
       }`}
     >
       {selected ? (

@@ -6,7 +6,7 @@ export function TodayStats({ totals, ready }: TodayStatsProps) {
   const items = [
     { label: "Hazırda işdə", value: totals.here, cls: "text-ok" },
     { label: "İşi bitirib", value: totals.done, cls: "text-ink" },
-    { label: "Bu gün icazəli", value: totals.leave, cls: "text-violet-600" },
+    { label: "Bu gün icazəli", value: totals.leave, cls: "text-violet-300" },
     { label: "Bu gün hələ gəlməyib", value: totals.missing, cls: "text-ink" },
     { label: "Bu gün işdə olmayıb", value: totals.absent, cls: totals.absent ? "text-danger" : "text-ink" },
     { label: "Gözləyən icazə sorğusu", value: totals.pending, cls: "text-primary" },

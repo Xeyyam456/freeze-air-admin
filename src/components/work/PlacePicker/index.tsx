@@ -15,7 +15,7 @@ export function PlacePicker({ places, value, onChange }: PlacePickerProps) {
   return (
     <div ref={rootRef} className="relative">
       <div className={`flex h-[42px] items-center gap-2 rounded-[10px] border bg-surface px-3 transition-colors ${
-        open ? "border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : "border-line hover:border-[#cfd5e1]"
+        open ? "border-primary shadow-[0_0_0_4px_var(--color-primary-soft)]" : "border-line hover:border-white/15"
       }`}>
         <Search size={16} className="muted shrink-0" />
         <input

@@ -39,7 +39,7 @@ export function LogCard({ log, canDelete, canEdit, onEdit, onDelete, onOpenGroup
       <p className="mt-1.5 whitespace-pre-line text-[13px]">{log.description}</p>
       {log.groupFiles && (
         <button type="button" onClick={onOpenGroup} title="Qrup yoldaşının əlavə etdiyi fayllar: bax"
-          className="mt-2 flex flex-wrap items-center gap-1.5 rounded-lg bg-violet-50/60 px-2 py-1 text-[11px] font-semibold text-violet-700 hover:bg-violet-50">
+          className="mt-2 flex flex-wrap items-center gap-1.5 rounded-lg bg-violet-500/10 px-2 py-1 text-[11px] font-semibold text-violet-300 hover:bg-violet-500/15">
           Qrupun faylları <FileBadges files={log.groupFiles} />
         </button>
       )}

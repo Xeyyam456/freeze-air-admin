@@ -12,8 +12,8 @@ export function LogsTable({ logs, payments, total, paid, range, today }: LogsTab
         <thead className="bg-bg text-left text-xs text-muted max-sm:hidden">
           <tr>
             <th className="px-5 max-md:px-3 py-2 font-semibold">Gün</th>
-            <th className="px-3 max-md:px-2 py-2 font-semibold"><span className="flex items-center gap-1.5"><span className="grid h-6 w-6 place-items-center rounded-lg bg-emerald-100 text-emerald-600"><SunMedium size={15} strokeWidth={2.2} /></span> Səhər</span></th>
-            <th className="px-3 max-md:px-2 py-2 font-semibold"><span className="flex items-center gap-1.5"><span className="grid h-6 w-6 place-items-center rounded-lg bg-violet-100 text-violet-600"><MoonStar size={15} strokeWidth={2.2} /></span> Axşam</span></th>
+            <th className="px-3 max-md:px-2 py-2 font-semibold"><span className="flex items-center gap-1.5"><span className="grid h-6 w-6 place-items-center rounded-lg bg-emerald-500/20 text-emerald-400"><SunMedium size={15} strokeWidth={2.2} /></span> Səhər</span></th>
+            <th className="px-3 max-md:px-2 py-2 font-semibold"><span className="flex items-center gap-1.5"><span className="grid h-6 w-6 place-items-center rounded-lg bg-violet-500/20 text-violet-300"><MoonStar size={15} strokeWidth={2.2} /></span> Axşam</span></th>
             <th className="max-md:hidden px-3 max-md:px-2 py-2 text-right font-semibold">Km</th>
             <th className="px-3 max-md:px-2 py-2 text-right font-semibold">Məbləğ</th>
             <th className="px-5 max-md:px-3 py-2 text-right font-semibold">Verildi</th>
