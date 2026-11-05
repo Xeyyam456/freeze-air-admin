@@ -1,7 +1,7 @@
 @layer theme, base, components, utilities;
 
 /* Giriş kartının kənarında fırlanan işıq: konik qradiyent yalnız 1.5 px-lik çərçivədə görünür (mask),
-   arxasında eyni işığın bulanıq kölgəsi kartın ətrafına yumşaq parıltı salır. */
+   kartın içinə heç nə düşmür. */
 @property --login-spin {
   syntax: "<angle>";
   initial-value: 0deg;
@@ -9,29 +9,18 @@
 }
 
 @layer components {
-  .card {
-    isolation: isolate;
-  }
-  .card::before,
-  .card::after {
+  .card::before {
     content: "";
     position: absolute;
     inset: -1.5px;
+    padding: 1.5px;
     border-radius: inherit;
     background: conic-gradient(from var(--login-spin), transparent 0 50%, rgba(59, 140, 240, 0.9) 68%, #8fe3ff 78%, rgba(59, 140, 240, 0.9) 86%, transparent 96%);
-    animation: login-spin 4.5s linear infinite;
-    pointer-events: none;
-  }
-  .card::before {
-    padding: 1.5px;
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-  }
-  .card::after {
-    z-index: -1;
-    filter: blur(18px);
-    opacity: 0.45;
+    animation: login-spin 4.5s linear infinite;
+    pointer-events: none;
   }
 }
 
@@ -42,8 +31,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card::before,
-  .card::after {
+  .card::before {
     animation: none;
   }
 }
