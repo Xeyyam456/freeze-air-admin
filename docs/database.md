@@ -61,8 +61,9 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 - Publikasiya `supabase_realtime`-da: `contact_requests` (yalnız admin alır), `tasks`, `attendance`, `leave_requests`, `attendance_absences`, `mileage_logs`, `fuel_payments`, `depot_requests`, `tool_assignments` (giriş edən hər kəs, RLS-ə görə). Web-də kanal sessiya yüklənəndən sonra açılır (`supabase.realtime.setAuth`), yoxsa anon kimi qoşulur və hadisə gəlmir.
 
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
-- `0001`–`0086`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
+- `0001`–`0103`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
+  - 0103: `storage.objects` AFTER DELETE trigger-i (`work_files_on_storage_delete`): `work` bucket-indən fayl silinəndə `work_files` sətri də silinir (əvvəl panel-dən silinən video/akt üçün nişan qalırdı); bir dəfəlik faylı olmayan sətirlər təmizləndi (2026-11-05, 10 sətir);
   - 0005: work_logs, `my_employee_id`;
   - 0010: rol trigger-i;
   - 0011: avatars;
