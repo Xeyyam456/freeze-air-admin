@@ -6,10 +6,9 @@ import { CodeMatrix } from "../CodeMatrix";
 import { ModelTabs } from "../ModelTabs";
 import s from "./CodeMap.module.css";
 
-// Sol tərəf: model, axtarış, "Edilecək iş" irəliləyişi və kod xəritəsi (mobildə siyahı)
+// Sol tərəf: model, axtarış, neçə kodda "Edilecək iş" yazılıb və kod xəritəsi (mobildə siyahı)
 export function CodeMap({ map, onPick, onCreate }: CodeMapProps) {
   const total = map.codes.length;
-  const share = total ? Math.round((map.solved / total) * 100) : 0;
   const visible = map.matches ? map.codes.filter((c) => map.matches?.has(c.id)) : map.codes;
   const selectedId = map.selected?.id ?? null;
 
@@ -28,7 +27,6 @@ export function CodeMap({ map, onPick, onCreate }: CodeMapProps) {
 
       <div className={s.progress}>
         <p><b>Edilecək iş</b> {map.solved} / {total} kodda yazılıb</p>
-        <span className={s.track} aria-hidden="true"><span style={{ width: `${share}%` }} /></span>
         <p className={s.legend} aria-hidden="true">
           <i className={s.keySolved} /> iş yazılıb <i className={s.keyNone} /> izahı yoxdur <i className={s.keyVoid} /> boş: kliklə əlavə et
         </p>

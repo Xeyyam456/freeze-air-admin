@@ -33,9 +33,10 @@
     left: 12px;
   }
   .progress {
-    display: grid;
-    grid-template-columns: auto minmax(80px, 1fr) auto;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
     gap: 6px 14px;
     font-size: 12px;
     color: var(--color-muted);
@@ -43,19 +44,6 @@
   .progress b {
     font-weight: 700;
     color: var(--color-ink);
-  }
-  .track {
-    height: 6px;
-    overflow: hidden;
-    border-radius: 99px;
-    background: var(--color-line);
-  }
-  .track span {
-    display: block;
-    height: 100%;
-    border-radius: inherit;
-    background: var(--color-ok);
-    transition: width 300ms ease-out;
   }
   .legend {
     display: flex;
@@ -101,10 +89,6 @@
     text-align: center;
     font-size: 14px;
     color: var(--color-muted);
-  }
-  @media (width < 1280px) {
-    .progress { grid-template-columns: auto minmax(80px, 1fr); }
-    .legend { grid-column: 1 / -1; }
   }
   @media (width < 640px) {
     .search { width: 100%; }
