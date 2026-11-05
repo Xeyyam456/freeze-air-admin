@@ -1,8 +1,6 @@
 import { revalidate } from "@/lib/revalidate";
 import { createClient } from "@/lib/supabase/client";
-
-// Açıq saytın ünvanı (canlıda .env-də VITE_SITE_URL)
-export const SITE_URL = import.meta.env.VITE_SITE_URL ?? "http://localhost:3000";
+import { SITE_URL } from "@/lib/env";
 
 // Saytın məzmunu dəyişəndən sonra: admin siyahıları yenilənir və açıq saytın keşi dərhal təmizlənir
 // (web `/api/revalidate`: admin sessiyası ilə təsdiqlənir). Alınmasa sayt ən gec ~1 dəqiqəyə özü yenilənir (web SITE_CACHE).

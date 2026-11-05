@@ -51,7 +51,7 @@ Test yoxdur. Yoxlama = tip yoxlaması + brauzerdə canlı test.
 ## Stack
 - Vite 8.3.2, React 19.3, React Router 8.4 (`BrowserRouter`, `Routes`), Tailwind v4 (`@tailwindcss/vite`), TypeScript 5.9, `@supabase/supabase-js` 2.117.2, lucide-react, `read-excel-file` (Excel import), `write-excel-file` (Excel ixrac). Versiyalar dəqiq (`--save-exact`), ən azı 2 həftəlik.
 - Font: Plus Jakarta Sans (Google Fonts, `index.html`). Alias `@/` → `src/`.
-- `.env.local` (git-ignored, **oxuma**): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Gizli açar burada yoxdur və olmamalıdır.
+- `.env.local` (git-ignored, **oxuma**): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Gizli açar burada yoxdur və olmamalıdır. Kodda env yalnız `lib/env`-də oxunur (`SUPABASE_URL`, `SUPABASE_KEY`, `SITE_URL`); başqa yerdə `import.meta.env` yazma.
 
 ## UI qaydaları
 - **Bildirişlər yalnız tostla** (`lib/toast.ts` + `components/Toaster.tsx`; `toast.success/error`). Formalarda `useOnSuccess(state, fn, "uğur mesajı")` xəta və uğur tostunu özü göstərir; `ConfirmButton` uğurda "Silindi" göstərir (`success` prop, `false` = tost yox). Formun içində `alert-error` və "Saxlanıldı" sətirləri yazma.
