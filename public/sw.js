@@ -1,8 +1,26 @@
-// Service worker yalnız push bildirişləri üçündür: keş YOXDUR (deploy-dan sonra köhnə kod riski olmasın).
+// Service worker: push bildirişləri + internet olmayanda offline ekranı (yalnız offline.html keşlənir, tətbiqin kodu yox).
 // Bildiriş Edge Function `push`-dan gəlir: { id, kind, title, body, url }. url usta panelinin ünvanıdır → admin ünvanına çevrilir.
 const MAP = { "/panel": "/", "/icazelerim": "/icazeler", "/aletlerim": "/depo" };
-self.addEventListener("install", () => self.skipWaiting());
-self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
+
+// İnternet olmayanda bizim ekranımız (public/offline.html): yalnız səhifə keçidləri tutulur — əvvəl şəbəkə,
+// alınmasa keşdəki offline səhifəsi. Tətbiqin kodu keşlənmir (deploy-dan sonra köhnə versiya riski yoxdur).
+const OFFLINE_URL = "/offline.html";
+const OFFLINE_CACHE = "offline-v2";
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
+  event.waitUntil(caches.open(OFFLINE_CACHE).then((c) => c.add(new Request(OFFLINE_URL, { cache: "reload" }))));
+});
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== OFFLINE_CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim()),
+  );
+});
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode !== "navigate") return;
+  event.respondWith(fetch(event.request).catch(() => caches.match(OFFLINE_URL)));
+});
 
 self.addEventListener("push", (event) => {
   let data = {};
