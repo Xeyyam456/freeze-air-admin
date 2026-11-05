@@ -9,7 +9,7 @@ export default function LoginPage() {
   if (!loading && session) return <Navigate to="/" replace />;
 
   return (
-    <main className="grid min-h-[calc(100vh/var(--zoom))] bg-[#f4f7fc] lg:grid-cols-[1.1fr_1fr]">
+    <main className="grid min-h-[calc(100vh/var(--zoom))] bg-bg lg:grid-cols-[1.1fr_1fr]">
       <LoginBrand />
       <LoginCard />
     </main>
