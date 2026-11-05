@@ -22,5 +22,4 @@ export type { PanelTab } from "./PanelTab";
 export type { PanelTabsProps } from "./PanelTabsProps";
 export type { ParsedCodeRow } from "./ParsedCodeRow";
 export type { RenameModalProps } from "./RenameModalProps";
-export type { SegmentDisplayProps } from "./SegmentDisplayProps";
 export type { ErrorCodesScreenProps } from "./ErrorCodesScreenProps";

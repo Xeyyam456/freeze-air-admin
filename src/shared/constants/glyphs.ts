@@ -2,7 +2,7 @@ import type { SegmentName } from "./segments";
 
 // Simvol → yanan seqmentlər. Kodlarda olanlar: 0–9, A C E F H J L M P U; qalanı axtarışda yazıla bilər
 export const GLYPHS: Record<string, SegmentName[]> = {
-  "0": ["a", "b", "c", "d", "e", "f", "j", "k"],
+  "0": ["a", "b", "c", "d", "e", "f"],
   "1": ["b", "c", "j"],
   "2": ["a", "b", "g1", "g2", "e", "d"],
   "3": ["a", "b", "g2", "c", "d"],

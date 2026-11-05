@@ -41,3 +41,4 @@ export type { CountUpProps } from "./CountUpProps";
 export type { UnitSelectProps } from "./UnitSelectProps";
 export type { WhatsAppIconProps } from "./WhatsAppIconProps";
 export type { AccountBoxProps } from "./AccountBoxProps";
+export type { SegmentDisplayProps } from "./SegmentDisplayProps";

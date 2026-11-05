@@ -4,6 +4,7 @@ import { Page } from "@/components/Page";
 import { PushPrompt } from "@/components/PushPrompt";
 import { WorkLogModal } from "@/components/work/WorkLogModal";
 import { AllLogsModal } from "./components/AllLogsModal";
+import { FlowBoard } from "./components/FlowBoard";
 import { LogsCard } from "./components/LogsCard";
 import { LowStockBanner } from "./components/LowStockBanner";
 import { MastersCard } from "./components/MastersCard";
@@ -13,7 +14,7 @@ import { StatsRow } from "./components/StatsRow";
 import { useDashboardData } from "./queries/useDashboardData";
 import { longDate } from "./utils/dateText";
 
-// Admin paneli (ana səhifə): göstəricilər, depoda azalanlar, bugünkü işlər, ayın icmalı, ustalar, sürətli keçidlər
+// Admin paneli (ana səhifə): günün axını, göstəricilər, depoda azalanlar, bugünkü işlər, ayın icmalı, ustalar, sürətli keçidlər
 export default function Home() {
   const { name } = useAuth();
   const d = useDashboardData();
@@ -27,6 +28,8 @@ export default function Home() {
       {allLogs !== null && <AllLogsModal initialQuery={allLogs} onClose={() => setAllLogs(null)} />}
 
       <div className="mb-5"><PushPrompt /></div>
+      {/* Günün axını: bütün məlumat növləri saatlar üzrə, bir lövhədə */}
+      <div className="mb-5"><FlowBoard onOpenLog={setOpenLog} /></div>
       <StatsRow d={d} />
       <LowStockBanner items={d?.lowStock ?? []} />
 

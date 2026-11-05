@@ -7,7 +7,7 @@ import { SaveConfirmForm } from "@/shared/components/SaveConfirmForm";
 import { useOnSuccess } from "@/shared/hooks/useOnSuccess";
 import { addErrorCode, deleteErrorCode, updateErrorCode } from "@/services/errorCodes/codes";
 import type { CodeEditorProps } from "@/types/errorCodes";
-import { SegmentDisplay } from "../SegmentDisplay";
+import { SegmentDisplay } from "@/shared/components/SegmentDisplay";
 import { EditorFields } from "./EditorFields";
 import s from "./CodeEditor.module.css";
 
