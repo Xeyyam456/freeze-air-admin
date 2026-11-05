@@ -8,7 +8,7 @@ import { IconTile } from "../IconTile";
 // flush: daxili boşluğu olmayan pəncərədə (!p-0) mənfi kənar boşluqlar lazım deyil
 export function DHead({ id, icon, tone, title, sub, onClose, children, flush = false }: DHeadProps) {
   return (
-    <div className={`${flush ? "" : "-mx-6 -mt-6 max-sm:-mx-4 max-sm:-mt-5 mb-5 "}flex items-center gap-3.5 max-sm:gap-2.5 rounded-t-[18px] border-b border-line bg-[linear-gradient(180deg,#f7f9fd,#ffffff)] px-6 max-sm:px-4 py-4`}>
+    <div className={`${flush ? "" : "-mx-6 -mt-6 max-sm:-mx-4 max-sm:-mt-5 mb-5 "}flex items-center gap-3.5 max-sm:gap-2.5 rounded-t-[18px] border-b border-line bg-[linear-gradient(180deg,var(--color-surface-2),var(--color-surface))] px-6 max-sm:px-4 py-4`}>
       {/* Mobildə ikon gizlidir (ad üçün yer qalsın) */}
       <span className="contents max-sm:[&>span]:!hidden"><IconTile icon={icon} tone={tone} /></span>
       <div className="min-w-0 flex-1">

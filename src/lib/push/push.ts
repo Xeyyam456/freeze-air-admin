@@ -41,11 +41,16 @@ export async function enablePush(): Promise<"ok" | "denied" | "error"> {
   }
 }
 
-// Girişdən sonra abunəliyi təzələ (cihaz başqa hesabdan keçibsə, bildirişlər yeni hesaba getsin)
-export async function refreshPush() {
-  const sub = await currentSubscription();
-  if (sub) await savePushSubscription(sub).catch(() => {});
-  return !!sub;
+// Girişdən sonra abunəliyi təzələ (cihaz başqa hesabdan keçibsə, bildirişlər yeni hesaba getsin).
+// Eyni anda gələn ikinci çağırış (məs. dev-də StrictMode effekti iki dəfə) birincini gözləyir — təkrar sorğu getmir.
+let refreshing: Promise<boolean> | null = null;
+export function refreshPush() {
+  refreshing ??= (async () => {
+    const sub = await currentSubscription();
+    if (sub) await savePushSubscription(sub).catch(() => {});
+    return !!sub;
+  })().finally(() => { refreshing = null; });
+  return refreshing;
 }
 
 export async function disablePush() {

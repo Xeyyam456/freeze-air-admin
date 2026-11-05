@@ -5,7 +5,7 @@ import { ArrowRight, Clock } from "lucide-react";
 export function PendingBanner({ total, parts, onOpen }: PendingBannerProps) {
   return (
     <button type="button" onClick={onOpen}
-      className="group flex w-full items-center gap-3 rounded-2xl border border-amber-500/40 bg-[linear-gradient(135deg,#fff4dc,#fffdf8_70%)] p-3 text-left shadow-[0_8px_20px_-14px_rgba(180,83,9,0.6)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-12px_rgba(180,83,9,0.55)] max-sm:gap-2.5 max-sm:p-2.5">
+      className="group flex w-full items-center gap-3 rounded-2xl border border-amber-500/40 bg-[linear-gradient(135deg,rgba(245,158,11,0.16),var(--color-surface)_70%)] p-3 text-left shadow-[0_8px_20px_-14px_rgba(180,83,9,0.6)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-12px_rgba(180,83,9,0.55)] max-sm:gap-2.5 max-sm:p-2.5">
       <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[linear-gradient(135deg,#f59e0b,#d97706)] text-white shadow-[0_6px_14px_-6px_rgba(217,119,6,0.8)] max-sm:h-8 max-sm:w-8"><Clock size={18} /></span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
