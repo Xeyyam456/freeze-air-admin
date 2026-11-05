@@ -163,10 +163,16 @@
   /* Ad sütunu sabit endədir (bütün sətirlərdə eyni xətt; "Soyad Ad" tam sığır), qalan yer iş yerinə */
   .headRow,
   .row { grid-template-columns: 210px minmax(0, 1fr) auto; column-gap: 16px; }
+  /* Telefon: iki sütun — solda avatar + adlar, sağda iş yeri və altında vaxt (alt-alta üç səviyyə yox) */
   @media (width < 640px) {
-    .row { grid-template-columns: minmax(0, 1fr) auto; row-gap: 4px; }
-    /* İş yeri adların altında, eyni xətdən başlayır: avatar (34px) + boşluq (10px) */
-    .place { padding-left: 44px; }
-    .time { align-self: start; padding-top: 2px; }
+    .row {
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      column-gap: 14px;
+      row-gap: 2px;
+    }
+    .who { grid-column: 1; grid-row: 1 / span 2; }
+    .place { grid-column: 2; grid-row: 1; padding-left: 0; align-self: end; }
+    .time { grid-column: 2; grid-row: 2; align-self: start; text-align: left; font-size: 11px; color: var(--d-muted); }
   }
 }
