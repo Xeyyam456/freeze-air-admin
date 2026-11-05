@@ -165,5 +165,8 @@
   .row { grid-template-columns: 210px minmax(0, 1fr) auto; column-gap: 16px; }
   @media (width < 640px) {
     .row { grid-template-columns: minmax(0, 1fr) auto; row-gap: 4px; }
+    /* İş yeri adların altında, eyni xətdən başlayır: avatar (34px) + boşluq (10px) */
+    .place { padding-left: 44px; }
+    .time { align-self: start; padding-top: 2px; }
   }
 }
