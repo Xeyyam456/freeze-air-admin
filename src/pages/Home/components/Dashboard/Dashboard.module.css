@@ -56,15 +56,16 @@
       transition: none !important;
     }
   }
-  /* Yuxarı: solda 2×2 göstərici, sağda iri qrafik (iki sıra hündürlüyündə) */
+  /* Yuxarı: solda 2×2 göstərici, sağda iri qrafik (iki sıra hündürlüyündə). 4 bərabər sütun (qrafik 2 sütun tutur):
+     "1fr 1fr 2fr" olanda boşluq sayı aşağı sıradan fərqli idi və aşağıdakı sağ kart 10px solda başlayırdı (simmetriya) */
   .top {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 2fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: auto auto;
     gap: 20px;
   }
   .big {
-    grid-column: 3;
+    grid-column: 3 / span 2;
     grid-row: 1 / span 2;
   }
   .bottom {
