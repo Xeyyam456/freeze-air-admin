@@ -3,6 +3,7 @@ export type { CarCardProps } from "./CarCardProps";
 export type { CarListProps } from "./CarListProps";
 export type { CarRowProps } from "./CarRowProps";
 export type { CarSummary } from "./CarSummary";
+export type { DayCover } from "./DayCover";
 export type { DayPaysProps } from "./DayPaysProps";
 export type { FuelCar } from "./FuelCar";
 export type { FuelData } from "./FuelData";

@@ -3,8 +3,8 @@ import type { LogsTableProps } from "@/types/fuel";
 import { azn } from "../../shared/money";
 import { LogRow } from "../LogRow";
 
-// Dövrün günləri: səhər/axşam km + şəkil, məbləğ, həmin gün verilən pul; mobildə gün kartları
-export function LogsTable({ logs, payments, total, paid, range, today }: LogsTableProps) {
+// Dövrün günləri: səhər/axşam km + şəkil, məbləğ, həmin gün verilən pul və günün ödəniş vəziyyəti; mobildə gün kartları
+export function LogsTable({ logs, payments, total, paid, range, today, cover }: LogsTableProps) {
   if (logs.length === 0) return <p className="muted border-t border-line px-5 py-4 text-sm">Bu dövrdə yürüş yazılmayıb.</p>;
   return (
     <div className="overflow-x-auto border-t border-line">
@@ -20,7 +20,7 @@ export function LogsTable({ logs, payments, total, paid, range, today }: LogsTab
           </tr>
         </thead>
         <tbody className="divide-y divide-line max-sm:block">
-          {logs.map((l) => <LogRow key={l.id} l={l} payments={payments} today={today} />)}
+          {logs.map((l) => <LogRow key={l.id} l={l} payments={payments} today={today} cover={cover[l.day]} />)}
         </tbody>
         <tfoot className="bg-bg font-bold max-sm:block">
           <tr className="max-sm:grid max-sm:grid-cols-2 max-sm:gap-y-1 max-sm:px-3.5 max-sm:py-2.5">
