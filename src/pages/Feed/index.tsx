@@ -32,7 +32,7 @@ export default function FeedPage() {
 
   return (
     <Page title="Qruplar" subtitle="Görülən işlər və aktlar">
-      <div className="mx-auto grid max-w-3xl gap-4">
+      <div className="grid gap-4">
         <FeedTabs group={group} onChange={setGroup} counts={{ work: work?.length ?? null, act: act?.length ?? null }} />
         <SearchBar value={query} onChange={setQuery} placeholder="Yer, usta və ya tarix axtar..." label="Lent axtarışı" />
         {meId === null && me !== null && (

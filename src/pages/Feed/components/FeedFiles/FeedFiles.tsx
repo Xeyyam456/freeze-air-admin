@@ -15,7 +15,7 @@ export function FeedFiles({ post }: FeedFilesProps) {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-1.5">
+      <div className="grid max-w-2xl grid-cols-3 gap-1.5">
         {post.files.slice(0, SHOW).map((f, i) => {
           const more = i === SHOW - 1 && rest > 0;
           if (isImage(f)) {

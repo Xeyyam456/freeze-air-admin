@@ -28,13 +28,13 @@ export function CommentsModal({ logId, group, meId, moderator, onClose }: Commen
   };
 
   return (
-    <Modal onClose={onClose} labelledBy="feed-comments-title" className="flex !h-[min(580px,calc(100dvh-32px))] !max-w-lg flex-col !gap-0 !p-0">
+    <Modal onClose={onClose} labelledBy="feed-comments-title" className="flex !h-[min(580px,calc(100dvh-32px))] !max-w-2xl flex-col !gap-0 !p-0">
       <div className="flex items-center gap-2 border-b border-line px-5 py-3.5">
         <span className="text-xl">💬</span>
         <h2 id="feed-comments-title" className="flex-1 text-lg font-extrabold">Şərhlər{list?.length ? ` · ${list.length}` : ""}</h2>
         <button type="button" onClick={onClose} className="muted grid h-8 w-8 place-items-center rounded-full hover:bg-surface-2" aria-label="Bağla"><X size={18} /></button>
       </div>
-      <ul className="flex flex-1 flex-col gap-3 overflow-y-auto px-5 py-4">
+      <ul className="flex flex-1 flex-col gap-3 overflow-y-auto px-5 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {list === null ? <li className="muted text-center text-sm">Yüklənir...</li>
           : list.length === 0 ? <li className="muted m-auto text-center text-sm">Hələ şərh yoxdur.<br />İlk şərhi sən yaz.</li>
           : list.map((c) => <CommentRow key={c.id} c={c} mine={c.employeeId === meId} canDelete={c.employeeId === meId || moderator} onDelete={remove} />)}
