@@ -108,3 +108,6 @@ Repolar ayrıdır, kod paylaşılmır; bunlar əl ilə eyni saxlanmalıdır:
 - Xəritə üçün koordinat sahəsi (`site_settings`). (Silmək əvəzinə "Səbət" sınanıb və istifadəçinin istəyi ilə ləğv olunub: yenidən təklif etmə.)
 - Ustalar üçün mobil tətbiq (React Native, Google Maps/Waze naviqasiyası). Mobildə mağaza/filial axtarışı kodla (məs. `ARZ-045`) + "Yol tap" (Google Maps marşrutu) və Waze lazımdır; web-də bu çıxarılıb, qaralama commit `019f8e4`-dədir.
 - Hazır olanlar (təkrar təklif etmə): "Görülən işlər" səhifəsi (`/isler`), Depo tarixçəsi və minimum qalıq, tapşırıqlar, xəta kodları.
+
+## Qruplar (2026-11-07)
+- `/qruplar` (`pages/Feed`, `services/feed`, `types/feed`): usta tapşırıq qeydinə yüklənən şəkil/video/akt lenti, 👍/👎, şərhlər, "birlikdə" ustalar; web `views/Feed` və mobil "Qruplar" ilə eyni. Əməkdaş kartı olan hesab (rəhbərlik/usta) reaksiya və şərh yaza bilir; kartı olmayan admin yalnız baxır və şərhləri silə bilir (`fetchFeedMe`). Push bildirişləri bazadadır (0109–0111).

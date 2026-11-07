@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import {
-  AnnouncementsPage, AttendancePage, ClientPage, ClientsPage, DepotPage, EmployeesPage, ErrorCodesPage, FuelPage, Home,
+  AnnouncementsPage, AttendancePage, ClientPage, ClientsPage, DepotPage, EmployeesPage, ErrorCodesPage, FeedPage, FuelPage, Home,
   LeavesPage, LoginPage, ManagementPage, NotFoundPage, RequestsPage, SitePage, TasksPage, WorkLogsPage,
 } from "./pages";
 import { OwnerOnly } from "../OwnerOnly";
@@ -18,6 +18,7 @@ export function AppRoutes() {
         <Route path="magazalar" element={<ClientsPage key="market" kind="market" />} />
         <Route path="magazalar/:id" element={<ClientPage kind="market" />} />
         <Route path="ustalar" element={<EmployeesPage />} />
+        <Route path="qruplar" element={<FeedPage />} />
         <Route path="elanlar" element={<AnnouncementsPage />} />
         <Route path="rehberlik" element={<ManagementPage />} />
         <Route path="yanacaq" element={<FuelPage />} />

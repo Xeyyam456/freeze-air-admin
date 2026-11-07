@@ -12,6 +12,8 @@ export type PublicTables = {
   crews: import("./crews").Table
   depot_requests: import("./depot_requests").Table
   employees: import("./employees").Table
+  feed_comments: import("./feed_comments").Table
+  feed_likes: import("./feed_likes").Table
   fuel_payments: import("./fuel_payments").Table
   fuel_settings: import("./fuel_settings").Table
   leave_requests: import("./leave_requests").Table

@@ -11,6 +11,7 @@ const loaders = {
   depot: () => import("@/pages/Depot"),
   employees: () => import("@/pages/Employees"),
   errorCodes: () => import("@/pages/ErrorCodes"),
+  feed: () => import("@/pages/Feed"),
   fuel: () => import("@/pages/Fuel"),
   attendance: () => import("@/pages/Attendance"),
   leaves: () => import("@/pages/Leaves"),
@@ -28,6 +29,7 @@ export const ClientPage = lazy(() => loaders.clients().then((m) => ({ default: m
 export const DepotPage = lazy(loaders.depot);
 export const EmployeesPage = lazy(loaders.employees);
 export const ErrorCodesPage = lazy(loaders.errorCodes);
+export const FeedPage = lazy(loaders.feed);
 export const FuelPage = lazy(loaders.fuel);
 export const AttendancePage = lazy(loaders.attendance);
 export const LeavesPage = lazy(loaders.leaves);
