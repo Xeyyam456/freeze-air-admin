@@ -12,7 +12,7 @@ export function EmojiPanel({ onPick }: { onPick: (emoji: string) => void }) {
             className={`grid h-9 w-11 place-items-center rounded-xl text-xl transition ${cat === i ? "bg-primary/15" : "hover:bg-surface-2"}`}>{g.icon}</button>
         ))}
       </div>
-      <div className="grid h-[180px] grid-cols-8 content-start gap-0.5 overflow-y-auto px-2 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="grid h-[min(180px,26dvh)] grid-cols-8 content-start gap-0.5 overflow-y-auto px-2 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {EMOJI_CATEGORIES[cat].list.map((e) => (
           <button key={e} type="button" onClick={() => onPick(e)} className="grid h-10 place-items-center rounded-lg text-2xl transition hover:scale-125 hover:bg-surface-2">{e}</button>
         ))}

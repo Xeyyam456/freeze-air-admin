@@ -10,7 +10,7 @@ import { ReactionPicker } from "../ReactionPicker";
 export function CommentRow({ c, mine, canDelete, canReact, onDelete, onReact }: CommentRowProps) {
   const given = REACTIONS.filter((r) => c.reactions[r.kind]);
   return (
-    <li className={`flex items-end gap-2 ${mine ? "flex-row-reverse" : ""}`}>
+    <li className={`flex items-start gap-2 ${mine ? "flex-row-reverse" : ""}`}>
       {!mine && <Avatar employee={{ full_name: c.name, photo_url: c.photo }} className="!h-8 !w-8 !text-xs" />}
       <div className={`flex max-w-[80%] flex-col gap-1 ${mine ? "items-end" : "items-start"}`}>
         <div className={`rounded-2xl px-3.5 py-2 ${mine ? "rounded-br-md bg-primary/15 ring-1 ring-primary/30" : "rounded-bl-md bg-surface-2 ring-1 ring-line"}`}>

@@ -16,13 +16,13 @@ export function FeedActions({ post, group, meId, moderator }: FeedActionsProps) 
   const mine = post.employeeId === meId;
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
       <button type="button" onClick={() => setComments(true)} aria-label={`${post.comments} şərh`}
         className={`group flex items-center gap-2 rounded-xl py-1 pl-1 pr-3 transition ${post.comments ? "bg-primary/10 hover:bg-primary/15" : "hover:bg-surface-2"}`}>
         <CommentIcon active={post.comments > 0} className="group-hover:-translate-y-px group-hover:scale-105" />
         <span className={`text-sm font-extrabold tabular-nums ${post.comments ? "text-primary" : "muted"}`}>{post.comments > 0 ? post.comments : "Şərh"}</span>
       </button>
-      <div className="flex items-center gap-1.5">
+      <div className="flex flex-wrap items-center justify-end gap-1.5">
         {(!mine && meId) && <ReactionPicker mine={post.mine} onPick={(kind) => react(post, kind)} />}
         {REACTIONS.filter((r) => post.reactions[r.kind]).map((r) => (
           <button key={r.kind} type="button" onClick={() => setLikers(true)} aria-label={`${post.reactions[r.kind]} ${r.label}, kimlər`}
