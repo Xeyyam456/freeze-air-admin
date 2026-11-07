@@ -326,3 +326,92 @@
   /* Menyunun aşağısı nəfəs alsın (əvvəl orada "Menyunu yığ" sətri vardı) */
   .nav { padding-bottom: 10px; }
 }
+
+@layer components {
+  /* Qruplar: yeni hadisə (rəqəmsiz) — qırmızı nöqtə nəbz edir; yığılmış menyuda ikonun küncündə */
+  .pulse {
+    position: relative;
+    flex: none;
+    width: 9px;
+    height: 9px;
+    margin-right: 4px;
+    border-radius: 999px;
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+    animation: pulseDot 1.6s ease-in-out infinite;
+  }
+  .pulse::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    animation: pulseRing 1.6s ease-out infinite;
+  }
+  @keyframes pulseDot { 50% { opacity: 0.45; } }
+  @keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.65); }
+    80%, 100% { box-shadow: 0 0 0 9px rgba(239, 68, 68, 0); }
+  }
+  .sidebar[data-collapsed] .pulse {
+    position: absolute;
+    top: 6px;
+    right: 14px;
+    margin: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pulse, .pulse::after { animation: none; }
+  }
+}
+
+@layer components {
+  /* Premium yığ / aç: bir yumşaq əyri (yavaş-sürətli-yavaş), yazılar kəsilmir — solğunlaşıb sürüşür, ikon yerində hamar sürüşür */
+  .sidebar {
+    --ease: cubic-bezier(0.32, 0.72, 0, 1);
+    transition: width 420ms var(--ease);
+  }
+  .text {
+    transition: opacity 220ms ease 120ms, transform 380ms var(--ease);
+  }
+  .sidebar[data-collapsed] .text,
+  .sidebar[data-collapsed] .groupTitle {
+    display: revert;
+    opacity: 0;
+    transform: translateX(-8px);
+    pointer-events: none;
+    transition: opacity 120ms ease, transform 380ms var(--ease);
+  }
+  .sidebar[data-collapsed] .alert .text { display: none; }
+  .sidebar[data-collapsed] .brand .text { display: none; }
+  .brand { transition: padding 420ms var(--ease); }
+  .sidebar[data-collapsed] .brand { justify-content: flex-start; padding: 0 18px; }
+  .link {
+    transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease, padding 420ms var(--ease), gap 420ms var(--ease);
+  }
+  /* Yığılmışda ikon mərkəzdə qalır (padding ilə, justify dəyişmədən — beləcə animasiya olunur): (52 − 18) / 2 */
+  .sidebar[data-collapsed] .link { justify-content: flex-start; padding: 0 0 0 17px; gap: 0; }
+  .groupTitle {
+    max-height: 24px;
+    overflow: hidden;
+    transition: max-height 380ms var(--ease), opacity 200ms ease, padding 380ms var(--ease), transform 380ms var(--ease);
+  }
+  .sidebar[data-collapsed] .groupTitle { max-height: 0; padding-bottom: 0; }
+  .edge { transition: transform 420ms var(--ease), background-color 150ms ease, color 150ms ease, box-shadow 150ms ease; }
+  @media (width < 1024px) {
+    .sidebar {
+      transition: transform 420ms var(--ease), box-shadow 420ms ease;
+    }
+    /* Siyirtmə açılanda bəndlər ardıcıl, yumşaq daxil olur */
+    .sidebar[data-open] .group { animation: groupIn 520ms var(--ease) both; }
+    .sidebar[data-open] .group:nth-child(2) { animation-delay: 50ms; }
+    .sidebar[data-open] .group:nth-child(3) { animation-delay: 100ms; }
+    .sidebar[data-open] .group:nth-child(4) { animation-delay: 150ms; }
+    .sidebar[data-open] .group:nth-child(5) { animation-delay: 200ms; }
+  }
+  @keyframes groupIn {
+    from { opacity: 0; transform: translateX(-14px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar, .text, .link, .brand, .groupTitle, .edge { transition-duration: 1ms; }
+    .sidebar[data-open] .group { animation: none; }
+  }
+}

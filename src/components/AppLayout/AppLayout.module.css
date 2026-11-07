@@ -6,7 +6,7 @@
     --nav: var(--nav-w);
     padding-left: var(--nav);
     min-height: calc(100vh / var(--zoom));
-    transition: padding-left 200ms ease;
+    transition: padding-left 420ms cubic-bezier(0.32, 0.72, 0, 1);
   }
   .frame[data-collapsed] {
     --nav: var(--nav-w-collapsed);
@@ -21,7 +21,7 @@
       inset: 0;
       z-index: 55;
       background: rgba(11, 19, 36, 0.55);
-      animation: fade 160ms ease-out;
+      animation: fade 320ms ease-out;
     }
   }
   @keyframes fade {

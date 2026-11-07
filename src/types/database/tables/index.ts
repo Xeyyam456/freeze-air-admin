@@ -13,6 +13,7 @@ export type PublicTables = {
   depot_requests: import("./depot_requests").Table
   employees: import("./employees").Table
   feed_comments: import("./feed_comments").Table
+  feed_comment_reactions: import("./feed_comment_reactions").Table
   feed_likes: import("./feed_likes").Table
   fuel_payments: import("./fuel_payments").Table
   fuel_settings: import("./fuel_settings").Table

@@ -27,12 +27,12 @@ export async function fetchFeed(group: FeedGroup, me: number | null): Promise<Fe
       name: l.employees?.full_name ?? "", photo: l.employees?.photo_url ?? null,
       place: l.stores ? `${l.stores.code} ${l.stores.name}` : l.companies?.name ?? l.place_text ?? "Yer yazılmayıb",
       company: l.stores?.companies?.name ?? null, description: l.description, files: [file],
-      up: 0, down: 0, mine: null, comments: 0, partners: [],
+      reactions: {}, mine: null, comments: 0, partners: [],
     });
   });
   const meta = await fetchFeedMeta(group, new Map([...posts.values()].map((p) => [p.logId, p.employeeId])), me);
   return [...posts.values()].map((p) => {
     const r = meta.reactions.get(p.logId);
-    return { ...p, files: p.files.reverse(), up: r?.up ?? 0, down: r?.down ?? 0, mine: r?.mine ?? null, comments: meta.comments.get(p.logId) ?? 0, partners: meta.partners.get(p.logId) ?? [] };
+    return { ...p, files: p.files.reverse(), reactions: r?.counts ?? {}, mine: r?.mine ?? null, comments: meta.comments.get(p.logId) ?? 0, partners: meta.partners.get(p.logId) ?? [] };
   });
 }

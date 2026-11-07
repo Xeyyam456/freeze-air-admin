@@ -29,7 +29,7 @@ export const GROUPS: NavGroup[] = [
       { href: "/icazeler", label: "İcazələr", icon: CalendarOff, badge: "leave" },
       { href: "/yanacaq", label: "Yanacaq", icon: Fuel },
       { href: "/rehberlik", label: "Rəhbərlik", icon: UserCog },
-      { href: "/qruplar", label: "Qruplar", icon: MessagesSquare },
+      { href: "/qruplar", label: "Qruplar", icon: MessagesSquare, badge: "feed" },
       { href: "/elanlar", label: "Elanlar", icon: Megaphone, badge: "announce" },
     ],
   },
@@ -57,6 +57,7 @@ export const BADGE_TITLE: Record<NavBadge, string> = {
   stock: "depo",
   leave: "gözləyən icazə sorğusu",
   announce: "oxunmamış elan",
+  feed: "oxunmamış hadisə",
 };
 
 export function isActive(href: string, pathname: string) {

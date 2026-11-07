@@ -4,11 +4,10 @@ import { LIKERS_KEY } from "@/services/feed/keys";
 import { fetchFeedLikers } from "@/services/feed/reactions";
 import { Avatar } from "@/shared/components/Avatar";
 import { Modal } from "@/shared/components/Modal";
-import type { LikersModalProps, Reaction } from "@/types/feed";
+import type { LikersModalProps } from "@/types/feed";
+import { REACTIONS } from "../../constants/reactions";
 
-const SECTIONS: { kind: Reaction; emoji: string }[] = [{ kind: "up", emoji: "👍" }, { kind: "down", emoji: "👎" }];
-
-// Kimlər reaksiya verib: 👍 və 👎 bölmələri (ad, şəkil, ixtisas/vəzifə). Canlı: feed_likes Realtime
+// Kimlər reaksiya verib: hər reaksiya növü ayrı bölmə (ad, şəkil, ixtisas/vəzifə). Canlı: feed_likes Realtime
 export function LikersModal({ logId, group, onClose }: LikersModalProps) {
   const list = useData(LIKERS_KEY, () => fetchFeedLikers(logId, group), [logId, group]);
 
@@ -20,7 +19,7 @@ export function LikersModal({ logId, group, onClose }: LikersModalProps) {
       </div>
       {list === null ? <p className="muted py-6 text-center text-sm">Yüklənir...</p>
         : list.length === 0 ? <p className="muted py-6 text-center text-sm">Hələ reaksiya yoxdur.</p>
-        : SECTIONS.map((s) => {
+        : REACTIONS.map((s) => {
           const rows = list.filter((p) => p.kind === s.kind);
           if (!rows.length) return null;
           return (

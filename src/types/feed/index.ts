@@ -1,5 +1,5 @@
 export type { FeedGroup } from "./FeedGroup";
-export type { Reaction } from "./Reaction";
+export type { Reaction, ReactionCounts } from "./Reaction";
 export type { FeedFile } from "./FeedFile";
 export type { FeedPost } from "./FeedPost";
 export type { FeedLiker } from "./FeedLiker";

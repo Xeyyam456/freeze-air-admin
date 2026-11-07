@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/client";
+import { isReaction } from "@/pages/Feed/constants/reactions";
 import type { FeedGroup, FeedLiker, Reaction } from "@/types/feed";
 
-// Reaksiya: kind = null → geri götür; "up"/"down" → seç (başqası seçilibsə əvəzlənir). RLS: yalnız öz adından, öz paylaşımına yox
+// Reaksiya: kind = null → geri götür; növ → seç (başqası seçilibsə əvəzlənir). RLS: yalnız öz adından, öz paylaşımına yox
 export async function setFeedReaction(logId: number, group: FeedGroup, me: number, kind: Reaction | null): Promise<void> {
   const supabase = createClient();
   const key = { work_log_id: logId, grp: group, employee_id: me };
@@ -11,7 +12,7 @@ export async function setFeedReaction(logId: number, group: FeedGroup, me: numbe
   if (error) throw new Error(error.message);
 }
 
-// Reaksiya verənlər (vaxt sırası ilə): ad, şəkil, ixtisas/vəzifə, 👍/👎
+// Reaksiya verənlər (vaxt sırası ilə): ad, şəkil, ixtisas/vəzifə, reaksiya növü
 export async function fetchFeedLikers(logId: number, group: FeedGroup): Promise<FeedLiker[]> {
   const supabase = createClient();
   const { data, error } = await supabase.from("feed_likes").select("employee_id, kind").eq("work_log_id", logId).eq("grp", group).order("created_at");
@@ -23,6 +24,6 @@ export async function fetchFeedLikers(logId: number, group: FeedGroup): Promise<
   const byId = new Map((emps ?? []).map((e) => [e.id, e]));
   return rows.flatMap((r) => {
     const e = byId.get(r.employee_id);
-    return e ? [{ id: r.employee_id, name: e.full_name, photo: e.photo_url, role: e.specialty ?? e.position, kind: (r.kind === "down" ? "down" : "up") as Reaction }] : [];
+    return e ? [{ id: r.employee_id, name: e.full_name, photo: e.photo_url, role: e.specialty ?? e.position, kind: (isReaction(r.kind) ? r.kind : "up") as Reaction }] : [];
   });
 }

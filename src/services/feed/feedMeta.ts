@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { isReaction } from "@/pages/Feed/constants/reactions";
 import type { FeedGroup, FeedMeta } from "@/types/feed";
 
 // Lent kartlarının əlavə məlumatı (paylaşımlar üçün bir dəfəyə): reaksiya sayları + mənim reaksiyam, şərh sayı,
@@ -15,9 +16,10 @@ export async function fetchFeedMeta(group: FeedGroup, authors: Map<number, numbe
     supabase.from("tasks").select("work_log_id, group_id").in("work_log_id", ids).not("group_id", "is", null),
   ]);
   for (const k of likes.data ?? []) {
-    const r = meta.reactions.get(k.work_log_id) ?? { up: 0, down: 0, mine: null };
-    if (k.kind === "down") r.down += 1; else r.up += 1;
-    if (k.employee_id === me) r.mine = k.kind === "down" ? "down" : "up";
+    const r = meta.reactions.get(k.work_log_id) ?? { counts: {}, mine: null };
+    const kind = isReaction(k.kind) ? k.kind : "up";
+    r.counts[kind] = (r.counts[kind] ?? 0) + 1;
+    if (k.employee_id === me) r.mine = kind;
     meta.reactions.set(k.work_log_id, r);
   }
   for (const c of comments.data ?? []) meta.comments.set(c.work_log_id, (meta.comments.get(c.work_log_id) ?? 0) + 1);

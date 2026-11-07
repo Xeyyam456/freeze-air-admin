@@ -194,3 +194,8 @@ html {
     }
   }
 }
+
+/* Reaksiya seçimi (lent): yumşaq açılış */
+@keyframes reactPop {
+  from { opacity: 0; transform: translateY(6px) scale(0.92); }
+}

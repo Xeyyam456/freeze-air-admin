@@ -18,6 +18,7 @@ async function start() {
     .on("postgres_changes", { event: "*", schema: "public", table: "work_files" }, refresh)
     .on("postgres_changes", { event: "*", schema: "public", table: "feed_likes" }, refresh)
     .on("postgres_changes", { event: "*", schema: "public", table: "feed_comments" }, refresh)
+    .on("postgres_changes", { event: "*", schema: "public", table: "feed_comment_reactions" }, refresh)
     .subscribe();
 }
 

@@ -4,7 +4,7 @@ import { todayBaku } from "@/shared/utils/todayBaku";
 import { usePanel } from "../../hooks/usePanel";
 import { useDashboardData } from "../../queries/useDashboardData";
 import { ChartCard } from "../ChartCard";
-import { KpiAvg, KpiDuty, KpiMonth, KpiTasks } from "../KpiCards";
+import { KpiToday, KpiDuty, KpiMonth, KpiTasks } from "../KpiCards";
 import { LowStockBanner } from "../LowStockBanner";
 import { RecentWork } from "../RecentWork";
 import { SkeletonCard } from "../SkeletonCard";
@@ -31,7 +31,7 @@ export function PanelDashboard({ onOpenLog, onAllLogs }: PanelDashboardProps) {
       <div className={s.stockMobile}><LowStockBanner items={d?.lowStock ?? []} /></div>
       <div className={s.top}>
         <KpiMonth v={v} d={d} />
-        <KpiAvg v={v} d={d} />
+        <KpiToday v={v} d={d} />
         <KpiTasks v={v} d={d} />
         <KpiDuty v={v} d={d} />
         <ChartCard title="Görülən işlər" noun="görülən iş" note="Bütün ustalar, qrup işi bir dəfə sayılır" values={v.work30} days={v.days30}

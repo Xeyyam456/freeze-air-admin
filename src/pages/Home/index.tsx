@@ -6,7 +6,7 @@ import { AllLogsModal } from "./components/AllLogsModal";
 import { PanelDashboard } from "./components/Dashboard";
 import { longDate } from "./utils/dateText";
 
-// Admin paneli (ana səhifə): tünd dashboard — ayın işləri, gündəlik orta, tapşırıqlar, işdə olanlar, son işlər, depo
+// Admin paneli (ana səhifə): tünd dashboard — ayın işləri, tapşırıqlar, işdə olanlar, son işlər, depo
 export default function Home() {
   const { name } = useAuth();
   const [openLog, setOpenLog] = useState<number | null>(null);

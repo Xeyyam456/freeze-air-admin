@@ -17,7 +17,8 @@ export function SidebarNav({ collapsed, owner, pathname, badges }: SidebarNavPro
                 aria-current={isActive(href, pathname) ? "page" : undefined}>
                 <Icon size={18} strokeWidth={2.1} />
                 <span className={`${s.text} flex-1 truncate`}>{label}</span>
-                {!!n && (
+                {!!n && badge === "feed" && <span className={s.pulse} title={`${n} ${BADGE_TITLE.feed}`} />}
+                {!!n && badge !== "feed" && (
                   <span className={`${s.badge} ${BADGE_STYLE}`} title={badge === "stock" ? badges?.stockTitle : `${n} ${BADGE_TITLE[badge!]}`}>{n}</span>
                 )}
               </Link>

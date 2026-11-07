@@ -1,12 +1,13 @@
 import { createClient } from "@/lib/supabase/client";
 import { localDate } from "@/shared/utils/localDate";
 import { isLowStock } from "@/pages/Depot/utils/stock";
+import { fetchFeedUnread } from "@/services/feed/fetchFeedUnread";
 import type { NavBadges } from "@/types/layout";
 
 // Menyu nişanları: baxılmamış müraciət, bugünkü gözləyən tapşırıq, depo (təsdiq gözləyən sənəd + "Almadım" + azalan), gözləyən icazə, oxunmamış elan (0105)
 export async function fetchNavBadges(): Promise<NavBadges> {
   const supabase = createClient();
-  const [requests, tasks, low, docs, disputed, leave, announce] = await Promise.all([
+  const [requests, tasks, low, docs, disputed, leave, announce, feed] = await Promise.all([
     supabase.from("contact_requests").select("*", { count: "exact", head: true }).eq("handled", false).then((r) => r.count ?? 0),
     // Qrup tapşırığı (0071) bir tapşırıq sayılır
     supabase.from("tasks").select("group_id").eq("task_date", localDate()).eq("done", false).is("cancelled_at", null)
@@ -19,9 +20,10 @@ export async function fetchNavBadges(): Promise<NavBadges> {
       .then((r) => r.count ?? 0),
     supabase.from("leave_requests").select("*", { count: "exact", head: true }).eq("status", "pending").then((r) => r.count ?? 0),
     supabase.rpc("unread_announcements").then((r) => r.data ?? 0),
+    fetchFeedUnread().then((u) => u.work + u.act),
   ]);
   return {
-    requests, tasks, stock: low + docs + disputed, leave, announce,
+    requests, tasks, stock: low + docs + disputed, leave, announce, feed,
     stockTitle: [docs && `${docs} sənəd təsdiq gözləyir`, disputed && `${disputed} «Almadım»`, low && `${low} azalan`].filter(Boolean).join(" · "),
   };
 }

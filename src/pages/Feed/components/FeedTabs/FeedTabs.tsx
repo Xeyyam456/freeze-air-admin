@@ -6,8 +6,8 @@ const TABS: { group: FeedGroup; label: string; icon: typeof Camera }[] = [
   { group: "act", label: "Aktlar", icon: FileText },
 ];
 
-// Qrup seçimi (mobildəki "Qruplar" siyahısı əvəzinə iki tab): ad + paylaşım sayı
-export function FeedTabs({ group, onChange, counts }: FeedTabsProps) {
+// Qrup seçimi (mobildəki "Qruplar" siyahısı əvəzinə iki tab): ad + yalnız oxunmamış hadisə sayı (qırmızı); günlük say gün başlığındadır
+export function FeedTabs({ group, onChange, unread }: FeedTabsProps) {
   return (
     <div role="tablist" className="flex gap-2">
       {TABS.map(({ group: g, label, icon: Icon }) => {
@@ -16,7 +16,7 @@ export function FeedTabs({ group, onChange, counts }: FeedTabsProps) {
           <button key={g} type="button" role="tab" aria-selected={on} onClick={() => onChange(g)}
             className={`flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition ${on ? "border-primary/50 bg-primary/15 text-primary" : "border-line bg-surface text-muted hover:bg-surface-2"}`}>
             <Icon size={16} />{label}
-            {counts[g] !== null && <span className={`rounded-full px-2 py-px text-xs font-extrabold ${on ? "bg-primary text-white" : "bg-surface-2"}`}>{counts[g]}</span>}
+            {unread[g] > 0 && <span className="min-w-[22px] rounded-full bg-danger px-2 py-px text-center text-xs font-extrabold text-white">{unread[g]}</span>}
           </button>
         );
       })}
