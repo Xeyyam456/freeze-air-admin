@@ -39,6 +39,8 @@ Kondisioner servis şirkəti **Freeze Air Service** üçün sistem: ustalar, mü
 
 ## Komandalar
 Yoxlama = `npm test` (Vitest, saf util-lər: `src/**/__tests__/*.test.ts`) + tip yoxlaması + brauzerdə canlı test.
+- **Testlər (2026-11-09)**: Vitest 5.0.5, `vitest.config` (`env: { TZ: "Asia/Baku" }`). Test faylı yoxladığı kodun yanındakı `__tests__/` qovluğunda. Hook-u React-sız yoxlamaq: `vi.mock("react", () => ({ useMemo: (f) => f() }))` + `await import(...)`. Vaxt: `vi.useFakeTimers()` + `vi.setSystemTime(...)`. Test səhv tapsa, düzəltmədən əvvəl istifadəçiyə göstər; səhv davranışı test gözləntisi kimi yazma. Commitdən əvvəl `npm test`.
+- **Azərbaycan mətnini kiçiltmək HƏMİŞƏ `toLocaleLowerCase("az")`** (`toLowerCase()` yox: "İ" → "i" + görünməz U+0307 olur, "ilqar" "İlqar"-ı tapmırdı; 2026-11-09 düzəldildi: `norm`, `slugify`, `nameKey`, Excel başlıqları).
 - `npm run dev` (port 5173), `npx tsc -b` (tip yoxlaması), `npm run build`. ESLint qoşulmayıb.
 - **Push və Elanlar (2026-11-02)**: `public/sw.js` (yalnız push; usta paneli ünvanlarını admin ünvanına çevirir), `lib/push`, `services/push` (`app: "admin"`), Panel-də `components/PushPrompt`; **Elanlar** səhifəsi `/elanlar` (`pages/Announcements`, `services/announcements`): rəhbərlik hamıya bildiriş göndərir (təsdiq modalı ilə). Baza: `docs/database.md` 0096–0099.
 - **Elan nişanı (2026-11-05, 0105)**: menyuda "Elanlar" yanında oxunmamış say (`fetchNavBadges.announce` → RPC `unread_announcements`; öz elanın sayılmır). Səhifə açılanda `markAnnouncementsSeen()` + `revalidate("nav-badges")`. Canlı: `components/AnnouncementsListener` (hamı üçün, `RequireAuth`) — başqasının elanında tost + səs (push gəlməsə də), `LIVE.announcements`. Son baxış bazadadır (`announcement_reads`), telefon/kompüter eyni sayı görür.
