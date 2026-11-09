@@ -47,6 +47,6 @@ export function toolError(error: { code: string; message: string }): FormState {
 
 // Ad müqayisəsi: böyük/kiçik hərf, artıq boşluq və ı/i, ə/e, ö/o, ü/u, ç/c, ş/s, ğ/g fərqi nəzərə alınmır ("MIs Boru" = "Mis boru")
 export function nameKey(s: string) {
-  return s.toLowerCase().replace(/ı/g, "i").replace(/ə/g, "e").replace(/ö/g, "o").replace(/ü/g, "u")
+  return s.toLocaleLowerCase("az").replace(/ı/g, "i").replace(/ə/g, "e").replace(/ö/g, "o").replace(/ü/g, "u")
     .replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g").replace(/\s+/g, " ").trim();
 }

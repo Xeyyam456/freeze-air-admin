@@ -6,7 +6,7 @@ import { IMPORT_COLUMNS } from "../constants/importColumns";
 function normalize(h: unknown) {
   return String(h ?? "")
     .trim()
-    .toLowerCase()
+    .toLocaleLowerCase("az")
     .replace(/ü/g, "u").replace(/ə/g, "e").replace(/ı/g, "i").replace(/ö/g, "o")
     .replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g");
 }
