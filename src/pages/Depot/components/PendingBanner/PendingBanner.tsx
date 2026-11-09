@@ -13,7 +13,7 @@ export function PendingBanner({ total, parts, onOpen }: PendingBannerProps) {
           <span className="rounded-full bg-danger px-2 py-0.5 text-[11px] font-bold leading-none text-white">{total}</span>
         </span>
         <span className="mt-1 flex flex-wrap gap-1">
-          {parts.map((x) => <span key={x} className="rounded-full bg-white/80 px-2 py-0.5 text-[11px] font-semibold text-amber-300 ring-1 ring-amber-500/40 max-sm:text-[10px]">{x}</span>)}
+          {parts.map((x) => <span key={x} className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[11px] font-semibold text-amber-300 ring-1 ring-amber-500/40 max-sm:text-[10px]">{x}</span>)}
         </span>
       </span>
       <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-primary ring-1 ring-primary/25 transition-colors group-hover:bg-primary group-hover:text-white max-sm:px-2.5 max-sm:py-1 max-sm:text-[11px]">

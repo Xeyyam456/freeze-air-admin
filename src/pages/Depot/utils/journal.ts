@@ -27,7 +27,7 @@ export const KINDS: Record<string, { label: string; verb: string; icon: LucideIc
   return: { label: "Qaytarıldı", verb: "qaytardı", icon: ArrowDownToLine, tone: "text-ok bg-ok-soft" },
   used: { label: "Sərf", verb: "işlətdi", icon: Flame, tone: "text-amber-300 bg-amber-500/15" },
   writeoff: { label: "Silindi", verb: "silindi", icon: Trash2, tone: "text-danger bg-danger-soft" },
-  count: { label: "Sayım", verb: "sayımla düzəldi", icon: ClipboardCheck, tone: "text-violet-300 bg-[#f1ebff]" },
+  count: { label: "Sayım", verb: "sayımla düzəldi", icon: ClipboardCheck, tone: "text-violet-300 bg-violet-500/15" },
   repair_out: { label: "Təmirə", verb: "təmirə getdi", icon: Wrench, tone: "text-amber-300 bg-amber-500/15" },
   repair_in: { label: "Təmirdən", verb: "təmirdən qayıtdı", icon: Wrench, tone: "text-ok bg-ok-soft" },
 };

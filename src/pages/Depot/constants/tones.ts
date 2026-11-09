@@ -12,11 +12,11 @@ export const GRAD: Record<Tone, string> = {
   slate: "bg-[linear-gradient(135deg,#94a3b8,#475569)] shadow-[0_8px_18px_-6px_rgba(71,85,105,0.5)]",
 };
 export const SOFT: Record<Tone, string> = {
-  blue: "bg-[#eef4ff] text-blue-400",
-  teal: "bg-[#e7f8f5] text-teal-300",
-  violet: "bg-[#f3efff] text-violet-300",
+  blue: "bg-blue-500/15 text-blue-400",
+  teal: "bg-teal-500/15 text-teal-300",
+  violet: "bg-violet-500/15 text-violet-300",
   amber: "bg-amber-500/15 text-amber-300",
   red: "bg-red-500/12 text-red-400",
-  green: "bg-[#ecfbf1] text-emerald-400",
-  slate: "bg-[#f1f4f8] text-slate-300",
+  green: "bg-emerald-500/15 text-emerald-400",
+  slate: "bg-slate-500/20 text-slate-300",
 };

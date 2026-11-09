@@ -37,7 +37,7 @@ export function RequestRow(props: RequestRowProps) {
           </span>
         </span>
         {can !== null && (
-          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${can ? "bg-[#ecfbf1] text-emerald-400" : "bg-red-500/12 text-red-400"}`}
+          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${can ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/12 text-red-400"}`}
             title={tool ? `depoda ${fmt(tool.available)} ${u}` : "alət silinib"}>
             {can ? `verilə bilər · depoda ${fmt(tool!.available)}` : `çatmır · depoda ${fmt(tool?.available ?? 0)}`}
           </span>
