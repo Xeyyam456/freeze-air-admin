@@ -1,13 +1,13 @@
 import { createClient } from "@/lib/supabase/client";
 import type { FeedGroup } from "@/types/feed";
-import { feedSince } from "./feedSeen";
+import { feedSinceAll } from "./feedSeen";
 
 // Oxunmamış hadisələr (hər qrup üçün): son baxışdan sonra başqalarının yüklədiyi fayl, verdiyi 👍/👎 və yazdığı şərh
 export async function fetchFeedUnread(): Promise<Record<FeedGroup, number>> {
   const supabase = createClient();
-  const { data: me } = await supabase.rpc("my_employee_id");
+  const [{ data: me }, seen] = await Promise.all([supabase.rpc("my_employee_id"), feedSinceAll()]);
   const count = async (group: FeedGroup) => {
-    const since = feedSince(group);
+    const since = seen[group];
     const kinds = group === "act" ? ["act"] : ["photo", "video"];
     let files = supabase.from("work_files").select("id, work_logs!inner(employee_id)", { count: "exact", head: true }).gt("created_at", since).in("kind", kinds);
     let likes = supabase.from("feed_likes").select("work_log_id", { count: "exact", head: true }).eq("grp", group).gt("created_at", since);

@@ -31,7 +31,9 @@ export type PublicFunctions = {
   mark_announcements_seen: import("./mark_announcements_seen").Fn
   material_small_to_pieces: import("./material_small_to_pieces").Fn
   mileage_fill_missing: import("./mileage_fill_missing").Fn
+  mark_feed_seen: import("./mark_feed_seen").Fn
   my_employee_id: import("./my_employee_id").Fn
+  my_feed_seen: import("./my_feed_seen").Fn
   place_set_location: import("./place_set_location").Fn
   public_employees: import("./public_employees").Fn
   public_management: import("./public_management").Fn
