@@ -63,6 +63,7 @@ Storage-də `remove` faylı həmişə dərhal silmir; köhnə şəkillər bucket
 ### Miqrasiyalar (`supabase/migrations/`, bu repoda)
 - `0001`–`0105`. Ad formatı `NNNN_ad.sql`; Supabase MCP `apply_migration` ilə tətbiq et və faylı da yaz.
 - Mühüm olanlar:
+  - 0114: `feed_seen (user_id, grp, seen_at)` — Qruplar lentinə son baxış (hər istifadəçi × qrup), `my_feed_seen()` (yoxdursa indi yazır) + `mark_feed_seen(p_grp, p_at)` (yalnız irəli); əvvəl cihaz yaddaşında idi, nişan hər girişdə yanırdı;
   - 0105: `announcement_reads` (istifadəçinin Elanlar səhifəsinə son baxışı) + `unread_announcements()` (sonra başqasının yazdığı elanlar) + `mark_announcements_seen()`; menyuda "Elanlar" nişanı admin `fetchNavBadges.announce` və web `lib/announcements-live`; canlı: admin `AnnouncementsListener`, web panel kanalı `onAnnouncementChange` (tost + səs, push gəlməsə də);
   - 0104: `push_subscribe` atomik upsert (`on conflict (endpoint) do update`): əvvəl sil + əlavə et idi, paralel iki çağırış (dev-də StrictMode) 409 Conflict verirdi; klientdə `refreshPush` eyni anda gələn çağırışı birləşdirir;
   - 0103: `storage.objects` AFTER DELETE trigger-i (`work_files_on_storage_delete`): `work` bucket-indən fayl silinəndə `work_files` sətri də silinir (əvvəl panel-dən silinən video/akt üçün nişan qalırdı); bir dəfəlik faylı olmayan sətirlər təmizləndi (2026-11-05, 10 sətir);
