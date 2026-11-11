@@ -15,6 +15,7 @@ export const HOME_TEXTS: TextGroup = {
         { key: "home.hero.cta", label: "Birinci düymə" },
         { key: "home.hero.cta2", label: "İkinci düymə" },
         { key: "home.hero.scroll", label: "Sürüşdürmə işarəsinin yazısı" },
+        { key: "home.hero.climate_hint", label: "Temperatur sürgüsü üçün işarə yazısı" },
       ],
     },
     {
