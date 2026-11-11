@@ -14,6 +14,7 @@ export const HOME_TEXTS: TextGroup = {
         { key: "home.hero.lead", label: "Alt mətn", kind: "text" },
         { key: "home.hero.cta", label: "Birinci düymə" },
         { key: "home.hero.cta2", label: "İkinci düymə" },
+        { key: "home.hero.scroll", label: "Sürüşdürmə işarəsinin yazısı" },
       ],
     },
     {
