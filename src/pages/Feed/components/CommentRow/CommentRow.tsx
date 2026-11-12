@@ -4,6 +4,7 @@ import type { CommentRowProps } from "@/types/feed";
 import { REACTIONS } from "../../constants/reactions";
 import { feedWhen } from "../../utils/feedWhen";
 import { ReactionPicker } from "../ReactionPicker";
+import { VoicePlayer } from "../VoicePlayer";
 
 // Bir şərh (söhbət qabarcığı): başqalarınınkı solda (şəkil + ad), mənimki sağda mavi tonda; silmək — öz şərhi və ya rəhbərlik.
 // Qabarcığın altında şərhə verilən reaksiyalar (say çipləri) və gülüş ikonu ilə reaksiya seçimi
@@ -15,7 +16,7 @@ export function CommentRow({ c, mine, canDelete, canReact, onDelete, onReact }: 
       <div className={`flex max-w-[80%] flex-col gap-1 ${mine ? "items-end" : "items-start"}`}>
         <div className={`rounded-2xl px-3.5 py-2 ${mine ? "rounded-br-md bg-primary/15 ring-1 ring-primary/30" : "rounded-bl-md bg-surface-2 ring-1 ring-line"}`}>
           {!mine && <p className="truncate text-xs font-extrabold text-primary">{c.name}</p>}
-          <p className="whitespace-pre-wrap break-words text-[15px] leading-snug">{c.body}</p>
+          {c.audio ? <VoicePlayer audio={c.audio} mine={mine} /> : <p className="whitespace-pre-wrap break-words text-[15px] leading-snug">{c.body}</p>}
           <p className="muted mt-0.5 flex items-center justify-end gap-2 text-[11px] font-semibold">
             {feedWhen(c.at)}
             {canDelete && c.id > 0 && (

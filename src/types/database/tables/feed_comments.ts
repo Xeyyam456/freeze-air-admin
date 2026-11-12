@@ -2,6 +2,9 @@
 export type Table = {
   Row: {
     body: string
+    audio_ms: number | null
+    audio_path: string | null
+    audio_peaks: number[] | null
     created_at: string
     employee_id: number
     grp: string
@@ -10,6 +13,9 @@ export type Table = {
   }
   Insert: {
     body: string
+    audio_ms?: number | null
+    audio_path?: string | null
+    audio_peaks?: number[] | null
     created_at?: string
     employee_id: number
     grp: string
@@ -18,6 +24,9 @@ export type Table = {
   }
   Update: {
     body?: string
+    audio_ms?: number | null
+    audio_path?: string | null
+    audio_peaks?: number[] | null
     created_at?: string
     employee_id?: number
     grp?: string

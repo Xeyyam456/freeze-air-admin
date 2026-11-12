@@ -5,7 +5,7 @@ import type { FeedComment, FeedGroup, Reaction } from "@/types/feed";
 // Paylaşımın şərhləri (köhnədən yeniyə): şərh + yazanın adı/şəkli
 export async function fetchFeedComments(logId: number, group: FeedGroup, me: number | null): Promise<FeedComment[]> {
   const supabase = createClient();
-  const { data, error } = await supabase.from("feed_comments").select("id, employee_id, body, created_at").eq("work_log_id", logId).eq("grp", group).order("created_at");
+  const { data, error } = await supabase.from("feed_comments").select("id, employee_id, body, created_at, audio_path, audio_ms, audio_peaks").eq("work_log_id", logId).eq("grp", group).order("created_at");
   if (error) throw error;
   const rows = data ?? [];
   if (!rows.length) return [];
@@ -22,7 +22,7 @@ export async function fetchFeedComments(logId: number, group: FeedGroup, me: num
     counts.set(k.comment_id, c);
     if (k.employee_id === me) mine.set(k.comment_id, kind);
   }
-  return rows.map((r) => ({ id: r.id, employeeId: r.employee_id, name: byId.get(r.employee_id)?.full_name ?? "—", photo: byId.get(r.employee_id)?.photo_url ?? null, body: r.body, at: r.created_at, reactions: counts.get(r.id) ?? {}, mine: mine.get(r.id) ?? null }));
+  return rows.map((r) => ({ id: r.id, employeeId: r.employee_id, name: byId.get(r.employee_id)?.full_name ?? "—", photo: byId.get(r.employee_id)?.photo_url ?? null, body: r.body, at: r.created_at, reactions: counts.get(r.id) ?? {}, mine: mine.get(r.id) ?? null, audio: r.audio_path ? { path: r.audio_path, ms: r.audio_ms ?? 0, peaks: r.audio_peaks ?? [] } : null }));
 }
 
 // Şərh yaz (RLS: yalnız öz adından). Müəllifə və əvvəl yazanlara push getməsi bazada tetikleyicidir (0109/0111)
@@ -31,10 +31,12 @@ export async function addFeedComment(logId: number, group: FeedGroup, me: number
   if (error) throw new Error(error.message);
 }
 
-// Şərhi sil (öz şərhi; rəhbərlik hamısını)
-export async function deleteFeedComment(id: number): Promise<void> {
-  const { error } = await createClient().from("feed_comments").delete().eq("id", id);
+// Şərhi sil (öz şərhi; rəhbərlik hamısını). Səs şərhində storage faylı da silinir (xəta olsa susur: yetim fayl zərərsizdir)
+export async function deleteFeedComment(id: number, audioPath?: string | null): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase.from("feed_comments").delete().eq("id", id);
   if (error) throw new Error(error.message);
+  if (audioPath) await supabase.storage.from("feed-audio").remove([audioPath]).catch(() => undefined);
 }
 
 // Şərhə reaksiya: kind = null → geri götür; növ → seç (başqası seçilibsə əvəzlənir). RLS: yalnız öz adından

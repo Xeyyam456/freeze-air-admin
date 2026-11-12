@@ -47,8 +47,8 @@ export function FeedListener() {
         happen(r.grp, `${REACTION_EMOJI[r.kind as Reaction] ?? "👍"} Yeni reaksiya`, GROUP_TITLE[r.grp], r.employee_id);
       })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "feed_comments" }, (p) => {
-        const r = p.new as { grp: FeedGroup; body: string; employee_id: number };
-        happen(r.grp, "Yeni şərh", r.body.length > 60 ? `${r.body.slice(0, 60)}…` : r.body, r.employee_id);
+        const r = p.new as { grp: FeedGroup; body: string; audio_path: string | null; employee_id: number };
+        happen(r.grp, "Yeni şərh", r.audio_path ? "🎤 Səs mesajı" : r.body.length > 60 ? `${r.body.slice(0, 60)}…` : r.body, r.employee_id);
       }));
     })();
     return () => { dead = true; close(); };

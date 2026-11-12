@@ -1,4 +1,4 @@
-import { Send, Smile, X } from "lucide-react";
+import { Mic, Send, Smile, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useData } from "@/lib/useData";
 import { fetchFeedComments } from "@/services/feed/comments";
@@ -6,17 +6,20 @@ import { COMMENTS_KEY } from "@/services/feed/keys";
 import { Modal } from "@/shared/components/Modal";
 import type { CommentsModalProps } from "@/types/feed";
 import { useFeedComments } from "../../hooks/useFeedComments";
+import { useVoiceRecorder } from "../../hooks/useVoiceRecorder";
 import { useFeedMe } from "../../hooks/useFeedMe";
 import { CommentIcon } from "../CommentIcon";
 import { CommentRow } from "../CommentRow";
 import { EmojiPanel } from "../EmojiPanel";
+import { VoiceBar } from "../VoiceBar";
 
 // Paylaşımın şərhləri: söhbət qabarcıqları, altda yazı sahəsi (Enter göndərir, Shift+Enter yeni sətir). Şərh klik anında siyahıda görünür.
 // Silmək: öz şərhi; rəhbərlik hamısını. Müəllifə və əvvəl yazanlara push gedir (bazada)
 export function CommentsModal({ logId, group, meId, moderator, onClose }: CommentsModalProps) {
   const me = useFeedMe();
   const list = useData(COMMENTS_KEY, () => fetchFeedComments(logId, group, meId), [logId, group, meId]);
-  const { send, remove, react } = useFeedComments(logId, group, meId, me?.name ?? "");
+  const { send, sendVoice, remove, react } = useFeedComments(logId, group, meId, me?.name ?? "");
+  const rec = useVoiceRecorder();
   const [text, setText] = useState("");
   const [emoji, setEmoji] = useState(false);
   const area = useRef<HTMLTextAreaElement>(null);
@@ -33,6 +36,8 @@ export function CommentsModal({ logId, group, meId, moderator, onClose }: Commen
     setText(text.slice(0, s) + e + text.slice(end));
     requestAnimationFrame(() => { el?.focus(); el?.setSelectionRange(s + e.length, s + e.length); });
   };
+
+  const submitVoice = async () => { const v = await rec.finish(); if (v) sendVoice(v); };
 
   const submit = () => {
     if (!text.trim()) return;
@@ -54,15 +59,18 @@ export function CommentsModal({ logId, group, meId, moderator, onClose }: Commen
         <li ref={end} className="h-0" />
       </ul>
       {meId && emoji && <EmojiPanel onPick={insert} />}
-      {meId ? (
+      {meId && rec.on ? <VoiceBar ms={rec.ms} onCancel={rec.cancel} onSend={submitVoice} /> : meId ? (
         <div className="flex items-end gap-2 border-t border-line px-4 py-3">
           <button type="button" onClick={() => setEmoji((o) => !o)} aria-label="Smaylik seç" aria-pressed={emoji}
             className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition ${emoji ? "bg-primary/15 text-primary" : "bg-surface-2 text-muted hover:text-primary"}`}><Smile size={20} /></button>
           <textarea ref={area} value={text} onChange={(e) => setText(e.target.value)} rows={1} maxLength={1000} placeholder="Şərh yaz..."
             onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }}
             className="max-h-28 min-h-11 flex-1 resize-none rounded-3xl border border-line bg-surface-2 px-4 py-2.5 text-[15px] outline-none focus:border-primary" />
-          <button type="button" onClick={submit} disabled={!text.trim()} aria-label="Göndər"
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary text-white transition disabled:bg-surface-2 disabled:text-muted"><Send size={18} /></button>
+          {text.trim() ? (
+            <button type="button" onClick={submit} aria-label="Göndər" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary text-white transition hover:brightness-110"><Send size={18} /></button>
+          ) : (
+            <button type="button" onClick={() => void rec.start()} aria-label="Səs yaz" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-surface-2 text-muted transition hover:text-primary"><Mic size={19} /></button>
+          )}
         </div>
       ) : (
         <p className="muted border-t border-line px-5 py-3 text-center text-sm">Şərh yazmaq üçün əməkdaş kartı lazımdır.</p>

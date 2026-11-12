@@ -4,7 +4,8 @@ import { revalidate } from "@/lib/revalidate";
 import { toast } from "@/lib/toast";
 import { addFeedComment, deleteFeedComment, setCommentReaction } from "@/services/feed/comments";
 import { COMMENTS_KEY, FEED_KEY } from "@/services/feed/keys";
-import type { FeedComment, FeedGroup, FeedPost, Reaction } from "@/types/feed";
+import { addVoiceComment } from "@/services/feed/voiceSend";
+import type { FeedComment, FeedGroup, FeedPost, Reaction, VoiceResult } from "@/types/feed";
 
 // Şərh yaz / sil — OPTİMİSTİK: şərh klik anında siyahıda, kartdakı say da dərhal dəyişir (keş); baza arxada, xətada geri qayıdır
 export function useFeedComments(logId: number, group: FeedGroup, meId: number | null, meName: string) {
@@ -26,11 +27,23 @@ export function useFeedComments(logId: number, group: FeedGroup, meId: number | 
       .finally(done);
   };
 
+  // Səs şərhi: klik anında siyahıda (brauzerdəki fayldan oxunur), yükləmə + yazma arxada; xətada geri
+  const sendVoice = (v: VoiceResult) => {
+    if (!meId) return;
+    const temp: FeedComment = { id: -Date.now(), employeeId: meId, name: meName, photo: null, body: "", at: new Date().toISOString(), reactions: {}, mine: null, audio: { path: "", ms: v.ms, peaks: v.peaks, local: URL.createObjectURL(v.blob) } };
+    const prev = qc.getQueryData<FeedComment[]>(listKey);
+    qc.setQueryData<FeedComment[]>(listKey, (l) => [...(l ?? []), temp]);
+    bump(1);
+    addVoiceComment(logId, group, meId, v)
+      .catch((e: Error) => { qc.setQueryData(listKey, prev); bump(-1); toast.error("Səs göndərilmədi", e.message); })
+      .finally(done);
+  };
+
   const remove = (c: FeedComment) => {
     const prev = qc.getQueryData<FeedComment[]>(listKey);
     qc.setQueryData<FeedComment[]>(listKey, (l) => l?.filter((x) => x.id !== c.id));
     bump(-1);
-    deleteFeedComment(c.id)
+    deleteFeedComment(c.id, c.audio?.path)
       .catch((e: Error) => { qc.setQueryData(listKey, prev); bump(1); toast.error("Şərh silinmədi", e.message); })
       .finally(done);
   };
@@ -52,5 +65,5 @@ export function useFeedComments(logId: number, group: FeedGroup, meId: number | 
       .finally(() => revalidate(COMMENTS_KEY));
   };
 
-  return { send, remove, react };
+  return { send, sendVoice, remove, react };
 }
